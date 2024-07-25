@@ -14,25 +14,19 @@ export default meta
 
 type Story = StoryObj<typeof Button>
 
-export const Default: Story = {
+export const Variant: Story = {
   render: () => {
-    return <Button>button</Button>
-  }
-}
-
-export const Stretch: Story = {
-  render: () => {
-    return <Button stretch>button</Button>
+    return (
+      <>
+        <Button>default</Button>
+        <Button variant="secondary">secondary</Button>
+        <Button variant="link">link</Button>
+      </>
+    )
   }
 }
 
 export const LinkButton: Story = {
-  render: () => {
-    return <Button variant="link">login</Button>
-  }
-}
-
-export const NavLink: Story = {
   render: () => {
     return (
       <>
@@ -41,6 +35,32 @@ export const NavLink: Story = {
         </Button>
         <Button asChild variant="secondary">
           <Link href="#">See Examples</Link>
+        </Button>
+      </>
+    )
+  }
+}
+
+export const Disabled: Story = {
+  render: () => {
+    return (
+      <>
+        <Button disabled>button</Button>
+        <Button variant="secondary" disabled>
+          button
+        </Button>
+      </>
+    )
+  }
+}
+
+export const Stretch: Story = {
+  render: () => {
+    return (
+      <>
+        <Button stretch>button</Button>
+        <Button variant="secondary" stretch>
+          button
         </Button>
       </>
     )

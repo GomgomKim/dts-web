@@ -33,11 +33,20 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
   stretch?: boolean
+  disabled?: boolean
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    { className, variant, size, asChild = false, stretch = false, ...props },
+    {
+      className,
+      variant,
+      size,
+      asChild = false,
+      stretch = false,
+      disabled = false,
+      ...props
+    },
     ref
   ) => {
     const Comp = asChild ? Slot : 'button'
@@ -46,6 +55,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className={cn(buttonVariants({ variant, size, className }), {
           'w-[100%]': stretch
         })}
+        disabled={disabled}
         ref={ref}
         {...props}
       />
