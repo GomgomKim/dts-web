@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 
 import Link from 'next/link'
 
-import { Button } from './button'
+import { Button } from '.'
 
 const meta: Meta<typeof Button> = {
   component: Button,
@@ -11,7 +11,14 @@ const meta: Meta<typeof Button> = {
   argTypes: {
     variant: {
       control: 'radio',
-      options: ['default', 'secondary', 'destructive', 'link']
+      options: [
+        'default',
+        'destructive',
+        'outlint',
+        'secondary',
+        'ghost',
+        'link'
+      ]
     },
     asChild: { control: 'boolean' },
     disabled: { control: 'boolean' },
