@@ -56,10 +56,12 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const Comp = asChild ? Slot : 'button'
+    const isActive = className?.includes('active')
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }), {
-          'w-[100%]': stretch
+          'w-[100%]': stretch,
+          'text-white bg-secondary': variant === 'ghost' && isActive
         })}
         disabled={disabled}
         ref={ref}

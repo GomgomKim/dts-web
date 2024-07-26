@@ -1,3 +1,5 @@
+'use client'
+
 import { Button } from '@/sdcn/components/ui/Button'
 import Link from 'next/link'
 import { forwardRef } from 'react'
@@ -6,6 +8,8 @@ import ExploreIcon from '/public/icons/compass.svg'
 import FavoriteIcon from '/public/icons/heart.svg'
 import ArchiveIcon from '/public/icons/folder.svg'
 import { Badge } from '@/shared/ui'
+import { usePathname } from 'next/navigation'
+import { cn } from '@/sdcn/lib/utils'
 
 type NavItemType = {
   href: string
@@ -22,6 +26,7 @@ const navList: NavItemType[] = [
     title: 'Archive',
     prefix: <ArchiveIcon />,
     postfix: <Badge>Upcoming</Badge>
+    // TODO: disabled
   }
 ]
 
@@ -30,8 +35,11 @@ type NavItemProps = {
 }
 
 const NavItem = ({ item }: NavItemProps) => {
+  const pathname = usePathname()
+  const isHere = pathname === item.href
+
   return (
-    <Button asChild variant="ghost" stretch>
+    <Button asChild variant="ghost" stretch className={cn({ active: isHere })}>
       <Link
         href={item.href}
         className="group justify-between items-center !px-[12px]"
@@ -62,7 +70,7 @@ const Navbar = () => {
 
 export const Menubar = () => {
   return (
-    <div>
+    <div className="min-w-[280px] px-5 py-3">
       <Navbar />
       <MenubarSeparator />
     </div>
