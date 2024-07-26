@@ -71,6 +71,10 @@ const config = {
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out'
+      },
+      backgroundImage: {
+        'custom-gradient':
+          'linear-gradient(to bottom, rgba(15, 16, 17, 0), rgba(15, 16, 17, 0.4), rgba(15, 16, 17, 0.8))'
       }
     }
   },
