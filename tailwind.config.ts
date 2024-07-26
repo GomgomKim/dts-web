@@ -1,4 +1,4 @@
-import { colorMap } from '@/app/styles/colors'
+import { colorMap } from './src/app/styles/colors'
 import type { Config } from 'tailwindcss'
 
 const config = {
@@ -53,7 +53,10 @@ const config = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))'
         },
-        ...colorMap
+        ...colorMap,
+        gridTemplateColumns: {
+          'auto-fill-minmax': 'repeat(auto-fill, minmax(288px, 1fr))'
+        }
       },
       borderRadius: {
         lg: 'var(--radius)',
