@@ -1,3 +1,4 @@
+import { colorMap } from '@/app/styles/colors'
 import type { Config } from 'tailwindcss'
 
 const config = {
@@ -51,7 +52,8 @@ const config = {
         card: {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))'
-        }
+        },
+        ...colorMap
       },
       borderRadius: {
         lg: 'var(--radius)',
