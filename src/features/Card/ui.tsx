@@ -31,7 +31,7 @@ export const Card = ({ imgUrl, id }: CardProps) => {
       />
       {isHovering && (
         <Link
-          href={'/' + id}
+          href={`/archive/${id}`}
           className="absolute inset-0 z-10 bg-custom-gradient"
         >
           <Button
@@ -50,10 +50,10 @@ export const Card = ({ imgUrl, id }: CardProps) => {
             variant="link"
             className="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-white"
           >
-            <span>
+            <Link href={`/archive/${id}`}>
               Start with This Model
               <LinkIcon />
-            </span>
+            </Link>
           </Button>
         </Link>
       )}
