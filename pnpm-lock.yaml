@@ -114,6 +114,9 @@ importers:
       express:
         specifier: ^4.19.2
         version: 4.19.2
+      html-to-image:
+        specifier: ^1.11.11
+        version: 1.11.11
       husky:
         specifier: ^9.1.1
         version: 9.1.1
@@ -3443,6 +3446,9 @@ packages:
   html-tags@3.3.1:
     resolution: {integrity: sha512-ztqyC3kLto0e9WbNp0aeP+M3kTt+nbaIveGmUxAtZa+8iFgKLUOD4YKM5j+f3QD89bra7UeumolZHKuOXnTmeQ==}
     engines: {node: '>=8'}
+
+  html-to-image@1.11.11:
+    resolution: {integrity: sha512-9gux8QhvjRO/erSnDPv28noDZcPZmYE7e1vFsBLKLlRlKDSqNJYebj6Qz1TGd5lsRV+X+xYyjCKjuZdABinWjA==}
 
   html-webpack-plugin@5.6.0:
     resolution: {integrity: sha512-iwaY4wzbe48AfKLZ/Cc8k0L+FKG6oSNRaZ8x5A/T/IVDGyXcbHncM9TdDa93wn0FsSm82FhTKW7f3vS61thXAw==}
@@ -9649,6 +9655,8 @@ snapshots:
       terser: 5.31.3
 
   html-tags@3.3.1: {}
+
+  html-to-image@1.11.11: {}
 
   html-webpack-plugin@5.6.0(webpack@5.93.0(esbuild@0.21.5)):
     dependencies:
