@@ -3,7 +3,7 @@ import { Inter } from 'next/font/google'
 import '@/app/styles/globals.css'
 import MSWComponent from '@/app/providers/msw-component'
 import ReactQueryProviders from '@/app/providers/query-client-provider'
-import { Menubar } from '@/widgets/Menubar'
+import { Sidebar } from '@/widgets'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -24,7 +24,7 @@ export default function RootLayout({
         <ReactQueryProviders>
           <header>header</header>
           <div className="flex">
-            <Menubar />
+            <Sidebar />
             <div className="p-12 flex-1">{children}</div>
           </div>
         </ReactQueryProviders>

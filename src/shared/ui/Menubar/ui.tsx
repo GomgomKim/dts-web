@@ -2,7 +2,6 @@
 
 import { Button } from '@/sdcn/components/ui/Button'
 import Link from 'next/link'
-import { forwardRef } from 'react'
 
 import ExploreIcon from '/public/icons/compass.svg'
 import FavoriteIcon from '/public/icons/heart.svg'
@@ -11,14 +10,14 @@ import { Badge } from '@/shared/ui'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/sdcn/lib/utils'
 
-type NavItemType = {
+type MenuItemType = {
   href: string
   title: string
   prefix: React.ReactNode
   postfix?: React.ReactNode
 }
 
-const navList: NavItemType[] = [
+const navList: MenuItemType[] = [
   { href: '/explore', title: 'Explore', prefix: <ExploreIcon /> },
   { href: '/favoriate', title: 'Favoriate', prefix: <FavoriteIcon /> },
   {
@@ -30,11 +29,11 @@ const navList: NavItemType[] = [
   }
 ]
 
-type NavItemProps = {
-  item: NavItemType
+type MenuItemProps = {
+  item: MenuItemType
 }
 
-const NavItem = ({ item }: NavItemProps) => {
+const MenuItem = ({ item }: MenuItemProps) => {
   const pathname = usePathname()
   const isHere = pathname === item.href
 
@@ -56,34 +55,14 @@ const NavItem = ({ item }: NavItemProps) => {
   )
 }
 
-const Navbar = () => {
+export const Menubar = () => {
   return (
     <ul>
       {navList.map((navItem) => (
         <li key={navItem.title}>
-          <NavItem item={navItem} />
+          <MenuItem item={navItem} />
         </li>
       ))}
     </ul>
   )
 }
-
-export const Menubar = () => {
-  return (
-    <div className="min-w-[280px] px-5 py-3">
-      <Navbar />
-      <MenubarSeparator />
-    </div>
-  )
-}
-
-interface MenubarSeparatorProps extends React.ComponentProps<'div'> {}
-export const MenubarSeparator = forwardRef<
-  HTMLDivElement,
-  MenubarSeparatorProps
->(({ ...props }, ref) => {
-  return (
-    <div ref={ref} className="my-3 border-b border-[#2D2E33]" {...props}></div>
-  )
-})
-MenubarSeparator.displayName = 'MenubarSeparator'

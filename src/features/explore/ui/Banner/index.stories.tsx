@@ -4,7 +4,7 @@ import { Banner } from '.'
 
 const meta: Meta<typeof Banner> = {
   component: Banner,
-  title: 'features/Banner',
+  title: 'features/explore/Banner',
   tags: ['autodocs'],
   argTypes: {}
 }
