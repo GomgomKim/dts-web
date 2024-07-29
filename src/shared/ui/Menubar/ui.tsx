@@ -19,7 +19,7 @@ type MenuItemType = {
 
 const navList: MenuItemType[] = [
   { href: '/explore', title: 'Explore', prefix: <ExploreIcon /> },
-  { href: '/favoriate', title: 'Favoriate', prefix: <FavoriteIcon /> },
+  { href: '/favorites', title: 'Favorites', prefix: <FavoriteIcon /> },
   {
     href: '/archive',
     title: 'Archive',
