@@ -24,7 +24,7 @@ function Explore() {
     <>
       <Banner />
       <div className="mb-5">filters</div>
-      <div className="grid grid-cols-auto-fill-minmax gap-5">
+      <div className="grid grid-cols-auto-fill-px gap-5">
         {cardList.map((cardItem) => (
           <div key={cardItem.id}>
             <Card imgUrl={cardItem.imgUrl} id={cardItem.id} />
