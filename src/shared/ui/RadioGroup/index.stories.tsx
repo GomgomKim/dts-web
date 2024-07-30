@@ -25,6 +25,7 @@ export const Default: Story = {
       <>
         value: {value}
         <RadioGroup
+          id="test"
           defaultValue="default"
           value={value}
           onValueChange={(value) => setValue(value)}
