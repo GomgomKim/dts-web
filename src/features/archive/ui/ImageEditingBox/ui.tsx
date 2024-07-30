@@ -33,7 +33,9 @@ export const ImageEditingBox = () => {
 
   return (
     <>
-      <ExportButton containerRef={containerRef} />
+      <div className="text-right mb-[20px]">
+        <ExportButton containerRef={containerRef} className="ml-auto" />
+      </div>
       <div className="min-w-[560px] bg-neutral-1 rounded-[0.5rem] overflow-hidden relative flex justify-center">
         <div
           ref={containerRef}

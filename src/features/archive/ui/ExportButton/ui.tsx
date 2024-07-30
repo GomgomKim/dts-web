@@ -1,12 +1,17 @@
 import { useCallback } from 'react'
 import { toPng } from 'html-to-image'
 import { Button } from '@/sdcn/components/ui/Button'
+import { cn } from '@/sdcn/lib/utils'
 
-interface ExportButtonProps {
+type ExportButtonProps = React.ComponentProps<typeof Button> & {
   containerRef: React.RefObject<HTMLElement>
 }
 
-export const ExportButton = ({ containerRef }: ExportButtonProps) => {
+export const ExportButton = ({
+  containerRef,
+  className,
+  ...props
+}: ExportButtonProps) => {
   const onButtonClick = useCallback(() => {
     console.log(containerRef.current)
     if (containerRef.current === null) return
@@ -27,7 +32,8 @@ export const ExportButton = ({ containerRef }: ExportButtonProps) => {
     <Button
       variant="outline"
       onClick={onButtonClick}
-      className="bg-[rgba(32,33,36,0.50)] rounded-[0.5rem]"
+      className={cn('bg-[rgba(32,33,36,0.50)] rounded-[0.5rem]', className)}
+      {...props}
     >
       Download
     </Button>
