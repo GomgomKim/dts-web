@@ -24,7 +24,11 @@ export const ExportButton = ({ containerRef }: ExportButtonProps) => {
   }, [containerRef])
 
   return (
-    <Button variant="outline" onClick={onButtonClick}>
+    <Button
+      variant="outline"
+      onClick={onButtonClick}
+      className="bg-[rgba(32,33,36,0.50)] rounded-[0.5rem]"
+    >
       Download
     </Button>
   )
