@@ -1,11 +1,14 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Image from 'next/image'
 import './styles.css'
 import { ImageEditingBox } from '@/features/archive/ui/ImageEditingBox'
 import { ImageInputBox } from '@/features/archive/ui/ImageInputBox'
 import { Button } from '@/sdcn/components/ui/Button'
 import { RadioGroup, RadioGroupItem } from '@/shared/ui/RadioGroup'
+
+import Img1 from '/public/images/model-gen-1.png'
 
 const skinTextureOptions = ['Matte', 'Medium', 'Glowy']
 const aspectRatioOptions = ['16:9', '9:16', '1:1', '4:3', '3:4']
@@ -56,13 +59,30 @@ function Model({ modelName }: { modelName: string }) {
           </div>
           <div className="grid-area-generate-variations mt-[58px]">
             <h3 className="mb-5">Variations</h3>
-            <div
-              style={{
-                width: '100%',
-                height: '300px',
-                backgroundColor: 'salmon'
-              }}
-            ></div>
+            {/* TODO: 각 이미지 컨테이너 height */}
+            <div className="flex flex-col-reverse gap-5">
+              <Button
+                variant="outline"
+                stretch
+                className="rounded-[0.5rem] bg-inherit flex-shrink-0"
+              >
+                Generate New Variations<span>(1/3)</span>
+              </Button>
+              <div className="grid grid-cols-2 gap-4 flex-1">
+                <div className="rounded-[0.5rem] overflow-hidden">
+                  <Image src={Img1} alt="" />
+                </div>
+                <div className="rounded-[0.5rem] overflow-hidden">
+                  <Image src={Img1} alt="" />
+                </div>
+                <div className="rounded-[0.5rem] overflow-hidden">
+                  <Image src={Img1} alt="" />
+                </div>
+                <div className="rounded-[0.5rem] overflow-hidden">
+                  <Image src={Img1} alt="" />
+                </div>
+              </div>
+            </div>
           </div>
           <div className="grid-area-generate-skin">
             <h3 className="mb-5">Skin Texture</h3>
