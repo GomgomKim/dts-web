@@ -4,7 +4,7 @@ import { ImageInputBox } from '.'
 
 const meta: Meta<typeof ImageInputBox> = {
   component: ImageInputBox,
-  title: 'entities/ImageInputBox',
+  title: 'features/archive/ImageInputBox',
   tags: ['autodocs'],
   argTypes: {}
 }
