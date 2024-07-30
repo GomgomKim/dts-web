@@ -1,14 +1,15 @@
 'use client'
 
-import React, { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 
 export type Box = {
   id: number
+  image: string
   left: number
   top: number
   width: number
   height: number
-  image: string
+  zIndex: number
 }
 
 type ActiveBox = Box & {
@@ -31,6 +32,7 @@ export const ResizableAndDraggableBoxes = ({
   const [isDragging, setIsDragging] = useState(false)
   const [isResizing, setIsResizing] = useState(false)
   const [resizeDirection, setResizeDirection] = useState('')
+  const boxRefs = useRef<Map<number, HTMLDivElement | null>>(new Map())
 
   const handleMouseDown = useCallback(
     (e: React.MouseEvent, boxId: number) => {
@@ -60,8 +62,15 @@ export const ResizableAndDraggableBoxes = ({
       } else {
         setIsDragging(true)
       }
+
+      setBoxes((prevBoxes) => {
+        const updatedBoxes = prevBoxes.map((box) =>
+          box.id === boxId ? { ...box, zIndex: 10 } : { ...box, zIndex: 1 }
+        )
+        return updatedBoxes
+      })
     },
-    [boxes]
+    [boxes, setBoxes]
   )
 
   const handleMouseMove = useCallback(
@@ -89,10 +98,18 @@ export const ResizableAndDraggableBoxes = ({
   )
 
   const handleMouseUp = useCallback(() => {
-    setActiveBox(null)
     setIsDragging(false)
     setIsResizing(false)
   }, [])
+
+  const handleClickOutside = (e: MouseEvent) => {
+    const clickedInsideBox = Array.from(boxRefs.current.values()).some(
+      (ref) => ref && ref.contains(e.target as Node)
+    )
+    if (!clickedInsideBox) {
+      setActiveBox(null)
+    }
+  }
 
   useEffect(() => {
     const container = containerRef.current
@@ -101,11 +118,13 @@ export const ResizableAndDraggableBoxes = ({
     container.addEventListener('mousemove', handleMouseMove)
     container.addEventListener('mouseup', handleMouseUp)
     container.addEventListener('mouseleave', handleMouseUp)
+    window.addEventListener('mousedown', handleClickOutside)
 
     return () => {
       container.removeEventListener('mousemove', handleMouseMove)
       container.removeEventListener('mouseup', handleMouseUp)
       container.removeEventListener('mouseleave', handleMouseUp)
+      window.addEventListener('mousedown', handleClickOutside)
     }
   }, [handleMouseMove, handleMouseUp, containerRef])
 
@@ -114,6 +133,9 @@ export const ResizableAndDraggableBoxes = ({
       {boxes?.map((box) => (
         <div
           key={box.id}
+          ref={(el) => {
+            boxRefs.current.set(box.id, el)
+          }}
           onMouseDown={(e) => handleMouseDown(e, box.id)}
           style={getBoxStyle(box, activeBox, isResizing, resizeDirection)}
         />
@@ -187,7 +209,6 @@ const getBoxStyle = (
   top: `${box.top}px`,
   width: `${box.width}px`,
   height: `${box.height}px`,
-  backgroundColor: 'lightblue',
   cursor:
     isResizing && activeBox?.id === box.id
       ? `${resizeDirection}-resize`
@@ -196,5 +217,6 @@ const getBoxStyle = (
   backgroundSize: 'contain',
   backgroundRepeat: 'no-repeat',
   backgroundPosition: 'center',
-  zIndex: activeBox?.id === box.id ? 10 : 1
+  zIndex: box.zIndex || 1,
+  outline: activeBox?.id === box.id ? '2px solid var(--primary)' : 'none'
 })
