@@ -3,7 +3,6 @@ import { Inter } from 'next/font/google'
 import '@/app/styles/globals.css'
 import MSWComponent from '@/app/providers/msw-component'
 import ReactQueryProviders from '@/app/providers/query-client-provider'
-import { Sidebar } from '@/widgets'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -23,10 +22,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <ReactQueryProviders>
           <header>header</header>
-          <div className="flex">
-            <Sidebar />
-            <div className="p-12 flex-1">{children}</div>
-          </div>
+          <div className="max-w-[1512px]">{children}</div>
         </ReactQueryProviders>
       </body>
     </html>
