@@ -31,6 +31,7 @@
     --border: #393a40;
     --input: 0 0% 16%;
     --ring: 150 100% 40%;
+    --radius: 16px;
   }
 }
 
@@ -47,4 +48,38 @@
   .grid-cols-auto-fill-px {
     grid-template-columns: repeat(auto-fill, 220px);
   }
+  .absolute-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.a11y-hidden {
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+}
+
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.5;
+  word-break: break-all;
+}
+
+.ellipsis-multi {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.5;
+  word-break: break-all;
 }

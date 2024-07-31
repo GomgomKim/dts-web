@@ -10,7 +10,7 @@ export const Nullbox = () => {
           className="h-[400px] aspect-[9/16] rounded-[8px] bg-[#0f1011] bg-custom-180-gradient"
         ></div>
       ))}
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 flex flex-col gap-[1.5rem] items-center">
+      <div className="absolute-center flex flex-col gap-[1.5rem] items-center">
         <p className="text-center text-[#76777D] text-[1.125rem] font-medium leading-normal">
           Go to the Explore page and click the heart icon
           <br />

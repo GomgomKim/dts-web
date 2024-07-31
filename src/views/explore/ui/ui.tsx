@@ -1,7 +1,7 @@
 'use client'
 
 import { Banner } from '@/features/explore/ui/Banner'
-import { Card } from '@/features/explore/ui/Card'
+import { Card } from '@/features/Card'
 
 import BG1 from '/public/images/model-gen-1.png'
 import BG2 from '/public/images/model-gen-2.png'

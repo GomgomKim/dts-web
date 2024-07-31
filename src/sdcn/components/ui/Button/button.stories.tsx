@@ -6,7 +6,7 @@ import { Button } from '.'
 
 const meta: Meta<typeof Button> = {
   component: Button,
-  title: 'shadn/Button',
+  title: 'shadcn/Button',
   tags: ['autodocs'],
   argTypes: {
     variant: {

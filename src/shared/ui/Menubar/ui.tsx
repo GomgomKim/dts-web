@@ -6,7 +6,6 @@ import Link from 'next/link'
 import ExploreIcon from '/public/icons/compass.svg'
 import FavoriteIcon from '/public/icons/heart.svg'
 import ArchiveIcon from '/public/icons/folder.svg'
-import { Badge } from '@/shared/ui'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/sdcn/lib/utils'
 
@@ -23,9 +22,7 @@ const navList: MenuItemType[] = [
   {
     href: '/archive',
     title: 'Archive',
-    prefix: <ArchiveIcon />,
-    postfix: <Badge>Upcoming</Badge>
-    // TODO: disabled
+    prefix: <ArchiveIcon />
   }
 ]
 
