@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  reactStrictMode: false,
   webpack: (config) => {
     config.module.rules.push({
       test: /\.svg$/,
@@ -12,9 +13,9 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'http',
-        hostname: '54.180.227.42',
-        port: '8080',
-        pathname: '/api/v1/**'
+        hostname: process.env.NEXT_PUBLIC_API_HOST_NAME,
+        port: process.env.NEXT_PUBLIC_API_PORT,
+        pathname: process.env.NEXT_PUBLIC_API_PATH_NAME
       }
     ]
   }
