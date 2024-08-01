@@ -21,6 +21,10 @@ export const Default: Story = {
     ]
     const [value, setValue] = useState('default')
 
+    const handleValueChange = (_id: string, value: string) => {
+      setValue(value)
+    }
+
     return (
       <>
         value: {value}
@@ -28,7 +32,7 @@ export const Default: Story = {
           id="test"
           defaultValue="default"
           value={value}
-          onValueChange={(value) => setValue(value)}
+          onValueChange={handleValueChange}
         >
           {options.map((option) => (
             <div key={option.id} className="flex items-center space-x-2">
@@ -40,3 +44,51 @@ export const Default: Story = {
     )
   }
 }
+
+// export const Many: Story = {
+//   render: () => {
+//     const options = [
+//       { id: 'option1', value: 'default', label: 'Default' },
+//       { id: 'option2', value: 'test', label: 'Test' },
+//       { id: 'option3', value: 'test2', label: 'Test2' }
+//     ]
+//     const [query, setQuery] = useState({
+//       radio1: options[0].value,
+//       radio2: options[0].value
+//     })
+
+//     const handleValueChange = (id: string, value: string) => {
+//       return setQuery((prev) => ({ ...prev, [`${id}`]: value }))
+//     }
+
+//     return (
+//       <>
+//         value: {query}
+//         <RadioGroup
+//           id="'radio1'"
+//           defaultValue="default"
+//           value={query.radio1}
+//           onValueChange={handleValueChange}
+//         >
+//           {options.map((option) => (
+//             <div key={option.id} className="flex items-center space-x-2">
+//               <RadioGroupItem value={option.value} label={option.label} />
+//             </div>
+//           ))}
+//         </RadioGroup>
+//         <RadioGroup
+//           id="radio2"
+//           defaultValue="default"
+//           value={query.radio2}
+//           onValueChange={handleValueChange}
+//         >
+//           {options.map((option) => (
+//             <div key={option.id} className="flex items-center space-x-2">
+//               <RadioGroupItem value={option.value} label={option.label} />
+//             </div>
+//           ))}
+//         </RadioGroup>
+//       </>
+//     )
+//   }
+// }

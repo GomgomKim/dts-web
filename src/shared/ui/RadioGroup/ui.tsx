@@ -10,8 +10,9 @@ type RadioGroupProps = React.ComponentProps<'div'> & {
 const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
   ({ id, value, onValueChange, className, ...props }, ref) => {
     const contextValue = {
+      id,
       value,
-      onValueChange: (newValue: string) => onValueChange(id, newValue)
+      onChange: (newValue: string) => onValueChange(id, newValue)
     }
 
     return (
@@ -29,7 +30,7 @@ type RadioGroupItemProps = React.ComponentProps<'div'> & {
 }
 const RadioGroupItem = React.forwardRef<HTMLDivElement, RadioGroupItemProps>(
   ({ value: localValue, label, className, ...props }, ref) => {
-    const { value, onValueChange } = React.useContext(RadioGroupContext)!
+    const { value, onChange } = React.useContext(RadioGroupContext)!
 
     return (
       <div
@@ -43,7 +44,7 @@ const RadioGroupItem = React.forwardRef<HTMLDivElement, RadioGroupItemProps>(
             'bg-neutral-1 text-white': value === localValue
           }
         )}
-        onClick={() => onValueChange(localValue)}
+        onClick={() => onChange(localValue)}
         {...props}
       >
         <label className="cursor-pointer">{label}</label>

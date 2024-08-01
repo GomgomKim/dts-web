@@ -1,8 +1,9 @@
 import { createContext, useContext } from 'react'
 
 type RadioGroupContextState = {
+  id: string
   value: string
-  onValueChange: (value: string) => void
+  onChange: (value: string) => void
 }
 
 export const RadioGroupContext = createContext<RadioGroupContextState | null>(
