@@ -3,10 +3,10 @@ import { dtsAxios } from '@/shared/api'
 import {
   GetExploreListResData,
   GetExploreListReqData
-} from '@/views/explore/model'
-import { URL_EXPLORE_LIST } from '@/views/explore/api/constants'
+} from '@/features/explore/CardList/CardList.model'
+import { URL_EXPLORE_LIST } from '@/features/explore/CardList/CardList.constant'
 
-const SEAERCH_SIZE = 4
+const SEAERCH_SIZE = 10
 
 export async function getExploreImages({
   tagType,
