@@ -5,7 +5,7 @@ import Image from 'next/image'
 import './styles.css'
 import { ImageEditingBox } from '@/features/archive/ui/ImageEditingBox'
 import { ImageInputBox } from '@/features/archive/ui/ImageInputBox'
-import { Button } from '@/sdcn/components/ui/Button'
+import { Button } from '@/shared/ui/Button'
 import { RadioGroup, RadioGroupItem } from '@/shared/ui/RadioGroup'
 
 import Img1 from '/public/images/model-gen-1.png'

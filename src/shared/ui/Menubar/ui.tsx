@@ -1,13 +1,13 @@
 'use client'
 
-import { Button } from '@/sdcn/components/ui/Button'
+import { Button } from '@/shared/ui/Button'
 import Link from 'next/link'
 
 import ExploreIcon from '/public/icons/compass.svg'
 import FavoriteIcon from '/public/icons/heart.svg'
 import ArchiveIcon from '/public/icons/folder.svg'
 import { usePathname } from 'next/navigation'
-import { cn } from '@/sdcn/lib/utils'
+import { cn } from '@/shared/lib/utils'
 
 type MenuItemType = {
   href: string

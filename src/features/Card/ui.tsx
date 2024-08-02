@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Image, { StaticImageData } from 'next/image'
 import Link from 'next/link'
-import { Button } from '@/sdcn/components/ui/Button'
+import { Button } from '@/shared/ui/Button'
 import LikeIcon from '/public/icons/heart.svg'
 import LinkIcon from '/public/icons/arrow-up-right.svg'
 

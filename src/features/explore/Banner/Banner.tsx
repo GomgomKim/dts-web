@@ -1,4 +1,4 @@
-import { Button } from '@/sdcn/components/ui/Button'
+import { Button } from '@/shared/ui/Button'
 
 const Banner = () => {
   return (
