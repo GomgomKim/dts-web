@@ -10,11 +10,9 @@ function Explore() {
     <>
       <Banner />
       <Catergory />
-      <div className="grid grid-cols-auto-fill-px gap-5">
-        <Suspense fallback={<div>Loading...</div>}>
-          <CardList />
-        </Suspense>
-      </div>
+      <Suspense fallback={<div>Loading...</div>}>
+        <CardList />
+      </Suspense>
     </>
   )
 }

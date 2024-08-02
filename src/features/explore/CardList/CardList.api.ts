@@ -17,8 +17,7 @@ export async function getExploreImages({
     GetExploreListReqData,
     AxiosResponse<GetExploreListResData, AxiosError>
   >(
-    `${URL_EXPLORE_LIST}?tagType=${tagType}` +
-      (size ? `&size=${size}` : '') +
+    `${URL_EXPLORE_LIST}?tagType=${tagType}&size=${size}` +
       (scrollKey ? `&scrollKey=${scrollKey}` : '')
   )
   return response.data

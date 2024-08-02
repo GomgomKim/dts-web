@@ -10,8 +10,8 @@ import { useSetQueryString } from '@/features/explore/Category/hooks/useSetQuery
 
 const Catergory = () => {
   const searchParams = useSearchParams()
-
-  const [query, setQuery] = useState(TAG_TYPES[0])
+  const currentTagType = searchParams.get('tagType')
+  const [query, setQuery] = useState(currentTagType || TAG_TYPES[0])
 
   useSetQueryString('tagType', query)
 
@@ -21,7 +21,7 @@ const Catergory = () => {
         <Button
           variant="ghost"
           key={type}
-          className={cn({ active: type === searchParams.get('tagType') })}
+          className={cn({ active: type === currentTagType })}
           onClick={() => setQuery(type)}
         >
           {capitalizeType(type)}

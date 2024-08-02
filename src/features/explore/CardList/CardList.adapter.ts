@@ -1,37 +1,40 @@
 import { getExploreImages } from '@/features/explore/CardList/CardList.api'
-import { useInfiniteQuery } from '@tanstack/react-query'
+import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query'
+import { GetExploreListResData } from './CardList.model'
 
-const useGetExploreImages = (tagType: string, scrollKey: string | null) => {
+const useGetExploreImages = (tagType: string) => {
   const {
     data,
     status,
+    error,
     fetchNextPage,
     hasNextPage,
     isFetching,
-    isPending,
-    isLoading, // isPending && isFetching
-    isError
-  } = useInfiniteQuery({
-    queryKey: ['explore', tagType, scrollKey],
+    isFetchingNextPage
+  } = useInfiniteQuery<
+    GetExploreListResData,
+    Error,
+    InfiniteData<GetExploreListResData>,
+    [_1: string, _2: string],
+    string | null
+  >({
+    queryKey: ['explore', tagType],
     queryFn: ({ pageParam }) =>
       getExploreImages({ tagType, scrollKey: pageParam }),
-    initialPageParam: null || '',
+    initialPageParam: null,
     getNextPageParam: (lastPage) => lastPage.content.scrollKey
     // staleTime: 60 * 1000,
     // gcTime: 300 * 1000,
   })
 
-  console.log('data', data)
-
   return {
     data,
     status,
+    error,
     hasNextPage,
     fetchNextPage,
     isFetching,
-    isPending,
-    isLoading,
-    isError
+    isFetchingNextPage
   }
 }
 
