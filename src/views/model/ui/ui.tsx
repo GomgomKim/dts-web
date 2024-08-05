@@ -32,26 +32,28 @@ function Model({ modelName }: { modelName: string }) {
   }, [query])
 
   return (
-    <div className="gap-[40px] grid-areas-layout">
+    <div className="flex">
       {/* brand assets section*/}
-      <section className="grid-areas-left flex flex-col gap-[20px]">
-        <h2 className="text-[24px] mb-5">Brand Assets</h2>
-        <div>
-          <h3 className="mb-3">Product</h3>
-          <ImageInputBox />
-        </div>
-        <div>
-          <h3 className="mb-3">Brand Logo</h3>
-          <ImageInputBox />
-        </div>
-        <div className="flex flex-col">
-          <Button variant="outline">Remove Background</Button>
-          <Button>Add Brand Assets</Button>
-        </div>
-      </section>
+      <div className="flex-shrink-0 basis-[390px] mr-5">
+        <section className="sticky top-0">
+          <h2 className="text-[24px] mb-5">Brand Assets</h2>
+          <div>
+            <h3 className="mb-3">Product</h3>
+            <ImageInputBox />
+          </div>
+          <div>
+            <h3 className="mb-3">Brand Logo</h3>
+            <ImageInputBox />
+          </div>
+          <div className="flex flex-col">
+            <Button variant="outline">Remove Background</Button>
+            <Button>Add Brand Assets</Button>
+          </div>
+        </section>
+      </div>
 
       {/* generate section */}
-      <section className="grid-areas-right">
+      <section className="px-5 grow">
         <h2 className="text-[24px] -mb-[42px]">Generate</h2>
         <div className="grid-areas-generate-layout gap-[40px]">
           <div className="grid-areas-generate-editing">

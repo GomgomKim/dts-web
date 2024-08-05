@@ -22,7 +22,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <ReactQueryProviders>
           <header>header</header>
-          <div className="max-w-[1512px]">{children}</div>
+          <main>{children}</main>
         </ReactQueryProviders>
       </body>
     </html>
