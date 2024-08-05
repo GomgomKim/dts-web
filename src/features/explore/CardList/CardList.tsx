@@ -3,7 +3,7 @@ import { useSearchParams } from 'next/navigation'
 import { useInView } from 'react-intersection-observer'
 import { useGetExploreImages } from '@/features/explore/CardList/CardList.adapter'
 import { URL_EXPLORE_LIST_IMAGE } from '@/features/explore/CardList/CardList.constant'
-import { Card } from '@/features/Card'
+import { Card } from '@/shared/ui/Card'
 
 const TAG_TYPES = ['FEATURED', 'MAKEUP', 'SKINCARE', 'HAIR']
 
