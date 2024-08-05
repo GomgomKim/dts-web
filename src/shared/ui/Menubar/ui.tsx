@@ -52,7 +52,7 @@ const MenuItem = ({ item }: MenuItemProps) => {
   )
 }
 
-export const Menubar = () => {
+const Menubar = () => {
   return (
     <ul>
       {navList.map((navItem) => (
@@ -63,3 +63,5 @@ export const Menubar = () => {
     </ul>
   )
 }
+
+export { Menubar }

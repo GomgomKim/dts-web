@@ -12,7 +12,7 @@ interface CardProps {
   id: string
 }
 
-export const Card = ({ imgUrl, id }: CardProps) => {
+const Card = ({ imgUrl, id }: CardProps) => {
   const [isHovering, setIsHovering] = useState(false)
 
   return (
@@ -53,3 +53,5 @@ export const Card = ({ imgUrl, id }: CardProps) => {
     </div>
   )
 }
+
+export { Card }
