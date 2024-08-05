@@ -35,7 +35,7 @@ function Model({ modelName }: { modelName: string }) {
     <div className="flex">
       {/* brand assets section*/}
       <div className="flex-shrink-0 basis-[390px] mr-5">
-        <section className="sticky top-0">
+        <section className="sticky top-0 flex flex-col gap-5">
           <h2 className="text-[24px] mb-5">Brand Assets</h2>
           <div>
             <h3 className="mb-3">Product</h3>
@@ -70,9 +70,9 @@ function Model({ modelName }: { modelName: string }) {
               >
                 Generate New Variations<span>(1/3)</span>
               </Button>
-              <div className="grid grid-cols-2 gap-4 flex-1">
+              <div className="grid-area-variations gap-4 flex-1">
                 <div className="rounded-[0.5rem] overflow-hidden">
-                  <Image src={Img1} alt="" />
+                  <Image src={Img1} alt="" objectFit="cover" />
                 </div>
                 <div className="rounded-[0.5rem] overflow-hidden">
                   <Image src={Img1} alt="" />

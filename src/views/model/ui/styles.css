@@ -5,8 +5,8 @@
     'a b'
     'c d'
     'c e';
-  grid-template-columns: repeat(2, 1fr);
-  /* grid-template-rows: minmax(auto, 700px) 1fr; */
+  grid-template-columns: minmax(477px, auto) minmax(auto, 428px);
+  grid-template-rows: auto 1fr;
 }
 
 .grid-area-generate-editing {
@@ -26,4 +26,11 @@
 }
 .grid-area-generate-aspectratio {
   grid-area: e;
+}
+
+/* variations section */
+.grid-area-variations {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, minmax(219px, auto));
 }
