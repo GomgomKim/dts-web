@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation'
 
 import { Button } from '@/shared/ui/button'
 import { cn } from '@/shared/lib/utils'
-import { TAG_TYPES } from '@/features/explore/category/Category.constant'
+import { TAG_TYPES } from '@/features/explore/category/constant'
 import { useSetQueryString } from '@/features/explore/category/hooks/useSetQueryString'
 
 const Catergory = () => {
