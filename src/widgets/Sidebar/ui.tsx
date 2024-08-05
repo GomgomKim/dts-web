@@ -1,5 +1,5 @@
 import { forwardRef } from 'react'
-import { Menubar } from '@/shared/ui/Menubar'
+import { Menubar } from '@/shared/ui/menubar'
 
 export const Sidebar = () => {
   return (

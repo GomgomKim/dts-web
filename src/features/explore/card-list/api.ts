@@ -3,8 +3,8 @@ import { dtsAxios } from '@/shared/api'
 import {
   GetExploreListResData,
   GetExploreListReqData
-} from '@/features/explore/CardList/CardList.model'
-import { URL_EXPLORE_LIST } from '@/features/explore/CardList/CardList.constant'
+} from '@/features/explore/card-list/model'
+import { URL_EXPLORE_LIST } from '@/features/explore/card-list/constant'
 
 const SEAERCH_SIZE = 10
 

@@ -3,10 +3,10 @@
 import { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 
-import { Button } from '@/sdcn/components/ui/Button'
-import { cn } from '@/sdcn/lib/utils'
-import { TAG_TYPES } from '@/features/explore/Category/Category.constant'
-import { useSetQueryString } from '@/features/explore/Category/hooks/useSetQueryString'
+import { Button } from '@/shared/ui/button'
+import { cn } from '@/shared/lib/utils'
+import { TAG_TYPES } from '@/features/explore/category/constant'
+import { useSetQueryString } from '@/features/explore/category/hooks/useSetQueryString'
 
 const Catergory = () => {
   const searchParams = useSearchParams()

@@ -5,7 +5,7 @@ import BG1 from '/public/images/model-gen-1.png'
 
 const meta: Meta<typeof Card> = {
   component: Card,
-  title: 'features/explore/Card',
+  title: 'shared/Card',
   tags: ['autodocs'],
   argTypes: {}
 }

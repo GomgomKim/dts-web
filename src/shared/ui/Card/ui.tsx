@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Image, { StaticImageData } from 'next/image'
 import Link from 'next/link'
-import { Button } from '@/sdcn/components/ui/Button'
+import { Button } from '@/shared/ui/button'
 import LikeIcon from '/public/icons/heart.svg'
 import LinkIcon from '/public/icons/arrow-up-right.svg'
 
@@ -12,7 +12,7 @@ interface CardProps {
   id: string
 }
 
-export const Card = ({ imgUrl, id }: CardProps) => {
+const Card = ({ imgUrl, id }: CardProps) => {
   const [isHovering, setIsHovering] = useState(false)
 
   return (
@@ -53,3 +53,5 @@ export const Card = ({ imgUrl, id }: CardProps) => {
     </div>
   )
 }
+
+export { Card }

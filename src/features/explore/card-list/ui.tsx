@@ -1,9 +1,9 @@
 import { Fragment, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useInView } from 'react-intersection-observer'
-import { useGetExploreImages } from '@/features/explore/CardList/CardList.adapter'
-import { URL_EXPLORE_LIST_IMAGE } from '@/features/explore/CardList/CardList.constant'
-import { Card } from '@/features/Card'
+import { useGetExploreImages } from '@/features/explore/card-list/adapter'
+import { URL_EXPLORE_LIST_IMAGE } from '@/features/explore/card-list/constant'
+import { Card } from '@/shared/ui/card'
 
 const TAG_TYPES = ['FEATURED', 'MAKEUP', 'SKINCARE', 'HAIR']
 

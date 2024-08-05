@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { DndBox } from '@/shared/lib/hocs/DndBox'
-import { Button } from '@/sdcn/components/ui/Button'
+import { Button } from '@/shared/ui/button'
 import DeleteIcon from '/public/icons/delete.svg'
 
 export const ImageInputBox = () => {

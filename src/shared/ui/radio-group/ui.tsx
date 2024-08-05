@@ -1,4 +1,4 @@
-import { cn } from '@/sdcn/lib/utils'
+import { cn } from '@/shared/lib/utils'
 import React from 'react'
 import { RadioGroupContext } from './index.context'
 

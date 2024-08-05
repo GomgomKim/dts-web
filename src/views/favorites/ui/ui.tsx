@@ -1,4 +1,4 @@
-import { Card } from '@/features/Card'
+import { Card } from '@/shared/ui/card'
 import { Nullbox } from '@/entities/favorites/ui/Nullbox'
 
 import BG1 from '/public/images/model-gen-1.png'
