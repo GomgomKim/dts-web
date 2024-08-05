@@ -3,10 +3,10 @@
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import './styles.css'
-import { ImageEditingBox } from '@/features/archive/ui/ImageEditingBox'
-import { ImageInputBox } from '@/features/archive/ui/ImageInputBox'
-import { Button } from '@/shared/ui/Button'
-import { RadioGroup, RadioGroupItem } from '@/shared/ui/RadioGroup'
+import { ImageEditingBox } from '@/features/archive/ui/image-editing-box'
+import { ImageInputBox } from '@/features/archive/ui/image-input-box'
+import { Button } from '@/shared/ui/button'
+import { RadioGroup, RadioGroupItem } from '@/shared/ui/radio-group'
 
 import Img1 from '/public/images/model-gen-1.png'
 

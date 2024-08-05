@@ -1,6 +1,6 @@
 'use client'
 
-import { Button } from '@/shared/ui/Button'
+import { Button } from '@/shared/ui/button'
 import Link from 'next/link'
 
 import ExploreIcon from '/public/icons/compass.svg'

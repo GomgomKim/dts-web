@@ -3,8 +3,8 @@
 import {
   type Box,
   ResizableAndDraggableBoxes
-} from '@/features/archive/ui/ResizableAndDraggableBoxes'
-import { ExportButton } from '@/features/archive/ui/ExportButton'
+} from '@/features/archive/ui/resizable-and-draggable-boxes'
+import { ExportButton } from '@/features/archive/ui/export-button'
 import { useRef, useState } from 'react'
 
 const images = [

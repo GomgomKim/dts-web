@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { toPng } from 'html-to-image'
-import { Button } from '@/shared/ui/Button'
+import { Button } from '@/shared/ui/button'
 import { cn } from '@/shared/lib/utils'
 
 type ExportButtonProps = React.ComponentProps<typeof Button> & {
