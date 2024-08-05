@@ -8,6 +8,8 @@ import { ImageInputBox } from '@/features/archive/ui/image-input-box'
 import { Button } from '@/shared/ui/button'
 import { RadioGroup, RadioGroupItem } from '@/shared/ui/radio-group'
 
+import LeftIcon from '/public/icons/arrow-left.svg'
+import RightIcon from '/public/icons/arrow-right.svg'
 import Img1 from '/public/images/model-gen-1.png'
 
 const skinTextureOptions = ['Matte', 'Medium', 'Glowy']
@@ -56,12 +58,32 @@ function Model({ modelName }: { modelName: string }) {
       <section className="px-5 grow">
         <h2 className="text-[24px] -mb-[42px]">Generate</h2>
         <div className="grid-areas-generate-layout gap-[40px]">
+          {/* image editing section */}
           <div className="grid-areas-generate-editing">
             <ImageEditingBox />
           </div>
+
+          {/* variations */}
           <div className="grid-area-generate-variations mt-[58px]">
-            <h3 className="mb-5">Variations</h3>
-            {/* TODO: 각 이미지 컨테이너 height */}
+            <div className="flex justify-between items-center mb-5">
+              <h3>Variations</h3>
+              <div className="flex gap-1">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="w-5 h-5 rounded-[4px] bg-inherit hover:bg-secondary"
+                >
+                  <LeftIcon />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="w-5 h-5 rounded-[4px] bg-inherit hover:bg-secondary"
+                >
+                  <RightIcon />
+                </Button>
+              </div>
+            </div>
             <div className="flex flex-col-reverse gap-5">
               <Button
                 variant="outline"
@@ -86,6 +108,8 @@ function Model({ modelName }: { modelName: string }) {
               </div>
             </div>
           </div>
+
+          {/* options - Skin Texture */}
           <div className="grid-area-generate-skin">
             <h3 className="mb-5">Skin Texture</h3>
             <RadioGroup
@@ -98,6 +122,8 @@ function Model({ modelName }: { modelName: string }) {
               ))}
             </RadioGroup>
           </div>
+
+          {/* options - Aspect Ratio */}
           <div className="grid-area-generate-faceangle">
             <h3 className="mb-5">Aspect Ratio</h3>
             <RadioGroup
@@ -110,6 +136,8 @@ function Model({ modelName }: { modelName: string }) {
               ))}
             </RadioGroup>
           </div>
+
+          {/* options - Face Angle */}
           <div className="grid-area-generate-aspectratio">
             <h3 className="mb-5">Face Angle</h3>
             <RadioGroup
