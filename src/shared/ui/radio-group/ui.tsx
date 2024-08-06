@@ -5,14 +5,14 @@ import { RadioGroupContext } from './index.context'
 type RadioGroupProps = React.ComponentProps<'div'> & {
   id: string
   value: string
-  onValueChange: (id: string, value: string) => void
+  onValueChange: (value: string) => void
 }
 const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
   ({ id, value, onValueChange, className, ...props }, ref) => {
     const contextValue = {
       id,
       value,
-      onChange: (newValue: string) => onValueChange(id, newValue)
+      onChange: onValueChange
     }
 
     return (
