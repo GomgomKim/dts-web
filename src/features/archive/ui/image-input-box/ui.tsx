@@ -88,7 +88,7 @@ export const ImageInputBox = ({ boxId }: { boxId: string }) => {
       />
       <DndBox
         width="100%"
-        height="15rem"
+        height="240px"
         onDropped={(e) => handleImagePreviewUrl(e.dataTransfer.files[0])}
         className="relative border-dashed border-2 border-border rounded-xl bg-[rgba(32,33,36,0.50)]"
       >

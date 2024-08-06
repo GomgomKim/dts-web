@@ -36,12 +36,11 @@ export const ImageEditingBox = () => {
       <div className="text-right mb-[20px]">
         <ExportButton containerRef={containerRef} className="ml-auto" />
       </div>
-      <div className="bg-neutral-1 rounded-[0.5rem] overflow-hidden relative flex justify-center w-[100%] aspectRatio-1/1">
+      <div className="bg-neutral-1 rounded-[0.5rem] overflow-hidden relative flex justify-center w-[100%] aspect-square">
         <div
           ref={containerRef}
           style={{
             position: 'relative',
-            width: '400px',
             aspectRatio: 9 / 16, // TODO: url query optional
             border: '1px solid black',
             background:
