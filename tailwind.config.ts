@@ -82,6 +82,9 @@ const config = {
           'linear-gradient(180deg, rgba(15, 16, 17, 0.00) 29.5%, rgba(15, 16, 17, 0.40) 60.47%, rgba(15, 16, 17, 0.80) 91.38%)',
         'custom-180-gradient':
           'linear-gradient(180deg, #202124 0%, rgba(32, 33, 36, 0.00) 100%)'
+      },
+      fontFamily: {
+        pretendard: ['var(--font-pretendard)']
       }
     }
   },
