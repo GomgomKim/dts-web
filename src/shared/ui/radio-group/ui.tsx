@@ -38,7 +38,7 @@ const RadioGroupItem = React.forwardRef<HTMLDivElement, RadioGroupItemProps>(
         role="radio"
         aria-checked={value === localValue}
         className={cn(
-          'p-3 rounded-[0.5rem] bg-inherit text-neutral-7 border border-neutral-1 cursor-pointer flex items-center justify-center flex-1',
+          'p-3 rounded-[0.5rem] bg-inherit text-neutral-7 border border-neutral-1 cursor-pointer flex items-center justify-center flex-1 text-[14px]',
           className,
           {
             'bg-neutral-1 text-white': value === localValue
