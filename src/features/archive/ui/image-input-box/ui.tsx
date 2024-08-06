@@ -6,7 +6,7 @@ import DeleteIcon from '/public/icons/delete.svg'
 import {
   useImageFileStore,
   useImagePreviewUrlStore
-} from '@/views/model/model/store'
+} from '@/features/archive/model/store'
 
 export const ImageInputBox = ({ boxId }: { boxId: string }) => {
   const { addImageFile, removeImageFile } = useImageFileStore()
