@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 
 export type Box = {
-  id: number
+  id: string
   image: string
   left: number
   top: number
@@ -32,10 +32,10 @@ export const ResizableAndDraggableBoxes = ({
   const [isDragging, setIsDragging] = useState(false)
   const [isResizing, setIsResizing] = useState(false)
   const [resizeDirection, setResizeDirection] = useState('')
-  const boxRefs = useRef<Map<number, HTMLDivElement | null>>(new Map())
+  const boxRefs = useRef<Map<string, HTMLDivElement | null>>(new Map())
 
   const handleMouseDown = useCallback(
-    (e: React.MouseEvent, boxId: number) => {
+    (e: React.MouseEvent, boxId: string) => {
       const box = boxes.find((b) => b.id === boxId)
       if (!box) return
 

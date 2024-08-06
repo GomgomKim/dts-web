@@ -7,6 +7,8 @@ import { ImageInputBox } from '@/features/archive/ui/image-input-box'
 import { Button } from '@/shared/ui/button'
 import { RadioGroup, RadioGroupItem } from '@/shared/ui/radio-group'
 import { VariationsSection } from '@/features/archive/ui/variations-section'
+import { useImagePreviewUrlStore } from '@/features/archive/model/store'
+import { Box } from '@/features/archive/ui/resizable-and-draggable-boxes'
 
 const skinTextureOptions = ['Matte', 'Medium', 'Glowy']
 const aspectRatioOptions = ['16:9', '9:16', '1:1', '4:3', '3:4']
@@ -39,12 +41,46 @@ function Model({ modelName }: { modelName: string }) {
     console.log(skinTexture, aspectRatio, faceAngle)
   }, [skinTexture, aspectRatio, faceAngle])
 
+  // const handleAddBrandAssets = () => {
+  //   setIsAddingBrandAssets(true)
+  // }
+
+  //////////////////
+  const { imagePreviewUrls } = useImagePreviewUrlStore()
+
+  const [boxes, setBoxes] = useState<Box[]>([])
+
+  const convertImagesToBoxData = () => {
+    console.log(imagePreviewUrls)
+    const imageData = Array.from(imagePreviewUrls.entries()).map(
+      ([id, image]) => ({ id, image })
+    )
+
+    const boxesData = imageData.map((imageItem, idx) => ({
+      ...imageItem,
+      // TODO: 컨테이너 넘어가지 않게 추가 처리
+      left: 100 + idx * 50,
+      top: 100 + idx * 50,
+      width: 200,
+      height: 200,
+      zIndex: 1
+    }))
+
+    return boxesData
+  }
+  // }, [imagePreviewUrls])
+
+  const onChangeBrandAssets = () => {
+    const boxesData = convertImagesToBoxData()
+    setBoxes(boxesData)
+  }
+
   return (
     <div className="flex">
       {/* brand assets section*/}
       <div className="flex-shrink-0 basis-[387px] mr-5">
         <section className="sticky top-0 flex flex-col gap-5">
-          <h2 className="text-[24px] mb-5">Brand Assets</h2>
+          <h2 className="text-[24px]">Brand Assets</h2>
           <div>
             <h3 className="mb-3">Product</h3>
             <ImageInputBox boxId="product" />
@@ -55,7 +91,7 @@ function Model({ modelName }: { modelName: string }) {
           </div>
           <div className="flex flex-col">
             <Button variant="outline">Remove Background</Button>
-            <Button>Add Brand Assets</Button>
+            <Button onClick={onChangeBrandAssets}>Add Brand Assets</Button>
           </div>
         </section>
       </div>
@@ -66,7 +102,7 @@ function Model({ modelName }: { modelName: string }) {
         <div className="grid-areas-generate-layout gap-[40px]">
           {/* image editing section */}
           <div className="grid-areas-generate-editing">
-            <ImageEditingBox />
+            <ImageEditingBox boxes={boxes} setBoxes={setBoxes} />
           </div>
 
           {/* variations */}
