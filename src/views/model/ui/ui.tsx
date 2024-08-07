@@ -41,10 +41,6 @@ function Model({ modelName }: { modelName: string }) {
     console.log(skinTexture, aspectRatio, faceAngle)
   }, [skinTexture, aspectRatio, faceAngle])
 
-  // const handleAddBrandAssets = () => {
-  //   setIsAddingBrandAssets(true)
-  // }
-
   //////////////////
   const { imagePreviewUrls } = useImagePreviewUrlStore()
 
@@ -68,12 +64,13 @@ function Model({ modelName }: { modelName: string }) {
 
     return boxesData
   }
-  // }, [imagePreviewUrls])
 
   const onChangeBrandAssets = () => {
     const boxesData = convertImagesToBoxData()
     setBoxes(boxesData)
   }
+
+  // TODO: assets 이미지 삭제 관련 로직 필요
 
   return (
     <div className="flex">
