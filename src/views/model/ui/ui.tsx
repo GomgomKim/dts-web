@@ -70,7 +70,10 @@ function Model({ modelName }: { modelName: string }) {
     setBoxes(boxesData)
   }
 
-  // TODO: assets 이미지 삭제 관련 로직 필요
+  const onClickRemoveBrandAsset = (id: string) => {
+    const newBoxes = boxes.filter((box) => box.id !== id)
+    setBoxes(newBoxes)
+  }
 
   return (
     <div className="flex">
@@ -80,11 +83,17 @@ function Model({ modelName }: { modelName: string }) {
           <h2 className="text-[24px]">Brand Assets</h2>
           <div>
             <h3 className="mb-3">Product</h3>
-            <ImageInputBox boxId="product" />
+            <ImageInputBox
+              boxId="product"
+              onClickRemove={() => onClickRemoveBrandAsset('product')}
+            />
           </div>
           <div>
             <h3 className="mb-3">Brand Logo</h3>
-            <ImageInputBox boxId="logo" />
+            <ImageInputBox
+              boxId="logo"
+              onClickRemove={() => onClickRemoveBrandAsset('logo')}
+            />
           </div>
           <div className="flex flex-col">
             <Button variant="outline">Remove Background</Button>

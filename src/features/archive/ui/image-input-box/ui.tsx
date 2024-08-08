@@ -10,9 +10,10 @@ import {
 
 type ImageInputBoxProps = {
   boxId: string
+  onClickRemove: () => void
 }
 
-export const ImageInputBox = ({ boxId }: ImageInputBoxProps) => {
+export const ImageInputBox = ({ boxId, onClickRemove }: ImageInputBoxProps) => {
   const { addImageFile, removeImageFile } = useImageFileStore()
   const { imagePreviewUrls, addImagePreviewUrl, removeImagePreviewUrl } =
     useImagePreviewUrlStore()
@@ -35,6 +36,7 @@ export const ImageInputBox = ({ boxId }: ImageInputBoxProps) => {
   const handleRemoveImage = () => {
     removeImageFile(boxId)
     removeImagePreviewUrl(boxId)
+    onClickRemove()
   }
 
   const handleImagePreviewUrl = (image: File) => {
