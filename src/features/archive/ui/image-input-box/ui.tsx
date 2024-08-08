@@ -8,7 +8,11 @@ import {
   useImagePreviewUrlStore
 } from '@/features/archive/model/store'
 
-export const ImageInputBox = ({ boxId }: { boxId: string }) => {
+type ImageInputBoxProps = {
+  boxId: string
+}
+
+export const ImageInputBox = ({ boxId }: ImageInputBoxProps) => {
   const { addImageFile, removeImageFile } = useImageFileStore()
   const { imagePreviewUrls, addImagePreviewUrl, removeImagePreviewUrl } =
     useImagePreviewUrlStore()
