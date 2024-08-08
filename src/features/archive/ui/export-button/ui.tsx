@@ -16,7 +16,12 @@ export const ExportButton = ({
     console.log(containerRef.current)
     if (containerRef.current === null) return
 
-    toPng(containerRef.current, { cacheBust: true })
+    toPng(containerRef.current, {
+      cacheBust: true,
+      width: 540,
+      height: 960,
+      skipFonts: true
+    })
       .then((dataUrl) => {
         const link = document.createElement('a')
         link.download = 'my-image-name.png'

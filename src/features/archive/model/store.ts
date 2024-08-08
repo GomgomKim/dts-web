@@ -30,33 +30,34 @@ type useImagePreviewUrlStore = {
   addImagePreviewUrl: (id: string, file: File) => void
   removeImagePreviewUrl: (id: string) => void
 }
-
 const useImagePreviewUrlStore = create<useImagePreviewUrlStore>((set) => ({
   imagePreviewUrls: new Map(),
   resetImagePreviewUrls: () =>
     set((state) => {
-      state.imagePreviewUrls.forEach((objUrl) => URL.revokeObjectURL(objUrl))
-      return { ...state, imagePreviewUrls: new Map() }
+      state.imagePreviewUrls.clear()
+      return { ...state }
     }),
   addImagePreviewUrl: (id, file) => {
-    const previewImgSrc = URL.createObjectURL(file)
-    set((state) => {
-      return {
-        ...state,
-        imagePreviewUrls: state.imagePreviewUrls.set(id, previewImgSrc)
-      }
-    })
+    const reader = new FileReader()
+    reader.onload = (event) => {
+      const previewImgSrc = event.target?.result as string
+      set((state) => {
+        return {
+          ...state,
+          imagePreviewUrls: state.imagePreviewUrls.set(id, previewImgSrc)
+        }
+      })
+    }
+    reader.readAsDataURL(file)
   },
   removeImagePreviewUrl: (id: string) =>
     set((state) => {
-      const newImagePreviewUrls = new Map(state.imagePreviewUrls)
-      newImagePreviewUrls.forEach((blobUrl, key) => {
+      state.imagePreviewUrls.forEach((_, key) => {
         if (key === id) {
-          URL.revokeObjectURL(blobUrl)
-          newImagePreviewUrls.delete(id)
+          state.imagePreviewUrls.delete(id)
         }
       })
-      return { ...state, imagePreviewUrls: newImagePreviewUrls }
+      return { ...state }
     })
 }))
 
