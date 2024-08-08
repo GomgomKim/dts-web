@@ -17,8 +17,7 @@ export interface Content {
 }
 
 export interface Image {
-  id: number
+  encodedBaseImageKey: string
   name: string
   description: string
-  path: string
 }
