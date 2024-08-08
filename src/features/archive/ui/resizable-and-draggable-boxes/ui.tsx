@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client'
 
 import { cn } from '@/shared/lib/utils'
@@ -37,6 +38,7 @@ export const ResizableAndDraggableBoxes = ({
 
   const handleMouseDown = useCallback(
     (e: React.MouseEvent, boxId: string) => {
+      e.preventDefault()
       const box = boxes.find((b) => b.id === boxId)
       if (!box) return
 
@@ -76,6 +78,7 @@ export const ResizableAndDraggableBoxes = ({
 
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
+      e.preventDefault()
       if (!activeBox || (!isDragging && !isResizing)) return
       if (!containerRef.current) return
 
@@ -104,6 +107,7 @@ export const ResizableAndDraggableBoxes = ({
   }, [])
 
   const handleClickOutside = (e: MouseEvent) => {
+    e.preventDefault()
     const clickedInsideBox = Array.from(boxRefs.current.values()).some(
       (ref) => ref && ref.contains(e.target as Node)
     )
@@ -141,8 +145,15 @@ export const ResizableAndDraggableBoxes = ({
           className="relative"
           style={getBoxStyle(box, activeBox, isResizing, resizeDirection)}
         >
+          <div className="w-full h-full">
+            <img
+              src={box.image}
+              alt=""
+              style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+            />
+          </div>
           <span
-            className={cn('absolute inset-0', {
+            className={cn('absolute top-0 w-full', {
               ["before:content-[''] before:absolute before:top-[-4px] before:left-[-4px] before:w-2 before:h-2 before:rounded-full before:bg-primary"]:
                 activeBox?.id === box.id,
               ["after:content-[''] after:absolute after:top-[-4px] after:right-[-4px] after:w-2 after:h-2 after:rounded-full after:bg-primary"]:
@@ -150,7 +161,7 @@ export const ResizableAndDraggableBoxes = ({
             })}
           ></span>
           <span
-            className={cn('absolute inset-0', {
+            className={cn('absolute bottom-0 w-full', {
               ["before:content-[''] before:absolute before:bottom-[-4px] before:left-[-4px] before:w-2 before:h-2 before:rounded-full before:bg-primary"]:
                 activeBox?.id === box.id,
               ["after:content-[''] after:absolute after:bottom-[-4px] after:right-[-4px] after:w-2 after:h-2 after:rounded-full after:bg-primary"]:
@@ -232,10 +243,6 @@ const getBoxStyle = (
     isResizing && activeBox?.id === box.id
       ? `${resizeDirection}-resize`
       : 'move',
-  backgroundImage: `url(${box.image})`,
-  backgroundSize: 'contain',
-  backgroundRepeat: 'no-repeat',
-  backgroundPosition: 'center',
   zIndex: box.zIndex || 1,
   outline: activeBox?.id === box.id ? '2px solid var(--primary)' : 'none'
 })

@@ -7,6 +7,11 @@ import {
 import { ExportButton } from '@/features/archive/ui/export-button'
 import { useRef } from 'react'
 
+import { faker } from '@faker-js/faker'
+import Image from 'next/image'
+
+const dummy = faker.image.urlLoremFlickr({ width: 206, height: 219 })
+
 type ImageEditingBoxProps = {
   boxes: Box[]
   setBoxes: React.Dispatch<React.SetStateAction<Box[]>>
@@ -25,12 +30,12 @@ export const ImageEditingBox = ({ boxes, setBoxes }: ImageEditingBoxProps) => {
           ref={containerRef}
           style={{
             position: 'relative',
-            aspectRatio: 9 / 16, // TODO: url query optional
-            border: '1px solid black',
-            background:
-              'url(/images/model-gen-1.png) no-repeat center center / cover'
+            aspectRatio: 9 / 16 // TODO: url query optional
           }}
         >
+          <div className="w">
+            <Image src={dummy} alt="" fill />
+          </div>
           <ResizableAndDraggableBoxes
             containerRef={containerRef}
             boxes={boxes}
