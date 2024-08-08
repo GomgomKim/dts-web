@@ -5,12 +5,14 @@ import RightIcon from '/public/icons/arrow-right.svg'
 import { Button } from '@/shared/ui'
 import './styles.css'
 
-import Img1 from '/public/images/model-gen-1.png'
-import Img2 from '/public/images/model-gen-2.png'
-import Img3 from '/public/images/model-gen-3.png'
-import Img4 from '/public/images/model-gen-4.png'
+import { faker } from '@faker-js/faker'
 
-const dummyImages = [Img1, Img2, Img3, Img4]
+const dummyImages = [
+  faker.image.urlLoremFlickr({ width: 206, height: 219 }),
+  faker.image.urlLoremFlickr({ width: 206, height: 219 }),
+  faker.image.urlLoremFlickr({ width: 206, height: 219 }),
+  faker.image.urlLoremFlickr({ width: 206, height: 219 })
+]
 
 export const VariationsSection = () => {
   return (
@@ -42,13 +44,15 @@ export const VariationsSection = () => {
         >
           Generate New Variations<span>(1/3)</span>
         </Button>
-        <div className="grid-area-variations gap-4 flex-1 max-h-">
+        <div className="grid-area-variations gap-4 flex-1">
           {dummyImages.map((img, idx) => (
             <div
               key={idx}
-              className="rounded-[0.5rem] overflow-hidden relative aspectRatio-206/219"
+              className="rounded-[0.5rem] overflow-hidden relative aspectRatio-206/219 min-w-[206px] min-h-[219px]"
             >
               <Image
+                width={206}
+                height={219}
                 src={img}
                 alt=""
                 className="absolute-center"
