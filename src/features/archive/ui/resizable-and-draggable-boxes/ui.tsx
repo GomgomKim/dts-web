@@ -1,5 +1,6 @@
 'use client'
 
+import { cn } from '@/shared/lib/utils'
 import { useState, useEffect, useCallback, useRef } from 'react'
 
 export type Box = {
@@ -137,8 +138,26 @@ export const ResizableAndDraggableBoxes = ({
             boxRefs.current.set(box.id, el)
           }}
           onMouseDown={(e) => handleMouseDown(e, box.id)}
+          className="relative"
           style={getBoxStyle(box, activeBox, isResizing, resizeDirection)}
-        />
+        >
+          <span
+            className={cn('absolute inset-0', {
+              ["before:content-[''] before:absolute before:top-[-4px] before:left-[-4px] before:w-2 before:h-2 before:rounded-full before:bg-primary"]:
+                activeBox?.id === box.id,
+              ["after:content-[''] after:absolute after:top-[-4px] after:right-[-4px] after:w-2 after:h-2 after:rounded-full after:bg-primary"]:
+                activeBox?.id === box.id
+            })}
+          ></span>
+          <span
+            className={cn('absolute inset-0', {
+              ["before:content-[''] before:absolute before:bottom-[-4px] before:left-[-4px] before:w-2 before:h-2 before:rounded-full before:bg-primary"]:
+                activeBox?.id === box.id,
+              ["after:content-[''] after:absolute after:bottom-[-4px] after:right-[-4px] after:w-2 after:h-2 after:rounded-full after:bg-primary"]:
+                activeBox?.id === box.id
+            })}
+          ></span>
+        </div>
       ))}
     </>
   )
