@@ -56,7 +56,7 @@ export const VariationsSection = () => {
                 src={img}
                 alt=""
                 className="absolute-center"
-                objectFit="cover"
+                style={{ objectFit: 'cover' }}
               />
             </div>
           ))}
