@@ -96,7 +96,12 @@ function Model({ modelName }: { modelName: string }) {
           </div>
           <div className="flex flex-col">
             <Button variant="outline">Remove Background</Button>
-            <Button onClick={handleAddBrandAssets}>Add Brand Assets</Button>
+            <Button
+              onClick={handleAddBrandAssets}
+              disabled={imagePreviewUrls.size < 1}
+            >
+              Add Brand Assets
+            </Button>
           </div>
         </section>
       </div>
