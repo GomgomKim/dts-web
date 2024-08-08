@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect } from 'react'
 import { DndBox } from '@/shared/lib/hocs/DndBox'
 import { Button } from '@/shared/ui/button'
 import DeleteIcon from '/public/icons/delete.svg'
@@ -10,20 +11,27 @@ import {
 
 type ImageInputBoxProps = {
   boxId: string
-  onClickRemove: () => void
+  onChangeBrandAsset: () => void
 }
 
-export const ImageInputBox = ({ boxId, onClickRemove }: ImageInputBoxProps) => {
-  const { addImageFile, removeImageFile } = useImageFileStore()
-  const { imagePreviewUrls, addImagePreviewUrl, removeImagePreviewUrl } =
-    useImagePreviewUrlStore()
+export const ImageInputBox = ({
+  boxId,
+  onChangeBrandAsset
+}: ImageInputBoxProps) => {
+  const { addImageFile, removeImageFile, resetImageFiles } = useImageFileStore()
+  const {
+    imagePreviewUrls,
+    addImagePreviewUrl,
+    removeImagePreviewUrl,
+    resetImagePreviewUrls
+  } = useImagePreviewUrlStore()
 
-  // useEffect(() => {
-  //   return () => {
-  //     resetImageFiles()
-  //     resetImagePreviewUrls()
-  //   }
-  // }, [])
+  useEffect(() => {
+    return () => {
+      resetImageFiles()
+      resetImagePreviewUrls()
+    }
+  }, [])
 
   const handleChangeImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target
@@ -36,12 +44,13 @@ export const ImageInputBox = ({ boxId, onClickRemove }: ImageInputBoxProps) => {
   const handleRemoveImage = () => {
     removeImageFile(boxId)
     removeImagePreviewUrl(boxId)
-    onClickRemove()
+    onChangeBrandAsset()
   }
 
   const handleImagePreviewUrl = (image: File) => {
     addImageFile(boxId, image)
     addImagePreviewUrl(boxId, image)
+    onChangeBrandAsset()
   }
 
   const renderImagePreview = () => {

@@ -41,7 +41,6 @@ function Model({ modelName }: { modelName: string }) {
     console.log(skinTexture, aspectRatio, faceAngle)
   }, [skinTexture, aspectRatio, faceAngle])
 
-  //////////////////
   const { imagePreviewUrls } = useImagePreviewUrlStore()
 
   const [boxes, setBoxes] = useState<Box[]>([])
@@ -55,8 +54,8 @@ function Model({ modelName }: { modelName: string }) {
     const boxesData = imageData.map((imageItem, idx) => ({
       ...imageItem,
       // TODO: 컨테이너 넘어가지 않게 추가 처리
-      left: 100 + idx * 50,
-      top: 100 + idx * 50,
+      left: 50 + idx * 50,
+      top: 50 + idx * 50,
       width: 200,
       height: 200,
       zIndex: 1
@@ -65,12 +64,12 @@ function Model({ modelName }: { modelName: string }) {
     return boxesData
   }
 
-  const onChangeBrandAssets = () => {
+  const handleAddBrandAssets = () => {
     const boxesData = convertImagesToBoxData()
     setBoxes(boxesData)
   }
 
-  const onClickRemoveBrandAsset = (id: string) => {
+  const handleRemoveBox = (id: string) => {
     const newBoxes = boxes.filter((box) => box.id !== id)
     setBoxes(newBoxes)
   }
@@ -85,19 +84,19 @@ function Model({ modelName }: { modelName: string }) {
             <h3 className="mb-3">Product</h3>
             <ImageInputBox
               boxId="product"
-              onClickRemove={() => onClickRemoveBrandAsset('product')}
+              onChangeBrandAsset={() => handleRemoveBox('product')}
             />
           </div>
           <div>
             <h3 className="mb-3">Brand Logo</h3>
             <ImageInputBox
               boxId="logo"
-              onClickRemove={() => onClickRemoveBrandAsset('logo')}
+              onChangeBrandAsset={() => handleRemoveBox('logo')}
             />
           </div>
           <div className="flex flex-col">
             <Button variant="outline">Remove Background</Button>
-            <Button onClick={onChangeBrandAssets}>Add Brand Assets</Button>
+            <Button onClick={handleAddBrandAssets}>Add Brand Assets</Button>
           </div>
         </section>
       </div>
