@@ -31,13 +31,11 @@ export const ImageEditingBox = ({ boxes, setBoxes }: ImageEditingBoxProps) => {
               'url(/images/model-gen-1.png) no-repeat center center / cover'
           }}
         >
-          {
-            <ResizableAndDraggableBoxes
-              containerRef={containerRef}
-              boxes={boxes}
-              setBoxes={setBoxes}
-            />
-          }
+          <ResizableAndDraggableBoxes
+            containerRef={containerRef}
+            boxes={boxes}
+            setBoxes={setBoxes}
+          />
         </div>
       </div>
     </>
