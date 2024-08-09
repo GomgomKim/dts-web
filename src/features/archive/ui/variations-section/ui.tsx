@@ -1,16 +1,15 @@
 import Image from 'next/image'
-import { useSearchParams } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 
 import LeftIcon from '/public/icons/arrow-left.svg'
 import RightIcon from '/public/icons/arrow-right.svg'
 import { Button } from '@/shared/ui'
 import './styles.css'
-import { useGetVariationImages } from '@/views/model/adapter'
 import { Variation } from '@/views/model/model'
 import { URL_VARIATION_LIST_IMAGE } from '@/views/model/constant'
 
 type VariationsSectionProps = {
+  data: Variation[] | undefined
   setSelectedVariation: (variation: Variation) => void
 }
 
@@ -19,13 +18,9 @@ const AMOUNT_PER_PAGE = 4
 const INITIAL_PAGE = 1
 
 export const VariationsSection = ({
+  data,
   setSelectedVariation
 }: VariationsSectionProps) => {
-  const searchParams = useSearchParams()
-  const encodedBaseImageId = searchParams.get('id') || ''
-
-  const { data } = useGetVariationImages(encodedBaseImageId)
-
   const [filteredData, setFilteredData] = useState<Variation[]>([])
   const [reqCount, setReqCount] = useState<number>(1)
   const [currentPage, setCurrentPage] = useState<number>(INITIAL_PAGE)
@@ -37,10 +32,11 @@ export const VariationsSection = ({
 
     setTotalPages((prev) => prev + 1)
 
-    const newData = data!.slice(
-      reqCount * AMOUNT_PER_PAGE,
-      reqCount * AMOUNT_PER_PAGE + AMOUNT_PER_PAGE
-    )
+    const newData =
+      data?.slice(
+        reqCount * AMOUNT_PER_PAGE,
+        reqCount * AMOUNT_PER_PAGE + AMOUNT_PER_PAGE
+      ) || []
     setFilteredData((prev) => [...newData, ...prev])
 
     if (reqCount + 1 >= LIMIT_REQUEST) {
@@ -50,9 +46,7 @@ export const VariationsSection = ({
   }
 
   useEffect(() => {
-    if (!data) return
-    setSelectedVariation(data[0])
-    setFilteredData(data.slice(0, AMOUNT_PER_PAGE))
+    data && setFilteredData(data.slice(0, AMOUNT_PER_PAGE))
   }, [data])
 
   return (

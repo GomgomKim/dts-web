@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import './styles.css'
+import { useSearchParams } from 'next/navigation'
 import { ImageEditingBox } from '@/features/archive/ui/image-editing-box'
 import { ImageInputBox } from '@/features/archive/ui/image-input-box'
 import { Button } from '@/shared/ui/button'
@@ -10,15 +11,29 @@ import { VariationsSection } from '@/features/archive/ui/variations-section'
 import { useImagePreviewUrlStore } from '@/features/archive/model/store'
 import { Box } from '@/features/archive/ui/resizable-and-draggable-boxes'
 import { Variation } from '../model'
+import { useGetVariationImages } from '@/views/model/adapter'
 
 const skinTextureOptions = ['Matte', 'Medium', 'Glowy']
 const aspectRatioOptions = ['16:9', '9:16', '1:1', '4:3', '3:4']
 const faceAngleOptions = ['Left', 'Front', 'Right']
 
 function Model() {
+  const searchParams = useSearchParams()
+  const encodedBaseImageId = searchParams.get('id') || ''
+
+  const {
+    data: variationImagesData,
+    status,
+    error
+  } = useGetVariationImages(encodedBaseImageId)
+
   const [selectedVariation, setSelectedVariation] = useState<Variation | null>(
     null
   )
+
+  useEffect(() => {
+    variationImagesData && setSelectedVariation(variationImagesData[0])
+  }, [variationImagesData])
 
   // TODO:
   // 받아온 데이터에 options로 라디오 버튼 값 넣어주기
@@ -77,9 +92,8 @@ function Model() {
     setBoxes(newBoxes)
   }
 
-  // TODO: options 값 변경을 위해 variation image data fetching 여기로 끌어올리기
-  // if (status === 'pending') return <p>loading</p>
-  // if (status === 'error') return <p>{error?.message}</p>
+  if (status === 'pending') return <p>loading</p>
+  if (status === 'error') return <p>{error?.message}</p>
 
   return (
     <div className="flex">
@@ -128,7 +142,10 @@ function Model() {
 
           {/* variations */}
           <div className="grid-area-generate-variations mt-[58px]">
-            <VariationsSection setSelectedVariation={setSelectedVariation} />
+            <VariationsSection
+              data={variationImagesData}
+              setSelectedVariation={setSelectedVariation}
+            />
           </div>
 
           {/* options - Skin Texture */}
