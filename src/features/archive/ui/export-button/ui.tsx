@@ -18,8 +18,7 @@ export const ExportButton = ({
 
     toPng(containerRef.current, {
       cacheBust: true,
-      width: 540,
-      height: 960,
+      pixelRatio: 2,
       skipFonts: true
     })
       .then((dataUrl) => {
