@@ -5,14 +5,14 @@ import { RadioGroupContext } from './index.context'
 type RadioGroupProps = React.ComponentProps<'div'> & {
   id: string
   value: string
-  onValueChange: (id: string, value: string) => void
+  onValueChange: (value: string) => void
 }
 const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
   ({ id, value, onValueChange, className, ...props }, ref) => {
     const contextValue = {
       id,
       value,
-      onChange: (newValue: string) => onValueChange(id, newValue)
+      onChange: onValueChange
     }
 
     return (
@@ -38,7 +38,7 @@ const RadioGroupItem = React.forwardRef<HTMLDivElement, RadioGroupItemProps>(
         role="radio"
         aria-checked={value === localValue}
         className={cn(
-          'p-3 rounded-[0.5rem] bg-inherit text-neutral-7 border border-neutral-1 cursor-pointer flex items-center justify-center flex-1',
+          'p-3 rounded-[0.5rem] bg-inherit text-neutral-7 border border-neutral-1 cursor-pointer flex items-center justify-center flex-1 text-[14px]',
           className,
           {
             'bg-neutral-1 text-white': value === localValue

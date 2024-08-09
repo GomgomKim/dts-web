@@ -1,10 +1,15 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import localFont from 'next/font/local'
 import '@/app/styles/globals.css'
 import MSWComponent from '@/app/providers/msw-component'
 import ReactQueryProviders from '@/app/providers/query-client-provider'
 
-const inter = Inter({ subsets: ['latin'] })
+const pretendard = localFont({
+  src: '../public/fonts/PretendardVariable.woff2',
+  display: 'swap',
+  weight: '45 920',
+  variable: '--font-pretendard'
+})
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -19,10 +24,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <MSWComponent />
-      <body className={inter.className}>
+      <body className={`${pretendard.variable} font-pretendard`}>
         <ReactQueryProviders>
           <header>header</header>
-          <div className="max-w-[1512px]">{children}</div>
+          <main>{children}</main>
         </ReactQueryProviders>
       </body>
     </html>

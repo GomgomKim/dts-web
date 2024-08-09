@@ -41,14 +41,14 @@ export const CardList = () => {
       return data?.pages.map((page, i) => (
         <Fragment key={i}>
           {page.content.images.map((cardItem) => (
-            <div key={cardItem.id}>
+            <div key={cardItem.encodedBaseImageKey}>
               <Card
                 imgUrl={
                   process.env.NEXT_PUBLIC_API_URL +
                   `${URL_EXPLORE_LIST_IMAGE}/` +
-                  cardItem.path
+                  cardItem.encodedBaseImageKey
                 }
-                id={cardItem.id.toString()}
+                id={cardItem.name.toString()}
               />
             </div>
           ))}
