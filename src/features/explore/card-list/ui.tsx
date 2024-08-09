@@ -2,7 +2,6 @@ import { Fragment, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useInView } from 'react-intersection-observer'
 import { useGetExploreImages } from '@/features/explore/card-list/adapter'
-import { URL_EXPLORE_LIST_IMAGE } from '@/features/explore/card-list/constant'
 import { Card } from '@/shared/ui/card'
 
 const TAG_TYPES = ['FEATURED', 'MAKEUP', 'SKINCARE', 'HAIR']
@@ -41,16 +40,9 @@ export const CardList = () => {
       return data?.pages.map((page, i) => (
         <Fragment key={i}>
           {page.content.images.map((cardItem) => (
-            <div key={cardItem.encodedBaseImageKey}>
-              <Card
-                imgUrl={
-                  process.env.NEXT_PUBLIC_API_URL +
-                  `${URL_EXPLORE_LIST_IMAGE}/` +
-                  cardItem.encodedBaseImageKey
-                }
-                id={cardItem.name.toString()}
-              />
-            </div>
+            // <div >
+            <Card key={cardItem.encodedBaseImageId} item={cardItem} />
+            // </div>
           ))}
         </Fragment>
       ))
