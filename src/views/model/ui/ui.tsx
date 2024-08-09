@@ -17,6 +17,10 @@ const faceAngleOptions = ['Left', 'Front', 'Right']
 function Model({ modelName }: { modelName: string }) {
   console.log(modelName)
 
+  const [selectedVariation, setSelectedVariation] = useState<string | null>(
+    null
+  )
+
   // TODO:
   // 받아온 데이터에 options로 라디오 버튼 값 넣어주기
   // option 변경시 해당 모델에 그 옵션이 적용된 이미지 보여주기
@@ -112,12 +116,16 @@ function Model({ modelName }: { modelName: string }) {
         <div className="grid-areas-generate-layout gap-[40px]">
           {/* image editing section */}
           <div className="grid-areas-generate-editing">
-            <ImageEditingBox boxes={boxes} setBoxes={setBoxes} />
+            <ImageEditingBox
+              boxes={boxes}
+              setBoxes={setBoxes}
+              selectedVariation={selectedVariation}
+            />
           </div>
 
           {/* variations */}
           <div className="grid-area-generate-variations mt-[58px]">
-            <VariationsSection />
+            <VariationsSection setSelectedVariation={setSelectedVariation} />
           </div>
 
           {/* options - Skin Texture */}
