@@ -9,15 +9,14 @@ import { RadioGroup, RadioGroupItem } from '@/shared/ui/radio-group'
 import { VariationsSection } from '@/features/archive/ui/variations-section'
 import { useImagePreviewUrlStore } from '@/features/archive/model/store'
 import { Box } from '@/features/archive/ui/resizable-and-draggable-boxes'
+import { Variation } from '../model'
 
 const skinTextureOptions = ['Matte', 'Medium', 'Glowy']
 const aspectRatioOptions = ['16:9', '9:16', '1:1', '4:3', '3:4']
 const faceAngleOptions = ['Left', 'Front', 'Right']
 
-function Model({ modelName }: { modelName: string }) {
-  console.log(modelName)
-
-  const [selectedVariation, setSelectedVariation] = useState<string | null>(
+function Model() {
+  const [selectedVariation, setSelectedVariation] = useState<Variation | null>(
     null
   )
 
@@ -77,6 +76,10 @@ function Model({ modelName }: { modelName: string }) {
     const newBoxes = boxes.filter((box) => box.id !== id)
     setBoxes(newBoxes)
   }
+
+  // TODO: options 값 변경을 위해 variation image data fetching 여기로 끌어올리기
+  // if (status === 'pending') return <p>loading</p>
+  // if (status === 'error') return <p>{error?.message}</p>
 
   return (
     <div className="flex">

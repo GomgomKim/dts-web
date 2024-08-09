@@ -1,21 +1,19 @@
 'use client'
 
+import Image from 'next/image'
+import { useRef } from 'react'
 import {
   Box,
   ResizableAndDraggableBoxes
 } from '@/features/archive/ui/resizable-and-draggable-boxes'
 import { ExportButton } from '@/features/archive/ui/export-button'
-import { useRef } from 'react'
-
-import { faker } from '@faker-js/faker'
-import Image from 'next/image'
-
-const dummy = faker.image.urlLoremFlickr({ width: 206, height: 219 })
+import { Variation } from '@/views/model/model'
+import { URL_VARIATION_LIST_IMAGE } from '@/views/model/constant'
 
 type ImageEditingBoxProps = {
   boxes: Box[]
   setBoxes: React.Dispatch<React.SetStateAction<Box[]>>
-  selectedVariation: string | null
+  selectedVariation: Variation | null
 }
 
 export const ImageEditingBox = ({
@@ -41,7 +39,17 @@ export const ImageEditingBox = ({
             aspectRatio: aspectRatio
           }}
         >
-          <Image src={selectedVariation || dummy} alt="" fill />
+          {selectedVariation && (
+            <Image
+              src={
+                process.env.NEXT_PUBLIC_API_URL +
+                `${URL_VARIATION_LIST_IMAGE}/` +
+                selectedVariation.encodedBaseImageId
+              }
+              alt=""
+              fill
+            />
+          )}
           <ResizableAndDraggableBoxes
             containerRef={containerRef}
             boxes={boxes}
