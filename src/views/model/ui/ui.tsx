@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import './styles.css'
-import { useSearchParams } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { ImageEditingBox } from '@/features/archive/ui/image-editing-box'
 import { ImageInputBox } from '@/features/archive/ui/image-input-box'
 import { Button } from '@/shared/ui/button'
@@ -13,9 +13,23 @@ import { Box } from '@/features/archive/ui/resizable-and-draggable-boxes'
 import { Variation } from '../model'
 import { useGetVariationImages } from '@/views/model/adapter'
 
-const skinTextureOptions = ['Matte', 'Medium', 'Glowy']
+// const skinTextureOptions = ['Matte', 'Medium', 'Glowy']
 const aspectRatioOptions = ['16:9', '9:16', '1:1', '4:3', '3:4']
 const faceAngleOptions = ['Left', 'Front', 'Right']
+
+enum AspectRatioValue {
+  'ASPECT_RATIO_16_9' = '16:9',
+  'ASPECT_RATIO_9_16' = '9:16',
+  'ASPECT_RATIO_1_1' = '1:1',
+  'ASPECT_RATIO_4_3' = '4:3',
+  'ASPECT_RATIO_3_4' = '3:4'
+}
+
+enum FaceAngleValue {
+  'LEFT' = 'Left',
+  'FRONT' = 'Front',
+  'RIGHT' = 'Right'
+}
 
 function Model() {
   const searchParams = useSearchParams()
@@ -31,40 +45,66 @@ function Model() {
     null
   )
 
+  const pathname = usePathname()
+  const { replace } = useRouter()
+
+  const params = new URLSearchParams(searchParams)
+
+  const handleVariationProperties = (name: string, value: string) => {
+    params.set(name, value)
+    replace(`${pathname}?${params.toString()}`)
+  }
+
   useEffect(() => {
-    variationImagesData && setSelectedVariation(variationImagesData[0])
+    if (!variationImagesData) return
+    setSelectedVariation(variationImagesData[0])
   }, [variationImagesData])
 
+  useEffect(() => {
+    if (!selectedVariation) return
+    // 라디오 버튼
+    setAspectRatio(AspectRatioValue[selectedVariation?.properties.aspectRatio])
+    setFaceAngle(FaceAngleValue[selectedVariation?.properties.faceAngle])
+
+    // url query
+    handleVariationProperties(
+      'aspectRatio',
+      AspectRatioValue[selectedVariation.properties.aspectRatio]
+    )
+    handleVariationProperties(
+      'faceAngle',
+      selectedVariation.properties.faceAngle
+    )
+  }, [selectedVariation])
+
   // TODO:
-  // 받아온 데이터에 options로 라디오 버튼 값 넣어주기
-  // option 변경시 해당 모델에 그 옵션이 적용된 이미지 보여주기
+  // 1. 옵션 수정하면 url 쿼리 변경
+  // 2. url 쿼리랑 선택된 variation 옵션 비교해서 다르면 ai 요청 버튼이 떠야함
+  // url query params === selectedVariation.properties 확인하기
 
-  const [skinTexture, setSkinTexture] = useState(skinTextureOptions[0])
-  const [aspectRatio, setAspectRatio] = useState(aspectRatioOptions[0])
-  const [faceAngle, setFaceAngle] = useState(faceAngleOptions[0])
+  // const [skinTexture, setSkinTexture] = useState(skinTextureOptions[0])
+  const [aspectRatio, setAspectRatio] = useState<string>('')
+  const [faceAngle, setFaceAngle] = useState<string>('')
 
-  const handleSkinTextureChange = (value: string) => {
-    setSkinTexture(value)
-  }
+  // const handleSkinTextureChange = (value: string) => {
+  //   setSkinTexture(value)
+  // }
 
   const handleAspectRatioChange = (value: string) => {
     setAspectRatio(value)
+    handleVariationProperties('aspectRatio', value)
   }
 
   const handleFaceAngleChange = (value: string) => {
     setFaceAngle(value)
+    handleVariationProperties('faceAngle', value as keyof typeof FaceAngleValue)
   }
-
-  useEffect(() => {
-    console.log(skinTexture, aspectRatio, faceAngle)
-  }, [skinTexture, aspectRatio, faceAngle])
 
   const { imagePreviewUrls } = useImagePreviewUrlStore()
 
   const [boxes, setBoxes] = useState<Box[]>([])
 
   const convertImagesToBoxData = () => {
-    console.log(imagePreviewUrls)
     const imageData = Array.from(imagePreviewUrls.entries()).map(
       ([id, image]) => ({ id, image })
     )
@@ -149,7 +189,7 @@ function Model() {
           </div>
 
           {/* options - Skin Texture */}
-          <div className="grid-area-generate-skin">
+          {/* <div className="grid-area-generate-skin">
             <h3 className="mb-5">Skin Texture</h3>
             <RadioGroup
               id="skinTexture"
@@ -160,7 +200,7 @@ function Model() {
                 <RadioGroupItem key={option} value={option} label={option} />
               ))}
             </RadioGroup>
-          </div>
+          </div> */}
 
           {/* options - Aspect Ratio */}
           <div className="grid-area-generate-faceangle">
