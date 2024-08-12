@@ -11,7 +11,11 @@ import { VariationsSection } from '@/features/archive/ui/variations-section'
 import { useImagePreviewUrlStore } from '@/features/archive/model/store'
 import { Box } from '@/features/archive/ui/resizable-and-draggable-boxes'
 import { Variation } from '../model'
-import { useGetVariationImages } from '@/views/model/adapter'
+import {
+  useGetAiImageProgress,
+  useGetVariationImages,
+  usePostAiImageGenerate
+} from '@/views/model/adapter'
 
 // const skinTextureOptions = ['Matte', 'Medium', 'Glowy']
 const aspectRatioOptions = ['16:9', '9:16', '1:1', '4:3', '3:4']
@@ -24,6 +28,16 @@ enum AspectRatioValue {
   'ASPECT_RATIO_4_3' = '4:3',
   'ASPECT_RATIO_3_4' = '3:4'
 }
+
+enum AspectRatioClientValue {
+  '16:9' = 'ASPECT_RATIO_16_9',
+  '9:16' = 'ASPECT_RATIO_9_16',
+  '1:1' = 'ASPECT_RATIO_1_1',
+  '4:3' = 'ASPECT_RATIO_4_3',
+  '3:4' = 'ASPECT_RATIO_3_4'
+}
+
+// type AspectRatioValueKeys = typeof AspectRatioValue[keyof typeof AspectRatioValue]
 
 enum FaceAngleValue {
   'LEFT' = 'Left',
@@ -55,6 +69,42 @@ function Model() {
     params.set(name, value)
     replace(`${pathname}?${params.toString()}`)
   }
+
+  const [encodedGenerateId, setEncodedGenerateId] = useState<string>('')
+
+  const postAiImageMutatiion = usePostAiImageGenerate()
+  const handleClickApplyChanges = () => {
+    postAiImageMutatiion.mutate(
+      {
+        encodedBaseImageId: selectedVariation?.encodedBaseImageId as string,
+        properties: {
+          aspectRatio:
+            AspectRatioClientValue[
+              searchParams.get(
+                'aspectRatio'
+              ) as keyof typeof AspectRatioClientValue
+            ],
+          faceAngle: searchParams.get(
+            'faceAngle'
+          ) as keyof typeof FaceAngleValue
+        }
+      },
+      {
+        onSuccess: (data) => {
+          setEncodedGenerateId(data.content.encodedGenerateId)
+          // queryClient.invalidateQueries({
+          //   queryKey: ['archive', 'aiImage', 'progress']
+          // }, )
+        }
+      }
+    )
+    setIsChangedOption(false)
+  }
+
+  const { data: progress } = useGetAiImageProgress({
+    modelKey: selectedVariation?.encodedBaseImageId as string,
+    encodedGenerateId
+  })
 
   useEffect(() => {
     if (!selectedVariation) return
@@ -145,102 +195,129 @@ function Model() {
   if (status === 'error') return <p>{error?.message}</p>
 
   return (
-    <div className="flex">
-      {/* brand assets section*/}
-      <div className="flex-shrink-0 basis-[387px] mr-5">
-        <section className="sticky top-0 flex flex-col gap-5">
-          <h2 className="text-[24px]">Brand Assets</h2>
-          <div>
-            <h3 className="mb-3">Product</h3>
-            <ImageInputBox
-              boxId="product"
-              onChangeBrandAsset={() => handleRemoveBox('product')}
-            />
-          </div>
-          <div>
-            <h3 className="mb-3">Brand Logo</h3>
-            <ImageInputBox
-              boxId="logo"
-              onChangeBrandAsset={() => handleRemoveBox('logo')}
-            />
-          </div>
-          <div className="flex flex-col">
-            <Button variant="outline">Remove Background</Button>
-            <Button
-              onClick={handleAddBrandAssets}
-              disabled={imagePreviewUrls.size < 1}
-            >
-              Add Brand Assets
-            </Button>
+    <div className="relative">
+      {!!progress && progress < 100 ? (
+        <div className="absolute inset-0 bg-red-900 z-10"></div>
+      ) : null}
+      <div className="flex">
+        {/* brand assets section*/}
+        <div className="flex-shrink-0 basis-[387px] mr-5">
+          <section className="sticky top-0 flex flex-col gap-5">
+            <h2 className="text-[24px]">Brand Assets</h2>
+            <div>
+              <h3 className="mb-3">Product</h3>
+              <ImageInputBox
+                boxId="product"
+                onChangeBrandAsset={() => handleRemoveBox('product')}
+              />
+            </div>
+            <div>
+              <h3 className="mb-3">Brand Logo</h3>
+              <ImageInputBox
+                boxId="logo"
+                onChangeBrandAsset={() => handleRemoveBox('logo')}
+              />
+            </div>
+            <div className="flex flex-col">
+              <Button variant="outline">Remove Background</Button>
+              <Button
+                onClick={handleAddBrandAssets}
+                disabled={imagePreviewUrls.size < 1}
+              >
+                Add Brand Assets
+              </Button>
+            </div>
+          </section>
+        </div>
+
+        {/* generate section */}
+        <section className="px-5 grow">
+          <h2 className="text-[24px] -mb-[37px]">Generate</h2>
+          <div className="grid-areas-generate-layout gap-[40px]">
+            {/* image editing section */}
+            <div className="grid-areas-generate-editing">
+              <div className="relative">
+                {/* {!!progress && progress < 100 ? (
+                  <div>Progress: {progress}%</div>
+                ) : null} */}
+                <ImageEditingBox
+                  boxes={boxes}
+                  setBoxes={setBoxes}
+                  selectedVariation={selectedVariation}
+                  // progress={progress}
+                  className={progress ? 'z-20' : ''}
+                  // TODO: progress ui 보여주기
+                />
+                {isChangedOption ? (
+                  <div className="absolute bottom-[20px] left-[50%] -translate-x-[50%]">
+                    <div className="flex items-center py-2 pr-2 rounded-md bg-black/80">
+                      <p className="mx-5 text-[14px] text-nowrap">
+                        Do you want to apply the changes?
+                      </p>
+                      <Button
+                        className="rounded-[8px]"
+                        onClick={handleClickApplyChanges}
+                      >
+                        Apply Changes
+                      </Button>
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+            </div>
+
+            {/* variations */}
+            <div className="grid-area-generate-variations mt-[58px]">
+              <VariationsSection
+                data={variationImagesData}
+                setSelectedVariation={setSelectedVariation}
+              />
+            </div>
+
+            {/* options - Skin Texture */}
+            {/* <div className="grid-area-generate-skin">
+          <h3 className="mb-5">Skin Texture</h3>
+          <RadioGroup
+            id="skinTexture"
+            value={skinTexture}
+            onValueChange={handleSkinTextureChange}
+          >
+            {skinTextureOptions.map((option) => (
+              <RadioGroupItem key={option} value={option} label={option} />
+            ))}
+            </RadioGroup>
+        </div> */}
+
+            {/* options - Aspect Ratio */}
+            <div className="grid-area-generate-faceangle">
+              <h3 className="mb-5">Aspect Ratio</h3>
+              <RadioGroup
+                id="aspectRatio"
+                value={aspectRatio}
+                onValueChange={handleAspectRatioChange}
+              >
+                {aspectRatioOptions.map((option) => (
+                  <RadioGroupItem key={option} value={option} label={option} />
+                ))}
+              </RadioGroup>
+            </div>
+
+            {/* options - Face Angle */}
+            <div className="grid-area-generate-aspectratio">
+              <h3 className="mb-5">Face Angle</h3>
+              <RadioGroup
+                id="faceAngle"
+                value={faceAngle}
+                onValueChange={handleFaceAngleChange}
+              >
+                {faceAngleOptions.map((option) => (
+                  <RadioGroupItem key={option} value={option} label={option} />
+                ))}
+              </RadioGroup>
+            </div>
           </div>
         </section>
       </div>
-
-      {/* generate section */}
-      <section className="px-5 grow">
-        <h2 className="text-[24px] -mb-[37px]">Generate</h2>
-        <div className="grid-areas-generate-layout gap-[40px]">
-          {/* image editing section */}
-          <div className="grid-areas-generate-editing">
-            <ImageEditingBox
-              boxes={boxes}
-              setBoxes={setBoxes}
-              selectedVariation={selectedVariation}
-              isChangedOption={isChangedOption}
-            />
-          </div>
-
-          {/* variations */}
-          <div className="grid-area-generate-variations mt-[58px]">
-            <VariationsSection
-              data={variationImagesData}
-              setSelectedVariation={setSelectedVariation}
-            />
-          </div>
-
-          {/* options - Skin Texture */}
-          {/* <div className="grid-area-generate-skin">
-            <h3 className="mb-5">Skin Texture</h3>
-            <RadioGroup
-              id="skinTexture"
-              value={skinTexture}
-              onValueChange={handleSkinTextureChange}
-            >
-              {skinTextureOptions.map((option) => (
-                <RadioGroupItem key={option} value={option} label={option} />
-              ))}
-            </RadioGroup>
-          </div> */}
-
-          {/* options - Aspect Ratio */}
-          <div className="grid-area-generate-faceangle">
-            <h3 className="mb-5">Aspect Ratio</h3>
-            <RadioGroup
-              id="aspectRatio"
-              value={aspectRatio}
-              onValueChange={handleAspectRatioChange}
-            >
-              {aspectRatioOptions.map((option) => (
-                <RadioGroupItem key={option} value={option} label={option} />
-              ))}
-            </RadioGroup>
-          </div>
-
-          {/* options - Face Angle */}
-          <div className="grid-area-generate-aspectratio">
-            <h3 className="mb-5">Face Angle</h3>
-            <RadioGroup
-              id="faceAngle"
-              value={faceAngle}
-              onValueChange={handleFaceAngleChange}
-            >
-              {faceAngleOptions.map((option) => (
-                <RadioGroupItem key={option} value={option} label={option} />
-              ))}
-            </RadioGroup>
-          </div>
-        </div>
-      </section>
     </div>
   )
 }

@@ -1,6 +1,15 @@
-import { getVariationImages } from './api'
-import { GetVariationListResData, Variation } from './model'
-import { useQuery } from '@tanstack/react-query'
+import {
+  getAiImageProgress,
+  getVariationImages,
+  postAiImageGenerate
+} from './api'
+import {
+  GetAiImageProgressReqData,
+  GetVariationListResData,
+  PostAiImageReqData,
+  Variation
+} from './model'
+import { useMutation, useQuery } from '@tanstack/react-query'
 
 const useGetVariationImages = (encodedBaseImageId: string) => {
   const { data, status, error, isFetching } = useQuery<
@@ -22,4 +31,30 @@ const useGetVariationImages = (encodedBaseImageId: string) => {
   }
 }
 
-export { useGetVariationImages }
+const usePostAiImageGenerate = () => {
+  return useMutation({
+    mutationFn: ({ encodedBaseImageId, properties }: PostAiImageReqData) =>
+      postAiImageGenerate({ encodedBaseImageId, properties })
+  })
+}
+
+type useGetAiImageProgressProps = GetAiImageProgressReqData & {
+  modelKey: string
+}
+const useGetAiImageProgress = ({
+  modelKey,
+  encodedGenerateId
+}: useGetAiImageProgressProps) => {
+  return useQuery({
+    queryKey: ['archive', modelKey, 'aiImage', 'progress', encodedGenerateId],
+    queryFn: () => getAiImageProgress({ encodedGenerateId }),
+    select: (data) => data.content.progress,
+    enabled: !!encodedGenerateId,
+    refetchInterval: (query) => {
+      console.log('useGetAiImageProgress', query.state.data?.content.progress)
+      return query.state.data?.content.progress === 100 ? false : 3000
+    }
+  })
+}
+
+export { useGetVariationImages, usePostAiImageGenerate, useGetAiImageProgress }

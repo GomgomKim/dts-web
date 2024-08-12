@@ -5,10 +5,10 @@ export interface GetVariationListReqData {
 export interface GetVariationListResData {
   code: number
   message: null | string
-  content: Content
+  content: VariationListContent
 }
 
-export interface Content {
+export interface VariationListContent {
   main: MainVariation
   variations: Variation[]
 }
@@ -35,3 +35,28 @@ export type AspectRatio =
   | 'ASPECT_RATIO_3_4'
 
 export type FaceAngle = 'LEFT' | 'FRONT' | 'RIGHT'
+
+export interface PostAiImageReqData {
+  encodedBaseImageId: string
+  properties: Properties
+}
+
+export interface PostAiImageResData {
+  code: number
+  message: null | string
+  content: {
+    encodedGenerateId: string
+  }
+}
+
+export interface GetAiImageProgressReqData {
+  encodedGenerateId: string
+}
+
+export interface GetAiImageProgressResData {
+  code: number
+  message: null | string
+  content: {
+    progress: number
+  }
+}
