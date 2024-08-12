@@ -41,8 +41,6 @@ export const ExportButton = ({
         className
       )}
       {...props}
-    >
-      Download
-    </Button>
+    ></Button>
   )
 }

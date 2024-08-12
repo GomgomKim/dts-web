@@ -9,20 +9,20 @@ import {
 import { ExportButton } from '@/features/archive/ui/export-button'
 import { Variation } from '@/views/model/model'
 import { URL_VARIATION_LIST_IMAGE } from '@/views/model/constant'
-import { Button } from '@/shared/ui'
+import { cn } from '@/shared/lib/utils'
 
 type ImageEditingBoxProps = {
   boxes: Box[]
   setBoxes: React.Dispatch<React.SetStateAction<Box[]>>
   selectedVariation: Variation | null
-  isChangedOption: boolean
+  className: string
 }
 
 export const ImageEditingBox = ({
   boxes,
   setBoxes,
   selectedVariation,
-  isChangedOption
+  className
 }: ImageEditingBoxProps) => {
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -31,9 +31,16 @@ export const ImageEditingBox = ({
   return (
     <>
       <div className="text-right mb-[20px]">
-        <ExportButton containerRef={containerRef} className="ml-auto" />
+        <ExportButton containerRef={containerRef} className="ml-auto">
+          Download
+        </ExportButton>
       </div>
-      <div className="h-[572px] bg-neutral-1 rounded-[0.5rem] overflow-hidden relative flex justify-center w-[100%]">
+      <div
+        className={cn(
+          'h-[572px] bg-neutral-1 rounded-[0.5rem] overflow-hidden relative flex justify-center w-[100%]',
+          className
+        )}
+      >
         <div
           ref={containerRef}
           className="object-contain overflow-hidden"
@@ -59,16 +66,27 @@ export const ImageEditingBox = ({
             setBoxes={setBoxes}
           />
         </div>
-        {isChangedOption ? (
-          <div className="absolute bottom-[20px] left-[50%] -translate-x-[50%]">
-            <div className="flex items-center py-2 pr-2 rounded-md bg-black/80">
-              <p className="mx-5 text-[14px] text-nowrap">
-                Do you want to apply the changes?
+        {/* TODO: download it now 버튼 띄우기 */}
+        {/* {isNewImage ? (
+        <div className="absolute bottom-[20px] left-[50%] -translate-x-[50%]">
+          <div className="flex items-center py-2 pr-2 rounded-md bg-black/80">
+            <div className="mx-5 flex flex-col gap-1">
+              <p className="text-[12px] text-nowrap font-[700]">
+                Love what you see?
               </p>
-              <Button className="rounded-[8px]">Apply Changes</Button>
+              <p className="text-[12px] text-nowrap text-neutral-7">
+                The magic might look different next time!
+              </p>
             </div>
+            <ExportButton
+              containerRef={containerRef}
+              className="ml-auto bg-white text-black font-[600]"
+            >
+              Download it now
+            </ExportButton>
           </div>
-        ) : null}
+        </div>
+       ) : null} */}
       </div>
     </>
   )
