@@ -9,17 +9,20 @@ import {
 import { ExportButton } from '@/features/archive/ui/export-button'
 import { Variation } from '@/views/model/model'
 import { URL_VARIATION_LIST_IMAGE } from '@/views/model/constant'
+import { Button } from '@/shared/ui'
 
 type ImageEditingBoxProps = {
   boxes: Box[]
   setBoxes: React.Dispatch<React.SetStateAction<Box[]>>
   selectedVariation: Variation | null
+  isChangedOption: boolean
 }
 
 export const ImageEditingBox = ({
   boxes,
   setBoxes,
-  selectedVariation
+  selectedVariation,
+  isChangedOption
 }: ImageEditingBoxProps) => {
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -56,6 +59,16 @@ export const ImageEditingBox = ({
             setBoxes={setBoxes}
           />
         </div>
+        {isChangedOption ? (
+          <div className="absolute bottom-[20px] left-[50%] -translate-x-[50%]">
+            <div className="flex items-center py-2 pr-2 rounded-md bg-black/80">
+              <p className="mx-5 text-[14px] text-nowrap">
+                Do you want to apply the changes?
+              </p>
+              <Button className="rounded-[8px]">Apply Changes</Button>
+            </div>
+          </div>
+        ) : null}
       </div>
     </>
   )

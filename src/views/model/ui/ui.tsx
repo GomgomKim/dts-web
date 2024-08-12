@@ -41,6 +41,7 @@ function Model() {
     error
   } = useGetVariationImages(encodedBaseImageId)
 
+  const [isChangedOption, setIsChangedOption] = useState(false)
   const [selectedVariation, setSelectedVariation] = useState<Variation | null>(
     null
   )
@@ -54,6 +55,19 @@ function Model() {
     params.set(name, value)
     replace(`${pathname}?${params.toString()}`)
   }
+
+  useEffect(() => {
+    if (!selectedVariation) return
+    if (
+      searchParams.get('aspectRatio') !==
+        AspectRatioValue[selectedVariation?.properties.aspectRatio] ||
+      searchParams.get('faceAngle') !== selectedVariation.properties.faceAngle
+    ) {
+      setIsChangedOption(true)
+    } else {
+      setIsChangedOption(false)
+    }
+  }, [searchParams, selectedVariation])
 
   useEffect(() => {
     if (!variationImagesData) return
@@ -77,11 +91,6 @@ function Model() {
     )
   }, [selectedVariation])
 
-  // TODO:
-  // 1. 옵션 수정하면 url 쿼리 변경
-  // 2. url 쿼리랑 선택된 variation 옵션 비교해서 다르면 ai 요청 버튼이 떠야함
-  // url query params === selectedVariation.properties 확인하기
-
   // const [skinTexture, setSkinTexture] = useState(skinTextureOptions[0])
   const [aspectRatio, setAspectRatio] = useState<string>('')
   const [faceAngle, setFaceAngle] = useState<string>('')
@@ -97,7 +106,7 @@ function Model() {
 
   const handleFaceAngleChange = (value: string) => {
     setFaceAngle(value)
-    handleVariationProperties('faceAngle', value as keyof typeof FaceAngleValue)
+    handleVariationProperties('faceAngle', value.toLocaleUpperCase())
   }
 
   const { imagePreviewUrls } = useImagePreviewUrlStore()
@@ -177,6 +186,7 @@ function Model() {
               boxes={boxes}
               setBoxes={setBoxes}
               selectedVariation={selectedVariation}
+              isChangedOption={isChangedOption}
             />
           </div>
 
