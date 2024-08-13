@@ -10,7 +10,7 @@ import { URL_VARIATION_LIST_IMAGE } from '@/views/model/constant'
 
 type VariationsSectionProps = {
   data: Variation[] | undefined
-  setSelectedVariation: (variation: Variation) => void
+  handleSelectedVariation: (variation: Variation) => void
 }
 
 const LIMIT_REQUEST = 3
@@ -19,7 +19,7 @@ const INITIAL_PAGE = 1
 
 export const VariationsSection = ({
   data,
-  setSelectedVariation
+  handleSelectedVariation
 }: VariationsSectionProps) => {
   const [filteredData, setFilteredData] = useState<Variation[]>([])
   const [reqCount, setReqCount] = useState<number>(1)
@@ -32,6 +32,7 @@ export const VariationsSection = ({
 
     setTotalPages((prev) => prev + 1)
 
+    // data 길이 체크
     const newData =
       data?.slice(
         reqCount * AMOUNT_PER_PAGE,
@@ -96,8 +97,8 @@ export const VariationsSection = ({
             .map((item) => (
               <div
                 key={item.encodedBaseImageId}
-                className="rounded-[0.5rem] border-red-700 overflow-hidden relative aspectRatio-206/219 min-w-[206px] min-h-[219px]"
-                onClick={() => setSelectedVariation(item)}
+                className="rounded-[0.5rem] border-red-700 overflow-hidden relative aspectRatio-206/219 min-w-[206px] min-h-[219px] cursor-pointer"
+                onClick={() => handleSelectedVariation(item)}
               >
                 <Image
                   src={

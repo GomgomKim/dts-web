@@ -21,6 +21,7 @@ import {
 const aspectRatioOptions = ['16:9', '9:16', '1:1', '4:3', '3:4']
 const faceAngleOptions = ['Left', 'Front', 'Right']
 
+// TODO: enum -> Object로 변경
 enum AspectRatioValue {
   'ASPECT_RATIO_16_9' = '16:9',
   'ASPECT_RATIO_9_16' = '9:16',
@@ -36,6 +37,19 @@ enum AspectRatioClientValue {
   '4:3' = 'ASPECT_RATIO_4_3',
   '3:4' = 'ASPECT_RATIO_3_4'
 }
+
+// const AspectRatioMap = {
+//   '16:9': 'ASPECT_RATIO_16_9',
+//   '9:16': 'ASPECT_RATIO_9_16',
+//   '1:1': 'ASPECT_RATIO_1_1',
+//   '4:3': 'ASPECT_RATIO_4_3',
+//   '3:4': 'ASPECT_RATIO_3_4',
+//   ASPECT_RATIO_16_9: '16:9',
+//   ASPECT_RATIO_9_16: '9:16',
+//   ASPECT_RATIO_1_1: '1:1',
+//   ASPECT_RATIO_4_3: '4:3',
+//   ASPECT_RATIO_3_4: '3:4'
+// }
 
 // type AspectRatioValueKeys = typeof AspectRatioValue[keyof typeof AspectRatioValue]
 
@@ -76,7 +90,7 @@ function Model() {
   const handleClickApplyChanges = () => {
     postAiImageMutatiion.mutate(
       {
-        encodedBaseImageId: selectedVariation?.encodedBaseImageId as string,
+        encodedBaseImageId: searchParams.get('variationId') as string,
         properties: {
           aspectRatio:
             AspectRatioClientValue[
@@ -92,19 +106,51 @@ function Model() {
       {
         onSuccess: (data) => {
           setEncodedGenerateId(data.content.encodedGenerateId)
-          // queryClient.invalidateQueries({
-          //   queryKey: ['archive', 'aiImage', 'progress']
-          // }, )
         }
       }
     )
     setIsChangedOption(false)
   }
 
-  const { data: progress } = useGetAiImageProgress({
-    modelKey: selectedVariation?.encodedBaseImageId as string,
+  const handleSelectedVariation = (variation: Variation) => {
+    setSelectedVariation(variation)
+    if (generatedNewImage.isCompleted)
+      setGeneratedNewImage({
+        isCompleted: false,
+        encodedGenerateId: ''
+      })
+  }
+
+  const [progress, setProgress] = useState<number>(0)
+
+  // progress ui local 확인용
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     if (progress < 100) {
+  //       setProgress((prev) => prev + 30)
+  //       console.log(progress)
+  //     }
+  //   }, 5000)
+  //   return () => clearInterval(intervalId)
+  // }, [])
+
+  const [generatedNewImage, setGeneratedNewImage] = useState({
+    isCompleted: false,
+    encodedGenerateId: ''
+  })
+  const { data: progressData } = useGetAiImageProgress({
+    variationId: searchParams.get('variationId') as string,
     encodedGenerateId
   })
+  useEffect(() => {
+    if (!progressData) return
+    setProgress(progressData)
+    if (progressData === 100) {
+      setProgress(0)
+      setGeneratedNewImage({ isCompleted: true, encodedGenerateId })
+      setEncodedGenerateId('') // for tanstack query key
+    }
+  }, [progressData])
 
   useEffect(() => {
     if (!selectedVariation) return
@@ -126,11 +172,16 @@ function Model() {
 
   useEffect(() => {
     if (!selectedVariation) return
+
     // 라디오 버튼
     setAspectRatio(AspectRatioValue[selectedVariation?.properties.aspectRatio])
     setFaceAngle(FaceAngleValue[selectedVariation?.properties.faceAngle])
 
     // url query
+    handleVariationProperties(
+      'variationId',
+      selectedVariation.encodedBaseImageId
+    )
     handleVariationProperties(
       'aspectRatio',
       AspectRatioValue[selectedVariation.properties.aspectRatio]
@@ -194,10 +245,13 @@ function Model() {
   if (status === 'pending') return <p>loading</p>
   if (status === 'error') return <p>{error?.message}</p>
 
+  const isGenerating = !!progress && progress < 100
+
   return (
-    <div className="relative">
-      {!!progress && progress < 100 ? (
-        <div className="absolute inset-0 bg-red-900 z-10"></div>
+    <>
+      {isGenerating ? (
+        // TODO: 꽉차게
+        <div className="z-10 absolute w-screen h-screen bg-neutral-0-70"></div>
       ) : null}
       <div className="flex">
         {/* brand assets section*/}
@@ -218,15 +272,15 @@ function Model() {
                 onChangeBrandAsset={() => handleRemoveBox('logo')}
               />
             </div>
-            <div className="flex flex-col">
-              <Button variant="outline">Remove Background</Button>
-              <Button
-                onClick={handleAddBrandAssets}
-                disabled={imagePreviewUrls.size < 1}
-              >
-                Add Brand Assets
-              </Button>
-            </div>
+            {/* <div className="flex flex-col">
+              <Button variant="outline">Remove Background</Button> */}
+            <Button
+              onClick={handleAddBrandAssets}
+              disabled={imagePreviewUrls.size < 1}
+            >
+              Add Brand Assets
+            </Button>
+            {/* </div> */}
           </section>
         </div>
 
@@ -237,19 +291,15 @@ function Model() {
             {/* image editing section */}
             <div className="grid-areas-generate-editing">
               <div className="relative">
-                {/* {!!progress && progress < 100 ? (
-                  <div>Progress: {progress}%</div>
-                ) : null} */}
                 <ImageEditingBox
                   boxes={boxes}
                   setBoxes={setBoxes}
                   selectedVariation={selectedVariation}
-                  // progress={progress}
-                  className={progress ? 'z-20' : ''}
-                  // TODO: progress ui 보여주기
+                  generatingProgress={progress}
+                  generatedNewImage={generatedNewImage}
                 />
                 {isChangedOption ? (
-                  <div className="absolute bottom-[20px] left-[50%] -translate-x-[50%]">
+                  <div className="z-30 absolute bottom-[20px] left-[50%] -translate-x-[50%]">
                     <div className="flex items-center py-2 pr-2 rounded-md bg-black/80">
                       <p className="mx-5 text-[14px] text-nowrap">
                         Do you want to apply the changes?
@@ -270,7 +320,7 @@ function Model() {
             <div className="grid-area-generate-variations mt-[58px]">
               <VariationsSection
                 data={variationImagesData}
-                setSelectedVariation={setSelectedVariation}
+                handleSelectedVariation={handleSelectedVariation}
               />
             </div>
 
@@ -318,7 +368,7 @@ function Model() {
           </div>
         </section>
       </div>
-    </div>
+    </>
   )
 }
 export default Model
