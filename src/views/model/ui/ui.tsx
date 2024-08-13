@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import './styles.css'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { ImageEditingBox } from '@/features/archive/ui/image-editing-box'
@@ -77,12 +77,16 @@ function Model() {
   const pathname = usePathname()
   const { replace } = useRouter()
 
+  // TODO: query로직 수정?
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const params = new URLSearchParams(searchParams)
-
-  const handleVariationProperties = (name: string, value: string) => {
-    params.set(name, value)
-    replace(`${pathname}?${params.toString()}`)
-  }
+  const handleVariationProperties = useCallback(
+    (name: string, value: string) => {
+      params.set(name, value)
+      replace(`${pathname}?${params.toString()}`)
+    },
+    [params, pathname, replace]
+  )
 
   const [encodedGenerateId, setEncodedGenerateId] = useState<string>('')
 
@@ -190,7 +194,8 @@ function Model() {
       'faceAngle',
       selectedVariation.properties.faceAngle
     )
-  }, [handleVariationProperties, selectedVariation])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedVariation])
 
   // const [skinTexture, setSkinTexture] = useState(skinTextureOptions[0])
   const [aspectRatio, setAspectRatio] = useState<string>('')
