@@ -150,7 +150,7 @@ function Model() {
       setGeneratedNewImage({ isCompleted: true, encodedGenerateId })
       setEncodedGenerateId('') // for tanstack query key
     }
-  }, [progressData])
+  }, [encodedGenerateId, progressData])
 
   useEffect(() => {
     if (!selectedVariation) return
@@ -190,7 +190,7 @@ function Model() {
       'faceAngle',
       selectedVariation.properties.faceAngle
     )
-  }, [selectedVariation])
+  }, [handleVariationProperties, selectedVariation])
 
   // const [skinTexture, setSkinTexture] = useState(skinTextureOptions[0])
   const [aspectRatio, setAspectRatio] = useState<string>('')
