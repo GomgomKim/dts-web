@@ -13,6 +13,7 @@ interface CardProps {
   item: ModelImageItem
 }
 
+// TODO: explore page, favorites page are using the same card component
 const Card = ({ item }: CardProps) => {
   const { encodedBaseImageId, name: modelname } = item
   const [isHovering, setIsHovering] = useState(false)
