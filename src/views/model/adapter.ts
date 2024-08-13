@@ -39,14 +39,20 @@ const usePostAiImageGenerate = () => {
 }
 
 type useGetAiImageProgressProps = GetAiImageProgressReqData & {
-  modelKey: string
+  variationId: string
 }
 const useGetAiImageProgress = ({
-  modelKey,
+  variationId,
   encodedGenerateId
 }: useGetAiImageProgressProps) => {
   return useQuery({
-    queryKey: ['archive', modelKey, 'aiImage', 'progress', encodedGenerateId],
+    queryKey: [
+      'archive',
+      variationId,
+      'aiImage',
+      'progress',
+      encodedGenerateId
+    ],
     queryFn: () => getAiImageProgress({ encodedGenerateId }),
     select: (data) => data.content.progress,
     enabled: !!encodedGenerateId,
