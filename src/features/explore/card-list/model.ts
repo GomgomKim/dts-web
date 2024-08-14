@@ -11,13 +11,13 @@ export interface GetExploreListResData {
 }
 
 export interface Content {
-  images: Image[]
+  images: ModelImageItem[]
   hasNext: boolean
   scrollKey: string
 }
 
-export interface Image {
-  encodedBaseImageKey: string
+export interface ModelImageItem {
+  encodedBaseImageId: string
   name: string
   description: string
 }

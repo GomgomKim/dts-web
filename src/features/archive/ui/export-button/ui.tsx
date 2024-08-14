@@ -13,10 +13,10 @@ export const ExportButton = ({
   ...props
 }: ExportButtonProps) => {
   const onButtonClick = useCallback(() => {
-    console.log(containerRef.current)
     if (containerRef.current === null) return
 
     toPng(containerRef.current, {
+      includeQueryParams: true,
       cacheBust: true,
       pixelRatio: 2,
       skipFonts: true
@@ -34,15 +34,13 @@ export const ExportButton = ({
 
   return (
     <Button
+      {...props}
       variant="outline"
       onClick={onButtonClick}
       className={cn(
         'bg-[rgba(32,33,36,0.50)] rounded-[0.5rem] leading-[14px]',
         className
       )}
-      {...props}
-    >
-      Download
-    </Button>
+    ></Button>
   )
 }

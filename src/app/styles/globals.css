@@ -38,6 +38,7 @@
 @layer base {
   * {
     @apply border-border;
+    line-height: normal;
   }
   body {
     @apply bg-background text-foreground;

@@ -1,0 +1,5 @@
+export const URL_VARIATION_LIST = '/image/base-image'
+export const URL_VARIATION_LIST_IMAGE = '/image-file/base-image'
+export const URL_AI_IMAGE_GENERATE = '/image/ai-image/generate'
+export const URL_AI_IMAGE_GENERATE_PROGRESS = '/image-file/ai'
+export const URL_GENERATED_AI_IMAGE_FILE = '/image-file/ai'

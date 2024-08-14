@@ -1,18 +1,21 @@
 'use client'
 
 import { useState } from 'react'
-import Image, { StaticImageData } from 'next/image'
+import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/shared/ui/button'
 import LikeIcon from '/public/icons/heart.svg'
 import LinkIcon from '/public/icons/arrow-up-right.svg'
+import { URL_EXPLORE_LIST_IMAGE } from '@/features/explore/card-list/constant'
+import { ModelImageItem } from '@/features/explore/card-list/model'
 
 interface CardProps {
-  imgUrl: string | StaticImageData
-  id: string
+  item: ModelImageItem
 }
 
-const Card = ({ imgUrl, id }: CardProps) => {
+// TODO: explore page, favorites page are using the same card component
+const Card = ({ item }: CardProps) => {
+  const { encodedBaseImageId, name: modelname } = item
   const [isHovering, setIsHovering] = useState(false)
 
   return (
@@ -21,10 +24,19 @@ const Card = ({ imgUrl, id }: CardProps) => {
       onMouseLeave={() => setIsHovering(false)}
       className="relative h-[400px] aspect-[9/16] rounded-[8px] overflow-hidden cursor-auto"
     >
-      <Image src={imgUrl} alt="" fill style={{ objectFit: 'cover' }} />
+      <Image
+        src={
+          process.env.NEXT_PUBLIC_API_URL +
+          `${URL_EXPLORE_LIST_IMAGE}/` +
+          encodedBaseImageId
+        }
+        alt=""
+        fill
+        style={{ objectFit: 'cover' }}
+      />
       {isHovering && (
         <Link
-          href={`/archive/${id}`}
+          href={`/archive/${modelname}?id=${encodedBaseImageId}`}
           className="absolute inset-0 z-10 bg-custom-gradient"
         >
           <Button

@@ -31,7 +31,7 @@ export const ImageInputBox = ({
       resetImageFiles()
       resetImagePreviewUrls()
     }
-  }, [])
+  }, [resetImageFiles, resetImagePreviewUrls])
 
   const handleChangeImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target

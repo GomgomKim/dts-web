@@ -21,7 +21,7 @@ export const Default: Story = {
     ]
     const [value, setValue] = useState('default')
 
-    const handleValueChange = (_id: string, value: string) => {
+    const handleValueChange = (value: string) => {
       setValue(value)
     }
 

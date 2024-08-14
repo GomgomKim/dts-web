@@ -5,24 +5,12 @@ import LeftIcon from '/public/icons/arrow-left.svg'
 import RightIcon from '/public/icons/arrow-right.svg'
 import { Button } from '@/shared/ui'
 import './styles.css'
-
-const dummyImages = [
-  '/images/model-gen-1.png',
-  '/images/model-gen-1.png',
-  '/images/model-gen-1.png',
-  '/images/model-gen-1.png',
-  '/images/model-gen-2.png',
-  '/images/model-gen-2.png',
-  '/images/model-gen-2.png',
-  '/images/model-gen-2.png',
-  '/images/model-gen-3.png',
-  '/images/model-gen-3.png',
-  '/images/model-gen-3.png',
-  '/images/model-gen-3.png'
-]
+import { Variation } from '@/views/model/model'
+import { URL_VARIATION_LIST_IMAGE } from '@/views/model/constant'
 
 type VariationsSectionProps = {
-  setSelectedVariation: (imgUrl: string) => void
+  data: Variation[] | undefined
+  handleSelectedVariation: (variation: Variation) => void
 }
 
 const LIMIT_REQUEST = 3
@@ -30,11 +18,10 @@ const AMOUNT_PER_PAGE = 4
 const INITIAL_PAGE = 1
 
 export const VariationsSection = ({
-  setSelectedVariation
+  data,
+  handleSelectedVariation
 }: VariationsSectionProps) => {
-  const [data, setData] = useState<string[]>(
-    dummyImages.slice(0, AMOUNT_PER_PAGE)
-  )
+  const [filteredData, setFilteredData] = useState<Variation[]>([])
   const [reqCount, setReqCount] = useState<number>(1)
   const [currentPage, setCurrentPage] = useState<number>(INITIAL_PAGE)
   const [totalPages, setTotalPages] = useState<number>(1)
@@ -45,11 +32,13 @@ export const VariationsSection = ({
 
     setTotalPages((prev) => prev + 1)
 
-    const newData = dummyImages.slice(
-      reqCount * AMOUNT_PER_PAGE,
-      reqCount * AMOUNT_PER_PAGE + AMOUNT_PER_PAGE
-    )
-    setData((prev) => [...newData, ...prev])
+    // data 길이 체크
+    const newData =
+      data?.slice(
+        reqCount * AMOUNT_PER_PAGE,
+        reqCount * AMOUNT_PER_PAGE + AMOUNT_PER_PAGE
+      ) || []
+    setFilteredData((prev) => [...newData, ...prev])
 
     if (reqCount + 1 >= LIMIT_REQUEST) {
       if (buttonRef.current) buttonRef.current.disabled = true
@@ -58,7 +47,7 @@ export const VariationsSection = ({
   }
 
   useEffect(() => {
-    data && setSelectedVariation(data[0])
+    data && setFilteredData(data.slice(0, AMOUNT_PER_PAGE))
   }, [data])
 
   return (
@@ -97,23 +86,30 @@ export const VariationsSection = ({
           className="rounded-[0.5rem] bg-inherit flex-shrink-0"
           onClick={handleClick}
           ref={buttonRef}
+          disabled={data?.length === 0}
         >
           Generate New Variations
           <span>({reqCount} / 3)</span>
         </Button>
         <div className="grid-area-variations gap-4 flex-1">
-          {data
+          {filteredData
             .slice((currentPage - 1) * 4, (currentPage - 1) * 4 + 4)
-            .map((img) => (
+            .map((item) => (
               <div
-                key={img + Math.random()}
-                className="rounded-[0.5rem] overflow-hidden relative aspectRatio-206/219 min-w-[206px] min-h-[219px]"
-                onClick={() => {
-                  setSelectedVariation(img)
-                  console.log(img)
-                }}
+                key={item.encodedBaseImageId}
+                className="rounded-[0.5rem] border-red-700 overflow-hidden relative aspectRatio-206/219 min-w-[206px] min-h-[219px] cursor-pointer"
+                onClick={() => handleSelectedVariation(item)}
               >
-                <Image src={img} alt="" fill style={{ objectFit: 'cover' }} />
+                <Image
+                  src={
+                    process.env.NEXT_PUBLIC_API_URL +
+                    `${URL_VARIATION_LIST_IMAGE}/` +
+                    item.encodedBaseImageId
+                  }
+                  alt=""
+                  fill
+                  style={{ objectFit: 'cover' }}
+                />
               </div>
             ))}
         </div>
