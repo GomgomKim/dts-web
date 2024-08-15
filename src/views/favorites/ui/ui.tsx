@@ -1,5 +1,7 @@
 import { Card } from '@/shared/ui/card'
 import { Nullbox } from '@/entities/favorites/ui/Nullbox'
+import { Category } from '@/features/category'
+import { TAG_TAPES } from '../constant'
 
 function Favorites() {
   const dummy = [
@@ -22,6 +24,7 @@ function Favorites() {
   return (
     <>
       <h1 className="text-xl mb-8 text-2xl font-semibold">Favorites</h1>
+      <Category tagTypeList={TAG_TAPES} />
       {dummy.length > 0 ? (
         <div className="grid grid-cols-auto-fill-px gap-5">
           {dummy.map((item, idx) => (

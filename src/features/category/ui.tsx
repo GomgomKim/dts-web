@@ -5,19 +5,23 @@ import { useSearchParams } from 'next/navigation'
 
 import { Button } from '@/shared/ui/button'
 import { cn } from '@/shared/lib/utils'
-import { TAG_TYPES } from '@/features/explore/Category/constant'
-import { useSetQueryString } from '@/features/explore/Category/hooks/useSetQueryString'
+import { useSetQueryString } from '@/shared/lib/hooks/useSetQueryString'
 
-const Catergory = () => {
+type CategoryProps = {
+  tagTypeList: string[]
+}
+
+const Category = ({ tagTypeList }: CategoryProps) => {
   const searchParams = useSearchParams()
-  const currentTagType = searchParams.get('tagType')
-  const [query, setQuery] = useState(currentTagType || TAG_TYPES[0])
 
-  useSetQueryString('tagType', query)
+  const currentTagType = searchParams.get('tagType')
+  const [query, setQuery] = useState(currentTagType || tagTypeList[0])
+
+  useSetQueryString({ queryParams: [{ tagType: query }] })
 
   return (
     <div className="mb-5">
-      {TAG_TYPES.map((type) => (
+      {tagTypeList.map((type) => (
         <Button
           variant="ghost"
           key={type}
@@ -30,7 +34,7 @@ const Catergory = () => {
     </div>
   )
 }
-export { Catergory }
+export { Category }
 
 const capitalizeType = (type: string) => {
   return type[0].toUpperCase() + type.slice(1, type.length).toLocaleLowerCase()
