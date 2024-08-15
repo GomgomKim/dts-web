@@ -6,8 +6,9 @@ import Link from 'next/link'
 import { Button } from '@/shared/ui/button'
 import LikeIcon from '/public/icons/heart.svg'
 import LinkIcon from '/public/icons/arrow-thin.svg'
-import { URL_EXPLORE_LIST_IMAGE } from '@/features/explore/CardList/constant'
 import { ModelImageItem } from '@/features/explore/CardList/model'
+
+const URL_BASE_IMAGE_FILE = '/image-file/base-image'
 
 interface CardProps {
   item: ModelImageItem
@@ -27,7 +28,7 @@ const Card = ({ item }: CardProps) => {
       <Image
         src={
           process.env.NEXT_PUBLIC_API_URL +
-          `${URL_EXPLORE_LIST_IMAGE}/` +
+          `${URL_BASE_IMAGE_FILE}/` +
           encodedBaseImageId
         }
         alt=""

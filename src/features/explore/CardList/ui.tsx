@@ -8,7 +8,7 @@ const TAG_TYPES = ['FEATURED', 'MAKEUP', 'SKINCARE', 'HAIR']
 
 export const CardList = () => {
   const searchParams = useSearchParams()
-  const params = new URLSearchParams(searchParams)
+  // const params = new URLSearchParams(searchParams)
 
   const {
     data,
@@ -18,7 +18,7 @@ export const CardList = () => {
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage
-  } = useGetExploreImages(params.get('tagType') || TAG_TYPES[0])
+  } = useGetExploreImages(searchParams.get('tagType') || TAG_TYPES[0])
 
   const { ref, inView } = useInView({
     threshold: 1
