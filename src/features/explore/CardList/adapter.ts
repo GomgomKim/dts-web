@@ -21,6 +21,7 @@ const useGetExploreImages = (tagType: string) => {
     queryKey: ['explore', tagType],
     queryFn: ({ pageParam }) =>
       getExploreImages({ tagType, scrollKey: pageParam }),
+    enabled: !!tagType,
     initialPageParam: null,
     getNextPageParam: (lastPage) => lastPage.content.scrollKey
     // staleTime: 60 * 1000,
