@@ -35,30 +35,36 @@ export const FavoriteList = () => {
   if (isFetching && !isFetchingNextPage) return <div>loading skeleton ...</div>
   if (status === 'error') return <p>{error?.message}</p>
 
-  const renderCard = () => {
-    if (data?.pages[0]?.content.images.length === 0) {
-      return <Nullbox />
-    } else {
-      return (
-        <>
-          <Catergory tagTypeList={TAG_TYPES} />
-          <div className="grid grid-cols-auto-fill-px gap-5">
-            {data?.pages.map((page, i) => (
-              <Fragment key={i}>
-                {page.content.images.map((cardItem) => (
-                  <Card key={cardItem.encodedBaseImageId} item={cardItem} />
-                ))}
-              </Fragment>
+  const Grid = () => {
+    return (
+      <div className="grid grid-cols-auto-fill-px gap-5">
+        {data?.pages.map((page, i) => (
+          <Fragment key={i}>
+            {page.content.images.map((cardItem) => (
+              <Card key={cardItem.encodedBaseImageId} item={cardItem} />
             ))}
-          </div>
-        </>
-      )
-    }
+          </Fragment>
+        ))}
+      </div>
+    )
+  }
+
+  const isEmpty = data?.pages[0].content.images.length === 0
+
+  const renderContent = () => {
+    isEmpty ? (
+      <Nullbox />
+    ) : (
+      <>
+        <Catergory tagTypeList={TAG_TYPES} />
+        <Grid />
+      </>
+    )
   }
 
   return (
     <>
-      {renderCard()}
+      {renderContent()}
       {isFetching && isFetchingNextPage && (
         <div style={{ height: 100 }}>loading more items ...</div>
       )}
