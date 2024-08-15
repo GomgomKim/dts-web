@@ -8,20 +8,20 @@ import { cn } from '@/shared/lib/utils'
 import { useSetQueryString } from '@/shared/lib/hooks/useSetQueryString'
 
 type CategoryProps = {
-  tagTypeList: string[]
+  categoryList: string[]
 }
 
-const Category = ({ tagTypeList }: CategoryProps) => {
+const Category = ({ categoryList }: CategoryProps) => {
   const searchParams = useSearchParams()
 
   const currentTagType = searchParams.get('tagType')
-  const [query, setQuery] = useState(currentTagType || tagTypeList[0])
+  const [query, setQuery] = useState(currentTagType || categoryList[0])
 
   useSetQueryString({ queryParams: [{ tagType: query }] })
 
   return (
     <div className="mb-5">
-      {tagTypeList.map((type) => (
+      {categoryList.map((type) => (
         <Button
           variant="ghost"
           key={type}

@@ -56,7 +56,7 @@ export const FavoriteList = () => {
       <Nullbox />
     ) : (
       <>
-        <Catergory tagTypeList={TAG_TYPES} />
+        <Catergory categoryList={TAG_TYPES} />
         <Grid />
       </>
     )
