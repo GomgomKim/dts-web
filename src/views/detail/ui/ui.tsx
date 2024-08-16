@@ -41,7 +41,7 @@ const FACE_ANGLE_MAP: Record<FaceAngle, string> = {
   RIGHT: 'Right'
 }
 
-function Model() {
+function Detail() {
   const searchParams = useSearchParams()
   const encodedBaseImageId = searchParams.get('id') || ''
 
@@ -292,7 +292,7 @@ function Model() {
     </>
   )
 }
-export default Model
+export default Detail
 
 // const ApplyChangeButton = ({ handleEncodedGenerateId }) => {
 //   const searchParams = useSearchParams()
