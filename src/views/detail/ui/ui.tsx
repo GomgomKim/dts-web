@@ -4,8 +4,6 @@ import { useCallback, useEffect, useState } from 'react'
 import './styles.css'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { ImageEditingBox } from '@/features/archive/ui/image-editing-box'
-import { ImageInputBox } from '@/features/archive/ui/image-input-box'
-import { Button } from '@/shared/ui/button'
 import { RadioGroup, RadioGroupItem } from '@/shared/ui/radio-group'
 import { VariationsSection } from '@/features/archive/ui/variations-section'
 import { useImagePreviewUrlStore } from '@/features/archive/model/store'
@@ -13,9 +11,9 @@ import { Box } from '@/features/archive/ui/resizable-and-draggable-boxes'
 import { AspectRatio, FaceAngle, Variation } from '../model'
 import {
   useGetAiImageProgress,
-  useGetVariationImages,
-  usePostAiImageGenerate
+  useGetVariationImages
 } from '@/views/detail/adapter'
+import BrandAssets from './BrandAssets'
 
 // const skinTextureOptions = ['Matte', 'Medium', 'Glowy']
 const aspectRatioOptions = ['16:9', '9:16', '1:1', '4:3', '3:4']
@@ -29,19 +27,13 @@ const ASPECT_RATIO_MAP: Record<AspectRatio, string> = {
   ASPECT_RATIO_3_4: '3:4'
 }
 
-enum AspectRatioClientValue {
-  '16:9' = 'ASPECT_RATIO_16_9',
-  '9:16' = 'ASPECT_RATIO_9_16',
-  '1:1' = 'ASPECT_RATIO_1_1',
-  '4:3' = 'ASPECT_RATIO_4_3',
-  '3:4' = 'ASPECT_RATIO_3_4'
-}
-
-enum FaceAngleValue {
-  'LEFT' = 'Left',
-  'FRONT' = 'Front',
-  'RIGHT' = 'Right'
-}
+// const ASPECT_RATIO_REVERT_MAP = {
+//   '16:9': 'ASPECT_RATIO_16_9',
+//   '9:16': 'ASPECT_RATIO_9_16',
+//   '1:1': 'ASPECT_RATIO_1_1',
+//   '4:3': 'ASPECT_RATIO_4_3',
+//   '3:4': 'ASPECT_RATIO_3_4'
+// } as const
 
 const FACE_ANGLE_MAP: Record<FaceAngle, string> = {
   LEFT: 'Left',
@@ -82,9 +74,6 @@ function Model() {
   )
 
   const [encodedGenerateId, setEncodedGenerateId] = useState<string>('')
-  const handleEncodedGenerateId = (id: string) => {
-    setEncodedGenerateId(id)
-  }
 
   const handleSelectedVariation = (variation: Variation) => {
     setSelectedVariation(variation)
@@ -94,8 +83,6 @@ function Model() {
         encodedGenerateId: ''
       })
   }
-
-  console.log('hello world')
 
   const [progress, setProgress] = useState<number>(0)
 
@@ -113,7 +100,7 @@ function Model() {
     if (progressData === 100) {
       setProgress(0)
       setGeneratedNewImage({ isCompleted: true, encodedGenerateId })
-      handleEncodedGenerateId('') // for tanstack query key
+      setEncodedGenerateId('') // for tanstack query key
     }
   }, [encodedGenerateId, progressData])
 
@@ -220,32 +207,11 @@ function Model() {
       <div className="flex">
         {/* brand assets section*/}
         <div className="flex-shrink-0 basis-[387px] mr-5">
-          <section className="sticky top-0 flex flex-col gap-5">
-            <h2 className="text-[24px]">Brand Assets</h2>
-            <div>
-              <h3 className="mb-3">Product</h3>
-              <ImageInputBox
-                boxId="product"
-                onChangeBrandAsset={() => handleRemoveBox('product')}
-              />
-            </div>
-            <div>
-              <h3 className="mb-3">Brand Logo</h3>
-              <ImageInputBox
-                boxId="logo"
-                onChangeBrandAsset={() => handleRemoveBox('logo')}
-              />
-            </div>
-            {/* <div className="flex flex-col">
-              <Button variant="outline">Remove Background</Button> */}
-            <Button
-              onClick={handleAddBrandAssets}
-              disabled={assetImages.size < 1}
-            >
-              Add Brand Assets
-            </Button>
-            {/* </div> */}
-          </section>
+          <BrandAssets
+            handleAddBrandAssets={handleAddBrandAssets}
+            handleRemoveBox={handleRemoveBox}
+            assetDisabled={assetImages.size < 1}
+          />
         </div>
 
         {/* generate section */}
@@ -262,11 +228,12 @@ function Model() {
                   generatingProgress={progress}
                   generatedNewImage={generatedNewImage}
                 />
-                {isChangedOption ? (
-                  <ApplyChangeButton
-                    handleEncodedGenerateId={handleEncodedGenerateId}
-                  />
-                ) : null}
+                {isChangedOption
+                  ? // <ApplyChangeButton
+                    //   handleEncodedGenerateId={(id) => setEncodedGenerateId(id)}
+                    // />
+                    null
+                  : null}
               </div>
             </div>
 
@@ -327,45 +294,45 @@ function Model() {
 }
 export default Model
 
-const ApplyChangeButton = ({ handleEncodedGenerateId }) => {
-  const searchParams = useSearchParams()
+// const ApplyChangeButton = ({ handleEncodedGenerateId }) => {
+//   const searchParams = useSearchParams()
 
-  const postAiImageMutatiion = usePostAiImageGenerate()
-  const handleClickApplyChanges = () => {
-    postAiImageMutatiion.mutate(
-      {
-        encodedBaseImageId: searchParams.get('variationId') as string,
-        properties: {
-          aspectRatio:
-            AspectRatioClientValue[
-              searchParams.get(
-                'aspectRatio'
-              ) as keyof typeof AspectRatioClientValue
-            ],
-          faceAngle: searchParams.get(
-            'faceAngle'
-          ) as keyof typeof FaceAngleValue
-        }
-      },
-      {
-        onSuccess: (data) => {
-          handleEncodedGenerateId(data.content.encodedGenerateId)
-        }
-      }
-    )
-    setIsChangedOption(false)
-  }
+//   const postAiImageMutatiion = usePostAiImageGenerate()
+//   const handleClickApplyChanges = () => {
+//     postAiImageMutatiion.mutate(
+//       {
+//         encodedBaseImageId: searchParams.get('variationId') as string,
+//         properties: {
+//           aspectRatio:
+//             AspectRatioClientValue[
+//               searchParams.get(
+//                 'aspectRatio'
+//               ) as keyof typeof AspectRatioClientValue
+//             ],
+//           faceAngle: searchParams.get(
+//             'faceAngle'
+//           ) as keyof typeof FaceAngleValue
+//         }
+//       },
+//       {
+//         onSuccess: (data) => {
+//           handleEncodedGenerateId(data.content.encodedGenerateId)
+//         }
+//       }
+//     )
+//     setIsChangedOption(false)
+//   }
 
-  return (
-    <div className="z-30 absolute bottom-[20px] left-[50%] -translate-x-[50%]">
-      <div className="flex items-center py-2 pr-2 rounded-md bg-black/80">
-        <p className="mx-5 text-[14px] text-nowrap">
-          Do you want to apply the changes?
-        </p>
-        <Button className="rounded-[8px]" onClick={handleClickApplyChanges}>
-          Apply Changes
-        </Button>
-      </div>
-    </div>
-  )
-}
+//   return (
+//     <div className="z-30 absolute bottom-[20px] left-[50%] -translate-x-[50%]">
+//       <div className="flex items-center py-2 pr-2 rounded-md bg-black/80">
+//         <p className="mx-5 text-[14px] text-nowrap">
+//           Do you want to apply the changes?
+//         </p>
+//         <Button className="rounded-[8px]" onClick={handleClickApplyChanges}>
+//           Apply Changes
+//         </Button>
+//       </div>
+//     </div>
+//   )
+// }
