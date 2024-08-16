@@ -8,38 +8,18 @@ import { RadioGroup, RadioGroupItem } from '@/shared/ui/radio-group'
 import { VariationsSection } from '@/features/archive/ui/variations-section'
 import { useImagePreviewUrlStore } from '@/features/archive/model/store'
 import { Box } from '@/features/archive/ui/resizable-and-draggable-boxes'
-import { AspectRatio, FaceAngle, Variation } from '../model'
+import { Variation } from '../model'
 import {
   useGetAiImageProgress,
   useGetVariationImages
 } from '@/views/detail/adapter'
 import BrandAssets from './BrandAssets'
+// import ApplyChangeButton from './ApplyChangeButton'
+import { ASPECT_RATIO_MAP, FACE_ANGLE_MAP } from '../constant'
 
 // const skinTextureOptions = ['Matte', 'Medium', 'Glowy']
 const aspectRatioOptions = ['16:9', '9:16', '1:1', '4:3', '3:4']
 const faceAngleOptions = ['Left', 'Front', 'Right']
-
-const ASPECT_RATIO_MAP: Record<AspectRatio, string> = {
-  ASPECT_RATIO_16_9: '16:9',
-  ASPECT_RATIO_9_16: '9:16',
-  ASPECT_RATIO_1_1: '1:1',
-  ASPECT_RATIO_4_3: '4:3',
-  ASPECT_RATIO_3_4: '3:4'
-}
-
-// const ASPECT_RATIO_REVERT_MAP = {
-//   '16:9': 'ASPECT_RATIO_16_9',
-//   '9:16': 'ASPECT_RATIO_9_16',
-//   '1:1': 'ASPECT_RATIO_1_1',
-//   '4:3': 'ASPECT_RATIO_4_3',
-//   '3:4': 'ASPECT_RATIO_3_4'
-// } as const
-
-const FACE_ANGLE_MAP: Record<FaceAngle, string> = {
-  LEFT: 'Left',
-  FRONT: 'Front',
-  RIGHT: 'Right'
-}
 
 function Detail() {
   const searchParams = useSearchParams()
