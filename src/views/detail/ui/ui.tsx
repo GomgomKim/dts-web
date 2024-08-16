@@ -14,7 +14,7 @@ import {
   useGetVariationImages
 } from '@/views/detail/adapter'
 import BrandAssets from './BrandAssets'
-// import ApplyChangeButton from './ApplyChangeButton'
+import ApplyChangeButton from './ApplyChangeButton'
 import { ASPECT_RATIO_MAP, FACE_ANGLE_MAP } from '../constant'
 
 // const skinTextureOptions = ['Matte', 'Medium', 'Glowy']
@@ -35,9 +35,6 @@ function Detail() {
   const [selectedVariation, setSelectedVariation] = useState<Variation | null>(
     null
   )
-  const handleIsChangedOption = (value: boolean) => {
-    setIsChangedOption(value)
-  }
 
   const pathname = usePathname()
   const { replace } = useRouter()
@@ -86,19 +83,22 @@ function Detail() {
 
   useEffect(() => {
     if (!selectedVariation) return
-    if (
+
+    const isChangedOption =
       searchParams.get('aspectRatio') !==
         ASPECT_RATIO_MAP[selectedVariation?.properties.aspectRatio] ||
       searchParams.get('faceAngle') !== selectedVariation.properties.faceAngle
-    ) {
-      handleIsChangedOption(true)
+
+    if (isChangedOption) {
+      setIsChangedOption(true)
     } else {
-      handleIsChangedOption(false)
+      setIsChangedOption(false)
     }
   }, [searchParams, selectedVariation])
 
   useEffect(() => {
     if (!variationImagesData) return
+
     setSelectedVariation(variationImagesData[0])
   }, [variationImagesData])
 
@@ -208,12 +208,14 @@ function Detail() {
                   generatingProgress={progress}
                   generatedNewImage={generatedNewImage}
                 />
-                {isChangedOption
-                  ? // <ApplyChangeButton
-                    //   handleEncodedGenerateId={(id) => setEncodedGenerateId(id)}
-                    // />
-                    null
-                  : null}
+                {isChangedOption ? (
+                  <ApplyChangeButton
+                    handleEncodedGenerateId={(id: string) =>
+                      setEncodedGenerateId(id)
+                    }
+                    handleToggle={() => setIsChangedOption(false)}
+                  />
+                ) : null}
               </div>
             </div>
 
@@ -273,46 +275,3 @@ function Detail() {
   )
 }
 export default Detail
-
-// const ApplyChangeButton = ({ handleEncodedGenerateId }) => {
-//   const searchParams = useSearchParams()
-
-//   const postAiImageMutatiion = usePostAiImageGenerate()
-//   const handleClickApplyChanges = () => {
-//     postAiImageMutatiion.mutate(
-//       {
-//         encodedBaseImageId: searchParams.get('variationId') as string,
-//         properties: {
-//           aspectRatio:
-//             AspectRatioClientValue[
-//               searchParams.get(
-//                 'aspectRatio'
-//               ) as keyof typeof AspectRatioClientValue
-//             ],
-//           faceAngle: searchParams.get(
-//             'faceAngle'
-//           ) as keyof typeof FaceAngleValue
-//         }
-//       },
-//       {
-//         onSuccess: (data) => {
-//           handleEncodedGenerateId(data.content.encodedGenerateId)
-//         }
-//       }
-//     )
-//     setIsChangedOption(false)
-//   }
-
-//   return (
-//     <div className="z-30 absolute bottom-[20px] left-[50%] -translate-x-[50%]">
-//       <div className="flex items-center py-2 pr-2 rounded-md bg-black/80">
-//         <p className="mx-5 text-[14px] text-nowrap">
-//           Do you want to apply the changes?
-//         </p>
-//         <Button className="rounded-[8px]" onClick={handleClickApplyChanges}>
-//           Apply Changes
-//         </Button>
-//       </div>
-//     </div>
-//   )
-// }
