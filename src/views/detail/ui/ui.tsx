@@ -10,7 +10,7 @@ import { RadioGroup, RadioGroupItem } from '@/shared/ui/radio-group'
 import { VariationsSection } from '@/features/archive/ui/variations-section'
 import { useImagePreviewUrlStore } from '@/features/archive/model/store'
 import { Box } from '@/features/archive/ui/resizable-and-draggable-boxes'
-import { Variation } from '../model'
+import { AspectRatio, FaceAngle, Variation } from '../model'
 import {
   useGetAiImageProgress,
   useGetVariationImages,
@@ -21,13 +21,12 @@ import {
 const aspectRatioOptions = ['16:9', '9:16', '1:1', '4:3', '3:4']
 const faceAngleOptions = ['Left', 'Front', 'Right']
 
-// TODO: enum -> Object로 변경
-enum AspectRatioValue {
-  'ASPECT_RATIO_16_9' = '16:9',
-  'ASPECT_RATIO_9_16' = '9:16',
-  'ASPECT_RATIO_1_1' = '1:1',
-  'ASPECT_RATIO_4_3' = '4:3',
-  'ASPECT_RATIO_3_4' = '3:4'
+const ASPECT_RATIO_MAP: Record<AspectRatio, string> = {
+  ASPECT_RATIO_16_9: '16:9',
+  ASPECT_RATIO_9_16: '9:16',
+  ASPECT_RATIO_1_1: '1:1',
+  ASPECT_RATIO_4_3: '4:3',
+  ASPECT_RATIO_3_4: '3:4'
 }
 
 enum AspectRatioClientValue {
@@ -38,25 +37,16 @@ enum AspectRatioClientValue {
   '3:4' = 'ASPECT_RATIO_3_4'
 }
 
-// const AspectRatioMap = {
-//   '16:9': 'ASPECT_RATIO_16_9',
-//   '9:16': 'ASPECT_RATIO_9_16',
-//   '1:1': 'ASPECT_RATIO_1_1',
-//   '4:3': 'ASPECT_RATIO_4_3',
-//   '3:4': 'ASPECT_RATIO_3_4',
-//   ASPECT_RATIO_16_9: '16:9',
-//   ASPECT_RATIO_9_16: '9:16',
-//   ASPECT_RATIO_1_1: '1:1',
-//   ASPECT_RATIO_4_3: '4:3',
-//   ASPECT_RATIO_3_4: '3:4'
-// }
-
-// type AspectRatioValueKeys = typeof AspectRatioValue[keyof typeof AspectRatioValue]
-
 enum FaceAngleValue {
   'LEFT' = 'Left',
   'FRONT' = 'Front',
   'RIGHT' = 'Right'
+}
+
+const FACE_ANGLE_MAP: Record<FaceAngle, string> = {
+  LEFT: 'Left',
+  FRONT: 'Front',
+  RIGHT: 'Right'
 }
 
 function Model() {
@@ -73,6 +63,9 @@ function Model() {
   const [selectedVariation, setSelectedVariation] = useState<Variation | null>(
     null
   )
+  const handleIsChangedOption = (value: boolean) => {
+    setIsChangedOption(value)
+  }
 
   const pathname = usePathname()
   const { replace } = useRouter()
@@ -89,31 +82,8 @@ function Model() {
   )
 
   const [encodedGenerateId, setEncodedGenerateId] = useState<string>('')
-
-  const postAiImageMutatiion = usePostAiImageGenerate()
-  const handleClickApplyChanges = () => {
-    postAiImageMutatiion.mutate(
-      {
-        encodedBaseImageId: searchParams.get('variationId') as string,
-        properties: {
-          aspectRatio:
-            AspectRatioClientValue[
-              searchParams.get(
-                'aspectRatio'
-              ) as keyof typeof AspectRatioClientValue
-            ],
-          faceAngle: searchParams.get(
-            'faceAngle'
-          ) as keyof typeof FaceAngleValue
-        }
-      },
-      {
-        onSuccess: (data) => {
-          setEncodedGenerateId(data.content.encodedGenerateId)
-        }
-      }
-    )
-    setIsChangedOption(false)
+  const handleEncodedGenerateId = (id: string) => {
+    setEncodedGenerateId(id)
   }
 
   const handleSelectedVariation = (variation: Variation) => {
@@ -125,18 +95,9 @@ function Model() {
       })
   }
 
-  const [progress, setProgress] = useState<number>(0)
+  console.log('hello world')
 
-  // progress ui local 확인용
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     if (progress < 100) {
-  //       setProgress((prev) => prev + 30)
-  //       console.log(progress)
-  //     }
-  //   }, 5000)
-  //   return () => clearInterval(intervalId)
-  // }, [])
+  const [progress, setProgress] = useState<number>(0)
 
   const [generatedNewImage, setGeneratedNewImage] = useState({
     isCompleted: false,
@@ -152,7 +113,7 @@ function Model() {
     if (progressData === 100) {
       setProgress(0)
       setGeneratedNewImage({ isCompleted: true, encodedGenerateId })
-      setEncodedGenerateId('') // for tanstack query key
+      handleEncodedGenerateId('') // for tanstack query key
     }
   }, [encodedGenerateId, progressData])
 
@@ -160,12 +121,12 @@ function Model() {
     if (!selectedVariation) return
     if (
       searchParams.get('aspectRatio') !==
-        AspectRatioValue[selectedVariation?.properties.aspectRatio] ||
+        ASPECT_RATIO_MAP[selectedVariation?.properties.aspectRatio] ||
       searchParams.get('faceAngle') !== selectedVariation.properties.faceAngle
     ) {
-      setIsChangedOption(true)
+      handleIsChangedOption(true)
     } else {
-      setIsChangedOption(false)
+      handleIsChangedOption(false)
     }
   }, [searchParams, selectedVariation])
 
@@ -177,23 +138,20 @@ function Model() {
   useEffect(() => {
     if (!selectedVariation) return
 
+    const aspectRatio = selectedVariation.properties.aspectRatio
+    const faceAngle = selectedVariation.properties.faceAngle
+
     // 라디오 버튼
-    setAspectRatio(AspectRatioValue[selectedVariation?.properties.aspectRatio])
-    setFaceAngle(FaceAngleValue[selectedVariation?.properties.faceAngle])
+    setAspectRatio(ASPECT_RATIO_MAP[aspectRatio])
+    setFaceAngle(FACE_ANGLE_MAP[faceAngle])
 
     // url query
     handleVariationProperties(
       'variationId',
       selectedVariation.encodedBaseImageId
     )
-    handleVariationProperties(
-      'aspectRatio',
-      AspectRatioValue[selectedVariation.properties.aspectRatio]
-    )
-    handleVariationProperties(
-      'faceAngle',
-      selectedVariation.properties.faceAngle
-    )
+    handleVariationProperties('aspectRatio', ASPECT_RATIO_MAP[aspectRatio])
+    handleVariationProperties('faceAngle', faceAngle)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedVariation])
 
@@ -305,19 +263,9 @@ function Model() {
                   generatedNewImage={generatedNewImage}
                 />
                 {isChangedOption ? (
-                  <div className="z-30 absolute bottom-[20px] left-[50%] -translate-x-[50%]">
-                    <div className="flex items-center py-2 pr-2 rounded-md bg-black/80">
-                      <p className="mx-5 text-[14px] text-nowrap">
-                        Do you want to apply the changes?
-                      </p>
-                      <Button
-                        className="rounded-[8px]"
-                        onClick={handleClickApplyChanges}
-                      >
-                        Apply Changes
-                      </Button>
-                    </div>
-                  </div>
+                  <ApplyChangeButton
+                    handleEncodedGenerateId={handleEncodedGenerateId}
+                  />
                 ) : null}
               </div>
             </div>
@@ -378,3 +326,46 @@ function Model() {
   )
 }
 export default Model
+
+const ApplyChangeButton = ({ handleEncodedGenerateId }) => {
+  const searchParams = useSearchParams()
+
+  const postAiImageMutatiion = usePostAiImageGenerate()
+  const handleClickApplyChanges = () => {
+    postAiImageMutatiion.mutate(
+      {
+        encodedBaseImageId: searchParams.get('variationId') as string,
+        properties: {
+          aspectRatio:
+            AspectRatioClientValue[
+              searchParams.get(
+                'aspectRatio'
+              ) as keyof typeof AspectRatioClientValue
+            ],
+          faceAngle: searchParams.get(
+            'faceAngle'
+          ) as keyof typeof FaceAngleValue
+        }
+      },
+      {
+        onSuccess: (data) => {
+          handleEncodedGenerateId(data.content.encodedGenerateId)
+        }
+      }
+    )
+    setIsChangedOption(false)
+  }
+
+  return (
+    <div className="z-30 absolute bottom-[20px] left-[50%] -translate-x-[50%]">
+      <div className="flex items-center py-2 pr-2 rounded-md bg-black/80">
+        <p className="mx-5 text-[14px] text-nowrap">
+          Do you want to apply the changes?
+        </p>
+        <Button className="rounded-[8px]" onClick={handleClickApplyChanges}>
+          Apply Changes
+        </Button>
+      </div>
+    </div>
+  )
+}
