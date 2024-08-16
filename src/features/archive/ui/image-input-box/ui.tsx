@@ -5,7 +5,7 @@ import { DndBox } from '@/shared/lib/hocs/DndBox'
 import { Button } from '@/shared/ui/button'
 import DeleteIcon from '/public/icons/delete.svg'
 import { useImagePreviewUrlStore } from '@/features/archive/model/store'
-import { usePostAssetRemoveBackground } from '@/views/model/adapter'
+import { usePostAssetRemoveBackground } from '@/views/detail/adapter'
 
 type ImageInputBoxProps = {
   boxId: string

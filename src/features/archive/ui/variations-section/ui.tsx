@@ -5,8 +5,8 @@ import LeftIcon from '/public/icons/arrow-left.svg'
 import RightIcon from '/public/icons/arrow-right.svg'
 import { Button } from '@/shared/ui'
 import './styles.css'
-import { Variation } from '@/views/model/model'
-import { URL_VARIATION_LIST_IMAGE } from '@/views/model/constant'
+import { Variation } from '@/views/detail/model'
+import { URL_VARIATION_LIST_IMAGE } from '@/views/detail/constant'
 
 type VariationsSectionProps = {
   data: Variation[] | undefined

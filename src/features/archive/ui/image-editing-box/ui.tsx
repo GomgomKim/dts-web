@@ -7,11 +7,11 @@ import {
   ResizableAndDraggableBoxes
 } from '@/features/archive/ui/resizable-and-draggable-boxes'
 import { ExportButton } from '@/features/archive/ui/export-button'
-import { Variation } from '@/views/model/model'
+import { Variation } from '@/views/detail/model'
 import {
   URL_GENERATED_AI_IMAGE_FILE,
   URL_VARIATION_LIST_IMAGE
-} from '@/views/model/constant'
+} from '@/views/detail/constant'
 import { cn } from '@/shared/lib/utils'
 import LoadingSpinner from '/public/icons/loading-spinner.svg'
 
