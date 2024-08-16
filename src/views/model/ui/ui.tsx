@@ -215,14 +215,15 @@ function Model() {
     handleVariationProperties('faceAngle', value.toLocaleUpperCase())
   }
 
-  const { imagePreviewUrls } = useImagePreviewUrlStore()
+  const { imagePreviewUrls: assetImages } = useImagePreviewUrlStore()
 
   const [boxes, setBoxes] = useState<Box[]>([])
 
   const convertImagesToBoxData = () => {
-    const imageData = Array.from(imagePreviewUrls.entries()).map(
-      ([id, image]) => ({ id, image })
-    )
+    const imageData = Array.from(assetImages.entries()).map(([id, image]) => ({
+      id,
+      image
+    }))
 
     const boxesData = imageData.map((imageItem, idx) => ({
       ...imageItem,
@@ -281,7 +282,7 @@ function Model() {
               <Button variant="outline">Remove Background</Button> */}
             <Button
               onClick={handleAddBrandAssets}
-              disabled={imagePreviewUrls.size < 1}
+              disabled={assetImages.size < 1}
             >
               Add Brand Assets
             </Button>
