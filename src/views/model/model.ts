@@ -60,3 +60,7 @@ export interface GetAiImageProgressResData {
     progress: number
   }
 }
+
+export interface PostAssetRemoveBackgroundReqData {
+  source: FormData
+}

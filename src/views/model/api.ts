@@ -6,11 +6,13 @@ import {
   GetVariationListReqData,
   GetVariationListResData,
   PostAiImageReqData,
-  PostAiImageResData
+  PostAiImageResData,
+  PostAssetRemoveBackgroundReqData
 } from './model'
 import {
   URL_AI_IMAGE_GENERATE,
   URL_AI_IMAGE_GENERATE_PROGRESS,
+  URL_ASSET_REMOVE_BACKGROUND,
   // URL_GENERATED_AI_IMAGE_FILE,
   URL_VARIATION_LIST
 } from './constant'
@@ -49,5 +51,22 @@ export async function getAiImageProgress({
     AxiosResponse<GetAiImageProgressResData, AxiosError>
   >(`${URL_AI_IMAGE_GENERATE_PROGRESS}/${encodedGenerateId}/progress`)
 
+  return response.data
+}
+
+export async function postAssetRemoveBackground({
+  source
+}: {
+  source: FormData
+}): Promise<Blob> {
+  const response = await dtsAxios.post<
+    PostAssetRemoveBackgroundReqData,
+    AxiosResponse<Blob, AxiosError>
+  >(`${URL_ASSET_REMOVE_BACKGROUND}`, source, {
+    responseType: 'blob',
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
   return response.data
 }

@@ -1,12 +1,14 @@
 import {
   getAiImageProgress,
   getVariationImages,
-  postAiImageGenerate
+  postAiImageGenerate,
+  postAssetRemoveBackground
 } from './api'
 import {
   GetAiImageProgressReqData,
   GetVariationListResData,
   PostAiImageReqData,
+  PostAssetRemoveBackgroundReqData,
   Variation
 } from './model'
 import { useMutation, useQuery } from '@tanstack/react-query'
@@ -63,4 +65,16 @@ const useGetAiImageProgress = ({
   })
 }
 
-export { useGetVariationImages, usePostAiImageGenerate, useGetAiImageProgress }
+const usePostAssetRemoveBackground = () => {
+  return useMutation({
+    mutationFn: ({ source }: PostAssetRemoveBackgroundReqData) =>
+      postAssetRemoveBackground({ source })
+  })
+}
+
+export {
+  useGetVariationImages,
+  usePostAiImageGenerate,
+  useGetAiImageProgress,
+  usePostAssetRemoveBackground
+}
