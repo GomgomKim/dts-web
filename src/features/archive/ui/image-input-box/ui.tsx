@@ -29,7 +29,7 @@ export const ImageInputBox = ({
     return () => {
       resetImagePreviewUrls()
     }
-  }, [])
+  }, [resetImagePreviewUrls])
 
   const convertFileToFormData = (file: File) => {
     const formData = new FormData()
