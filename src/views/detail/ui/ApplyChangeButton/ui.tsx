@@ -1,6 +1,9 @@
 import { useSearchParams } from 'next/navigation'
-import { usePostAiImageGenerate } from '../../adapter'
-import { ASPECT_RATIO_REVERT_MAP, FACE_ANGLE_REVERT_MAP } from '../../constant'
+import { usePostAiImageGenerate } from '@/entities/detail/adapter'
+import {
+  ASPECT_RATIO_REVERT_MAP,
+  FACE_ANGLE_REVERT_MAP
+} from '@/entities/detail/constant'
 import { Button } from '@/shared/ui'
 
 type Props = {

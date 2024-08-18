@@ -5,7 +5,7 @@ import { DndBox } from '@/shared/lib/hocs/DndBox'
 import { Button } from '@/shared/ui/button'
 import DeleteIcon from '/public/icons/delete.svg'
 import { useImagePreviewUrlStore } from '@/features/archive/model/store'
-import { usePostAssetRemoveBackground } from '@/views/detail/adapter'
+import { usePostAssetRemoveBackground } from '@/entities/detail/adapter'
 
 type ImageInputBoxProps = {
   boxId: string
@@ -75,7 +75,7 @@ export const ImageInputBox = ({
     onChangeBrandAsset()
   }
 
-  const renderImagePreview = () => {
+  const renderContent = () => {
     if (imagePreviewUrls.has(boxId)) {
       return (
         <div className="h-full">
@@ -129,7 +129,7 @@ export const ImageInputBox = ({
         onDropped={(e) => handleChangeDNDInput(e.dataTransfer.files[0])}
         className="relative border-dashed border-2 border-border rounded-xl bg-[rgba(32,33,36,0.50)]"
       >
-        {renderImagePreview()}
+        {renderContent()}
       </DndBox>
     </>
   )

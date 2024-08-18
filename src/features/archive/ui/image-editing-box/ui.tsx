@@ -1,21 +1,24 @@
 'use client'
 
+import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
-import { useRef } from 'react'
+import { useSearchParams } from 'next/navigation'
+import { ExportButton } from '@/entities/detail/ui/export-button'
+import { AspectRatio, Variation } from '@/entities/detail/model'
 import {
-  Box,
-  ResizableAndDraggableBoxes
-} from '@/features/archive/ui/resizable-and-draggable-boxes'
-import { ExportButton } from '@/features/archive/ui/export-button'
-import { Variation } from '@/views/detail/model'
-import {
+  ASPECT_RATIO_REVERT_MAP,
+  ASPECT_RATIO_MAP_NUMBER,
   URL_GENERATED_AI_IMAGE_FILE,
   URL_VARIATION_LIST_IMAGE
-} from '@/views/detail/constant'
+} from '@/entities/detail/constant'
 import { cn } from '@/shared/lib/utils'
-import LoadingSpinner from '/public/icons/loading-spinner.svg'
+import { ProgressInfo } from './ProgressInfo'
+import { LoadingInfo } from './LoadingInfo'
+import { DownloadNowToast } from './DownloadNowToast'
+import { ResizableAndDraggableBoxes } from './ResizableAndDraggableBoxes'
+import { Box } from './type'
 
-type ImageEditingBoxProps = {
+type Props = {
   boxes: Box[]
   setBoxes: React.Dispatch<React.SetStateAction<Box[]>>
   selectedVariation: Variation | null
@@ -26,30 +29,34 @@ type ImageEditingBoxProps = {
   }
 }
 
-const AspectRatioMap = {
-  ASPECT_RATIO_16_9: 16 / 9,
-  ASPECT_RATIO_4_3: 4 / 3,
-  ASPECT_RATIO_1_1: 1 / 1,
-  ASPECT_RATIO_3_4: 3 / 4,
-  ASPECT_RATIO_9_16: 9 / 16
-}
+export const ImageEditingBox = (props: Props) => {
+  const {
+    generatedNewImage,
+    generatingProgress,
+    selectedVariation,
+    boxes,
+    setBoxes
+  } = props
 
-export const ImageEditingBox = ({
-  boxes,
-  setBoxes,
-  selectedVariation,
-  generatingProgress,
-  generatedNewImage
-}: ImageEditingBoxProps) => {
+  const searchParams = useSearchParams()
   const containerRef = useRef<HTMLDivElement>(null)
+  const [isShowToast, setIsShowToast] = useState(
+    !!generatedNewImage.encodedGenerateId
+  )
 
-  // const convertAspectRatio = (aspectRatioString: string): number => {
-  //   const [numerator, denominator] = aspectRatioString.split('/')
-  //   return Number(numerator) / Number(denominator)
-  // }
-  // const aspectRatio = convertAspectRatio(
-  //   selectedVariation?.properties.aspectRatio || '16/9'
-  // )
+  useEffect(() => {
+    if (
+      generatedNewImage.isCompleted === false ||
+      generatedNewImage.encodedGenerateId === ''
+    )
+      return
+    setTimeout(() => {
+      setIsShowToast(true)
+    }, 1000)
+    setTimeout(() => {
+      setIsShowToast(false)
+    }, 2500)
+  }, [generatedNewImage])
 
   const isGenerating = !!generatingProgress && generatingProgress < 100
 
@@ -63,8 +70,33 @@ export const ImageEditingBox = ({
         : URL_VARIATION_LIST_IMAGE + '/' + selectedVariation?.encodedBaseImageId
     }`
 
+  const getContainerStyle = (): React.CSSProperties => {
+    if (!selectedVariation) return { aspectRatio: 9 / 16, height: '100%' }
+
+    let value: AspectRatio
+    if (generatedNewImage.isCompleted && generatedNewImage.encodedGenerateId) {
+      value =
+        ASPECT_RATIO_REVERT_MAP[
+          searchParams.get(
+            'aspectRatio'
+          ) as keyof typeof ASPECT_RATIO_REVERT_MAP
+        ]
+    } else {
+      value = selectedVariation?.properties.aspectRatio
+    }
+
+    const aspectRatio = ASPECT_RATIO_MAP_NUMBER[value]
+    const type =
+      value === 'ASPECT_RATIO_16_9' || value === 'ASPECT_RATIO_4_3'
+        ? 'height'
+        : 'width'
+
+    return { aspectRatio: aspectRatio, [type]: '100%' }
+  }
+
   return (
     <>
+      {/* TODO: 상위 컴포넌트에 마크업 */}
       <div className="text-right mb-[20px]">
         <ExportButton containerRef={containerRef} className="ml-auto">
           Download
@@ -72,43 +104,16 @@ export const ImageEditingBox = ({
       </div>
       <div
         className={cn(
-          'h-[572px] bg-neutral-1 rounded-[0.5rem] overflow-hidden relative flex justify-center w-[100%]',
+          'min-h-[572px] w-[100%] bg-neutral-1 rounded-[0.5rem] overflow-hidden relative flex justify-center',
           {
             'z-20': isGenerating
           }
         )}
       >
-        {isGenerating ? (
-          <div className="z-30 absolute inset-0 pointer-event-none">
-            <div className="absolute top-[12px] right-[12px] rounded-[4px] p-2 bg-neutral-0-50 text-[12px]">
-              Realtime:{' '}
-              <span className="text-primary">{generatingProgress}%</span>
-            </div>
-            <div className="absolute-center bg-[rgba(32,33,36,0.90)] rounded-[8px] py-3 px-5">
-              <div className="flex items-center gap-2">
-                <div className="w-[1rem] h-[1rem] relative">
-                  <LoadingSpinner className="animate-spin" />
-                </div>
-                <p className="text-[12px] text-neutral-7">
-                  Hold on! Magic in progress...
-                </p>
-              </div>
-            </div>
-          </div>
-        ) : null}
         <div
           ref={containerRef}
           className="relative m-auto"
-          style={{
-            aspectRatio: selectedVariation
-              ? AspectRatioMap[selectedVariation?.properties.aspectRatio]
-              : 9 / 16,
-            ...(selectedVariation?.properties.aspectRatio ===
-              'ASPECT_RATIO_16_9' ||
-            selectedVariation?.properties.aspectRatio === 'ASPECT_RATIO_4_3'
-              ? { height: '100%' }
-              : { width: '100%' })
-          }}
+          style={{ ...getContainerStyle() }}
         >
           {selectedVariation && (
             <Image
@@ -126,28 +131,18 @@ export const ImageEditingBox = ({
             setBoxes={setBoxes}
           />
         </div>
-        {/* TODO: toast */}
-        {/* {isShowToast ? (
-          <div className="z-30 absolute bottom-[20px] left-[50%] -translate-x-[50%]">
-            <div className="flex items-center py-2 pr-2 rounded-md bg-black/80">
-              <div className="mx-5 flex flex-col gap-1">
-                <p className="text-[12px] text-nowrap font-[700]">
-                  Love what you see?
-                </p>
-                <p className="text-[12px] text-nowrap text-neutral-7">
-                  The magic might look different next time!
-                </p>
-              </div>
-              <ExportButton
-                containerRef={containerRef}
-                className="ml-auto bg-white text-black font-[600] active:text-black hover:text-black"
-              >
-                Download it now
-              </ExportButton>
-            </div>
+        {isGenerating ? (
+          <div className="z-30 absolute inset-0 pointer-event-none">
+            <ProgressInfo progress={generatingProgress} />
+            <LoadingInfo />
           </div>
-        ) : null} */}
+        ) : null}
+        {/* open toast when new image is generated  */}
+        {isShowToast ? <DownloadNowToast containerRef={containerRef} /> : null}
       </div>
+      {isGenerating ? (
+        <div className="z-10 absolute w-screen h-screen bg-neutral-0-70" />
+      ) : null}
     </>
   )
 }

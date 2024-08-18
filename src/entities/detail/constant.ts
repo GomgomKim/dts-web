@@ -15,13 +15,21 @@ export const ASPECT_RATIO_MAP: Record<AspectRatio, string> = {
   ASPECT_RATIO_3_4: '3:4'
 }
 
-export const ASPECT_RATIO_REVERT_MAP = {
+export const ASPECT_RATIO_REVERT_MAP: Record<string, AspectRatio> = {
   '16:9': 'ASPECT_RATIO_16_9',
   '9:16': 'ASPECT_RATIO_9_16',
   '1:1': 'ASPECT_RATIO_1_1',
   '4:3': 'ASPECT_RATIO_4_3',
   '3:4': 'ASPECT_RATIO_3_4'
-} as const
+}
+
+export const ASPECT_RATIO_MAP_NUMBER: Record<AspectRatio, number> = {
+  ASPECT_RATIO_16_9: 16 / 9,
+  ASPECT_RATIO_4_3: 4 / 3,
+  ASPECT_RATIO_1_1: 1 / 1,
+  ASPECT_RATIO_3_4: 3 / 4,
+  ASPECT_RATIO_9_16: 9 / 16
+}
 
 export const FACE_ANGLE_MAP: Record<FaceAngle, string> = {
   LEFT: 'Left',

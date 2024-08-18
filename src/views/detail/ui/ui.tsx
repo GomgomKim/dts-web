@@ -1,29 +1,57 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import './styles.css'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { ImageEditingBox } from '@/features/archive/ui/image-editing-box'
 import { RadioGroup, RadioGroupItem } from '@/shared/ui/radio-group'
 import { VariationsSection } from '@/features/archive/ui/variations-section'
 import { useImagePreviewUrlStore } from '@/features/archive/model/store'
-import { Box } from '@/features/archive/ui/resizable-and-draggable-boxes'
-import { Variation } from '../model'
+import { Box } from '@/features/archive/ui/image-editing-box/type'
+import { Variation } from '@/entities/detail/model'
 import {
   useGetAiImageProgress,
   useGetVariationImages
-} from '@/views/detail/adapter'
+} from '@/entities/detail/adapter'
 import BrandAssets from './BrandAssets'
 import ApplyChangeButton from './ApplyChangeButton'
-import { ASPECT_RATIO_MAP, FACE_ANGLE_MAP } from '../constant'
+import {
+  ASPECT_RATIO_MAP,
+  ASPECT_RATIO_REVERT_MAP,
+  FACE_ANGLE_MAP,
+  FACE_ANGLE_REVERT_MAP
+} from '@/entities/detail/constant'
 
 // const skinTextureOptions = ['Matte', 'Medium', 'Glowy']
-const aspectRatioOptions = ['16:9', '9:16', '1:1', '4:3', '3:4']
-const faceAngleOptions = ['Left', 'Front', 'Right']
+const ASPECT_RATIO_OPTIONS = Object.values(ASPECT_RATIO_MAP)
+const FACE_ANGLE_OPTIONS = Object.values(FACE_ANGLE_MAP)
 
 function Detail() {
+  const pathname = usePathname()
+  const { replace } = useRouter()
   const searchParams = useSearchParams()
+  const params = new URLSearchParams(searchParams)
   const encodedBaseImageId = searchParams.get('id') || ''
+
+  const { imagePreviewUrls: assetImages } = useImagePreviewUrlStore()
+  const [boxes, setBoxes] = useState<Box[]>([])
+
+  const [encodedGenerateId, setEncodedGenerateId] = useState<string>('')
+  const [generatingProgress, setGeneratingProgress] = useState<number>(0)
+  const [generatedNewImage, setGeneratedNewImage] = useState({
+    isCompleted: false,
+    encodedGenerateId: ''
+  })
+  const [isChangedOption, setIsChangedOption] = useState(false)
+  const [selectedVariation, setSelectedVariation] = useState<Variation | null>(
+    null
+  )
+
+  // const [skinTexture, setSkinTexture] = useState(skinTextureOptions[0])
+  const [aspectRatio, setAspectRatio] = useState<string>('')
+  const [faceAngle, setFaceAngle] = useState<string>('')
+
+  ///////////////////////////////////////
 
   const {
     data: variationImagesData,
@@ -31,140 +59,15 @@ function Detail() {
     error
   } = useGetVariationImages(encodedBaseImageId)
 
-  const [isChangedOption, setIsChangedOption] = useState(false)
-  const [selectedVariation, setSelectedVariation] = useState<Variation | null>(
-    null
-  )
-
-  const pathname = usePathname()
-  const { replace } = useRouter()
-
-  // TODO: query로직 수정?
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const params = new URLSearchParams(searchParams)
-  const handleVariationProperties = useCallback(
-    (name: string, value: string) => {
-      params.set(name, value)
-      replace(`${pathname}?${params.toString()}`)
-    },
-    [params, pathname, replace]
-  )
-
-  const [encodedGenerateId, setEncodedGenerateId] = useState<string>('')
-
-  const handleSelectedVariation = (variation: Variation) => {
-    setSelectedVariation(variation)
-    if (generatedNewImage.isCompleted)
-      setGeneratedNewImage({
-        isCompleted: false,
-        encodedGenerateId: ''
-      })
-  }
-
-  const [progress, setProgress] = useState<number>(0)
-
-  const [generatedNewImage, setGeneratedNewImage] = useState({
-    isCompleted: false,
-    encodedGenerateId: ''
-  })
   const { data: progressData } = useGetAiImageProgress({
     variationId: searchParams.get('variationId') as string,
     encodedGenerateId
   })
-  useEffect(() => {
-    if (!progressData) return
-    setProgress(progressData)
-    if (progressData === 100) {
-      setProgress(0)
-      setGeneratedNewImage({ isCompleted: true, encodedGenerateId })
-      setEncodedGenerateId('') // for tanstack query key
-    }
-  }, [encodedGenerateId, progressData])
 
-  useEffect(() => {
-    if (!selectedVariation) return
-
-    const isChangedOption =
-      searchParams.get('aspectRatio') !==
-        ASPECT_RATIO_MAP[selectedVariation?.properties.aspectRatio] ||
-      searchParams.get('faceAngle') !== selectedVariation.properties.faceAngle
-
-    if (isChangedOption) {
-      setIsChangedOption(true)
-    } else {
-      setIsChangedOption(false)
-    }
-  }, [searchParams, selectedVariation])
-
-  useEffect(() => {
-    if (!variationImagesData) return
-
-    setSelectedVariation(variationImagesData[0])
-  }, [variationImagesData])
-
-  useEffect(() => {
-    if (!selectedVariation) return
-
-    const aspectRatio = selectedVariation.properties.aspectRatio
-    const faceAngle = selectedVariation.properties.faceAngle
-
-    // 라디오 버튼
-    setAspectRatio(ASPECT_RATIO_MAP[aspectRatio])
-    setFaceAngle(FACE_ANGLE_MAP[faceAngle])
-
-    // url query
-    handleVariationProperties(
-      'variationId',
-      selectedVariation.encodedBaseImageId
-    )
-    handleVariationProperties('aspectRatio', ASPECT_RATIO_MAP[aspectRatio])
-    handleVariationProperties('faceAngle', faceAngle)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedVariation])
-
-  // const [skinTexture, setSkinTexture] = useState(skinTextureOptions[0])
-  const [aspectRatio, setAspectRatio] = useState<string>('')
-  const [faceAngle, setFaceAngle] = useState<string>('')
-
-  // const handleSkinTextureChange = (value: string) => {
-  //   setSkinTexture(value)
-  // }
-
-  const handleAspectRatioChange = (value: string) => {
-    setAspectRatio(value)
-    handleVariationProperties('aspectRatio', value)
-  }
-
-  const handleFaceAngleChange = (value: string) => {
-    setFaceAngle(value)
-    handleVariationProperties('faceAngle', value.toLocaleUpperCase())
-  }
-
-  const { imagePreviewUrls: assetImages } = useImagePreviewUrlStore()
-
-  const [boxes, setBoxes] = useState<Box[]>([])
-
-  const convertImagesToBoxData = () => {
-    const imageData = Array.from(assetImages.entries()).map(([id, image]) => ({
-      id,
-      image
-    }))
-
-    const boxesData = imageData.map((imageItem, idx) => ({
-      ...imageItem,
-      // TODO: 컨테이너 넘어가지 않게 추가 처리
-      left: 50 + idx * 50,
-      top: 50 + idx * 50,
-      width: 200,
-      height: 200,
-      zIndex: 1
-    }))
-
-    return boxesData
-  }
+  ///////////////////////////////////////
 
   const handleAddBrandAssets = () => {
-    const boxesData = convertImagesToBoxData()
+    const boxesData = convertImagesToBoxData(assetImages)
     setBoxes(boxesData)
   }
 
@@ -173,17 +76,91 @@ function Detail() {
     setBoxes(newBoxes)
   }
 
+  const handleQueryString = (name: string, value: string) => {
+    params.set(name, value)
+    replace(`${pathname}?${params.toString()}`)
+  }
+
+  const handleIsChangedOption = () => {
+    if (!selectedVariation) return
+
+    const isChangedOption =
+      searchParams.get('aspectRatio') !==
+        ASPECT_RATIO_MAP[selectedVariation.properties.aspectRatio] ||
+      searchParams.get('faceAngle') !== selectedVariation.properties.faceAngle
+
+    if (isChangedOption) {
+      setIsChangedOption(true)
+    } else {
+      setIsChangedOption(false)
+    }
+  }
+
+  const handleSelectedVariation = (variation: Variation) => {
+    setSelectedVariation(variation)
+
+    handleIsChangedOption()
+
+    if (generatedNewImage.isCompleted)
+      setGeneratedNewImage({
+        isCompleted: false,
+        encodedGenerateId: ''
+      })
+  }
+
+  // const handleSkinTextureChange = (value: string) => {
+  //   setSkinTexture(value)
+  // }
+
+  const handleAspectRatioChange = (
+    value: keyof typeof ASPECT_RATIO_REVERT_MAP
+  ) => {
+    setAspectRatio(value)
+    handleQueryString('aspectRatio', value)
+  }
+
+  const handleFaceAngleChange = (value: keyof typeof FACE_ANGLE_REVERT_MAP) => {
+    setFaceAngle(value)
+    handleQueryString('faceAngle', FACE_ANGLE_REVERT_MAP[value])
+  }
+
+  // 초기값 세팅 - editingBox Image / options / query string
+  useEffect(() => {
+    if (!variationImagesData) return
+
+    setSelectedVariation(variationImagesData[0])
+
+    const variationId = variationImagesData[0].encodedBaseImageId
+    const aspectRatio = variationImagesData[0].properties.aspectRatio
+    const faceAngle = variationImagesData[0].properties.faceAngle
+
+    // 라디오 버튼
+    setAspectRatio(ASPECT_RATIO_MAP[aspectRatio])
+    setFaceAngle(FACE_ANGLE_MAP[faceAngle])
+
+    // url query
+    handleQueryString('variationId', variationId)
+    handleQueryString('aspectRatio', ASPECT_RATIO_MAP[aspectRatio])
+    handleQueryString('faceAngle', faceAngle)
+  }, [variationImagesData])
+
+  useEffect(() => {
+    if (!progressData) return
+
+    setGeneratingProgress(progressData)
+
+    if (progressData === 100) {
+      setGeneratingProgress(0)
+      setGeneratedNewImage({ isCompleted: true, encodedGenerateId })
+      setEncodedGenerateId('') // to stop polling
+    }
+  }, [progressData])
+
   if (status === 'pending') return <p>loading</p>
   if (status === 'error') return <p>{error?.message}</p>
 
-  const isGenerating = !!progress && progress < 100
-
   return (
     <>
-      {isGenerating ? (
-        // TODO: 꽉차게
-        <div className="z-10 absolute w-screen h-screen bg-neutral-0-70"></div>
-      ) : null}
       <div className="flex">
         {/* brand assets section*/}
         <div className="flex-shrink-0 basis-[387px] mr-5">
@@ -205,7 +182,7 @@ function Detail() {
                   boxes={boxes}
                   setBoxes={setBoxes}
                   selectedVariation={selectedVariation}
-                  generatingProgress={progress}
+                  generatingProgress={generatingProgress}
                   generatedNewImage={generatedNewImage}
                 />
                 {isChangedOption ? (
@@ -249,7 +226,7 @@ function Detail() {
                 value={aspectRatio}
                 onValueChange={handleAspectRatioChange}
               >
-                {aspectRatioOptions.map((option) => (
+                {ASPECT_RATIO_OPTIONS.map((option) => (
                   <RadioGroupItem key={option} value={option} label={option} />
                 ))}
               </RadioGroup>
@@ -263,7 +240,7 @@ function Detail() {
                 value={faceAngle}
                 onValueChange={handleFaceAngleChange}
               >
-                {faceAngleOptions.map((option) => (
+                {FACE_ANGLE_OPTIONS.map((option) => (
                   <RadioGroupItem key={option} value={option} label={option} />
                 ))}
               </RadioGroup>
@@ -275,3 +252,22 @@ function Detail() {
   )
 }
 export default Detail
+
+const convertImagesToBoxData = (assetImages: Map<string, string>) => {
+  const imageData = Array.from(assetImages.entries()).map(([id, image]) => ({
+    id,
+    image
+  }))
+
+  const boxesData = imageData.map((imageItem, idx) => ({
+    ...imageItem,
+    // TODO: 컨테이너 넘어가지 않게 추가 처리
+    left: 50 + idx * 50,
+    top: 50 + idx * 50,
+    width: 200,
+    height: 200,
+    zIndex: 1
+  }))
+
+  return boxesData
+}
