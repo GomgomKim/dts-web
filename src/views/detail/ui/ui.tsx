@@ -4,11 +4,11 @@
 import { useEffect, useState } from 'react'
 import './styles.css'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { ImageEditingBox } from '@/features/archive/ui/image-editing-box'
+import { ImageEditingBox } from '@/features/archive/ui/ImageEditingBox'
 import { RadioGroup, RadioGroupItem } from '@/shared/ui/radio-group'
 import { VariationsSection } from '@/features/archive/ui/variations-section'
 import { useImagePreviewUrlStore } from '@/features/archive/model/store'
-import { Box } from '@/features/archive/ui/image-editing-box/type'
+import { Box } from '@/features/archive/ui/ImageEditingBox/type'
 import { Variation } from '@/entities/detail/model'
 import {
   useGetAiImageProgress,
