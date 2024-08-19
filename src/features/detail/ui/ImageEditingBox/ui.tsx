@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
-import { ExportButton } from '@/entities/detail/ui/export-button'
+import { ExportButton } from '@/entities/detail/ui/ExportButton'
 import { AspectRatio, Variation } from '@/entities/detail/model'
 import {
   ASPECT_RATIO_REVERT_MAP,

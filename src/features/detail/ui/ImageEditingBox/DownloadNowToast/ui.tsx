@@ -1,4 +1,4 @@
-import { ExportButton } from '@/entities/detail/ui/export-button'
+import { ExportButton } from '@/entities/detail/ui/ExportButton'
 
 type Props = {
   containerRef: React.RefObject<HTMLElement>
