@@ -1,9 +1,8 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
-import { ExportButton } from '@/entities/detail/ui/ExportButton'
 import { AspectRatio, Variation } from '@/entities/detail/model'
 import {
   ASPECT_RATIO_REVERT_MAP,
@@ -19,6 +18,7 @@ import { ResizableAndDraggableBoxes } from './ResizableAndDraggableBoxes'
 import { Box } from './type'
 
 type Props = {
+  containerRef: React.RefObject<HTMLDivElement>
   boxes: Box[]
   setBoxes: React.Dispatch<React.SetStateAction<Box[]>>
   selectedVariation: Variation | null
@@ -31,6 +31,7 @@ type Props = {
 
 export const ImageEditingBox = (props: Props) => {
   const {
+    containerRef,
     generatedNewImage,
     generatingProgress,
     selectedVariation,
@@ -39,7 +40,6 @@ export const ImageEditingBox = (props: Props) => {
   } = props
 
   const searchParams = useSearchParams()
-  const containerRef = useRef<HTMLDivElement>(null)
   const [isShowToast, setIsShowToast] = useState(
     !!generatedNewImage.encodedGenerateId
   )
@@ -96,15 +96,9 @@ export const ImageEditingBox = (props: Props) => {
 
   return (
     <>
-      {/* TODO: 상위 컴포넌트에 마크업 */}
-      <div className="text-right mb-[20px]">
-        <ExportButton containerRef={containerRef} className="ml-auto">
-          Download
-        </ExportButton>
-      </div>
       <div
         className={cn(
-          'min-h-[572px] w-[100%] bg-neutral-1 rounded-[0.5rem] overflow-hidden relative flex justify-center',
+          'min-h-[572px] h-full bg-neutral-1 rounded-[0.5rem] overflow-hidden relative flex justify-center',
           {
             'z-20': isGenerating
           }

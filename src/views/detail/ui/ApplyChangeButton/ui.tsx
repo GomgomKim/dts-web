@@ -1,10 +1,8 @@
 import { useSearchParams } from 'next/navigation'
 import { usePostAiImageGenerate } from '@/entities/detail/adapter'
-import {
-  ASPECT_RATIO_REVERT_MAP,
-  FACE_ANGLE_REVERT_MAP
-} from '@/entities/detail/constant'
+import { ASPECT_RATIO_REVERT_MAP } from '@/entities/detail/constant'
 import { Button } from '@/shared/ui'
+import { FaceAngle } from '@/entities/detail/model'
 
 type Props = {
   handleEncodedGenerateId: (id: string) => void
@@ -36,10 +34,7 @@ function ApplyChangeButton(props: Props) {
             ASPECT_RATIO_REVERT_MAP[
               aspectRatio as keyof typeof ASPECT_RATIO_REVERT_MAP
             ],
-          faceAngle:
-            FACE_ANGLE_REVERT_MAP[
-              faceAngle as keyof typeof FACE_ANGLE_REVERT_MAP
-            ]
+          faceAngle: faceAngle as FaceAngle
         }
       },
       {

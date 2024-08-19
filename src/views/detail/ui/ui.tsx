@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './styles.css'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { ImageEditingBox } from '@/features/detail/ui/ImageEditingBox'
@@ -22,8 +22,9 @@ import {
   FACE_ANGLE_MAP,
   FACE_ANGLE_REVERT_MAP
 } from '@/entities/detail/constant'
+import { ExportButton } from '@/entities/detail/ui/ExportButton'
 
-// const skinTextureOptions = ['Matte', 'Medium', 'Glowy']
+const SKIN_TEXTURE_OPTIONS = ['Matte', 'Medium', 'Glowy']
 const ASPECT_RATIO_OPTIONS = Object.values(ASPECT_RATIO_MAP)
 const FACE_ANGLE_OPTIONS = Object.values(FACE_ANGLE_MAP)
 
@@ -34,6 +35,7 @@ function Detail() {
   const params = new URLSearchParams(searchParams)
   const encodedBaseImageId = searchParams.get('id') || ''
 
+  const containerRef = useRef<HTMLDivElement>(null)
   const { imagePreviewUrls: assetImages } = useImagePreviewUrlStore()
   const [boxes, setBoxes] = useState<Box[]>([])
 
@@ -48,7 +50,7 @@ function Detail() {
     null
   )
 
-  // const [skinTexture, setSkinTexture] = useState(skinTextureOptions[0])
+  const [skinTexture, setSkinTexture] = useState<string>('')
   const [aspectRatio, setAspectRatio] = useState<string>('')
   const [faceAngle, setFaceAngle] = useState<string>('')
 
@@ -97,11 +99,17 @@ function Detail() {
     }
   }
 
+  useEffect(() => {
+    handleIsChangedOption()
+  }, [searchParams])
+
   const handleSelectedVariation = (variation: Variation) => {
     setSelectedVariation(variation)
 
-    handleIsChangedOption()
+    handleChangeAspectRatio(ASPECT_RATIO_MAP[variation.properties.aspectRatio])
+    handleChangeFaceAngle(FACE_ANGLE_MAP[variation.properties.faceAngle])
 
+    // image 생성 후에 다시 선택할 경우
     if (generatedNewImage.isCompleted)
       setGeneratedNewImage({
         isCompleted: false,
@@ -109,18 +117,18 @@ function Detail() {
       })
   }
 
-  // const handleSkinTextureChange = (value: string) => {
-  //   setSkinTexture(value)
-  // }
+  const handleChangeSkinTexture = (value: string) => {
+    setSkinTexture(value)
+  }
 
-  const handleAspectRatioChange = (
+  const handleChangeAspectRatio = (
     value: keyof typeof ASPECT_RATIO_REVERT_MAP
   ) => {
     setAspectRatio(value)
     handleQueryString('aspectRatio', value)
   }
 
-  const handleFaceAngleChange = (value: keyof typeof FACE_ANGLE_REVERT_MAP) => {
+  const handleChangeFaceAngle = (value: keyof typeof FACE_ANGLE_REVERT_MAP) => {
     setFaceAngle(value)
     handleQueryString('faceAngle', FACE_ANGLE_REVERT_MAP[value])
   }
@@ -162,7 +170,7 @@ function Detail() {
 
   return (
     <>
-      <div className="flex">
+      <div className="flex h-full">
         {/* brand assets section*/}
         <div className="flex-shrink-0 basis-[387px] mr-5">
           <BrandAssets
@@ -173,78 +181,111 @@ function Detail() {
         </div>
 
         {/* generate section */}
-        <section className="px-5 grow">
-          <h2 className="text-[24px] -mb-[37px]">Generate</h2>
-          <div className="grid-areas-generate-layout gap-[40px]">
-            {/* image editing section */}
-            <div className="grid-areas-generate-editing">
-              <div className="relative">
-                <ImageEditingBox
-                  boxes={boxes}
-                  setBoxes={setBoxes}
-                  selectedVariation={selectedVariation}
-                  generatingProgress={generatingProgress}
-                  generatedNewImage={generatedNewImage}
-                />
-                {isChangedOption ? (
-                  <ApplyChangeButton
-                    handleEncodedGenerateId={(id: string) =>
-                      setEncodedGenerateId(id)
-                    }
-                    handleToggle={() => setIsChangedOption(false)}
+        <section className="grow px-5 flex gap-10">
+          {/* generate section - left */}
+          <div className="grow-[2] overflow-y-auto overflow-x-hidden basis-[477px] shrink-0">
+            <div className="flex flex-col relative h-full">
+              {/* title top fix */}
+              <div className="flex justify-between items-center sticky top-0 w-full h-[38px] z-10">
+                <h2 className="text-[24px]">Generate</h2>
+                <ExportButton
+                  containerRef={containerRef}
+                  className="ml-auto h-full"
+                >
+                  Download
+                </ExportButton>
+              </div>
+
+              <div className="grow flex flex-col mt-5">
+                {/* image editing section */}
+                <div className="grow relative mb-5 max-h-[80%] ">
+                  <ImageEditingBox
+                    containerRef={containerRef}
+                    boxes={boxes}
+                    setBoxes={setBoxes}
+                    selectedVariation={selectedVariation}
+                    generatingProgress={generatingProgress}
+                    generatedNewImage={generatedNewImage}
                   />
-                ) : null}
+                  {isChangedOption ? (
+                    <ApplyChangeButton
+                      handleEncodedGenerateId={(id: string) =>
+                        setEncodedGenerateId(id)
+                      }
+                      handleToggle={() => setIsChangedOption(false)}
+                    />
+                  ) : null}
+                </div>
+
+                {/* options - Skin Texture */}
+                {/* TODO: disabled 추가  */}
+                <div>
+                  <h3 className="mb-5">Skin Texture</h3>
+                  <RadioGroup
+                    id="skinTexture"
+                    value={skinTexture}
+                    onValueChange={handleChangeSkinTexture}
+                  >
+                    {SKIN_TEXTURE_OPTIONS.map((option) => (
+                      <RadioGroupItem
+                        key={option}
+                        value={option}
+                        label={option}
+                      />
+                    ))}
+                  </RadioGroup>
+                </div>
+                {/* TODO: skin texture percentage bar */}
               </div>
             </div>
+          </div>
 
-            {/* variations */}
-            <div className="grid-area-generate-variations mt-[58px]">
-              <VariationsSection
-                data={variationImagesData}
-                handleSelectedVariation={handleSelectedVariation}
-              />
-            </div>
+          {/* generate section - right */}
+          <div className="grow overflow-y-auto">
+            <div className="flex flex-col gap-5">
+              {/* variations */}
+              <div className="mt-[58px] max-h-[80%]">
+                <VariationsSection
+                  data={variationImagesData}
+                  handleSelectedVariation={handleSelectedVariation}
+                />
+              </div>
 
-            {/* options - Skin Texture */}
-            {/* <div className="grid-area-generate-skin">
-          <h3 className="mb-5">Skin Texture</h3>
-          <RadioGroup
-            id="skinTexture"
-            value={skinTexture}
-            onValueChange={handleSkinTextureChange}
-          >
-            {skinTextureOptions.map((option) => (
-              <RadioGroupItem key={option} value={option} label={option} />
-            ))}
-            </RadioGroup>
-        </div> */}
+              {/* options - Aspect Ratio */}
+              <div>
+                <h3 className="mb-5">Aspect Ratio</h3>
+                <RadioGroup
+                  id="aspectRatio"
+                  value={aspectRatio}
+                  onValueChange={handleChangeAspectRatio}
+                >
+                  {ASPECT_RATIO_OPTIONS.map((option) => (
+                    <RadioGroupItem
+                      key={option}
+                      value={option}
+                      label={option}
+                    />
+                  ))}
+                </RadioGroup>
+              </div>
 
-            {/* options - Aspect Ratio */}
-            <div className="grid-area-generate-faceangle">
-              <h3 className="mb-5">Aspect Ratio</h3>
-              <RadioGroup
-                id="aspectRatio"
-                value={aspectRatio}
-                onValueChange={handleAspectRatioChange}
-              >
-                {ASPECT_RATIO_OPTIONS.map((option) => (
-                  <RadioGroupItem key={option} value={option} label={option} />
-                ))}
-              </RadioGroup>
-            </div>
-
-            {/* options - Face Angle */}
-            <div className="grid-area-generate-aspectratio">
-              <h3 className="mb-5">Face Angle</h3>
-              <RadioGroup
-                id="faceAngle"
-                value={faceAngle}
-                onValueChange={handleFaceAngleChange}
-              >
-                {FACE_ANGLE_OPTIONS.map((option) => (
-                  <RadioGroupItem key={option} value={option} label={option} />
-                ))}
-              </RadioGroup>
+              {/* options - Face Angle */}
+              <div className="grid-area-generate-aspectratio">
+                <h3 className="mb-5">Face Angle</h3>
+                <RadioGroup
+                  id="faceAngle"
+                  value={faceAngle}
+                  onValueChange={handleChangeFaceAngle}
+                >
+                  {FACE_ANGLE_OPTIONS.map((option) => (
+                    <RadioGroupItem
+                      key={option}
+                      value={option}
+                      label={option}
+                    />
+                  ))}
+                </RadioGroup>
+              </div>
             </div>
           </div>
         </section>
