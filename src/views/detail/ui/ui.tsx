@@ -23,6 +23,8 @@ import {
   FACE_ANGLE_REVERT_MAP
 } from '@/entities/detail/constant'
 import { ExportButton } from '@/entities/detail/ui/ExportButton'
+import { Button } from '@/shared/ui'
+import ArrowIcon from '/public/icons/arrow.svg'
 
 const SKIN_TEXTURE_OPTIONS = ['Matte', 'Medium', 'Glowy']
 const ASPECT_RATIO_OPTIONS = Object.values(ASPECT_RATIO_MAP)
@@ -157,6 +159,7 @@ function Detail() {
     if (!progressData) return
 
     setGeneratingProgress(progressData)
+    // setGeneratedNewImage({ isCompleted: false, encodedGenerateId })
 
     if (progressData === 100) {
       setGeneratingProgress(0)
@@ -183,7 +186,7 @@ function Detail() {
         {/* generate section */}
         <section className="grow px-5 flex gap-10">
           {/* generate section - left */}
-          <div className="grow-[2] overflow-y-auto overflow-x-hidden basis-[477px] shrink-0">
+          <div className="grow-[3] overflow-y-auto overflow-x-hidden basis-[477px] shrink-0">
             <div className="flex flex-col relative h-full">
               {/* title top fix */}
               <div className="flex justify-between items-center sticky top-0 w-full h-[38px] z-10">
@@ -196,9 +199,9 @@ function Detail() {
                 </ExportButton>
               </div>
 
-              <div className="grow flex flex-col mt-5">
+              <div className="flex flex-col mt-5 gap-5 h-full">
                 {/* image editing section */}
-                <div className="grow relative mb-5 max-h-[80%] ">
+                <div className="grow relative max-h-[80%] min-h-[572px]">
                   <ImageEditingBox
                     containerRef={containerRef}
                     boxes={boxes}
@@ -234,14 +237,33 @@ function Detail() {
                       />
                     ))}
                   </RadioGroup>
+                  {/* skin texture percentage bar */}
+                  <div className="flex gap-2 items-center mt-5">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="bg-inherit rounded-[8px] w-8 h-8 shrink-0"
+                    >
+                      <ArrowIcon className="rotate-180 fill-neutral-5" />
+                    </Button>
+                    <div className="grow h-[5px] w-full bg-neutral-1 rounded-[30px]">
+                      <div className="h-full bg-neutral-5 rounded-[4px] w-[50%]"></div>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="bg-primary rounded-[8px] w-8 h-8 shrink-0"
+                    >
+                      <ArrowIcon className="fill-neutral-0" />
+                    </Button>
+                  </div>
                 </div>
-                {/* TODO: skin texture percentage bar */}
               </div>
             </div>
           </div>
 
           {/* generate section - right */}
-          <div className="grow overflow-y-auto">
+          <div className="grow overflow-y-auto overflow-x-hidden basis-[472px]">
             <div className="flex flex-col gap-5">
               {/* variations */}
               <div className="mt-[58px] max-h-[80%]">
