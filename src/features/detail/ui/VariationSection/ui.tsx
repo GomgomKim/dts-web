@@ -1,8 +1,7 @@
 import Image from 'next/image'
 import { useState } from 'react'
 
-import LeftIcon from '/public/icons/arrow-left.svg'
-import RightIcon from '/public/icons/arrow-right.svg'
+import AngleBracketIcon from '/public/icons/angle-bracket-open.svg'
 import { Button } from '@/shared/ui'
 import './styles.css'
 import { Variation } from '@/entities/detail/model'
@@ -58,7 +57,7 @@ export const VariationsSection = ({
               setCurrentPage((prev) => Math.max(prev - 1, INITIAL_PAGE))
             }
           >
-            <LeftIcon />
+            <AngleBracketIcon />
           </Button>
           <Button
             variant="outline"
@@ -69,7 +68,7 @@ export const VariationsSection = ({
               setCurrentPage((prev) => Math.min(prev + 1, totalPages))
             }
           >
-            <RightIcon />
+            <AngleBracketIcon className="rotate-180" />
           </Button>
         </div>
       </div>
