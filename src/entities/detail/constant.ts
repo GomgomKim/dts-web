@@ -37,8 +37,8 @@ export const FACE_ANGLE_MAP: Record<FaceAngle, string> = {
   RIGHT: 'Right'
 }
 
-export const FACE_ANGLE_REVERT_MAP = {
+export const FACE_ANGLE_REVERT_MAP: Record<string, FaceAngle> = {
   Left: 'LEFT',
   Front: 'FRONT',
   Right: 'RIGHT'
-} as const
+}
