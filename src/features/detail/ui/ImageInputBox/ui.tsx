@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { DndBox } from '@/shared/lib/hocs/DndBox'
 import { Button } from '@/shared/ui/button'
 import DeleteIcon from '/public/icons/delete.svg'
-import { useImagePreviewUrlStore } from '@/features/archive/model/store'
+import { useImagePreviewUrlStore } from '@/features/detail/store'
 import { usePostAssetRemoveBackground } from '@/entities/detail/adapter'
 
 type ImageInputBoxProps = {
