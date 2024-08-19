@@ -58,7 +58,7 @@ export const ImageEditingBox = (props: Props) => {
     }, 2500)
   }, [generatedNewImage])
 
-  const isGenerating = !!generatingProgress && generatingProgress < 100
+  const isGenerating = !!generatedNewImage.encodedGenerateId
 
   const imgUrl =
     process.env.NEXT_PUBLIC_API_URL +
@@ -98,7 +98,7 @@ export const ImageEditingBox = (props: Props) => {
     <>
       <div
         className={cn(
-          'min-h-[572px] h-full bg-neutral-1 rounded-[0.5rem] overflow-hidden relative flex justify-center',
+          'h-full bg-neutral-1 rounded-[0.5rem] overflow-hidden relative flex justify-center',
           {
             'z-20': isGenerating
           }
@@ -135,7 +135,7 @@ export const ImageEditingBox = (props: Props) => {
         {isShowToast ? <DownloadNowToast containerRef={containerRef} /> : null}
       </div>
       {isGenerating ? (
-        <div className="z-10 absolute w-screen h-screen bg-neutral-0-70" />
+        <div className="z-10 fixed inset-0 bg-neutral-0-70" />
       ) : null}
     </>
   )

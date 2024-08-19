@@ -156,10 +156,8 @@ function Detail() {
   }, [variationImagesData])
 
   useEffect(() => {
-    if (!progressData) return
-
-    setGeneratingProgress(progressData)
-    // setGeneratedNewImage({ isCompleted: false, encodedGenerateId })
+    setGeneratingProgress(progressData || 0)
+    setGeneratedNewImage({ isCompleted: false, encodedGenerateId }) // memo
 
     if (progressData === 100) {
       setGeneratingProgress(0)
