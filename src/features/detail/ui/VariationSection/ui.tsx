@@ -33,7 +33,7 @@ export const VariationsSection = ({
 
     setTotalPages((prev) => prev + 1)
 
-    // data 길이 체크
+    // TODO: data 길이 체크
     const newData =
       data?.slice(
         reqCount * AMOUNT_PER_PAGE,
@@ -42,7 +42,7 @@ export const VariationsSection = ({
     setFilteredData((prev) => [...newData, ...prev])
   }
 
-  const isDisabled = !!data || data!.length < 5 || reqCount >= LIMIT_REQUEST
+  const isDisabled = (data && data.length < 5) || reqCount >= LIMIT_REQUEST
 
   return (
     <>
