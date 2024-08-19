@@ -9,7 +9,7 @@ interface Props {
 
 function BrandAssets(props: Props) {
   return (
-    <section className="sticky top-[76px] flex flex-col gap-5">
+    <section className="sticky flex flex-col gap-5">
       <h2 className="text-[24px]">Brand Assets</h2>
       <div>
         <h3 className="mb-3">Product</h3>
