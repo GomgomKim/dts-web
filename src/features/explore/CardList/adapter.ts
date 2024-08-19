@@ -1,4 +1,4 @@
-import { getExploreImages } from '@/features/explore/card-list/api'
+import { getExploreImages } from '@/features/explore/CardList/api'
 import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query'
 import { GetExploreListResData } from './model'
 
