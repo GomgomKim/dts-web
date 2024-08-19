@@ -38,7 +38,14 @@ export default function RootLayout({
           >
             header
           </header>
-          <main style={{ paddingTop: '56px' }}>{children}</main>
+          <main
+            style={{
+              paddingTop: '56px',
+              height: '100vh'
+            }}
+          >
+            {children}
+          </main>
         </ReactQueryProviders>
       </body>
     </html>
