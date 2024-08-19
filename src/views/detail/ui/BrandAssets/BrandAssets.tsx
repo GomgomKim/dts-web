@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ImageInputBox } from '@/features/archive/ui/ImageInputBox'
+import { ImageInputBox } from '@/features/detail/ui/ImageInputBox'
 import { Button } from '@/shared/ui/button'
 interface Props {
   handleRemoveBox: (boxId: string) => void
