@@ -26,8 +26,26 @@ export default function RootLayout({
       <MSWComponent />
       <body className={`${pretendard.variable} font-pretendard`}>
         <ReactQueryProviders>
-          <header>header</header>
-          <main>{children}</main>
+          <header
+            style={{
+              height: '56px',
+              position: 'fixed',
+              top: 0,
+              inset: 0,
+              zIndex: '9999',
+              backgroundColor: 'beige'
+            }}
+          >
+            header
+          </header>
+          <main
+            style={{
+              paddingTop: '56px',
+              height: '100vh'
+            }}
+          >
+            {children}
+          </main>
         </ReactQueryProviders>
       </body>
     </html>

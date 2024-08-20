@@ -5,9 +5,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/shared/ui/button'
 import LikeIcon from '/public/icons/heart.svg'
-import LinkIcon from '/public/icons/arrow-up-right.svg'
-import { URL_EXPLORE_LIST_IMAGE } from '@/features/explore/card-list/constant'
-import { ModelImageItem } from '@/features/explore/card-list/model'
+import LinkIcon from '/public/icons/arrow-thin.svg'
+import { URL_EXPLORE_LIST_IMAGE } from '@/features/explore/CardList/constant'
+import { ModelImageItem } from '@/features/explore/CardList/model'
 
 interface CardProps {
   item: ModelImageItem

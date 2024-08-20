@@ -5,7 +5,8 @@ import { RadioGroupContext } from './index.context'
 type RadioGroupProps = React.ComponentProps<'div'> & {
   id: string
   value: string
-  onValueChange: (value: string) => void
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onValueChange: (value: any) => void
 }
 const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
   ({ id, value, onValueChange, className, ...props }, ref) => {

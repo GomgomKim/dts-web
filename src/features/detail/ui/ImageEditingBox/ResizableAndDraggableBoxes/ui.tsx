@@ -3,33 +3,22 @@
 
 import { cn } from '@/shared/lib/utils'
 import { useState, useEffect, useCallback, useRef } from 'react'
-
-export type Box = {
-  id: string
-  image: string
-  left: number
-  top: number
-  width: number
-  height: number
-  zIndex: number
-}
+import { Box } from '../type'
 
 type ActiveBox = Box & {
   offsetX: number
   offsetY: number
 }
 
-type ResizableAndDraggableBoxesProps = {
+type Props = {
   containerRef: React.RefObject<HTMLElement>
   boxes: Box[]
   setBoxes: React.Dispatch<React.SetStateAction<Box[]>>
 }
 
-export const ResizableAndDraggableBoxes = ({
-  containerRef,
-  boxes,
-  setBoxes
-}: ResizableAndDraggableBoxesProps) => {
+export const ResizableAndDraggableBoxes = (props: Props) => {
+  const { containerRef, boxes, setBoxes } = props
+
   const [activeBox, setActiveBox] = useState<ActiveBox | null>(null)
   const [isDragging, setIsDragging] = useState(false)
   const [isResizing, setIsResizing] = useState(false)
