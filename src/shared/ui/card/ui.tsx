@@ -6,7 +6,8 @@ import Link from 'next/link'
 import { Button } from '@/shared/ui/button'
 import LinkIcon from '/public/icons/arrow-thin.svg'
 import { ModelImageItem } from '@/features/explore/CardList/model'
-import { LikeButton } from '@/features/favorites/LikeButton'
+// TODO: LikeButton 주입 또는 card component 기능적 분할로 리팩토링
+import { LikeButton } from '@/features/LikeButton'
 
 const URL_BASE_IMAGE_FILE = '/image-file/base-image'
 
