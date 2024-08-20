@@ -4,9 +4,9 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/shared/ui/button'
-import LikeIcon from '/public/icons/heart.svg'
 import LinkIcon from '/public/icons/arrow-thin.svg'
 import { ModelImageItem } from '@/features/explore/CardList/model'
+import { LikeButton } from '@/features/favorites/LikeButton'
 
 const URL_BASE_IMAGE_FILE = '/image-file/base-image'
 
@@ -14,9 +14,8 @@ interface CardProps {
   item: ModelImageItem
 }
 
-// TODO: explore page, favorites page are using the same card component
 const Card = ({ item }: CardProps) => {
-  const { encodedBaseImageId, name: modelname } = item
+  const { encodedBaseImageId, name: modelname, description, isFavorite } = item
   const [isHovering, setIsHovering] = useState(false)
 
   return (
@@ -31,7 +30,7 @@ const Card = ({ item }: CardProps) => {
           `${URL_BASE_IMAGE_FILE}/` +
           encodedBaseImageId
         }
-        alt=""
+        alt={description}
         fill
         style={{ objectFit: 'cover' }}
       />
@@ -40,17 +39,11 @@ const Card = ({ item }: CardProps) => {
           href={`/archive/${modelname}?id=${encodedBaseImageId}`}
           className="absolute inset-0 z-10 bg-custom-gradient"
         >
-          <Button
-            asChild
-            variant="secondary"
-            size="icon"
-            onClick={() => alert('clicked like button')}
-            className="group absolute top-2 right-2"
-          >
-            <span>
-              <LikeIcon className="stroke-current group-active:fill-primary group-active:stroke-primary" />
-            </span>
-          </Button>
+          <LikeButton
+            id={encodedBaseImageId}
+            isFavorite={isFavorite}
+            className="absolute top-2 right-2"
+          />
           <Button
             asChild
             variant="link"
