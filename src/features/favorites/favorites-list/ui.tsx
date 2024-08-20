@@ -7,7 +7,7 @@ import { Card } from '@/shared/ui/card'
 import { useGetFavoriteList } from './adapter'
 import { Nullbox } from '@/entities/favorites/ui/Nullbox'
 import { TAG_TYPES } from './constant'
-import { Catergory } from '@/features/category'
+import { Category } from '@/features/category'
 
 export const FavoriteList = () => {
   const searchParams = useSearchParams()
@@ -56,7 +56,7 @@ export const FavoriteList = () => {
       <Nullbox />
     ) : (
       <>
-        <Catergory categoryList={TAG_TYPES} />
+        <Category categoryList={TAG_TYPES} />
         <Grid />
       </>
     )
