@@ -1,4 +1,4 @@
-import { FavoriteList } from '@/features/favorites/favorites-list'
+import { FavoriteList } from '@/features/favorites/FavoriteList'
 import { Suspense } from 'react'
 
 function Favorites() {

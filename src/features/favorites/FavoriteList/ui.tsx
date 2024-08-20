@@ -4,7 +4,7 @@ import { Fragment, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useInView } from 'react-intersection-observer'
 import { Card } from '@/shared/ui/card'
-import { useGetFavoriteList } from './adapter'
+import { useGetFavoriteList } from '../../../entities/favorites/favorites-list/adapter'
 import { Nullbox } from '@/entities/favorites/ui/Nullbox'
 import { TAG_TYPES } from './constant'
 import { Category } from '@/features/category'
@@ -32,6 +32,7 @@ export const FavoriteList = () => {
     }
   }, [inView, isFetching, isFetchingNextPage, hasNextPage, fetchNextPage])
 
+  // TODO: null box di
   if (isFetching && !isFetchingNextPage) return <div>loading skeleton ...</div>
   if (status === 'error') return <p>{error?.message}</p>
 

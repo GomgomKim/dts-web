@@ -1,6 +1,5 @@
 import { AxiosError, AxiosResponse } from 'axios'
 import { dtsAxios } from '@/shared/api'
-
 import { GetFavoriteListReqData, GetFavoriteListResData } from './model'
 import { URL_FAVORITE_LIST } from './constant'
 

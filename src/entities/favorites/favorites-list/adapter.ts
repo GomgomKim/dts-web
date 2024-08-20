@@ -1,6 +1,6 @@
 import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query'
-import { GetFavoriteListResData } from './model'
 import { getFavoriteList } from './api'
+import { GetFavoriteListResData } from './model'
 
 const useGetFavoriteList = (tagType: string) => {
   const {
