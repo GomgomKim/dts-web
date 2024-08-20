@@ -52,7 +52,7 @@ export const FavoriteList = () => {
   const isEmpty = data?.pages[0].content.images.length === 0
 
   const renderContent = () => {
-    isEmpty ? (
+    return isEmpty ? (
       <Nullbox />
     ) : (
       <>
