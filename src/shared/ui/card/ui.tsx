@@ -6,17 +6,16 @@ import Link from 'next/link'
 import { Button } from '@/shared/ui/button'
 import LinkIcon from '/public/icons/arrow-thin.svg'
 import { ModelImageItem } from '@/features/explore/CardList/model'
-// TODO: LikeButton 주입 또는 card component 기능적 분할로 리팩토링
-import { LikeButton } from '@/features/LikeButton'
 
 const URL_BASE_IMAGE_FILE = '/image-file/base-image'
 
-interface CardProps {
+type Props = {
   item: ModelImageItem
+  actionSlot?: React.ReactNode
 }
 
-const Card = ({ item }: CardProps) => {
-  const { encodedBaseImageId, name: modelname, description, isFavorite } = item
+const Card = (props: Props) => {
+  const { encodedBaseImageId, name: modelname, description } = props.item
   const [isHovering, setIsHovering] = useState(false)
 
   return (
@@ -40,11 +39,6 @@ const Card = ({ item }: CardProps) => {
           href={`/archive/${modelname}?id=${encodedBaseImageId}`}
           className="absolute inset-0 z-10 bg-custom-gradient"
         >
-          <LikeButton
-            id={encodedBaseImageId}
-            isFavorite={isFavorite}
-            className="absolute top-2 right-2"
-          />
           <Button
             asChild
             variant="link"
@@ -56,6 +50,9 @@ const Card = ({ item }: CardProps) => {
             </div>
           </Button>
         </Link>
+      )}
+      {isHovering && props.actionSlot && (
+        <div className="absolute top-2 right-2 z-10">{props.actionSlot}</div>
       )}
     </div>
   )

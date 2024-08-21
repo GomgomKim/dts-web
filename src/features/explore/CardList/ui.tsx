@@ -3,6 +3,7 @@ import { useSearchParams } from 'next/navigation'
 import { useInView } from 'react-intersection-observer'
 import { useGetExploreImages } from '@/features/explore/CardList/adapter'
 import { Card } from '@/shared/ui/card'
+import { LikeButton } from '@/features/explore/LikeButton'
 
 const TAG_TYPES = ['FEATURED', 'MAKEUP', 'SKINCARE', 'HAIR']
 
@@ -40,9 +41,16 @@ export const CardList = () => {
       return data?.pages.map((page, i) => (
         <Fragment key={i}>
           {page.content.images.map((cardItem) => (
-            // <div >
-            <Card key={cardItem.encodedBaseImageId} item={cardItem} />
-            // </div>
+            <Card
+              key={cardItem.encodedBaseImageId}
+              item={cardItem}
+              actionSlot={
+                <LikeButton
+                  id={cardItem.encodedBaseImageId}
+                  isFavorite={cardItem.isFavorite}
+                />
+              }
+            />
           ))}
         </Fragment>
       ))

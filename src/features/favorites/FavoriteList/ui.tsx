@@ -4,10 +4,11 @@ import { Fragment, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useInView } from 'react-intersection-observer'
 import { Card } from '@/shared/ui/card'
-import { useGetFavoriteList } from '../../../entities/favorites/favorites-list/adapter'
+import { useGetFavoriteList } from './adapter'
 import { Nullbox } from '@/entities/favorites/ui/Nullbox'
 import { TAG_TYPES } from './constant'
 import { Category } from '@/features/category'
+import { LikeButton } from '../LikeButton'
 
 export const FavoriteList = () => {
   const searchParams = useSearchParams()
@@ -42,7 +43,16 @@ export const FavoriteList = () => {
         {data?.pages.map((page, i) => (
           <Fragment key={i}>
             {page.content.images.map((cardItem) => (
-              <Card key={cardItem.encodedBaseImageId} item={cardItem} />
+              <Card
+                key={cardItem.encodedBaseImageId}
+                item={cardItem}
+                actionSlot={
+                  <LikeButton
+                    id={cardItem.encodedBaseImageId}
+                    isFavorite={cardItem.isFavorite}
+                  />
+                }
+              />
             ))}
           </Fragment>
         ))}
