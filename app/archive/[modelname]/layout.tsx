@@ -10,5 +10,5 @@ export default function DetailPageLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  return <div className="p-5 h-full overflow-hidden">{children}</div>
+  return <div className="px-5 pb-5 h-full overflow-hidden">{children}</div>
 }

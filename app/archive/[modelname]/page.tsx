@@ -1,5 +1,5 @@
-import Model from '@/views/detail/ui'
+import Detail from '@/views/detail/ui'
 
 export default function Page() {
-  return <Model />
+  return <Detail />
 }
