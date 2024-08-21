@@ -1,12 +1,38 @@
+'use client'
+
+import Link from 'next/link'
 import { forwardRef } from 'react'
-import { Menubar } from '@/shared/ui/menubar'
+import { Button, MenuItem } from '@/shared/ui'
+import { Menubar } from './Menubar'
+import { Categorybar } from './Categorybar'
 
 export const Sidebar = () => {
   return (
     <div className="min-w-[280px] px-5 py-3">
       <Menubar />
       <SidebarSeparator />
-      <div>categorybar...</div>
+      <Categorybar />
+      <SidebarSeparator />
+      <li>
+        <MenuItem
+          item={{
+            href: '/help',
+            title: 'Help',
+            prefix: '?'
+          }}
+        />
+      </li>
+      <li>
+        <Button asChild variant="link" className="p-[12px] text-inherit">
+          <Link href="/terms" className="block">
+            <p className="text-[12px] text-nowrap font-medium">
+              Terms of Use
+              <span className="font-normal text-neutral-7"> and </span>
+              Privacy Policy
+            </p>
+          </Link>
+        </Button>
+      </li>
     </div>
   )
 }
