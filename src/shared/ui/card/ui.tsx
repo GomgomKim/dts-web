@@ -46,7 +46,7 @@ const Card = (props: Props) => {
           >
             <div>
               Start with This Model
-              <LinkIcon />
+              <LinkIcon className="stroke-white" />
             </div>
           </Button>
         </Link>
