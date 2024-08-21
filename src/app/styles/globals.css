@@ -39,6 +39,8 @@
   * {
     @apply border-border;
     line-height: normal;
+    list-style: none;
+    box-sizing: border-box;
   }
   body {
     @apply bg-background text-foreground;
