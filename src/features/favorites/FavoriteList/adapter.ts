@@ -1,8 +1,8 @@
-import { getExploreImages } from '@/features/explore/CardList/api'
 import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query'
-import { GetExploreListResData } from './model'
+import { getFavoriteList } from './api'
+import { GetFavoriteListResData } from './model'
 
-const useGetExploreImages = (tagType: string) => {
+const useGetFavoriteList = (tagType: string) => {
   const {
     data,
     status,
@@ -12,15 +12,15 @@ const useGetExploreImages = (tagType: string) => {
     isFetching,
     isFetchingNextPage
   } = useInfiniteQuery<
-    GetExploreListResData,
+    GetFavoriteListResData,
     Error,
-    InfiniteData<GetExploreListResData>,
+    InfiniteData<GetFavoriteListResData>,
     [_1: string, _2: string],
     string | null
   >({
-    queryKey: ['explore', tagType],
+    queryKey: ['favorites', tagType],
     queryFn: ({ pageParam }) =>
-      getExploreImages({ tagType, scrollKey: pageParam }),
+      getFavoriteList({ tagType, scrollKey: pageParam }),
     enabled: !!tagType,
     initialPageParam: null,
     getNextPageParam: (lastPage) => lastPage.content.scrollKey
@@ -39,4 +39,4 @@ const useGetExploreImages = (tagType: string) => {
   }
 }
 
-export { useGetExploreImages }
+export { useGetFavoriteList }

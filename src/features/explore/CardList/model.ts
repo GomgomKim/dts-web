@@ -20,4 +20,5 @@ export interface ModelImageItem {
   encodedBaseImageId: string
   name: string
   description: string
+  isFavorite: boolean
 }

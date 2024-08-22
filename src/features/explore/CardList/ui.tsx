@@ -3,12 +3,13 @@ import { useSearchParams } from 'next/navigation'
 import { useInView } from 'react-intersection-observer'
 import { useGetExploreImages } from '@/features/explore/CardList/adapter'
 import { Card } from '@/shared/ui/card'
+import { LikeButton } from '@/features/explore/LikeButton'
 
 const TAG_TYPES = ['FEATURED', 'MAKEUP', 'SKINCARE', 'HAIR']
 
 export const CardList = () => {
   const searchParams = useSearchParams()
-  const params = new URLSearchParams(searchParams)
+  // const params = new URLSearchParams(searchParams)
 
   const {
     data,
@@ -18,7 +19,7 @@ export const CardList = () => {
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage
-  } = useGetExploreImages(params.get('tagType') || TAG_TYPES[0])
+  } = useGetExploreImages(searchParams.get('tagType') || TAG_TYPES[0])
 
   const { ref, inView } = useInView({
     threshold: 1
@@ -40,9 +41,11 @@ export const CardList = () => {
       return data?.pages.map((page, i) => (
         <Fragment key={i}>
           {page.content.images.map((cardItem) => (
-            // <div >
-            <Card key={cardItem.encodedBaseImageId} item={cardItem} />
-            // </div>
+            <Card
+              key={cardItem.encodedBaseImageId}
+              item={cardItem}
+              actionSlot={<LikeButton item={cardItem} />}
+            />
           ))}
         </Fragment>
       ))

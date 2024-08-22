@@ -4,18 +4,18 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/shared/ui/button'
-import LikeIcon from '/public/icons/heart.svg'
 import LinkIcon from '/public/icons/arrow-thin.svg'
-import { URL_EXPLORE_LIST_IMAGE } from '@/features/explore/CardList/constant'
 import { ModelImageItem } from '@/features/explore/CardList/model'
 
-interface CardProps {
+const URL_BASE_IMAGE_FILE = '/image-file/base-image'
+
+type Props = {
   item: ModelImageItem
+  actionSlot?: React.ReactNode
 }
 
-// TODO: explore page, favorites page are using the same card component
-const Card = ({ item }: CardProps) => {
-  const { encodedBaseImageId, name: modelname } = item
+const Card = (props: Props) => {
+  const { encodedBaseImageId, name: modelname, description } = props.item
   const [isHovering, setIsHovering] = useState(false)
 
   return (
@@ -27,10 +27,10 @@ const Card = ({ item }: CardProps) => {
       <Image
         src={
           process.env.NEXT_PUBLIC_API_URL +
-          `${URL_EXPLORE_LIST_IMAGE}/` +
+          `${URL_BASE_IMAGE_FILE}/` +
           encodedBaseImageId
         }
-        alt=""
+        alt={description}
         fill
         style={{ objectFit: 'cover' }}
       />
@@ -39,17 +39,6 @@ const Card = ({ item }: CardProps) => {
           href={`/archive/${modelname}?id=${encodedBaseImageId}`}
           className="absolute inset-0 z-10 bg-custom-gradient"
         >
-          <Button
-            asChild
-            variant="secondary"
-            size="icon"
-            onClick={() => alert('clicked like button')}
-            className="group absolute top-2 right-2"
-          >
-            <span>
-              <LikeIcon className="stroke-current group-active:fill-primary group-active:stroke-primary" />
-            </span>
-          </Button>
           <Button
             asChild
             variant="link"
@@ -61,6 +50,9 @@ const Card = ({ item }: CardProps) => {
             </div>
           </Button>
         </Link>
+      )}
+      {isHovering && props.actionSlot && (
+        <div className="absolute top-2 right-2 z-10">{props.actionSlot}</div>
       )}
     </div>
   )
