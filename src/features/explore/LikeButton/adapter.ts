@@ -1,0 +1,124 @@
+import {
+  deleteFavoriteRemove,
+  postFavoriteAdd
+} from '@/entities/LikeButton/api'
+import {
+  DeleteFavoriteRemoveReqData,
+  PostFavoriteAddReqData
+} from '@/entities/LikeButton/model'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useSearchParams } from 'next/navigation'
+import { GetExploreListResData } from '../CardList/model'
+
+const usePostFavoriteAdd = () => {
+  const queryClient = useQueryClient()
+
+  const searchParams = useSearchParams()
+  const tagType = searchParams.get('tagType')
+  const queryKey = ['explore', tagType]
+
+  return useMutation({
+    mutationFn: ({ encodedBaseImageId }: PostFavoriteAddReqData) =>
+      postFavoriteAdd({ encodedBaseImageId }),
+    // onMutate: async ({ encodedBaseImageId }) => {
+    //   await queryClient.cancelQueries({
+    //     queryKey: queryKey
+    //   })
+
+    //   const previousData = queryClient.getQueryData<{
+    //     pages: GetExploreListResData[]
+    //     pageParams: string[]
+    //   }>(queryKey)
+
+    //   queryClient.setQueryData(
+    //     queryKey,
+    //     (oldData: typeof previousData | undefined) => {
+    //       if (!oldData) return oldData
+
+    //       return {
+    //         ...oldData,
+    //         pages: oldData.pages.map((page) => ({
+    //           ...page,
+    //           content: {
+    //             ...page.content,
+    //             images: page.content.images.map((item) => {
+    //               if (item.encodedBaseImageId === encodedBaseImageId)
+    //                 return { ...item, isFavorite: true }
+    //               return item
+    //             })
+    //           }
+    //         }))
+    //       }
+    //     }
+    //   )
+
+    //   return { previousData }
+    // },
+    onError: (error) => {
+      // onError: (error, _variables, context) => {
+      //   queryClient.setQueryData(queryKey, context?.previousData)
+      console.log('failed to add favorite in explore page')
+      console.error(error)
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: queryKey })
+    }
+  })
+}
+
+const useDeleteFavoriteRemove = () => {
+  const queryClient = useQueryClient()
+
+  const searchParams = useSearchParams()
+  const tagType = searchParams.get('tagType')
+  const queryKey = ['explore', tagType]
+
+  return useMutation({
+    mutationFn: ({ encodedBaseImageId }: DeleteFavoriteRemoveReqData) =>
+      deleteFavoriteRemove({ encodedBaseImageId }),
+    onMutate: async ({ encodedBaseImageId }) => {
+      await queryClient.cancelQueries({
+        queryKey: queryKey
+      })
+
+      const previousData = queryClient.getQueryData<{
+        pages: GetExploreListResData[]
+        pageParams: string[]
+      }>(queryKey)
+
+      queryClient.setQueryData(
+        queryKey,
+        (oldData: typeof previousData | undefined) => {
+          if (!oldData) return oldData
+
+          return {
+            ...oldData,
+            pages: oldData.pages.map((page) => ({
+              ...page,
+              content: {
+                ...page.content,
+                images: page.content.images.map((item) => {
+                  if (item.encodedBaseImageId === encodedBaseImageId)
+                    return { ...item, isFavorite: false }
+                  return item
+                })
+              }
+            }))
+          }
+        }
+      )
+
+      return { previousData }
+    },
+    onError: (error, _variables, context) => {
+      queryClient.setQueryData(queryKey, context?.previousData)
+      console.log('failed to delete favorite in explore page')
+      console.error(error)
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: queryKey })
+    }
+  })
+}
+
+export { usePostFavoriteAdd, useDeleteFavoriteRemove }
