@@ -46,12 +46,7 @@ export const FavoriteList = () => {
               <Card
                 key={cardItem.encodedBaseImageId}
                 item={cardItem}
-                actionSlot={
-                  <LikeButton
-                    id={cardItem.encodedBaseImageId}
-                    isFavorite={cardItem.isFavorite}
-                  />
-                }
+                actionSlot={<LikeButton item={cardItem} />}
               />
             ))}
           </Fragment>

@@ -2,17 +2,18 @@
 
 import * as entities from '@/entities/LikeButton'
 import { useDeleteFavoriteRemove } from './adapter'
+import { ModelImageItem } from '@/features/explore/CardList/model'
 
 export type Props = {
-  id: string
-  className?: string
+  item: ModelImageItem
 }
 
 export const LikeButton = (props: Props) => {
+  const { encodedBaseImageId } = props.item
   const deleteFavoriteRemove = useDeleteFavoriteRemove()
 
   const handleClick = () => {
-    deleteFavoriteRemove.mutate({ encodedBaseImageId: props.id })
+    deleteFavoriteRemove.mutate({ encodedBaseImageId })
   }
 
   return <entities.LikeButton handleClick={handleClick} isActive={true} />
