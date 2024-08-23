@@ -61,7 +61,7 @@ const Header = () => {
   const pathname = usePathname()
 
   return (
-    <header className="fixed top-0 inset-0 z-50 h-14 py-[7.5px] px-5 bg-background">
+    <header className="fixed top-0 inset-0 z-40 h-14 py-[7.5px] px-5 bg-background">
       <div className="flex items-center gap-[0.5rem]">
         <span className="mr-5">
           <DTSLogo />
