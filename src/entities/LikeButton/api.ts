@@ -5,20 +5,20 @@ import { PostFavoriteAddReqData, DeleteFavoriteRemoveReqData } from './model'
 
 // TODO: error 처리
 export async function postFavoriteAdd({
-  encodedBaseImageId
+  encodedImageInfoId
 }: PostFavoriteAddReqData): Promise<void> {
   const response = await dtsAxios.post<
     PostFavoriteAddReqData,
     AxiosResponse<void, AxiosError>
-  >(`${URL_FAVORITE_ADD}?encodedBaseImageId=${encodedBaseImageId}`)
+  >(`${URL_FAVORITE_ADD}?encodedImageInfoId=${encodedImageInfoId}`)
   return response.data
 }
 
 export async function deleteFavoriteRemove({
-  encodedBaseImageId
+  encodedImageInfoId
 }: DeleteFavoriteRemoveReqData): Promise<void> {
   const response = await dtsAxios.delete<null, AxiosResponse<void, AxiosError>>(
-    `${URL_FAVORITE_REMOVE}?encodedBaseImageId=${encodedBaseImageId}`
+    `${URL_FAVORITE_REMOVE}?encodedImageInfoId=${encodedImageInfoId}`
   )
   return response.data
 }

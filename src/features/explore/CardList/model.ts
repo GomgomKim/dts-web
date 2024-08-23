@@ -17,8 +17,9 @@ export interface Content {
 }
 
 export interface ModelImageItem {
-  encodedBaseImageId: string
+  encodedImageInfoId: string
   name: string
   description: string
   isFavorite: boolean
+  encodedMainImageId: string
 }

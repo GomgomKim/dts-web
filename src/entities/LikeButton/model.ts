@@ -1,7 +1,7 @@
 export interface PostFavoriteAddReqData {
-  encodedBaseImageId: string
+  encodedImageInfoId: string
 }
 
 export interface DeleteFavoriteRemoveReqData {
-  encodedBaseImageId: string
+  encodedImageInfoId: string
 }

@@ -42,7 +42,7 @@ export const CardList = () => {
         <Fragment key={i}>
           {page.content.images.map((cardItem) => (
             <Card
-              key={cardItem.encodedBaseImageId}
+              key={cardItem.encodedMainImageId}
               item={cardItem}
               actionSlot={<LikeButton item={cardItem} />}
             />
