@@ -1,7 +1,10 @@
+'use client'
+
 import Link from 'next/link'
 import DTSLogo from '/public/icons/dts-logo.svg'
 import { Button } from '@/shared/ui'
 import GoogleIcon from '/public/icons/google-logo.svg'
+import { useRouter } from 'next/navigation'
 
 const LoginButton = () => {
   return (
@@ -15,11 +18,19 @@ const LoginButton = () => {
 }
 
 const Login = () => {
+  const router = useRouter()
+  const onClickClose = () => {
+    // router.back()
+    router.replace('/explore')
+  }
+
   return (
-    <div className="w-screen h-full flex justify-center absolute bg-neutral-0-90 inset-0">
-      <div className="flex flex-col gap-10 border border-neutral-2 rounded-[12px] m-auto relative w-[400px] p-10">
+    <div className="w-screen h-full flex justify-center absolute bg-neutral-0-90 inset-0 z-50">
+      <div className="flex flex-col gap-10 border border-neutral-2 rounded-[12px] m-auto relative w-[400px] p-10 bg-background">
         <div>
-          <DTSLogo />
+          <div role="button" onClick={onClickClose}>
+            <DTSLogo />
+          </div>
         </div>
         <div className="flex flex-col gap-8">
           <div>
