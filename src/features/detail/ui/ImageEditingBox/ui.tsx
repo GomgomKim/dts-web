@@ -58,7 +58,9 @@ export const ImageEditingBox = (props: Props) => {
     }, 2500)
   }, [generatedNewImage])
 
-  const isGenerating = !!generatedNewImage.encodedGenerateId
+  const isGenerating =
+    !!generatedNewImage.encodedGenerateId &&
+    generatedNewImage.isCompleted === false
 
   const imgUrl =
     process.env.NEXT_PUBLIC_API_URL +
@@ -88,8 +90,9 @@ export const ImageEditingBox = (props: Props) => {
     const aspectRatio = ASPECT_RATIO_MAP_NUMBER[value]
     const type =
       value === 'ASPECT_RATIO_16_9' || value === 'ASPECT_RATIO_4_3'
-        ? 'height'
-        : 'width'
+        ? 'width'
+        : 'height'
+    // 1:1이면 상위 컨테이너의 짧은 길이에 맞추기
 
     return { aspectRatio: aspectRatio, [type]: '100%' }
   }
