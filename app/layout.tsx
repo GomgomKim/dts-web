@@ -1,3 +1,5 @@
+// 'use client true'
+
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 import '@/app/styles/globals.css'
@@ -17,15 +19,20 @@ export const metadata: Metadata = {
 }
 
 export default function RootLayout({
-  children
+  children,
+  modal
 }: Readonly<{
   children: React.ReactNode
+  modal: React.ReactNode
 }>) {
   return (
     <html lang="en">
       <MSWComponent />
       <body className={`${pretendard.variable} font-pretendard`}>
-        <ReactQueryProviders>{children}</ReactQueryProviders>
+        <ReactQueryProviders>
+          {children}
+          {modal}
+        </ReactQueryProviders>
       </body>
     </html>
   )
