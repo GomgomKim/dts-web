@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
@@ -105,18 +104,18 @@ function Detail() {
     handleIsChangedOption()
   }, [searchParams])
 
+  const resetGeneratedNewImageInfo = () => {
+    setGeneratedNewImage({
+      isCompleted: false,
+      encodedGenerateId: ''
+    })
+  }
+
   const handleSelectedVariation = (variation: Variation) => {
     setSelectedVariation(variation)
 
     handleChangeAspectRatio(ASPECT_RATIO_MAP[variation.properties.aspectRatio])
     handleChangeFaceAngle(FACE_ANGLE_MAP[variation.properties.faceAngle])
-
-    // image 생성 후에 다시 선택할 경우
-    if (generatedNewImage.isCompleted)
-      setGeneratedNewImage({
-        isCompleted: false,
-        encodedGenerateId: ''
-      })
   }
 
   const handleChangeSkinTexture = (value: string) => {
@@ -126,11 +125,21 @@ function Detail() {
   const handleChangeAspectRatio = (
     value: keyof typeof ASPECT_RATIO_REVERT_MAP
   ) => {
+    if (generatedNewImage.isCompleted) {
+      const answer = confirm('Do you want to apply the changes?')
+      if (!answer) return
+      resetGeneratedNewImageInfo()
+    }
     setAspectRatio(value)
     handleQueryString('aspectRatio', value)
   }
 
   const handleChangeFaceAngle = (value: keyof typeof FACE_ANGLE_REVERT_MAP) => {
+    if (generatedNewImage.isCompleted) {
+      const answer = confirm('Do you want to apply the changes?')
+      if (!answer) return
+      resetGeneratedNewImageInfo()
+    }
     setFaceAngle(value)
     handleQueryString('faceAngle', FACE_ANGLE_REVERT_MAP[value])
   }
@@ -156,6 +165,8 @@ function Detail() {
   }, [variationImagesData])
 
   useEffect(() => {
+    if (!encodedGenerateId) return
+
     setGeneratingProgress(progressData || 0)
     setGeneratedNewImage({ isCompleted: false, encodedGenerateId }) // memo
 
