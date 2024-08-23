@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Sidebar } from '@/widgets'
+import { Header } from '@/widgets/Header'
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -12,9 +13,12 @@ export default function FavoritePageLayout({
   children: React.ReactNode
 }>) {
   return (
-    <div className="flex">
-      <Sidebar />
-      <div className="p-12 flex-1">{children}</div>
-    </div>
+    <>
+      <Header />
+      <div className="flex pt-14 h-screen">
+        <Sidebar />
+        <main className="p-12 ml-[280px] flex-1">{children}</main>
+      </div>
+    </>
   )
 }

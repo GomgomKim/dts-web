@@ -3,7 +3,6 @@ import localFont from 'next/font/local'
 import '@/app/styles/globals.css'
 import MSWComponent from '@/app/providers/msw-component'
 import ReactQueryProviders from '@/app/providers/query-client-provider'
-import { Header } from '@/widgets/Header'
 
 const pretendard = localFont({
   src: '../public/fonts/PretendardVariable.woff2',
@@ -26,17 +25,7 @@ export default function RootLayout({
     <html lang="en">
       <MSWComponent />
       <body className={`${pretendard.variable} font-pretendard`}>
-        <ReactQueryProviders>
-          <Header />
-          <main
-            style={{
-              paddingTop: '56px',
-              height: '100vh'
-            }}
-          >
-            {children}
-          </main>
-        </ReactQueryProviders>
+        <ReactQueryProviders>{children}</ReactQueryProviders>
       </body>
     </html>
   )

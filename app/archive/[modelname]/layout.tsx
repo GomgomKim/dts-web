@@ -1,3 +1,4 @@
+import { Header } from '@/widgets/Header'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -10,5 +11,12 @@ export default function DetailPageLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  return <div className="px-5 pb-5 h-full overflow-hidden">{children}</div>
+  return (
+    <>
+      <Header />
+      <main className="pt-14 h-screen">
+        <div className="px-5 pb-5 h-full overflow-hidden">{children}</div>
+      </main>
+    </>
+  )
 }

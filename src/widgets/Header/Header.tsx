@@ -66,7 +66,7 @@ const Header = () => {
         <span className="mr-5">
           <DTSLogo />
         </span>
-        {pathname.startsWith('/archive') ? <BackButton /> : null}
+        {pathname.startsWith('/archive/') ? <BackButton /> : null}
         {userAuth ? null : <NotLoggedInNav />}
       </div>
     </header>

@@ -19,7 +19,7 @@ SidebarSeparator.displayName = 'SidebarSeparator'
 
 const Sidebar = () => {
   return (
-    <div className="min-w-[280px] px-5 py-3">
+    <div className="min-w-[280px] px-5 py-3 fixed h-screen">
       <Menubar />
       <SidebarSeparator />
       <Categorybar />

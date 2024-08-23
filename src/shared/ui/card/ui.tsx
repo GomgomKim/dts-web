@@ -7,7 +7,7 @@ import { Button } from '@/shared/ui/button'
 import LinkIcon from '/public/icons/arrow-thin.svg'
 import { ModelImageItem } from '@/features/explore/CardList/model'
 
-const URL_BASE_IMAGE_FILE = '/image-file/base-image'
+const URL_BASE_IMAGE_FILE = '/image-file'
 
 type Props = {
   item: ModelImageItem
