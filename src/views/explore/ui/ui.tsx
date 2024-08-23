@@ -10,8 +10,8 @@ function Explore() {
   return (
     <>
       <Banner />
-      <Category categoryList={TAG_TYPES} />
       <Suspense fallback={<div>Loading...</div>}>
+        <Category categoryList={TAG_TYPES} />
         <CardList />
       </Suspense>
     </>
