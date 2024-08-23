@@ -173,7 +173,7 @@ function Detail() {
     <>
       <div className="flex h-full">
         {/* brand assets section*/}
-        <div className="flex-shrink-0 basis-[387px] mr-5">
+        <div className="flex-shrink-0 basis-[387px] mr-5 mt-5">
           <BrandAssets
             handleAddBrandAssets={handleAddBrandAssets}
             handleRemoveBox={handleRemoveBox}
@@ -184,10 +184,10 @@ function Detail() {
         {/* generate section */}
         <section className="grow px-5 flex gap-10">
           {/* generate section - left */}
-          <div className="grow-[3] overflow-y-auto overflow-x-hidden basis-[477px] shrink-0">
+          <div className="grow-[3] overflow-y-auto overflow-x-hidden basis-[477px] shrink-0 ">
             <div className="flex flex-col relative h-full">
               {/* title top fix */}
-              <div className="flex justify-between items-center sticky top-0 w-full h-[38px] z-10">
+              <div className="flex justify-between items-center sticky top-0 w-full h-[58px] z-10 pt-5">
                 <h2 className="text-[24px]">Generate</h2>
                 <ExportButton
                   containerRef={containerRef}
@@ -264,7 +264,7 @@ function Detail() {
           <div className="grow overflow-y-auto overflow-x-hidden basis-[472px]">
             <div className="flex flex-col gap-5">
               {/* variations */}
-              <div className="mt-[58px] max-h-[80%]">
+              <div className="mt-[78px] max-h-[80%]">
                 <VariationsSection
                   data={variationImagesData}
                   handleSelectedVariation={handleSelectedVariation}
