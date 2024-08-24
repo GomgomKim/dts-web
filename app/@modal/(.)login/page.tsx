@@ -1,19 +1,17 @@
 'use client'
 
 import { Login } from '@/entities/Login/Login'
-import { useEffect } from 'react'
+import { useOutsideClick } from '@/shared/lib/hooks/useOutsideClick'
+import { usePreventScroll } from '@/shared/lib/hooks/usePreventScroll'
+import { useRouter } from 'next/navigation'
+import { useRef } from 'react'
 
 export default function Page() {
-  useEffect(() => {
-    document.body.style.overflowY = 'hidden'
-    return () => {
-      document.body.style.overflowY = 'auto'
-    }
-  }, [])
-  return (
-    <>
-      login modal ~~
-      <Login />
-    </>
-  )
+  const router = useRouter()
+  const modalRef = useRef<HTMLDivElement>(null)
+
+  useOutsideClick(modalRef, () => router.back())
+  usePreventScroll()
+
+  return <Login modalRef={modalRef} />
 }

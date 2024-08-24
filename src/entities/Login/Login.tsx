@@ -17,20 +17,23 @@ const LoginButton = () => {
   )
 }
 
-const Login = () => {
+type LoginProps = {
+  modalRef?: React.RefObject<HTMLDivElement>
+}
+
+const Login = ({ modalRef }: LoginProps) => {
   const router = useRouter()
-  const onClickClose = () => {
-    // router.back()
-    router.replace('/explore')
-  }
 
   return (
     <div className="w-screen h-full flex justify-center absolute bg-neutral-0-90 inset-0 z-50">
-      <div className="flex flex-col gap-10 border border-neutral-2 rounded-[12px] m-auto relative w-[400px] p-10 bg-background">
+      <div
+        ref={modalRef}
+        className="flex flex-col gap-10 border border-neutral-2 rounded-[12px] m-auto relative w-[400px] p-10 bg-background"
+      >
         <div>
-          <div role="button" onClick={onClickClose}>
+          <button onClick={() => router.back()}>
             <DTSLogo />
-          </div>
+          </button>
         </div>
         <div className="flex flex-col gap-8">
           <div>

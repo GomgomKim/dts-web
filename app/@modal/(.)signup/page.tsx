@@ -1,18 +1,17 @@
 'use client'
-import { Signup } from '@/entities/Signup/Signup'
-import { useEffect } from 'react'
+
+import { Signup } from '@/entities/Signup'
+import { useOutsideClick } from '@/shared/lib/hooks/useOutsideClick'
+import { usePreventScroll } from '@/shared/lib/hooks/usePreventScroll'
+import { useRouter } from 'next/navigation'
+import { useRef } from 'react'
 
 export default function Page() {
-  useEffect(() => {
-    document.body.style.overflowY = 'hidden'
-    return () => {
-      document.body.style.overflowY = 'auto'
-    }
-  }, [])
-  return (
-    <>
-      signup modal ~~
-      <Signup />
-    </>
-  )
+  const router = useRouter()
+  const modalRef = useRef<HTMLDivElement>(null)
+
+  useOutsideClick(modalRef, () => router.back())
+  usePreventScroll()
+
+  return <Signup modalRef={modalRef} />
 }
