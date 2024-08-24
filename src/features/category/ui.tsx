@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 
 import { Button } from '@/shared/ui/button'
@@ -14,10 +13,9 @@ type CategoryProps = {
 const Category = ({ categoryList }: CategoryProps) => {
   const searchParams = useSearchParams()
 
-  const currentTagType = searchParams.get('tagType')
-  const [query, setQuery] = useState(currentTagType || categoryList[0])
+  const currentTagType = searchParams.get('tagType') || categoryList[0]
 
-  useSetQueryString({ queryParams: [{ tagType: query }] })
+  const { handleQueryString } = useSetQueryString({ option: 'push' })
 
   return (
     <div className="mb-5">
@@ -26,7 +24,7 @@ const Category = ({ categoryList }: CategoryProps) => {
           variant="ghost"
           key={type}
           className={cn({ active: type === currentTagType })}
-          onClick={() => setQuery(type)}
+          onClick={() => handleQueryString([{ tagType: type }])}
         >
           {capitalizeType(type)}
         </Button>

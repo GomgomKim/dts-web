@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import './styles.css'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { ImageEditingBox } from '@/features/detail/ui/ImageEditingBox'
 import { RadioGroup, RadioGroupItem } from '@/shared/ui/radio-group'
 import { VariationsSection } from '@/features/detail/ui/VariationSection'
@@ -24,16 +24,15 @@ import {
 import { ExportButton } from '@/entities/detail/ui/ExportButton'
 import { Button } from '@/shared/ui'
 import ArrowIcon from '/public/icons/arrow.svg'
+import { useSetQueryString } from '@/shared/lib/hooks/useSetQueryString'
 
 const SKIN_TEXTURE_OPTIONS = ['Matte', 'Medium', 'Glowy']
 const ASPECT_RATIO_OPTIONS = Object.values(ASPECT_RATIO_MAP)
 const FACE_ANGLE_OPTIONS = Object.values(FACE_ANGLE_MAP)
 
 function Detail() {
-  const pathname = usePathname()
-  const { replace } = useRouter()
   const searchParams = useSearchParams()
-  const params = new URLSearchParams(searchParams)
+
   const encodedBaseImageId = searchParams.get('id') || ''
 
   const containerRef = useRef<HTMLDivElement>(null)
@@ -80,10 +79,7 @@ function Detail() {
     setBoxes(newBoxes)
   }
 
-  const handleQueryString = (name: string, value: string) => {
-    params.set(name, value)
-    replace(`${pathname}?${params.toString()}`)
-  }
+  const { handleQueryString } = useSetQueryString({ option: 'replace' })
 
   const handleIsChangedOption = () => {
     if (!selectedVariation) return
@@ -104,15 +100,17 @@ function Detail() {
     handleIsChangedOption()
   }, [searchParams])
 
-  const resetGeneratedNewImageInfo = () => {
-    setGeneratedNewImage({
-      isCompleted: false,
-      encodedGenerateId: ''
-    })
-  }
+  // const resetGeneratedNewImageInfo = () => {
+  //   setGeneratedNewImage({
+  //     isCompleted: false,
+  //     encodedGenerateId: ''
+  //   })
+  // }
 
   const handleSelectedVariation = (variation: Variation) => {
     setSelectedVariation(variation)
+
+    handleQueryString([{ variationId: variation.encodedBaseImageId }])
 
     handleChangeAspectRatio(ASPECT_RATIO_MAP[variation.properties.aspectRatio])
     handleChangeFaceAngle(FACE_ANGLE_MAP[variation.properties.faceAngle])
@@ -125,29 +123,30 @@ function Detail() {
   const handleChangeAspectRatio = (
     value: keyof typeof ASPECT_RATIO_REVERT_MAP
   ) => {
-    if (generatedNewImage.isCompleted) {
-      const answer = confirm('Do you want to apply the changes?')
-      if (!answer) return
-      resetGeneratedNewImageInfo()
-    }
+    // if (generatedNewImage.isCompleted) {
+    //   const answer = confirm('Do you want to apply the changes?')
+    //   if (!answer) return
+    //   resetGeneratedNewImageInfo()
+    // }
     setAspectRatio(value)
-    handleQueryString('aspectRatio', value)
+    handleQueryString([{ aspectRatio: value }])
   }
 
   const handleChangeFaceAngle = (value: keyof typeof FACE_ANGLE_REVERT_MAP) => {
-    if (generatedNewImage.isCompleted) {
-      const answer = confirm('Do you want to apply the changes?')
-      if (!answer) return
-      resetGeneratedNewImageInfo()
-    }
+    // if (generatedNewImage.isCompleted) {
+    //   const answer = confirm('Do you want to apply the changes?')
+    //   if (!answer) return
+    //   resetGeneratedNewImageInfo()
+    // }
     setFaceAngle(value)
-    handleQueryString('faceAngle', FACE_ANGLE_REVERT_MAP[value])
+    handleQueryString([{ faceAngle: FACE_ANGLE_REVERT_MAP[value] }])
   }
 
   // 초기값 세팅 - editingBox Image / options / query string
   useEffect(() => {
     if (!variationImagesData) return
 
+    // TODO: querystirng 먼저 확인 후에 없으면 variationImagesData[0]으로 초기값 설정
     setSelectedVariation(variationImagesData[0])
 
     const variationId = variationImagesData[0].encodedBaseImageId
@@ -158,10 +157,12 @@ function Detail() {
     setAspectRatio(ASPECT_RATIO_MAP[aspectRatio])
     setFaceAngle(FACE_ANGLE_MAP[faceAngle])
 
-    // url query
-    handleQueryString('variationId', variationId)
-    handleQueryString('aspectRatio', ASPECT_RATIO_MAP[aspectRatio])
-    handleQueryString('faceAngle', faceAngle)
+    // url query string
+    handleQueryString([
+      { variationId },
+      { aspectRatio: ASPECT_RATIO_MAP[aspectRatio] },
+      { faceAngle }
+    ])
   }, [variationImagesData])
 
   useEffect(() => {
