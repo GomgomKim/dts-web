@@ -16,6 +16,7 @@ export default function Layout({
     if (isAuth !== null) {
       router.replace('/login')
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return isAuth !== null ? null : children

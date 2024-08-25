@@ -98,6 +98,7 @@ function Detail() {
 
   useEffect(() => {
     handleIsChangedOption()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams])
 
   // const resetGeneratedNewImageInfo = () => {
@@ -163,6 +164,7 @@ function Detail() {
       { aspectRatio: ASPECT_RATIO_MAP[aspectRatio] },
       { faceAngle }
     ])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [variationImagesData])
 
   useEffect(() => {
@@ -176,6 +178,7 @@ function Detail() {
       setGeneratedNewImage({ isCompleted: true, encodedGenerateId })
       setEncodedGenerateId('') // to stop polling
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [progressData])
 
   if (status === 'pending') return <p>loading</p>

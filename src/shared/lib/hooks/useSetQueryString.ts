@@ -27,6 +27,7 @@ export const useSetQueryString = ({ option }: Params) => {
       })
       return params.toString()
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [searchParams]
   )
   const handleQueryString = (queryParams: QueryParams[]) => {
