@@ -18,8 +18,8 @@ const usePostFavoriteAdd = () => {
   const queryKey = ['explore', tagType]
 
   return useMutation({
-    mutationFn: ({ encodedBaseImageId }: PostFavoriteAddReqData) =>
-      postFavoriteAdd({ encodedBaseImageId }),
+    mutationFn: ({ encodedImageInfoId }: PostFavoriteAddReqData) =>
+      postFavoriteAdd({ encodedImageInfoId }),
     // onMutate: async ({ encodedBaseImageId }) => {
     //   await queryClient.cancelQueries({
     //     queryKey: queryKey
@@ -74,9 +74,9 @@ const useDeleteFavoriteRemove = () => {
   const queryKey = ['explore', tagType]
 
   return useMutation({
-    mutationFn: ({ encodedBaseImageId }: DeleteFavoriteRemoveReqData) =>
-      deleteFavoriteRemove({ encodedBaseImageId }),
-    onMutate: async ({ encodedBaseImageId }) => {
+    mutationFn: ({ encodedImageInfoId }: DeleteFavoriteRemoveReqData) =>
+      deleteFavoriteRemove({ encodedImageInfoId }),
+    onMutate: async ({ encodedImageInfoId }) => {
       await queryClient.cancelQueries({
         queryKey: queryKey
       })
@@ -98,7 +98,7 @@ const useDeleteFavoriteRemove = () => {
               content: {
                 ...page.content,
                 images: page.content.images.map((item) => {
-                  if (item.encodedBaseImageId === encodedBaseImageId)
+                  if (item.encodedImageInfoId === encodedImageInfoId)
                     return { ...item, isFavorite: false }
                   return item
                 })

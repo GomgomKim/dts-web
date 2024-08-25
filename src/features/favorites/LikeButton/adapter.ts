@@ -12,9 +12,9 @@ const useDeleteFavoriteRemove = () => {
   const queryKey = ['favorites', tagType]
 
   return useMutation({
-    mutationFn: ({ encodedBaseImageId }: DeleteFavoriteRemoveReqData) =>
-      deleteFavoriteRemove({ encodedBaseImageId }),
-    onMutate: async ({ encodedBaseImageId }) => {
+    mutationFn: ({ encodedImageInfoId }: DeleteFavoriteRemoveReqData) =>
+      deleteFavoriteRemove({ encodedImageInfoId }),
+    onMutate: async ({ encodedImageInfoId }) => {
       await queryClient.cancelQueries({
         queryKey: queryKey
       })
@@ -36,7 +36,7 @@ const useDeleteFavoriteRemove = () => {
               content: {
                 ...page.content,
                 images: page.content.images.filter(
-                  (item) => item.encodedBaseImageId !== encodedBaseImageId
+                  (item) => item.encodedImageInfoId !== encodedImageInfoId
                 )
               }
             }))

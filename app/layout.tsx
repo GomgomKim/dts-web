@@ -17,35 +17,19 @@ export const metadata: Metadata = {
 }
 
 export default function RootLayout({
-  children
+  children,
+  modal
 }: Readonly<{
   children: React.ReactNode
+  modal: React.ReactNode
 }>) {
   return (
     <html lang="en">
       <MSWComponent />
       <body className={`${pretendard.variable} font-pretendard`}>
         <ReactQueryProviders>
-          <header
-            style={{
-              height: '56px',
-              position: 'fixed',
-              top: 0,
-              inset: 0,
-              zIndex: '9999',
-              backgroundColor: 'beige'
-            }}
-          >
-            header
-          </header>
-          <main
-            style={{
-              paddingTop: '56px',
-              height: '100vh'
-            }}
-          >
-            {children}
-          </main>
+          {children}
+          {modal}
         </ReactQueryProviders>
       </body>
     </html>

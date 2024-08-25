@@ -20,6 +20,7 @@ export interface MainVariation {
 export interface Variation {
   encodedBaseImageId: string
   properties: Properties
+  isAiGenerated: boolean
 }
 
 export interface Properties {

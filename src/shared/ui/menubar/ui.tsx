@@ -2,35 +2,29 @@
 
 import { Button } from '@/shared/ui/button'
 import Link from 'next/link'
-
-import ExploreIcon from '/public/icons/compass.svg'
-import FavoriteIcon from '/public/icons/heart.svg'
-import ArchiveIcon from '/public/icons/folder.svg'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/shared/lib/utils'
+import { type MenuItem as MenuItemT } from './model'
+import { ComponentProps } from 'react'
+import * as React from 'react'
 
-type MenuItemType = {
-  href: string
-  title: string
-  prefix: React.ReactNode
-  postfix?: React.ReactNode
-}
+// menu
 
-const navList: MenuItemType[] = [
-  { href: '/explore', title: 'Explore', prefix: <ExploreIcon /> },
-  { href: '/favorites', title: 'Favorites', prefix: <FavoriteIcon /> },
-  {
-    href: '/archive',
-    title: 'Archive',
-    prefix: <ArchiveIcon />
+interface MenuProps extends ComponentProps<'ul'> {}
+export const Menu = React.forwardRef<HTMLUListElement, MenuProps>(
+  ({ ...props }, ref: React.Ref<HTMLUListElement>) => {
+    return <ul ref={ref} {...props}></ul>
   }
-]
+)
+Menu.displayName = 'Menu'
+
+// menu item
 
 type MenuItemProps = {
-  item: MenuItemType
+  item: MenuItemT
 }
 
-const MenuItem = ({ item }: MenuItemProps) => {
+export const MenuItem = ({ item }: MenuItemProps) => {
   const pathname = usePathname()
   const isHere = pathname === item.href
 
@@ -38,7 +32,10 @@ const MenuItem = ({ item }: MenuItemProps) => {
     <Button asChild variant="ghost" stretch className={cn({ active: isHere })}>
       <Link
         href={item.href}
-        className="group justify-between items-center !px-[12px]"
+        aria-disabled={item.disabled}
+        className={cn('group justify-between items-center !px-[12px]', {
+          'pointer-events-none': item.disabled
+        })}
       >
         <div className="flex justify-center items-center gap-5 ">
           <span className="[&>svg]:stroke-secondary-foreground [&>svg]:group-hover:stroke-white [&>svg]:group-active:stroke-white">
@@ -52,16 +49,33 @@ const MenuItem = ({ item }: MenuItemProps) => {
   )
 }
 
-const Menubar = () => {
-  return (
-    <ul>
-      {navList.map((navItem) => (
-        <li key={navItem.title}>
-          <MenuItem item={navItem} />
-        </li>
-      ))}
-    </ul>
-  )
-}
+//  menu group
 
-export { Menubar }
+interface MenuGroupProps extends Omit<React.ComponentProps<'div'>, 'prefix'> {
+  title: string
+  prefix: React.ReactNode
+  postfix?: React.ReactNode
+  children?: React.ReactNode
+}
+export const MenuGroup = React.forwardRef<HTMLDivElement, MenuGroupProps>(
+  (
+    { title, prefix, postfix, children, ...props },
+    ref: React.Ref<HTMLDivElement>
+  ) => {
+    return (
+      <div ref={ref} className="text-[14px]" {...props} role="group">
+        <div className="flex justify-between items-center p-3 rounded-lg text-[#aeafb5]">
+          <div className="flex justify-center items-center gap-5">
+            <span className="flex justify-center items-center gap-[20px] w-4 h-4">
+              {prefix}
+            </span>
+            <span className="flex justify-center items-center">{title}</span>
+          </div>
+          {postfix && postfix}
+        </div>
+        {children}
+      </div>
+    )
+  }
+)
+MenuGroup.displayName = 'MenuGroup'

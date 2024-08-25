@@ -2,7 +2,7 @@ import { Button } from '@/shared/ui/button'
 
 const Banner = () => {
   return (
-    <div className="flex flex-col gap-6 text-center ">
+    <div className="flex flex-col gap-6 text-center mb-[0.5rem]">
       <div className="font-semibold text-[32px]">
         Create stunning virtual brand models effortlessly <br />
         with our advanced AI

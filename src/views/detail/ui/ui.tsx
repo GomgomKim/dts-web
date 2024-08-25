@@ -1,9 +1,8 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
 import './styles.css'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { ImageEditingBox } from '@/features/detail/ui/ImageEditingBox'
 import { RadioGroup, RadioGroupItem } from '@/shared/ui/radio-group'
 import { VariationsSection } from '@/features/detail/ui/VariationSection'
@@ -25,16 +24,15 @@ import {
 import { ExportButton } from '@/entities/detail/ui/ExportButton'
 import { Button } from '@/shared/ui'
 import ArrowIcon from '/public/icons/arrow.svg'
+import { useSetQueryString } from '@/shared/lib/hooks/useSetQueryString'
 
 const SKIN_TEXTURE_OPTIONS = ['Matte', 'Medium', 'Glowy']
 const ASPECT_RATIO_OPTIONS = Object.values(ASPECT_RATIO_MAP)
 const FACE_ANGLE_OPTIONS = Object.values(FACE_ANGLE_MAP)
 
 function Detail() {
-  const pathname = usePathname()
-  const { replace } = useRouter()
   const searchParams = useSearchParams()
-  const params = new URLSearchParams(searchParams)
+
   const encodedBaseImageId = searchParams.get('id') || ''
 
   const containerRef = useRef<HTMLDivElement>(null)
@@ -81,10 +79,7 @@ function Detail() {
     setBoxes(newBoxes)
   }
 
-  const handleQueryString = (name: string, value: string) => {
-    params.set(name, value)
-    replace(`${pathname}?${params.toString()}`)
-  }
+  const { handleQueryString } = useSetQueryString({ option: 'replace' })
 
   const handleIsChangedOption = () => {
     if (!selectedVariation) return
@@ -103,20 +98,23 @@ function Detail() {
 
   useEffect(() => {
     handleIsChangedOption()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams])
+
+  // const resetGeneratedNewImageInfo = () => {
+  //   setGeneratedNewImage({
+  //     isCompleted: false,
+  //     encodedGenerateId: ''
+  //   })
+  // }
 
   const handleSelectedVariation = (variation: Variation) => {
     setSelectedVariation(variation)
 
+    handleQueryString([{ variationId: variation.encodedBaseImageId }])
+
     handleChangeAspectRatio(ASPECT_RATIO_MAP[variation.properties.aspectRatio])
     handleChangeFaceAngle(FACE_ANGLE_MAP[variation.properties.faceAngle])
-
-    // image 생성 후에 다시 선택할 경우
-    if (generatedNewImage.isCompleted)
-      setGeneratedNewImage({
-        isCompleted: false,
-        encodedGenerateId: ''
-      })
   }
 
   const handleChangeSkinTexture = (value: string) => {
@@ -126,19 +124,30 @@ function Detail() {
   const handleChangeAspectRatio = (
     value: keyof typeof ASPECT_RATIO_REVERT_MAP
   ) => {
+    // if (generatedNewImage.isCompleted) {
+    //   const answer = confirm('Do you want to apply the changes?')
+    //   if (!answer) return
+    //   resetGeneratedNewImageInfo()
+    // }
     setAspectRatio(value)
-    handleQueryString('aspectRatio', value)
+    handleQueryString([{ aspectRatio: value }])
   }
 
   const handleChangeFaceAngle = (value: keyof typeof FACE_ANGLE_REVERT_MAP) => {
+    // if (generatedNewImage.isCompleted) {
+    //   const answer = confirm('Do you want to apply the changes?')
+    //   if (!answer) return
+    //   resetGeneratedNewImageInfo()
+    // }
     setFaceAngle(value)
-    handleQueryString('faceAngle', FACE_ANGLE_REVERT_MAP[value])
+    handleQueryString([{ faceAngle: FACE_ANGLE_REVERT_MAP[value] }])
   }
 
   // 초기값 세팅 - editingBox Image / options / query string
   useEffect(() => {
     if (!variationImagesData) return
 
+    // TODO: querystirng 먼저 확인 후에 없으면 variationImagesData[0]으로 초기값 설정
     setSelectedVariation(variationImagesData[0])
 
     const variationId = variationImagesData[0].encodedBaseImageId
@@ -149,13 +158,18 @@ function Detail() {
     setAspectRatio(ASPECT_RATIO_MAP[aspectRatio])
     setFaceAngle(FACE_ANGLE_MAP[faceAngle])
 
-    // url query
-    handleQueryString('variationId', variationId)
-    handleQueryString('aspectRatio', ASPECT_RATIO_MAP[aspectRatio])
-    handleQueryString('faceAngle', faceAngle)
+    // url query string
+    handleQueryString([
+      { variationId },
+      { aspectRatio: ASPECT_RATIO_MAP[aspectRatio] },
+      { faceAngle }
+    ])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [variationImagesData])
 
   useEffect(() => {
+    if (!encodedGenerateId) return
+
     setGeneratingProgress(progressData || 0)
     setGeneratedNewImage({ isCompleted: false, encodedGenerateId }) // memo
 
@@ -164,6 +178,7 @@ function Detail() {
       setGeneratedNewImage({ isCompleted: true, encodedGenerateId })
       setEncodedGenerateId('') // to stop polling
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [progressData])
 
   if (status === 'pending') return <p>loading</p>
@@ -173,7 +188,7 @@ function Detail() {
     <>
       <div className="flex h-full">
         {/* brand assets section*/}
-        <div className="flex-shrink-0 basis-[387px] mr-5">
+        <div className="flex-shrink-0 basis-[387px] mr-5 mt-5">
           <BrandAssets
             handleAddBrandAssets={handleAddBrandAssets}
             handleRemoveBox={handleRemoveBox}
@@ -184,10 +199,10 @@ function Detail() {
         {/* generate section */}
         <section className="grow px-5 flex gap-10">
           {/* generate section - left */}
-          <div className="grow-[3] overflow-y-auto overflow-x-hidden basis-[477px] shrink-0">
+          <div className="grow-[3] overflow-y-auto overflow-x-hidden basis-[477px] shrink-0 ">
             <div className="flex flex-col relative h-full">
               {/* title top fix */}
-              <div className="flex justify-between items-center sticky top-0 w-full h-[38px] z-10">
+              <div className="flex justify-between items-center sticky top-0 w-full h-[58px] z-10 pt-5">
                 <h2 className="text-[24px]">Generate</h2>
                 <ExportButton
                   containerRef={containerRef}
@@ -264,7 +279,7 @@ function Detail() {
           <div className="grow overflow-y-auto overflow-x-hidden basis-[472px]">
             <div className="flex flex-col gap-5">
               {/* variations */}
-              <div className="mt-[58px] max-h-[80%]">
+              <div className="mt-[78px] max-h-[80%]">
                 <VariationsSection
                   data={variationImagesData}
                   handleSelectedVariation={handleSelectedVariation}

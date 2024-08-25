@@ -7,7 +7,7 @@ import { Button } from '@/shared/ui/button'
 import LinkIcon from '/public/icons/arrow-thin.svg'
 import { ModelImageItem } from '@/features/explore/CardList/model'
 
-const URL_BASE_IMAGE_FILE = '/image-file/base-image'
+const URL_BASE_IMAGE_FILE = '/image-file'
 
 type Props = {
   item: ModelImageItem
@@ -15,7 +15,7 @@ type Props = {
 }
 
 const Card = (props: Props) => {
-  const { encodedBaseImageId, name: modelname, description } = props.item
+  const { encodedMainImageId, name: modelname, description } = props.item
   const [isHovering, setIsHovering] = useState(false)
 
   return (
@@ -28,7 +28,7 @@ const Card = (props: Props) => {
         src={
           process.env.NEXT_PUBLIC_API_URL +
           `${URL_BASE_IMAGE_FILE}/` +
-          encodedBaseImageId
+          encodedMainImageId
         }
         alt={description}
         fill
@@ -36,7 +36,7 @@ const Card = (props: Props) => {
       />
       {isHovering && (
         <Link
-          href={`/archive/${modelname}?id=${encodedBaseImageId}`}
+          href={`/archive/${modelname}?id=${encodedMainImageId}`}
           className="absolute inset-0 z-10 bg-custom-gradient"
         >
           <Button
@@ -46,7 +46,7 @@ const Card = (props: Props) => {
           >
             <div>
               Start with This Model
-              <LinkIcon />
+              <LinkIcon className="stroke-white" />
             </div>
           </Button>
         </Link>

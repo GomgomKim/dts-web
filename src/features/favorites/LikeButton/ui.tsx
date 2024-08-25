@@ -9,11 +9,11 @@ export type Props = {
 }
 
 export const LikeButton = (props: Props) => {
-  const { encodedBaseImageId } = props.item
+  const { encodedImageInfoId } = props.item
   const deleteFavoriteRemove = useDeleteFavoriteRemove()
 
   const handleClick = () => {
-    deleteFavoriteRemove.mutate({ encodedBaseImageId })
+    deleteFavoriteRemove.mutate({ encodedImageInfoId })
   }
 
   return <entities.LikeButton handleClick={handleClick} isActive={true} />
