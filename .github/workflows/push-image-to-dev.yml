@@ -56,6 +56,9 @@ jobs:
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-
       
       - name: Build with Create React App
+        run: pnpm install
+
+      - name: Build with Create React App
         run: pnpm build
 
       - name: Configure AWS credentials
