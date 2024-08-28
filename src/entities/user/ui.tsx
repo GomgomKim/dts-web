@@ -39,12 +39,13 @@ export const UserProfile = async () => {
   const handleClickLogout = () => {
     logOut(queryClient)
   }
+  if (!user) return <div>loading user info ...</div>
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
         <div>
-          <Image src={user?.image} alt="user avatar" width={50} height={50} />
+          <Image src={user.image} alt="user avatar" width={50} height={50} />
         </div>
       </DropdownMenuTrigger>
 
