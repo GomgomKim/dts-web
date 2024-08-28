@@ -3,12 +3,13 @@ import { DeleteFavoriteRemoveReqData } from '@/entities/LikeButton/model'
 import { deleteFavoriteRemove } from '@/entities/LikeButton/api'
 import { useSearchParams } from 'next/navigation'
 import { GetFavoriteListResData } from '../FavoriteList/model'
+import { TAG_TYPES } from '../FavoriteList/constant'
 
 const useDeleteFavoriteRemove = () => {
   const queryClient = useQueryClient()
 
   const searchParams = useSearchParams()
-  const tagType = searchParams.get('tagType')
+  const tagType = searchParams.get('tagType') || TAG_TYPES[0]
   const queryKey = ['favorites', tagType]
 
   return useMutation({
