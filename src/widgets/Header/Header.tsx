@@ -6,40 +6,60 @@ import { Button } from '@/shared/ui'
 import { usePathname } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 import Arrow from '/public/icons/arrow-thin.svg'
+import { useAuthStore } from '@/entities/user/store'
+import { UserProfile } from '@/entities/user'
+
+import { Suspense } from 'react'
+
+const Links = () => {
+  return (
+    <>
+      <li>
+        <Button asChild variant="link">
+          <Link href="https://medium.com/do-things-with-ai" target="_blank">
+            Medium
+          </Link>
+        </Button>
+      </li>
+      <li>
+        <Button asChild variant="link">
+          <Link
+            href="https://www.instagram.com/dothings.studio/"
+            target="_blank"
+          >
+            Instagram
+          </Link>
+        </Button>
+      </li>
+    </>
+  )
+}
 
 const NotLoggedInNav = () => {
   return (
-    <nav className="ml-auto text-[14px] text-secondary-foreground">
-      <ul className="flex items-center">
-        <li>
-          <Button asChild variant="link">
-            <Link href="https://medium.com/do-things-with-ai" target="_blank">
-              Medium
-            </Link>
-          </Button>
-        </li>
-        <li>
-          <Button asChild variant="link">
-            <Link
-              href="https://www.instagram.com/dothings.studio/"
-              target="_blank"
-            >
-              Instagram
-            </Link>
-          </Button>
-        </li>
-        <li>
-          <Button asChild variant="link">
-            <Link href="/login">Log in</Link>
-          </Button>
-        </li>
-        <li>
-          <Button asChild className="rounded-full">
-            <Link href="/signup">Sign up</Link>
-          </Button>
-        </li>
-      </ul>
-    </nav>
+    <>
+      <li>
+        <Button asChild variant="link">
+          <Link href="/login">Log in</Link>
+        </Button>
+      </li>
+      <li>
+        <Button asChild className="rounded-full">
+          <Link href="/signup">Sign up</Link>
+        </Button>
+      </li>
+    </>
+  )
+}
+
+const UserInfo = () => {
+  return (
+    <div>
+      <div>credit</div>
+      <Suspense>
+        <UserProfile />
+      </Suspense>
+    </div>
   )
 }
 
@@ -57,8 +77,11 @@ const BackButton = () => {
 }
 
 const Header = () => {
-  const userAuth = false
   const pathname = usePathname()
+  const isAuth = useAuthStore((state) => state.isAuth)
+  const isDetailPage = pathname.startsWith('/archive/')
+  const isMainPage =
+    pathname.startsWith('/explore') || pathname.startsWith('/favorites')
 
   return (
     <header className="fixed top-0 inset-0 z-40 h-14 py-[7.5px] px-5 bg-background">
@@ -66,8 +89,17 @@ const Header = () => {
         <span className="mr-5">
           <DTSLogo />
         </span>
-        {pathname.startsWith('/archive/') ? <BackButton /> : null}
-        {userAuth ? null : <NotLoggedInNav />}
+
+        {isDetailPage ? <BackButton /> : null}
+        <div className="flex items-center ml-auto">
+          <nav className=" text-[14px] text-secondary-foreground flex items-center">
+            <ul className="flex items-center">
+              {isMainPage ? <Links /> : null}
+              {isAuth ? null : <NotLoggedInNav />}
+            </ul>
+          </nav>
+          {isAuth ? <UserInfo /> : null}
+        </div>
       </div>
     </header>
   )
