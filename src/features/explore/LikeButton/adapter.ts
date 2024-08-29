@@ -9,12 +9,13 @@ import {
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useSearchParams } from 'next/navigation'
 import { GetExploreListResData } from '../CardList/model'
+import { TAG_TYPES } from '@/views/explore/constant' // TODO: move to shared
 
 const usePostFavoriteAdd = () => {
   const queryClient = useQueryClient()
 
   const searchParams = useSearchParams()
-  const tagType = searchParams.get('tagType')
+  const tagType = searchParams.get('tagType') || TAG_TYPES[0]
   const queryKey = ['explore', tagType]
 
   return useMutation({

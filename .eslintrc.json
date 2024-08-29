@@ -18,5 +18,8 @@
     "prettier",
     "plugin:storybook/recommended"
   ],
-  "plugins": ["unicorn"]
+  "plugins": ["unicorn"],
+  "rules": {
+    "react-hooks/exhaustive-deps": "off"
+  }
 }
