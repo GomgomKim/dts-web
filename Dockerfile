@@ -13,14 +13,15 @@ FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+
+ARG ENV_NODE
+COPY .env.$ENV_NODE ./.env.production
+
 RUN npm install -g pnpm && pnpm run build
 
 # 3단계: production image 생성
 FROM base AS runner
 WORKDIR /app
-
-ARG NODE_ENV
-ENV NODE_ENV=$NODE_ENV
 
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
