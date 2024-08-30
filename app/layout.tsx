@@ -29,10 +29,10 @@ export default function RootLayout({
       <MSWComponent />
       <body className={`${pretendard.variable} font-pretendard`}>
         <ReactQueryProviders>
-          <SkeletonTheme baseColor="#202124" highlightColor="#38393D">
-            {children}
-            {modal}
-          </SkeletonTheme>
+          {/* <SkeletonTheme baseColor="#202124" highlightColor="#38393D"> */}
+          {children}
+          {modal}
+          {/* </SkeletonTheme> */}
         </ReactQueryProviders>
       </body>
     </html>

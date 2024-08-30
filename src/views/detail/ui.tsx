@@ -68,7 +68,7 @@ function Detail() {
   return (
     <div className="flex w-full h-full">
       {/* brand assets section */}
-      <div className="min-w-[320px] fixed px-5 bg-background z-20">
+      <div className="w-[320px] xl:w-[387px] fixed px-5 bg-background z-20">
         <BrandAssets
           handleAddBrandAssets={handleAddBrandAssets}
           handleRemoveBox={handleRemoveBox}
@@ -76,7 +76,7 @@ function Detail() {
         />
       </div>
       {/* generate section */}
-      <section className="h-full ml-[320px] grow">
+      <section className="h-full ml-[320px] xl:ml-[407px] grow">
         <div className="h-full overflow-x-scroll flex gap-5">
           {/* generate section - left */}
           <div className="overflow-y-auto overflow-x-hidden basis-[513px] shrink-0 grow">
@@ -99,11 +99,13 @@ function Detail() {
                   </div>
 
                   {/* variations section */}
-                  <Suspense fallback={<div>Loading...</div>}>
-                    <VariationsSection
-                      handleSelectedVariation={handleSelectedVariation}
-                    />
-                  </Suspense>
+                  <div className="min-h-[180px]">
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <VariationsSection
+                        handleSelectedVariation={handleSelectedVariation}
+                      />
+                    </Suspense>
+                  </div>
                   {/* </div> */}
                 </div>
               </div>

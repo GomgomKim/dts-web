@@ -35,21 +35,12 @@ export const ImageEditingBox = (props: Props) => {
   const getContainerStyle = (): React.CSSProperties => {
     if (!selectedVariation) return { aspectRatio: 9 / 16, height: '100%' }
 
-    // let value: AspectRatio
-    // if (generatedNewImage.isCompleted && generatedNewImage.encodedGenerateId) {
-    //   value =
-    //     ASPECT_RATIO_REVERT_MAP[
-    //       searchParams.get(
-    //         'aspectRatio'
-    //       ) as keyof typeof ASPECT_RATIO_REVERT_MAP
-    //     ]
-    // } else {
-    const value = selectedVariation?.properties.aspectRatio
-    // }
+    const aspectRatioValue = selectedVariation?.properties.aspectRatio
 
-    const aspectRatio = ASPECT_RATIO_MAP_NUMBER[value]
+    const aspectRatio = ASPECT_RATIO_MAP_NUMBER[aspectRatioValue]
     const type =
-      value === 'ASPECT_RATIO_16_9' || value === 'ASPECT_RATIO_4_3'
+      aspectRatioValue === 'ASPECT_RATIO_16_9' ||
+      aspectRatioValue === 'ASPECT_RATIO_4_3'
         ? 'width'
         : 'height'
     // 1:1이면 상위 컨테이너의 짧은 길이에 맞추기
@@ -61,7 +52,7 @@ export const ImageEditingBox = (props: Props) => {
     <>
       <div
         className={cn(
-          'h-full bg-neutral-1 rounded-[0.5rem] overflow-hidden relative flex justify-center'
+          'h-full bg-neutral-1 bg-opacity-50 rounded-[0.5rem] overflow-hidden relative flex justify-center'
           // {
           //   'z-20': isGenerating
           // }

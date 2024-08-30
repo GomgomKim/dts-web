@@ -54,7 +54,7 @@ export const DndBox = ({
       onDragOver={onDragOver}
       onDrop={onDrop}
       className={cn(
-        'flex justify-center items-center border border-border rounded-sm bg-[rgba(32, 33, 36, 0.5)]',
+        'flex justify-center items-center border border-neutral-3 rounded-sm bg-neutral-1 bg-opacity-50',
         className,
         {
           'border-primary': isDragging

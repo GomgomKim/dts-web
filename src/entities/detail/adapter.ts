@@ -7,9 +7,9 @@ import {
 import {
   GetAiImageProgressReqData,
   GetVariationListResData,
+  VariationListContent,
   PostAiImageReqData,
-  PostAssetRemoveBackgroundReqData,
-  Variation
+  PostAssetRemoveBackgroundReqData
 } from './model'
 import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query'
 
@@ -17,11 +17,11 @@ const useGetVariationImages = (encodedBaseImageInfoId: string) => {
   const { data, status, error, isFetching } = useSuspenseQuery<
     GetVariationListResData,
     Error,
-    Variation[]
+    VariationListContent
   >({
     queryKey: ['archive', 'variation', encodedBaseImageInfoId],
     queryFn: () => getVariationImages({ encodedBaseImageInfoId }),
-    select: (data) => data.content.variations
+    select: (data) => data.content
   })
 
   return {

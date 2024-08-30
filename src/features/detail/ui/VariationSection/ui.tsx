@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { useState } from 'react'
+import * as React from 'react'
 
 import AngleBracketIcon from '/public/icons/angle-bracket-open.svg'
 import { Button } from '@/shared/ui'
@@ -7,9 +7,8 @@ import { Variation } from '@/entities/detail/model'
 import { URL_VARIATION_LIST_IMAGE } from '@/entities/detail/constant'
 import { useGetVariationImages } from '@/entities/detail/adapter'
 import { useSearchParams } from 'next/navigation'
-
-import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import { cn } from '@/shared/lib/utils'
 
 type VariationsSectionProps = {
   handleSelectedVariation: (variation: Variation) => void
@@ -24,15 +23,26 @@ export const VariationsSection = ({
   const searchParams = useSearchParams()
   const encodedBaseImageInfoId = searchParams.get('id') || ''
 
-  const { data: variationImagesData } = useGetVariationImages(
-    encodedBaseImageInfoId
-  )
+  const {
+    data: { mainImageIndex, variations }
+  } = useGetVariationImages(encodedBaseImageInfoId)
 
   // 첫 로드시 가져온 static image data + 새롭게 생성한 image data
-  const [allData, setAllData] = useState(variationImagesData)
+  const [allData, setAllData] = React.useState<Variation[]>([
+    ...variations,
+    {
+      encodedBaseImageId: 'string',
+      properties: {
+        aspectRatio: 'ASPECT_RATIO_1_1',
+        faceAngle: 'LEFT'
+      },
+      isAiGenerated: true,
+      progress: 75
+    }
+  ])
 
-  const [currentPage, setCurrentPage] = useState<number>(INITIAL_PAGE)
-  const [totalPages, setTotalPages] = useState<number>(() => {
+  const [currentPage, setCurrentPage] = React.useState<number>(INITIAL_PAGE)
+  const [totalPages, setTotalPages] = React.useState<number>(() => {
     return Math.ceil(allData.length / AMOUNT_PER_PAGE)
   })
   console.log(setAllData, setTotalPages)
@@ -44,6 +54,10 @@ export const VariationsSection = ({
   // 2. 새로 페이지 진입시 작업중인 내용이 있던거면 해당 페이지로 이동 + setSelectedVariation
   // setTotalPages((prev) => prev + 1)
   // }
+
+  React.useEffect(() => {
+    handleSelectedVariation(variations[mainImageIndex])
+  }, [])
 
   const renderData = allData.slice(
     (currentPage - 1) * AMOUNT_PER_PAGE,
@@ -87,29 +101,37 @@ export const VariationsSection = ({
 
       <div className="flex gap-2 min-h-[120px] h-">
         {/*  */}
-        {renderData.map((item) => (
-          <div
-            key={item.encodedBaseImageId}
-            className="rounded-[0.5rem] overflow-hidden relative aspect-[206/219] w-full cursor-pointer border border-border"
-            onClick={() => handleSelectedVariation(item)}
-          >
-            {/* TODO: progress < 100이면 polling & 스켈레톤 */}
-            {item.isAiGenerated && item.progress < 100 ? (
-              <Skeleton height="100%" />
-            ) : (
-              <Image
-                src={
-                  process.env.NEXT_PUBLIC_API_URL +
-                  `${URL_VARIATION_LIST_IMAGE}/` +
-                  item.encodedBaseImageId
+        {renderData.map((item) => {
+          const isGenerating = item.isAiGenerated && item.progress < 100
+          return (
+            <div
+              key={item.encodedBaseImageId}
+              className={cn(
+                'rounded-[0.5rem] overflow-hidden relative aspect-[206/219] w-full border border-border',
+                {
+                  'cursor-pointer': !isGenerating
                 }
-                alt=""
-                fill
-                style={{ objectFit: 'cover' }}
-              />
-            )}
-          </div>
-        ))}
+              )}
+              onClick={() => handleSelectedVariation(item)}
+            >
+              {/* TODO: progress < 100이면 polling */}
+              {isGenerating ? (
+                <div className="loading-skeleton h-full" />
+              ) : (
+                <Image
+                  src={
+                    process.env.NEXT_PUBLIC_API_URL +
+                    `${URL_VARIATION_LIST_IMAGE}/` +
+                    item.encodedBaseImageId
+                  }
+                  alt=""
+                  fill
+                  style={{ objectFit: 'cover' }}
+                />
+              )}
+            </div>
+          )
+        })}
         {/* null card */}
         {renderData.length < AMOUNT_PER_PAGE &&
           Array.from({ length: AMOUNT_PER_PAGE - renderData.length }).map(
@@ -117,7 +139,7 @@ export const VariationsSection = ({
               <div
                 // Key 변경
                 key={index}
-                className="border border-dotted border-border rounded-[0.5rem] aspect-[206/219] w-full"
+                className="border border-dashed rounded-[0.5rem] aspect-[206/219] w-full bg-neutral-1 opacity-50"
               ></div>
             )
           )}
