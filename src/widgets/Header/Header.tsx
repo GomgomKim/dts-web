@@ -6,11 +6,19 @@ import { Button } from '@/shared/ui'
 import { usePathname } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 import Arrow from '/public/icons/arrow-thin.svg'
+import { DownloadDropdown } from '@/shared/ui/dropdown-menu/download-dropdown'
+import { ProfileDropdown } from '@/shared/ui/dropdown-menu/profile-dropdown'
 
 const NotLoggedInNav = () => {
   return (
     <nav className="ml-auto text-[14px] text-secondary-foreground">
       <ul className="flex items-center">
+        <li>
+          <ProfileDropdown />
+        </li>
+        <li>
+          <DownloadDropdown />
+        </li>
         <li>
           <Button asChild variant="link">
             <Link href="https://medium.com/do-things-with-ai" target="_blank">
