@@ -34,13 +34,10 @@ export const ExportButton = ({
 
   return (
     <Button
-      {...props}
-      variant="outline"
       onClick={onButtonClick}
-      className={cn(
-        'bg-[rgba(32,33,36,0.50)] rounded-[0.5rem] leading-[14px]',
-        className
-      )}
+      className={cn('leading-[14px]', className)}
+      stretch
+      {...props}
     ></Button>
   )
 }

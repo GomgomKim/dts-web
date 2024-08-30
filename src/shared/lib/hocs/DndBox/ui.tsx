@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 interface DndBoxProps extends React.ComponentProps<'div'> {
   children: React.ReactNode
   width: string
-  height: string
+  height?: string
   onDropped: (e: React.DragEvent) => void
 }
 

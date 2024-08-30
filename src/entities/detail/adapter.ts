@@ -11,17 +11,16 @@ import {
   PostAssetRemoveBackgroundReqData,
   Variation
 } from './model'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query'
 
-const useGetVariationImages = (encodedBaseImageId: string) => {
-  const { data, status, error, isFetching } = useQuery<
+const useGetVariationImages = (encodedBaseImageInfoId: string) => {
+  const { data, status, error, isFetching } = useSuspenseQuery<
     GetVariationListResData,
     Error,
     Variation[]
   >({
-    queryKey: ['archive', 'variation', encodedBaseImageId],
-    queryFn: () => getVariationImages({ encodedBaseImageId }),
-    enabled: !!encodedBaseImageId,
+    queryKey: ['archive', 'variation', encodedBaseImageInfoId],
+    queryFn: () => getVariationImages({ encodedBaseImageInfoId }),
     select: (data) => data.content.variations
   })
 

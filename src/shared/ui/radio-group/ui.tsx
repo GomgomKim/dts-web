@@ -50,7 +50,7 @@ const RadioGroupItem = React.forwardRef<HTMLDivElement, RadioGroupItemProps>(
         onClick={() => onChange(localValue)}
         {...props}
       >
-        <label className="cursor-pointer">{label}</label>
+        <label className="cursor-pointer text-[0.875rem]">{label}</label>
       </div>
     )
   }

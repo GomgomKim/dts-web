@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 
 const SignupButton = () => {
   return (
-    <Button className="bg-white relative text-[14px]">
+    <Button className="bg-white relative">
       <span className="absolute left-[20px]">
         <GoogleIcon />
       </span>

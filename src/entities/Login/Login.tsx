@@ -17,7 +17,7 @@ const LoginButton = () => {
   }
 
   return (
-    <Button className="bg-white relative text-[14px]" onClick={handleClick}>
+    <Button className="bg-white relative" onClick={handleClick}>
       <span className="absolute left-[20px]">
         <GoogleIcon />
       </span>

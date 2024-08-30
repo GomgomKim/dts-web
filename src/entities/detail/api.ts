@@ -17,12 +17,12 @@ import {
 } from './constant'
 
 export async function getVariationImages({
-  encodedBaseImageId
+  encodedBaseImageInfoId
 }: GetVariationListReqData): Promise<GetVariationListResData> {
   const response = await dtsAxios.get<
     GetVariationListReqData,
     AxiosResponse<GetVariationListResData, AxiosError>
-  >(`${URL_VARIATION_LIST}/${encodedBaseImageId}`)
+  >(`${URL_VARIATION_LIST}/${encodedBaseImageInfoId}`)
   return response.data
 }
 

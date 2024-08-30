@@ -1,4 +1,4 @@
-import { AspectRatio, FaceAngle } from './model'
+import { AspectRatio, FaceAngle, SkinTexture } from './model'
 
 export const URL_VARIATION_LIST = '/image/base-image'
 export const URL_VARIATION_LIST_IMAGE = '/image-file'
@@ -41,4 +41,10 @@ export const FACE_ANGLE_REVERT_MAP: Record<string, FaceAngle> = {
   Left: 'LEFT',
   Front: 'FRONT',
   Right: 'RIGHT'
+}
+
+export const SKIN_TEXTURE_MAP: Record<SkinTexture, string> = {
+  MATTE: 'Matte',
+  MEDIUM: 'Medium',
+  GlOWY: 'Glowy'
 }
