@@ -166,7 +166,7 @@ function Detail() {
                   id="skinTexture"
                   value=""
                   onValueChange={() => {}}
-                  // disabled
+                  disabled
                 >
                   {SKIN_TEXTURE_OPTIONS.map((option) => (
                     <RadioGroupItem
