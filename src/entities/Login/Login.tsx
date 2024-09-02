@@ -6,9 +6,18 @@ import { Button } from '@/shared/ui'
 import GoogleIcon from '/public/icons/google-logo.svg'
 import { useRouter } from 'next/navigation'
 
+// TODO:
+const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=46244385145-oek5rc3ik17t7dfnsb55hvnu1va0ck98.apps.googleusercontent.com&redirect_uri=http://localhost:3000/explore?oAuthProviderType=GOOGLE&response_type=code&scope=email&access_type=offline&prompt=consent`
+
 const LoginButton = () => {
+  const router = useRouter()
+
+  const handleClick = () => {
+    router.replace(url)
+  }
+
   return (
-    <Button className="bg-white relative text-[14px]">
+    <Button className="bg-white relative text-[14px]" onClick={handleClick}>
       <span className="absolute left-[20px]">
         <GoogleIcon />
       </span>
