@@ -32,7 +32,13 @@ const DownloadDropdown = () => {
           onValueChange={setSelectedFormat}
         >
           {FORMAT_OPTIONS.map((option) => (
-            <DropdownMenuRadioItem key={option.value} value={option.value}>
+            <DropdownMenuRadioItem
+              key={option.value}
+              value={option.value}
+              onSelect={(e) => {
+                e.preventDefault()
+              }}
+            >
               {option.label}
             </DropdownMenuRadioItem>
           ))}
@@ -48,6 +54,9 @@ const DownloadDropdown = () => {
                 <DropdownMenuItem
                   className="flex justify-between"
                   key={option.label}
+                  onSelect={(e) => {
+                    e.preventDefault()
+                  }}
                 >
                   <div className="flex gap-x-2">
                     <span>{option.label}</span>

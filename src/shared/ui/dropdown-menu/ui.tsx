@@ -68,10 +68,6 @@ const DropdownMenuContent = React.forwardRef<
         'z-50 overflow-hidden rounded border border-[#393A40] bg-[#202124]  py-5 text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
         className
       )}
-      onPointerDown={(e) => {
-        e.preventDefault()
-        console.log('menu content')
-      }}
       {...props}
     />
   </DropdownMenuPrimitive.Portal>
@@ -107,10 +103,6 @@ const DropdownMenuCheckboxItem = React.forwardRef<
       className
     )}
     checked={checked}
-    onPointerDown={(e) => {
-      e.preventDefault()
-      console.log('group')
-    }}
     {...props}
   >
     <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
@@ -134,10 +126,6 @@ const DropdownMenuRadioItem = React.forwardRef<
       'relative flex cursor-default select-none items-center pl-5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
       className
     )}
-    onPointerDown={(e) => {
-      e.preventDefault()
-      e.stopPropagation()
-    }}
     {...props}
   >
     <span className="absolute left-0 flex h-3.5 w-3.5 items-center justify-center border border-[#E2E8F0] rounded-full">
