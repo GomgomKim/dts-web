@@ -3,7 +3,6 @@ import localFont from 'next/font/local'
 import '@/app/styles/globals.css'
 import MSWComponent from '@/app/providers/msw-component'
 import ReactQueryProviders from '@/app/providers/query-client-provider'
-import { SkeletonTheme } from 'react-loading-skeleton'
 
 const pretendard = localFont({
   src: '../public/fonts/PretendardVariable.woff2',
@@ -29,10 +28,8 @@ export default function RootLayout({
       <MSWComponent />
       <body className={`${pretendard.variable} font-pretendard`}>
         <ReactQueryProviders>
-          {/* <SkeletonTheme baseColor="#202124" highlightColor="#38393D"> */}
           {children}
           {modal}
-          {/* </SkeletonTheme> */}
         </ReactQueryProviders>
       </body>
     </html>
