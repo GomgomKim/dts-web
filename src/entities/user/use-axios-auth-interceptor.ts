@@ -40,17 +40,15 @@ const useAxiosAuthInterceptor = () => {
       // const originalRequestConfig = error.config
       const { tokens, logOut } = useAuthStore.getState()
 
-      // 3004: 로그인 페이지로 이동?
+      // 3004: 로그인 페이지로 이동
 
-      // if (error.response?.status !== 401) {
-      //   return Promise.reject(error)
-      // }
-
-      if (!tokens) {
+      if (!tokens?.accessToken || !tokens?.refreshToken) {
+        // console.log('tokens not found')
         logOut(queryClient)
         return Promise.reject(error)
       }
 
+      // console.log('interceptor error', error.response)
       return Promise.reject(error)
     }
 

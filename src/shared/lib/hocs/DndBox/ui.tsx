@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 interface DndBoxProps extends React.ComponentProps<'div'> {
   children: React.ReactNode
   width: string
-  height: string
+  height?: string
   onDropped: (e: React.DragEvent) => void
 }
 
@@ -54,10 +54,10 @@ export const DndBox = ({
       onDragOver={onDragOver}
       onDrop={onDrop}
       className={cn(
-        'flex justify-center items-center border border-border rounded-sm bg-[rgba(32, 33, 36, 0.5)]',
+        'flex justify-center items-center rounded-sm bg-neutral-1 bg-opacity-50',
         className,
         {
-          'border-primary': isDragging
+          'border border-primary': isDragging
         }
       )}
       style={{ width, height }}

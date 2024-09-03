@@ -1,52 +1,220 @@
 import Image from 'next/image'
-import { useState } from 'react'
+import * as React from 'react'
 
 import AngleBracketIcon from '/public/icons/angle-bracket-open.svg'
 import { Button } from '@/shared/ui'
-import './styles.css'
-import { Variation } from '@/entities/detail/model'
-import { URL_VARIATION_LIST_IMAGE } from '@/entities/detail/constant'
+import { FaceAngle, Variation } from '@/entities/detail/model'
+import {
+  ASPECT_RATIO_REVERT_MAP,
+  URL_VARIATION_LIST_IMAGE
+} from '@/entities/detail/constant'
+import {
+  useGetAiImageProgress,
+  useGetVariationImages,
+  usePostAiImageGenerate
+} from '@/entities/detail/adapter'
+import { useSearchParams } from 'next/navigation'
+import { cn } from '@/shared/lib/utils'
+import { useAiImageGeneratingStore } from '@/features/detail/store'
+import { useAuthStore } from '@/entities/user/store'
+import AlertCircleIcon from '/public/icons/alert-circle.svg'
+
+import { v4 } from 'uuid'
 
 type VariationsSectionProps = {
-  data: Variation[] | undefined
   handleSelectedVariation: (variation: Variation) => void
 }
 
-const LIMIT_REQUEST = 3
 const AMOUNT_PER_PAGE = 4
 const INITIAL_PAGE = 1
 
+// const dummy: Variation[] = [
+//   {
+//     encodedAiBasedImageId: 'MTk=',
+//     encodedBaseImageId: '',
+//     properties: {
+//       aspectRatio: 'ASPECT_RATIO_1_1',
+//       faceAngle: 'FRONT'
+//     },
+//     progress: 0,
+//     isAiGenerated: true,
+//     isFail: true,
+//     isTimeout: true
+//   }
+// ]
+
 export const VariationsSection = ({
-  data,
   handleSelectedVariation
 }: VariationsSectionProps) => {
-  const [filteredData, setFilteredData] = useState<Variation[]>(
-    data!.slice(0, AMOUNT_PER_PAGE)
-  )
-  const [reqCount, setReqCount] = useState<number>(1)
-  const [currentPage, setCurrentPage] = useState<number>(INITIAL_PAGE)
-  const [totalPages, setTotalPages] = useState<number>(1)
+  const searchParams = useSearchParams()
+  const encodedBaseImageInfoId = searchParams.get('id') || ''
 
-  const handleClick = () => {
-    setReqCount((prev) => prev + 1)
+  const {
+    isAiImageFailed,
+    setIsAiImageFailed,
+    //
+    isAiImageGenerating,
+    setIsAiImageGenerating,
+    //
+    aiImageList,
+    setAiImageList,
+    addAiImageItem,
+    updateAiImageItem,
+    //
+    aiImageGeneratingList,
+    addAiImageGeneratingList,
+    removeAiImageGeneratingList
+  } = useAiImageGeneratingStore.getState()
 
-    setTotalPages((prev) => prev + 1)
+  const {
+    data: { mainImageIndex, variations }
+  } = useGetVariationImages(encodedBaseImageInfoId)
+  const queries = useGetAiImageProgress()
 
-    // TODO: data 길이 체크
-    const newData =
-      data?.slice(
-        reqCount * AMOUNT_PER_PAGE,
-        reqCount * AMOUNT_PER_PAGE + AMOUNT_PER_PAGE
-      ) || []
-    setFilteredData((prev) => [...newData, ...prev])
+  const postAiImageMutaion = usePostAiImageGenerate()
+
+  const { setRestriction } = useAuthStore.getState()
+
+  const [initialData, setInitialData] = React.useState<Variation[]>([])
+
+  const [currentPage, setCurrentPage] = React.useState<number>(INITIAL_PAGE)
+  const [totalPages, setTotalPages] = React.useState<number>(() => {
+    return Math.ceil(variations.length / AMOUNT_PER_PAGE)
+  })
+
+  React.useEffect(() => {
+    handleSelectedVariation(variations[mainImageIndex])
+
+    // polling 할 목록 따로 추출
+    const successGeneratingList: Variation[] = []
+    const newGeneratingList: Variation[] = []
+    // const failGeneratingList: Variation[] = []
+    for (let i = 0; i < variations.length; i++) {
+      const variation = variations[i]
+
+      if (!variation.isAiGenerated || variation.progress >= 100) {
+        successGeneratingList.push(variation)
+        continue
+      }
+      // if (variation.isFail) {
+      //   failGeneratingList.push(variation)
+      //   continue
+      // }
+      newGeneratingList.push(variation)
+    }
+
+    setInitialData(successGeneratingList)
+
+    if (newGeneratingList.length > 0) {
+      setIsAiImageGenerating(true) // false 처리는 polling 완료시
+      setCurrentPage(totalPages)
+
+      addAiImageGeneratingList(newGeneratingList)
+      setAiImageList(newGeneratingList)
+    }
+
+    // if (failGeneratingList.length > 0) {
+    //   setIsAiImageFailed(true)
+    //   // console.log('에러 발생한 목록', failGeneratingList)
+    // }
+  }, [])
+
+  for (let i = 0; i < queries.length; i++) {
+    const query = queries[i]
+    console.log('query', query)
+
+    if (query.isLoading) {
+      console.log('로딩중')
+      continue
+    }
+
+    if (query.isError) {
+      console.log('에러 발생')
+      continue
+    }
+
+    if (query.data?.content.variation.isFail) {
+      // console.log('isFail', query.data?.content)
+
+      // TODO: 에러 발생시 처리
+      const { encodedBaseImageId } = query.data.content.variation
+      setIsAiImageFailed(true)
+      removeAiImageGeneratingList(encodedBaseImageId)
+      updateAiImageItem(query.data?.content.variation)
+      continue
+    }
+
+    if (query.data?.content.variation.progress === 100) {
+      // console.log('생성 완료!', query.data?.content)
+
+      const { encodedBaseImageId } = query.data.content.variation
+      removeAiImageGeneratingList(encodedBaseImageId)
+      updateAiImageItem(query.data?.content.variation)
+      // TODO: 업데이트되고 다음 렌더링때 이미지가 반영되는 이슈
+    }
   }
 
-  const isDisabled = (data && data.length < 5) || reqCount >= LIMIT_REQUEST
+  if (aiImageGeneratingList.length === 0) setIsAiImageGenerating(false)
+  else setIsAiImageGenerating(true)
+
+  const variationsLength = initialData.length + aiImageList.length
+
+  React.useEffect(() => {
+    if (variationsLength === 0 || variationsLength === variations.length) return
+    const updatePage = Math.ceil(variationsLength / AMOUNT_PER_PAGE)
+    setCurrentPage(updatePage)
+  }, [variationsLength])
+
+  if (variationsLength > totalPages * AMOUNT_PER_PAGE) {
+    const updatePage = Math.ceil(variationsLength / AMOUNT_PER_PAGE)
+    setTotalPages(updatePage)
+  }
+
+  const renderData = [...initialData, ...aiImageList].slice(
+    (currentPage - 1) * AMOUNT_PER_PAGE,
+    (currentPage - 1) * AMOUNT_PER_PAGE + AMOUNT_PER_PAGE
+  )
+
+  const handleClickRetryButton = ({ item }: { item: Variation }) => {
+    const {
+      encodedBaseImageId,
+      properties: { aspectRatio, faceAngle }
+    } = item
+
+    removeAiImageGeneratingList(encodedBaseImageId)
+
+    postAiImageMutaion.mutate(
+      {
+        encodedBaseImageId,
+        properties: {
+          aspectRatio: ASPECT_RATIO_REVERT_MAP[aspectRatio],
+          faceAngle: faceAngle as FaceAngle
+        }
+      },
+      {
+        onSuccess: (data) => {
+          const { variation, restriction } = data.content
+
+          addAiImageGeneratingList([variation])
+          addAiImageItem(variation)
+
+          setRestriction(restriction.current)
+        }
+      }
+      // onError
+    )
+  }
 
   return (
     <>
       <div className="flex justify-between items-center mb-5">
-        <h3>Variations</h3>
+        <div className="flex items-center gap-2">
+          <h3 className="text-neutral-7 text-[0.875rem]">Variations</h3>
+          {isAiImageFailed ? <AlertCircleIcon /> : null}
+          {isAiImageGenerating ? (
+            <span className="text-primary text-[0.875rem]">Generating ...</span>
+          ) : null}
+        </div>
         <div className="flex gap-1">
           <Button
             variant="outline"
@@ -59,6 +227,11 @@ export const VariationsSection = ({
           >
             <AngleBracketIcon />
           </Button>
+          <div className="flex items-center text-center text-neutral-5">
+            <span className="block w-[25px]">{currentPage}</span>
+            <span> / </span>
+            <span className="block w-[25px]">{totalPages}</span>
+          </div>
           <Button
             variant="outline"
             size="icon"
@@ -72,29 +245,68 @@ export const VariationsSection = ({
           </Button>
         </div>
       </div>
-      <div className="flex flex-col-reverse gap-5">
-        <Button
-          variant="outline"
-          stretch
-          className="rounded-[0.5rem] bg-inherit flex-shrink-0"
-          onClick={handleClick}
-          disabled={isDisabled}
-        >
-          Generate New Variations
-          <span>({reqCount} / 3)</span>
-        </Button>
-        <div className="grid-area-variations gap-4 flex-1">
-          {filteredData
-            .slice(
-              (currentPage - 1) * AMOUNT_PER_PAGE,
-              (currentPage - 1) * AMOUNT_PER_PAGE + AMOUNT_PER_PAGE
-            )
-            .map((item) => (
-              <div
-                key={item.encodedBaseImageId}
-                className="rounded-[0.5rem] border-red-700 overflow-hidden relative aspectRatio-206/219 min-w-[206px] min-h-[219px] cursor-pointer"
-                onClick={() => handleSelectedVariation(item)}
-              >
+
+      <div className="flex gap-2 min-h-[120px] h-">
+        {/*  */}
+        {renderData.map((item) => {
+          const {
+            encodedAiBasedImageId,
+            encodedBaseImageId,
+            isAiGenerated,
+            progress,
+            isFail
+          } = item
+
+          const isGenerating = isAiGenerated && progress < 100
+          const isSeletedVariation =
+            searchParams.get('variation') === encodedBaseImageId
+
+          return (
+            <div
+              key={encodedAiBasedImageId + encodedBaseImageId + progress + v4()}
+              aria-disabled={isGenerating}
+              className={cn(
+                'rounded-[0.5rem] overflow-hidden relative aspect-[206/219] w-full border border-border',
+                {
+                  'cursor-pointer': !isGenerating,
+                  'pointer-events-none': isGenerating,
+                  'opacity-50': !isSeletedVariation && !isFail
+                }
+              )}
+              onClick={() => handleSelectedVariation(item)}
+            >
+              {isFail ? (
+                // fail card
+                <div className="p-[8px] absolute inset-0">
+                  <Image
+                    src={
+                      process.env.NEXT_PUBLIC_API_URL +
+                      `${URL_VARIATION_LIST_IMAGE}/` +
+                      item.encodedAiBasedImageId
+                    }
+                    alt=""
+                    fill
+                    style={{ objectFit: 'cover', filter: 'blur(1px)' }}
+                  />
+                  <div className="absolute inset-0 bg-[#FF8480] bg-opacity-20" />
+                  <div className="relative h-full">
+                    <Button
+                      variant="outline"
+                      className="absolute bottom-0 rounded-[8px] py-[8px] w-full mt-auto text-white text-[12px] z-20 pointer-events-auto"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleClickRetryButton({ item })
+                      }}
+                    >
+                      Try Again
+                    </Button>
+                  </div>
+                </div>
+              ) : isGenerating ? (
+                // generating skeleton card
+                <div className="loading-skeleton h-full" />
+              ) : (
+                // normal card
                 <Image
                   src={
                     process.env.NEXT_PUBLIC_API_URL +
@@ -105,9 +317,21 @@ export const VariationsSection = ({
                   fill
                   style={{ objectFit: 'cover' }}
                 />
-              </div>
-            ))}
-        </div>
+              )}
+            </div>
+          )
+        })}
+        {/* null card */}
+        {renderData.length < AMOUNT_PER_PAGE &&
+          Array.from({ length: AMOUNT_PER_PAGE - renderData.length }).map(
+            (_, index) => (
+              <div
+                // Key 변경
+                key={index}
+                className="border border-dashed rounded-[0.5rem] aspect-[206/219] w-full bg-neutral-1 opacity-50"
+              ></div>
+            )
+          )}
       </div>
     </>
   )

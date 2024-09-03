@@ -1,3 +1,5 @@
+'use client'
+
 import * as React from 'react'
 import {
   DropdownMenu,
@@ -12,7 +14,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import Image from 'next/image'
 import { faker } from '@faker-js/faker'
 
-export const UserProfile = async () => {
+export const UserProfile = () => {
   const queryClient = useQueryClient()
 
   const isAuth = useAuthStore((state) => state.isAuth)

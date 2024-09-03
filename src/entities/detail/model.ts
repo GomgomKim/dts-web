@@ -1,5 +1,5 @@
 export interface GetVariationListReqData {
-  encodedBaseImageId: string
+  encodedBaseImageInfoId: string
 }
 
 export interface GetVariationListResData {
@@ -9,18 +9,24 @@ export interface GetVariationListResData {
 }
 
 export interface VariationListContent {
-  main: MainVariation
+  mainImageIndex: number
   variations: Variation[]
-}
-
-export interface MainVariation {
-  encodedBaseImageId: string
+  restriction: Restriction
 }
 
 export interface Variation {
   encodedBaseImageId: string
   properties: Properties
   isAiGenerated: boolean
+  progress: number
+  encodedAiBasedImageId: string
+  isFail: boolean
+  isTimeout: boolean
+}
+
+export interface Restriction {
+  current: number
+  max: number
 }
 
 export interface Properties {
@@ -37,6 +43,9 @@ export type AspectRatio =
 
 export type FaceAngle = 'LEFT' | 'FRONT' | 'RIGHT'
 
+export type SkinTexture = 'MATTE' | 'MEDIUM' | 'GlOWY'
+
+//
 export interface PostAiImageReqData {
   encodedBaseImageId: string
   properties: Properties
@@ -46,19 +55,25 @@ export interface PostAiImageResData {
   code: number
   message: null | string
   content: {
-    encodedGenerateId: string
+    variation: Variation
+    restriction: Restriction
   }
 }
 
+export interface Restriction {
+  current: number
+  max: number
+}
+
 export interface GetAiImageProgressReqData {
-  encodedGenerateId: string
+  encodedImageId: string
 }
 
 export interface GetAiImageProgressResData {
   code: number
   message: null | string
   content: {
-    progress: number
+    variation: Variation
   }
 }
 

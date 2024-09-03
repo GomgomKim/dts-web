@@ -3,7 +3,6 @@
 import { useAuthStore } from '@/entities/user/store'
 import useAxiosAuthInterceptor from '@/entities/user/use-axios-auth-interceptor'
 import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
 
 export default function Layout({
   children
@@ -15,11 +14,7 @@ export default function Layout({
 
   useAxiosAuthInterceptor()
 
-  useEffect(() => {
-    if (!isAuth) {
-      router.replace('/login')
-    }
-  }, [isAuth])
+  if (isAuth === null) return null
 
-  return isAuth ? children : null
+  return isAuth ? children : router.replace('/login')
 }

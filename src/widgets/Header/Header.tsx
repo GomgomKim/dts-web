@@ -53,9 +53,11 @@ const NotLoggedInNav = () => {
 }
 
 const UserInfo = () => {
+  const restrict = useAuthStore((state) => state.restriction)
+
   return (
     <div>
-      <div>credit</div>
+      <div>{restrict}</div>
       <Suspense>
         <UserProfile />
       </Suspense>

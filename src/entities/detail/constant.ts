@@ -1,9 +1,9 @@
-import { AspectRatio, FaceAngle } from './model'
+import { AspectRatio, FaceAngle, SkinTexture } from './model'
 
 export const URL_VARIATION_LIST = '/image/base-image'
 export const URL_VARIATION_LIST_IMAGE = '/image-file'
 export const URL_AI_IMAGE_GENERATE = '/image/ai-image/generate'
-export const URL_AI_IMAGE_GENERATE_PROGRESS = '/image-file/ai'
+export const URL_AI_IMAGE_GENERATE_PROGRESS = '/image/ai-image'
 export const URL_GENERATED_AI_IMAGE_FILE = '/image-file'
 export const URL_ASSET_REMOVE_BACKGROUND = '/image-file/asset/remove_background'
 
@@ -41,4 +41,10 @@ export const FACE_ANGLE_REVERT_MAP: Record<string, FaceAngle> = {
   Left: 'LEFT',
   Front: 'FRONT',
   Right: 'RIGHT'
+}
+
+export const SKIN_TEXTURE_MAP: Record<SkinTexture, string> = {
+  MATTE: 'Matte',
+  MEDIUM: 'Medium',
+  GlOWY: 'Glowy'
 }
