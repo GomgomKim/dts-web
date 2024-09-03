@@ -19,6 +19,9 @@ export interface Variation {
   properties: Properties
   isAiGenerated: boolean
   progress: number
+  encodedAiBasedImageId: string
+  isFail: boolean
+  isTimeout: boolean
 }
 
 export interface Restriction {
@@ -52,19 +55,25 @@ export interface PostAiImageResData {
   code: number
   message: null | string
   content: {
-    encodedGenerateId: string
+    variation: Variation
+    restriction: Restriction
   }
 }
 
+export interface Restriction {
+  current: number
+  max: number
+}
+
 export interface GetAiImageProgressReqData {
-  encodedGenerateId: string
+  encodedImageId: string
 }
 
 export interface GetAiImageProgressResData {
   code: number
   message: null | string
   content: {
-    progress: number
+    variation: Variation
   }
 }
 

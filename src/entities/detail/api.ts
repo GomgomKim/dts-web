@@ -1,4 +1,4 @@
-import { AxiosError, AxiosResponse } from 'axios'
+import { AxiosError, AxiosResponse, isAxiosError } from 'axios'
 import { dtsAxios } from '@/shared/api'
 import {
   GetAiImageProgressReqData,
@@ -41,16 +41,22 @@ export async function postAiImageGenerate({
 }
 
 export async function getAiImageProgress({
-  encodedGenerateId
+  encodedImageId
 }: GetAiImageProgressReqData) {
-  console.log('getAiImageProgress generateKey 받음', encodedGenerateId)
+  try {
+    const response = await dtsAxios.get<
+      GetAiImageProgressReqData,
+      AxiosResponse<GetAiImageProgressResData, AxiosError>
+    >(`${URL_AI_IMAGE_GENERATE_PROGRESS}/${encodedImageId}/progress`)
 
-  const response = await dtsAxios.get<
-    GetAiImageProgressReqData,
-    AxiosResponse<GetAiImageProgressResData, AxiosError>
-  >(`${URL_AI_IMAGE_GENERATE_PROGRESS}/${encodedGenerateId}/progress`)
-
-  return response.data
+    return response.data
+  } catch (error) {
+    if (isAxiosError(error)) {
+      return new AxiosError(error.response?.data)
+    } else {
+      console.log('unexpected error', error)
+    }
+  }
 }
 
 export async function postAssetRemoveBackground({

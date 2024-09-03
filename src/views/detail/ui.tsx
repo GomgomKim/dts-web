@@ -4,24 +4,36 @@ import { Suspense, useRef, useState } from 'react'
 import { ImageEditingBox } from '@/features/detail/ui/ImageEditingBox'
 import { RadioGroup, RadioGroupItem } from '@/shared/ui/radio-group'
 import { VariationsSection } from '@/features/detail/ui/VariationSection'
-import { useImagePreviewUrlStore } from '@/features/detail/store'
+import {
+  useAiImageGeneratingStore,
+  useImagePreviewUrlStore
+} from '@/features/detail/store'
 import { Box } from '@/features/detail/ui/ImageEditingBox/type'
-import { Variation } from '@/entities/detail/model'
+import { FaceAngle, Variation } from '@/entities/detail/model'
 import BrandAssets from './BrandAssets'
 import {
   ASPECT_RATIO_MAP,
+  ASPECT_RATIO_REVERT_MAP,
   FACE_ANGLE_MAP,
+  FACE_ANGLE_REVERT_MAP,
   SKIN_TEXTURE_MAP
 } from '@/entities/detail/constant'
 import { ExportButton } from '@/entities/detail/ui/ExportButton'
 import { convertImagesToBoxData } from './util'
 import { Badge, Button } from '@/shared/ui'
+import { useSetQueryString } from '@/shared/lib/hooks/useSetQueryString'
+import { usePostAiImageGenerate } from '@/entities/detail/adapter'
+import { useSearchParams } from 'next/navigation'
+import { useAuthStore } from '@/entities/user/store'
 
 const SKIN_TEXTURE_OPTIONS = Object.values(SKIN_TEXTURE_MAP)
 const ASPECT_RATIO_OPTIONS = Object.values(ASPECT_RATIO_MAP)
 const FACE_ANGLE_OPTIONS = Object.values(FACE_ANGLE_MAP)
 
 function Detail() {
+  const searchParams = useSearchParams()
+  const { addAiImageGeneratingList } = useAiImageGeneratingStore.getState()
+
   // related brand assets
   const containerRef = useRef<HTMLDivElement>(null)
   const { imagePreviewUrls: assetImages } = useImagePreviewUrlStore()
@@ -38,31 +50,77 @@ function Detail() {
   }
 
   // related variations
+  const { setRestriction } = useAuthStore.getState()
+  const { setIsAiImageGenerating, addAiImageItem } =
+    useAiImageGeneratingStore.getState()
+  const postAiImageMutaion = usePostAiImageGenerate()
+
   const [selectedVariation, setSelectedVariation] = useState<Variation | null>(
     null
   )
   const [aspectRatio, setAspectRatio] = useState<string>('')
   const [faceAngle, setFaceAngle] = useState<string>('')
 
+  const { handleQueryString } = useSetQueryString({ option: 'replace' })
+
   const handleSelectedVariation = (variation: Variation) => {
     setSelectedVariation(variation)
+
+    const {
+      encodedBaseImageId,
+      properties: { aspectRatio, faceAngle }
+    } = variation
+
+    handleQueryString([{ variation: encodedBaseImageId }])
+
+    handleChangeAspectRatio(ASPECT_RATIO_MAP[aspectRatio])
+    handleChangeFaceAngle(FACE_ANGLE_MAP[faceAngle])
   }
 
   const handleChangeAspectRatio = (value: string) => {
     setAspectRatio(value)
+    handleQueryString([{ aspectRatio: value }])
   }
 
   const handleChangeFaceAngle = (value: string) => {
     setFaceAngle(value)
+    handleQueryString([{ faceAngle: FACE_ANGLE_REVERT_MAP[value] }])
   }
 
-  //
   const handleClickNewVariation = () => {
     // TODO: 디바운싱 처리
-    // props.handleClick()
-    // // new variation request
-    // // render image placeholder and loading spinner + disabled click
-    // setFilteredData()
+    setIsAiImageGenerating(true)
+
+    // request new variation
+    const encodedBaseImageId = searchParams.get('variation')
+    const aspectRatio = searchParams.get('aspectRatio')
+    const faceAngle = searchParams.get('faceAngle')
+
+    if (!encodedBaseImageId || !aspectRatio || !faceAngle) {
+      return
+    }
+
+    postAiImageMutaion.mutate(
+      {
+        encodedBaseImageId,
+        properties: {
+          aspectRatio: ASPECT_RATIO_REVERT_MAP[aspectRatio],
+          faceAngle: faceAngle as FaceAngle
+        }
+      },
+      {
+        onSuccess: (data) => {
+          const { variation, restriction } = data.content
+
+          setIsAiImageGenerating(true)
+          addAiImageGeneratingList([variation])
+          addAiImageItem(variation)
+
+          setRestriction(restriction.current)
+        }
+      }
+      // onError
+    )
   }
 
   return (
@@ -106,7 +164,6 @@ function Detail() {
                       />
                     </Suspense>
                   </div>
-                  {/* </div> */}
                 </div>
               </div>
             </div>
@@ -183,7 +240,7 @@ function Detail() {
               <Button
                 variant="outline"
                 stretch
-                className="bg-[rgba(32,33,36,0.5)]"
+                className="bg-neautral-1 bg-opacity-50"
                 onClick={handleClickNewVariation}
               >
                 Generate New Variations

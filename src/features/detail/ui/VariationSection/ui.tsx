@@ -3,12 +3,24 @@ import * as React from 'react'
 
 import AngleBracketIcon from '/public/icons/angle-bracket-open.svg'
 import { Button } from '@/shared/ui'
-import { Variation } from '@/entities/detail/model'
-import { URL_VARIATION_LIST_IMAGE } from '@/entities/detail/constant'
-import { useGetVariationImages } from '@/entities/detail/adapter'
+import { FaceAngle, Variation } from '@/entities/detail/model'
+import {
+  ASPECT_RATIO_REVERT_MAP,
+  URL_VARIATION_LIST_IMAGE
+} from '@/entities/detail/constant'
+import {
+  useGetAiImageProgress,
+  useGetVariationImages,
+  usePostAiImageGenerate
+} from '@/entities/detail/adapter'
 import { useSearchParams } from 'next/navigation'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { cn } from '@/shared/lib/utils'
+import { useAiImageGeneratingStore } from '@/features/detail/store'
+import { useAuthStore } from '@/entities/user/store'
+import AlertCircleIcon from '/public/icons/alert-circle.svg'
+
+import { v4 } from 'uuid'
 
 type VariationsSectionProps = {
   handleSelectedVariation: (variation: Variation) => void
@@ -17,6 +29,21 @@ type VariationsSectionProps = {
 const AMOUNT_PER_PAGE = 4
 const INITIAL_PAGE = 1
 
+// const dummy: Variation[] = [
+//   {
+//     encodedAiBasedImageId: 'MTk=',
+//     encodedBaseImageId: '',
+//     properties: {
+//       aspectRatio: 'ASPECT_RATIO_1_1',
+//       faceAngle: 'FRONT'
+//     },
+//     progress: 0,
+//     isAiGenerated: true,
+//     isFail: true,
+//     isTimeout: true
+//   }
+// ]
+
 export const VariationsSection = ({
   handleSelectedVariation
 }: VariationsSectionProps) => {
@@ -24,50 +51,171 @@ export const VariationsSection = ({
   const encodedBaseImageInfoId = searchParams.get('id') || ''
 
   const {
+    isAiImageFailed,
+    setIsAiImageFailed,
+    //
+    isAiImageGenerating,
+    setIsAiImageGenerating,
+    //
+    aiImageList,
+    setAiImageList,
+    addAiImageItem,
+    updateAiImageItem,
+    //
+    aiImageGeneratingList,
+    addAiImageGeneratingList,
+    removeAiImageGeneratingList
+  } = useAiImageGeneratingStore.getState()
+
+  const {
     data: { mainImageIndex, variations }
   } = useGetVariationImages(encodedBaseImageInfoId)
+  const queries = useGetAiImageProgress()
 
-  // 첫 로드시 가져온 static image data + 새롭게 생성한 image data
-  const [allData, setAllData] = React.useState<Variation[]>([
-    ...variations,
-    {
-      encodedBaseImageId: 'string',
-      properties: {
-        aspectRatio: 'ASPECT_RATIO_1_1',
-        faceAngle: 'LEFT'
-      },
-      isAiGenerated: true,
-      progress: 75
-    }
-  ])
+  const postAiImageMutaion = usePostAiImageGenerate()
+
+  const { setRestriction } = useAuthStore.getState()
+
+  const [initialData, setInitialData] = React.useState<Variation[]>([])
 
   const [currentPage, setCurrentPage] = React.useState<number>(INITIAL_PAGE)
   const [totalPages, setTotalPages] = React.useState<number>(() => {
-    return Math.ceil(allData.length / AMOUNT_PER_PAGE)
+    return Math.ceil(variations.length / AMOUNT_PER_PAGE)
   })
-  console.log(setAllData, setTotalPages)
-
-  // const handlePagenation = () => {
-  // polling 중이면 실행되도록
-  // 현재 데이터가 n(한 페이지당 이미지 개수)의 배수면 다음 페이지 이동
-  // 1. 이미지가 새로 생성되는거면 마지막 페이지로 이동,
-  // 2. 새로 페이지 진입시 작업중인 내용이 있던거면 해당 페이지로 이동 + setSelectedVariation
-  // setTotalPages((prev) => prev + 1)
-  // }
 
   React.useEffect(() => {
     handleSelectedVariation(variations[mainImageIndex])
+
+    // polling 할 목록 따로 추출
+    const successGeneratingList: Variation[] = []
+    const newGeneratingList: Variation[] = []
+    // const failGeneratingList: Variation[] = []
+    for (let i = 0; i < variations.length; i++) {
+      const variation = variations[i]
+
+      if (!variation.isAiGenerated || variation.progress >= 100) {
+        successGeneratingList.push(variation)
+        continue
+      }
+      // if (variation.isFail) {
+      //   failGeneratingList.push(variation)
+      //   continue
+      // }
+      newGeneratingList.push(variation)
+    }
+
+    setInitialData(successGeneratingList)
+
+    if (newGeneratingList.length > 0) {
+      setIsAiImageGenerating(true) // false 처리는 polling 완료시
+      setCurrentPage(totalPages)
+
+      addAiImageGeneratingList(newGeneratingList)
+      setAiImageList(newGeneratingList)
+    }
+
+    // if (failGeneratingList.length > 0) {
+    //   setIsAiImageFailed(true)
+    //   // console.log('에러 발생한 목록', failGeneratingList)
+    // }
   }, [])
 
-  const renderData = allData.slice(
+  for (let i = 0; i < queries.length; i++) {
+    const query = queries[i]
+    console.log('query', query)
+
+    if (query.isLoading) {
+      console.log('로딩중')
+      continue
+    }
+
+    if (query.isError) {
+      console.log('에러 발생')
+      continue
+    }
+
+    if (query.data?.content.variation.isFail) {
+      // console.log('isFail', query.data?.content)
+
+      // TODO: 에러 발생시 처리
+      const { encodedBaseImageId } = query.data.content.variation
+      setIsAiImageFailed(true)
+      removeAiImageGeneratingList(encodedBaseImageId)
+      updateAiImageItem(query.data?.content.variation)
+      continue
+    }
+
+    if (query.data?.content.variation.progress === 100) {
+      // console.log('생성 완료!', query.data?.content)
+
+      const { encodedBaseImageId } = query.data.content.variation
+      removeAiImageGeneratingList(encodedBaseImageId)
+      updateAiImageItem(query.data?.content.variation)
+      // TODO: 업데이트되고 다음 렌더링때 이미지가 반영되는 이슈
+    }
+  }
+
+  if (aiImageGeneratingList.length === 0) setIsAiImageGenerating(false)
+  else setIsAiImageGenerating(true)
+
+  const variationsLength = initialData.length + aiImageList.length
+
+  React.useEffect(() => {
+    if (variationsLength === 0 || variationsLength === variations.length) return
+    const updatePage = Math.ceil(variationsLength / AMOUNT_PER_PAGE)
+    setCurrentPage(updatePage)
+  }, [variationsLength])
+
+  if (variationsLength > totalPages * AMOUNT_PER_PAGE) {
+    const updatePage = Math.ceil(variationsLength / AMOUNT_PER_PAGE)
+    setTotalPages(updatePage)
+  }
+
+  const renderData = [...initialData, ...aiImageList].slice(
     (currentPage - 1) * AMOUNT_PER_PAGE,
     (currentPage - 1) * AMOUNT_PER_PAGE + AMOUNT_PER_PAGE
   )
 
+  const handleClickRetryButton = ({ item }: { item: Variation }) => {
+    const {
+      encodedBaseImageId,
+      properties: { aspectRatio, faceAngle }
+    } = item
+
+    removeAiImageGeneratingList(encodedBaseImageId)
+
+    postAiImageMutaion.mutate(
+      {
+        encodedBaseImageId,
+        properties: {
+          aspectRatio: ASPECT_RATIO_REVERT_MAP[aspectRatio],
+          faceAngle: faceAngle as FaceAngle
+        }
+      },
+      {
+        onSuccess: (data) => {
+          const { variation, restriction } = data.content
+
+          addAiImageGeneratingList([variation])
+          addAiImageItem(variation)
+
+          setRestriction(restriction.current)
+        }
+      }
+      // onError
+    )
+  }
+
   return (
     <>
       <div className="flex justify-between items-center mb-5">
-        <h3>Variations</h3>
+        <div className="flex items-center gap-2">
+          <h3 className="text-neutral-7 text-[0.875rem]">Variations</h3>
+          {isAiImageFailed ? <AlertCircleIcon /> : null}
+          {isAiImageGenerating ? (
+            <span className="text-primary text-[0.875rem]">Generating ...</span>
+          ) : null}
+        </div>
         <div className="flex gap-1">
           <Button
             variant="outline"
@@ -102,22 +250,64 @@ export const VariationsSection = ({
       <div className="flex gap-2 min-h-[120px] h-">
         {/*  */}
         {renderData.map((item) => {
-          const isGenerating = item.isAiGenerated && item.progress < 100
+          const {
+            encodedAiBasedImageId,
+            encodedBaseImageId,
+            isAiGenerated,
+            progress,
+            isFail
+          } = item
+
+          const isGenerating = isAiGenerated && progress < 100
+          const isSeletedVariation =
+            searchParams.get('variation') === encodedBaseImageId
+
           return (
             <div
-              key={item.encodedBaseImageId}
+              key={encodedAiBasedImageId + encodedBaseImageId + progress + v4()}
+              aria-disabled={isGenerating}
               className={cn(
                 'rounded-[0.5rem] overflow-hidden relative aspect-[206/219] w-full border border-border',
                 {
-                  'cursor-pointer': !isGenerating
+                  'cursor-pointer': !isGenerating,
+                  'pointer-events-none': isGenerating,
+                  'opacity-50': !isSeletedVariation && !isFail
                 }
               )}
               onClick={() => handleSelectedVariation(item)}
             >
-              {/* TODO: progress < 100이면 polling */}
-              {isGenerating ? (
+              {isFail ? (
+                // fail card
+                <div className="p-[8px] absolute inset-0">
+                  <Image
+                    src={
+                      process.env.NEXT_PUBLIC_API_URL +
+                      `${URL_VARIATION_LIST_IMAGE}/` +
+                      item.encodedAiBasedImageId
+                    }
+                    alt=""
+                    fill
+                    style={{ objectFit: 'cover', filter: 'blur(1px)' }}
+                  />
+                  <div className="absolute inset-0 bg-[#FF8480] bg-opacity-20" />
+                  <div className="relative h-full">
+                    <Button
+                      variant="outline"
+                      className="absolute bottom-0 rounded-[8px] py-[8px] w-full mt-auto text-white text-[12px] z-20 pointer-events-auto"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleClickRetryButton({ item })
+                      }}
+                    >
+                      Try Again
+                    </Button>
+                  </div>
+                </div>
+              ) : isGenerating ? (
+                // generating skeleton card
                 <div className="loading-skeleton h-full" />
               ) : (
+                // normal card
                 <Image
                   src={
                     process.env.NEXT_PUBLIC_API_URL +
