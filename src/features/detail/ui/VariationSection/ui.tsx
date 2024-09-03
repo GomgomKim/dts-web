@@ -14,7 +14,6 @@ import {
   usePostAiImageGenerate
 } from '@/entities/detail/adapter'
 import { useSearchParams } from 'next/navigation'
-import 'react-loading-skeleton/dist/skeleton.css'
 import { cn } from '@/shared/lib/utils'
 import { useAiImageGeneratingStore } from '@/features/detail/store'
 import { useAuthStore } from '@/entities/user/store'
