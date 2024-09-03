@@ -6,6 +6,8 @@ import { Button } from '@/shared/ui'
 import { usePathname } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 import Arrow from '/public/icons/arrow-thin.svg'
+import { DownloadDropdown } from '@/shared/ui/dropdown-menu/download-dropdown'
+import { ProfileDropdown } from '@/shared/ui/dropdown-menu/profile-dropdown'
 import { useAuthStore } from '@/entities/user/store'
 import { UserProfile } from '@/entities/user'
 
@@ -14,6 +16,12 @@ import { Suspense } from 'react'
 const Links = () => {
   return (
     <>
+      <li>
+        <ProfileDropdown />
+      </li>
+      <li>
+        <DownloadDropdown />
+      </li>
       <li>
         <Button asChild variant="link">
           <Link href="https://medium.com/do-things-with-ai" target="_blank">
