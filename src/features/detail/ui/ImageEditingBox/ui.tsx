@@ -20,12 +20,6 @@ type Props = {
 export const ImageEditingBox = (props: Props) => {
   const { containerRef, selectedVariation, boxes, setBoxes } = props
 
-  // const searchParams = useSearchParams()
-
-  // const isGenerating =
-  //   !!generatedNewImage.encodedGenerateId &&
-  //   generatedNewImage.isCompleted === false
-
   const imgUrl =
     process.env.NEXT_PUBLIC_API_URL +
     URL_VARIATION_LIST_IMAGE +
@@ -53,9 +47,6 @@ export const ImageEditingBox = (props: Props) => {
       <div
         className={cn(
           'h-full bg-neutral-1 bg-opacity-50 rounded-[0.5rem] overflow-hidden relative flex justify-center'
-          // {
-          //   'z-20': isGenerating
-          // }
         )}
       >
         <div
@@ -79,16 +70,7 @@ export const ImageEditingBox = (props: Props) => {
             setBoxes={setBoxes}
           />
         </div>
-        {/* {isGenerating ? (
-          <div className="z-30 absolute inset-0 pointer-event-none">
-            <ProgressInfo progress={generatingProgress} />
-            <LoadingInfo />
-          </div>
-        ) : null} */}
       </div>
-      {/* {isGenerating ? (
-        <div className="z-10 fixed inset-0 bg-neutral-0-70" />
-      ) : null} */}
     </>
   )
 }
