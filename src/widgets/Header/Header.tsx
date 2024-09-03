@@ -6,22 +6,16 @@ import { Button } from '@/shared/ui'
 import { usePathname } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 import Arrow from '/public/icons/arrow-thin.svg'
-import { DownloadDropdown } from '@/shared/ui/dropdown-menu/download-dropdown'
-import { ProfileDropdown } from '@/shared/ui/dropdown-menu/profile-dropdown'
 import { useAuthStore } from '@/entities/user/store'
 import { UserProfile } from '@/entities/user'
+import CreditIcon from '/public/icons/database.svg'
 
 import { Suspense } from 'react'
+import { cn } from '@/shared/lib/utils'
 
 const Links = () => {
   return (
     <>
-      <li>
-        <ProfileDropdown />
-      </li>
-      <li>
-        <DownloadDropdown />
-      </li>
       <li>
         <Button asChild variant="link">
           <Link href="https://medium.com/do-things-with-ai" target="_blank">
@@ -61,11 +55,30 @@ const NotLoggedInNav = () => {
 }
 
 const UserInfo = () => {
-  const restrict = useAuthStore((state) => state.restriction)
+  const restriction = useAuthStore((state) => state.restriction)
+
+  const isZeroRestriction = restriction === 0
 
   return (
-    <div>
-      <div>{restrict}</div>
+    <div className="flex gap-3 items-center">
+      <div className="flex gap-2 items-center">
+        <CreditIcon
+          className={cn('stroke-white', {
+            'stroke-[#FF8480]': isZeroRestriction
+          })}
+        />
+        <span
+          className={cn('text-[14px]', { 'text-[#FF8480]': isZeroRestriction })}
+        >
+          {restriction}
+        </span>
+      </div>
+      {isZeroRestriction ? (
+        <div className="font-medium text-[0.875rem] text-[#616268]">
+          Credits reset at midnight
+          <span className="ml-[8px]">🌙</span>
+        </div>
+      ) : null}
       <Suspense>
         <UserProfile />
       </Suspense>

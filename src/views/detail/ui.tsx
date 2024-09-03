@@ -12,10 +12,10 @@ import {
   FACE_ANGLE_MAP,
   FACE_ANGLE_REVERT_MAP
 } from '@/entities/detail/constant'
-import { ExportButton } from '@/entities/detail/ui/ExportButton'
 import { convertImagesToBoxData } from './util'
 import { useSetQueryString } from '@/shared/lib/hooks/useSetQueryString'
 import { GenerateVariation } from '@/features/detail/ui/GenerateVariation'
+import { DownloadDropdown } from './DownloadDropdown'
 
 function Detail() {
   // related brand assets
@@ -125,10 +125,7 @@ function Detail() {
               />
 
               {/* related download image /////////////////////////////////////////////  */}
-              {/* TODO: download option */}
-              <ExportButton containerRef={containerRef}>
-                Free Download
-              </ExportButton>
+              <DownloadDropdown containerRef={containerRef} />
             </div>
           </div>
         </div>

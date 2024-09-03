@@ -1,6 +1,5 @@
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
@@ -8,23 +7,30 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger
 } from '@/shared/ui/dropdown-menu'
-
+import { Switch } from '@/shared/ui/switch'
 import { Button } from '@/shared/ui'
 import { useState } from 'react'
 
 import CheckIcon from '/public/icons/check.svg'
-import { Switch } from '../switch'
 import { cn } from '@/shared/lib/utils'
-const DownloadDropdown = () => {
+import { ExportButton } from '@/entities/detail/ui/ExportButton'
+
+interface Props {
+  containerRef: React.RefObject<HTMLDivElement>
+}
+
+const DownloadDropdown = (props: Props) => {
   const [selectedFormat, setSelectedFormat] = useState('png')
   const [selectedQuality] = useState('small')
   const [isError] = useState(false)
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline">Download</Button>
+        <Button>Free Download</Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-[400px]">
+
+      <DropdownMenuContent className="w-[400px]" sideOffset={-20}>
+        {/* menu 1 */}
         <DropdownMenuLabel>Format</DropdownMenuLabel>
         <DropdownMenuRadioGroup
           className="flex px-5 py-3 w-[252px] justify-between"
@@ -44,6 +50,7 @@ const DownloadDropdown = () => {
           ))}
         </DropdownMenuRadioGroup>
 
+        {/* menu 2 */}
         <DropdownMenuLabel className="pt-5 pb-1 bl-5">
           EXPORT QUALITY
         </DropdownMenuLabel>
@@ -52,15 +59,17 @@ const DownloadDropdown = () => {
             if (i == 0)
               return (
                 <DropdownMenuItem
-                  className="flex justify-between"
                   key={option.label}
+                  className={cn('flex justify-between', {
+                    focus: selectedQuality === option.value
+                  })}
                   onSelect={(e) => {
                     e.preventDefault()
                   }}
                 >
                   <div className="flex gap-x-2">
-                    <span>{option.label}</span>
-                    <span className="font-medium text-sm text-[#616268]">
+                    <span className="text-[0.875rem]">{option.label}</span>
+                    <span className="font-medium text-[0.875rem] text-[#616268]">
                       {option.subText}
                     </span>
                   </div>
@@ -71,38 +80,43 @@ const DownloadDropdown = () => {
               return (
                 <div
                   key={option.label}
-                  className="flex justify-between cursor-not-allowed px-5 py-3 text-sm text-[#AEAFB5] font-medium outline-none "
+                  className="flex justify-between cursor-not-allowed px-5 py-3 text-[0.875rem] text-[#AEAFB5] font-medium outline-none "
                 >
                   <div className="flex gap-x-2">
-                    <span>{option.label}</span>
-                    <span className="font-medium text-sm text-[#616268]">
+                    <span className="text-[0.875rem]">{option.label}</span>
+                    <span className="font-medium text-[0.875rem] text-[#616268]">
                       {option.subText}
                     </span>
                   </div>
-                  <span className="text-white">Pro Plan</span>
+                  <span className="text-white text-[0.875rem]">Pro Plan</span>
                 </div>
               )
           })}
         </div>
+
+        {/* menu 3 */}
         <DropdownMenuLabel className="px-5 pt-5 pb-1">
           WATERMARK
         </DropdownMenuLabel>
         <div className="flex justify-between px-5 py-3">
           <div>
-            <span className="text-sm font-medium text-white">
+            <span className="text-[0.875rem] font-medium text-white">
               Pro plan&nbsp;
             </span>
-            <span className="text-sm font-medium text-[#AEAFB5]">
+            <span className="text-[0.875rem] font-medium text-[#AEAFB5]">
               only for watermark removal
             </span>
           </div>
           <Switch disabled={true} />
         </div>
-        <DropdownMenuCheckboxItem></DropdownMenuCheckboxItem>
+
         <div className="pt-3 px-5">
-          <Button
-            className={cn('rounded-[8px]', { 'bg-[#FF8480]': isError })}
-            stretch={true}
+          <ExportButton
+            containerRef={props.containerRef}
+            className={cn('rounded-[8px] text-[0.75rem]', {
+              'bg-[#FF8480]': isError
+            })}
+            stretch
             onClick={() => {
               alert(
                 `let's download! format: ${selectedFormat} quality: ${selectedQuality}`
@@ -110,7 +124,7 @@ const DownloadDropdown = () => {
             }}
           >
             Continue
-          </Button>
+          </ExportButton>
         </div>
       </DropdownMenuContent>
     </DropdownMenu>
