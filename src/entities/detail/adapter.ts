@@ -1,3 +1,4 @@
+import { useAiImageGeneratingStore } from '@/features/detail/store'
 import {
   getAiImageProgress,
   getVariationImages,
@@ -5,24 +6,32 @@ import {
   postAssetRemoveBackground
 } from './api'
 import {
-  GetAiImageProgressReqData,
   GetVariationListResData,
+  VariationListContent,
   PostAiImageReqData,
   PostAssetRemoveBackgroundReqData,
-  Variation
+  GetAiImageProgressResData
 } from './model'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import {
+  Query,
+  useMutation,
+  useQueries,
+  UseQueryOptions,
+  useSuspenseQuery
+} from '@tanstack/react-query'
+import { AxiosError } from 'axios'
 
-const useGetVariationImages = (encodedBaseImageId: string) => {
-  const { data, status, error, isFetching } = useQuery<
+const useGetVariationImages = (encodedBaseImageInfoId: string) => {
+  const { data, status, error, isFetching } = useSuspenseQuery<
     GetVariationListResData,
     Error,
-    Variation[]
+    VariationListContent
   >({
-    queryKey: ['archive', 'variation', encodedBaseImageId],
-    queryFn: () => getVariationImages({ encodedBaseImageId }),
-    enabled: !!encodedBaseImageId,
-    select: (data) => data.content.variations
+    queryKey: ['archive', 'variation', encodedBaseImageInfoId],
+    queryFn: () => getVariationImages({ encodedBaseImageInfoId }),
+    select: (data) => data.content
+    // staleTime: 60 * 1000,
+    // gcTime: 300 * 1000
   })
 
   return {
@@ -40,28 +49,46 @@ const usePostAiImageGenerate = () => {
   })
 }
 
-type useGetAiImageProgressProps = GetAiImageProgressReqData & {
-  variationId: string
-}
-const useGetAiImageProgress = ({
-  variationId,
-  encodedGenerateId
-}: useGetAiImageProgressProps) => {
-  return useQuery({
-    queryKey: [
-      'archive',
-      variationId,
-      'aiImage',
-      'progress',
-      encodedGenerateId
-    ],
-    queryFn: () => getAiImageProgress({ encodedGenerateId }),
-    select: (data) => data.content.progress,
-    enabled: !!encodedGenerateId,
-    refetchInterval: (query) => {
-      console.log('useGetAiImageProgress', query.state.data?.content.progress)
-      return query.state.data?.content.progress === 100 ? false : 3000
-    }
+const useGetAiImageProgress = () => {
+  const { aiImageGeneratingList } = useAiImageGeneratingStore.getState()
+
+  return useQueries<UseQueryOptions<GetAiImageProgressResData, AxiosError>[]>({
+    queries: aiImageGeneratingList.map((item) => {
+      const { encodedAiBasedImageId, encodedBaseImageId } = item
+
+      return {
+        queryKey: [
+          'archive',
+          encodedAiBasedImageId,
+          'aiImage',
+          'progress',
+          encodedBaseImageId
+        ],
+        queryFn: async () => {
+          const response = await getAiImageProgress({
+            encodedImageId: encodedBaseImageId
+          })
+          if (response instanceof AxiosError || response === undefined) {
+            throw new Error('Failed to fetch AI image progress')
+          }
+          return response
+        },
+        refetchInterval: (
+          query: Query<GetAiImageProgressResData, AxiosError>
+        ) => {
+          if (
+            query.state.data?.content?.variation.isFail === true ||
+            query.state.data?.content?.variation.isTimeout === true
+          ) {
+            return false
+          }
+          if (query.state.data?.content?.variation.progress === 100) {
+            return false
+          }
+          return 3000
+        }
+      }
+    })
   })
 }
 

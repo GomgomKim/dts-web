@@ -14,9 +14,7 @@ export default function DetailPageLayout({
   return (
     <>
       <Header />
-      <main className="pt-14 h-screen">
-        <div className="px-5 pb-5 h-full overflow-hidden">{children}</div>
-      </main>
+      <main className="pt-16 pr-5 pb-5 h-screen">{children}</main>
     </>
   )
 }

@@ -6,6 +6,7 @@ import { Button } from '@/shared/ui/button'
 import DeleteIcon from '/public/icons/delete.svg'
 import { useImagePreviewUrlStore } from '@/features/detail/store'
 import { usePostAssetRemoveBackground } from '@/entities/detail/adapter'
+import { cn } from '@/shared/lib/utils'
 
 type ImageInputBoxProps = {
   boxId: string
@@ -105,7 +106,7 @@ export const ImageInputBox = ({
               </label>
             </Button>
           </div>
-          <p className="text-neutral-5 whitespace-nowrap">
+          <p className="text-neutral-5 whitespace-nowrap text-[0.875rem]">
             Supports JPG and PNG up to 5MB
           </p>
         </div>
@@ -125,9 +126,14 @@ export const ImageInputBox = ({
       />
       <DndBox
         width="100%"
-        height="240px"
         onDropped={(e) => handleChangeDNDInput(e.dataTransfer.files[0])}
-        className="relative border-dashed border-2 border-border rounded-xl bg-[rgba(32,33,36,0.50)]"
+        className={cn(
+          'relative rounded-xl bg-neutral-1 bg-opacity-50 aspect-[7/4] max-h-[200px]',
+          {
+            'border border-neutral-3 border-dashed border-2 border-border':
+              !imagePreviewUrls.has(boxId)
+          }
+        )}
       >
         {renderContent()}
       </DndBox>

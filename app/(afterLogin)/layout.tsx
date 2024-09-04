@@ -1,8 +1,8 @@
 'use client'
 
 import { useAuthStore } from '@/entities/user/store'
+import useAxiosAuthInterceptor from '@/entities/user/use-axios-auth-interceptor'
 import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
 
 export default function Layout({
   children
@@ -10,14 +10,11 @@ export default function Layout({
   children: React.ReactNode
 }>) {
   const router = useRouter()
-  const { isAuth } = useAuthStore()
+  const isAuth = useAuthStore((state) => state.isAuth)
 
-  useEffect(() => {
-    if (isAuth !== null) {
-      router.replace('/login')
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  useAxiosAuthInterceptor()
 
-  return isAuth !== null ? null : children
+  if (isAuth === null) return null
+
+  return isAuth ? children : router.replace('/login')
 }

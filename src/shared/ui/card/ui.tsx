@@ -15,7 +15,12 @@ type Props = {
 }
 
 const Card = (props: Props) => {
-  const { encodedMainImageId, name: modelname, description } = props.item
+  const {
+    encodedImageInfoId,
+    encodedMainImageId,
+    name: modelname,
+    description
+  } = props.item
   const [isHovering, setIsHovering] = useState(false)
 
   return (
@@ -36,7 +41,7 @@ const Card = (props: Props) => {
       />
       {isHovering && (
         <Link
-          href={`/archive/${modelname}?id=${encodedMainImageId}`}
+          href={`/archive/${modelname}?id=${encodedImageInfoId}`}
           className="absolute inset-0 z-10 bg-custom-gradient"
         >
           <Button

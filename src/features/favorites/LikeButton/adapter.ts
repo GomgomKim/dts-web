@@ -3,13 +3,16 @@ import { DeleteFavoriteRemoveReqData } from '@/entities/LikeButton/model'
 import { deleteFavoriteRemove } from '@/entities/LikeButton/api'
 import { useSearchParams } from 'next/navigation'
 import { GetFavoriteListResData } from '../FavoriteList/model'
+import { FILTER_TYPES } from '../FavoriteList/constant'
+import { SORTING_TYPES } from '../SortDropdown'
 
 const useDeleteFavoriteRemove = () => {
   const queryClient = useQueryClient()
 
   const searchParams = useSearchParams()
-  const tagType = searchParams.get('tagType')
-  const queryKey = ['favorites', tagType]
+  const filterType = searchParams.get('filterType') || FILTER_TYPES[0]
+  const sortingType = searchParams.get('sortingType') || SORTING_TYPES[0]
+  const queryKey = ['favorites', filterType, sortingType]
 
   return useMutation({
     mutationFn: ({ encodedImageInfoId }: DeleteFavoriteRemoveReqData) =>
