@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start-dev": "next dev",
-    "build": "next build",
+    "build:newdev": "cp .env.dev .env && next build",
     "start": "next start",
     "lint": "next lint",
     "prepare": "husky",
