@@ -4,7 +4,7 @@ import { Suspense } from 'react'
 import { Banner } from '@/features/explore/Banner'
 import { CardList } from '@/features/explore/CardList'
 import { Category } from '@/features/category'
-import { TAG_TYPES } from '../constant'
+import { FILTER_TYPES } from '@/features/favorites/FavoriteList/constant'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuthStore } from '@/entities/user/store'
 import * as React from 'react'
@@ -48,7 +48,9 @@ function Explore() {
     <>
       <Banner />
       <Suspense fallback={<div>Loading...</div>}>
-        <Category categoryList={TAG_TYPES} />
+        <div className="mb-5">
+          <Category categoryList={FILTER_TYPES} />
+        </div>
         <CardList />
       </Suspense>
     </>

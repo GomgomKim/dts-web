@@ -2,7 +2,7 @@ import { getExploreImages } from '@/features/explore/CardList/api'
 import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query'
 import { GetExploreListResData } from './model'
 
-const useGetExploreImages = (tagType: string) => {
+const useGetExploreImages = (filterType: string) => {
   const {
     data,
     status,
@@ -18,10 +18,10 @@ const useGetExploreImages = (tagType: string) => {
     [_1: string, _2: string],
     string | null
   >({
-    queryKey: ['explore', tagType],
+    queryKey: ['explore', filterType],
     queryFn: ({ pageParam }) =>
-      getExploreImages({ tagType, scrollKey: pageParam }),
-    enabled: !!tagType,
+      getExploreImages({ filterType, scrollKey: pageParam }),
+    enabled: !!filterType,
     initialPageParam: null,
     getNextPageParam: (lastPage) => lastPage.content.scrollKey
     // staleTime: 60 * 1000,

@@ -5,7 +5,7 @@ import { useGetExploreImages } from '@/features/explore/CardList/adapter'
 import { Card } from '@/shared/ui/card'
 import { LikeButton } from '@/features/explore/LikeButton'
 
-const TAG_TYPES = ['FEATURED', 'MAKEUP', 'SKINCARE', 'HAIR']
+const FILTER_TYPES = ['ALL', 'FEATURED', 'MAKEUP', 'SKINCARE', 'HAIR']
 
 export const CardList = () => {
   const searchParams = useSearchParams()
@@ -19,7 +19,7 @@ export const CardList = () => {
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage
-  } = useGetExploreImages(searchParams.get('tagType') || TAG_TYPES[0])
+  } = useGetExploreImages(searchParams.get('filterType') || FILTER_TYPES[0])
 
   const { ref, inView } = useInView({
     threshold: 1

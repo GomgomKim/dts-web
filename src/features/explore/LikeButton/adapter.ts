@@ -9,14 +9,16 @@ import {
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useSearchParams } from 'next/navigation'
 import { GetExploreListResData } from '../CardList/model'
-import { TAG_TYPES } from '@/views/explore/constant' // TODO: move to shared
+import { FILTER_TYPES } from '@/features/favorites/FavoriteList/constant'
+
+// TODO: invalidate 작동 후 스크롤 유지
 
 const usePostFavoriteAdd = () => {
   const queryClient = useQueryClient()
 
   const searchParams = useSearchParams()
-  const tagType = searchParams.get('tagType') || TAG_TYPES[0]
-  const queryKey = ['explore', tagType]
+  const filterType = searchParams.get('filterType') || FILTER_TYPES[0]
+  const queryKey = ['explore', filterType]
 
   return useMutation({
     mutationFn: ({ encodedImageInfoId }: PostFavoriteAddReqData) =>
@@ -71,8 +73,8 @@ const useDeleteFavoriteRemove = () => {
   const queryClient = useQueryClient()
 
   const searchParams = useSearchParams()
-  const tagType = searchParams.get('tagType')
-  const queryKey = ['explore', tagType]
+  const filterType = searchParams.get('filterType') || FILTER_TYPES[0]
+  const queryKey = ['explore', filterType]
 
   return useMutation({
     mutationFn: ({ encodedImageInfoId }: DeleteFavoriteRemoveReqData) =>
