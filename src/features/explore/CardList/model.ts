@@ -1,5 +1,5 @@
 export interface GetExploreListReqData {
-  tagType: string
+  filterType: string
   size?: number | null
   scrollKey?: string | null
 }

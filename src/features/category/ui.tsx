@@ -13,18 +13,18 @@ type CategoryProps = {
 const Category = ({ categoryList }: CategoryProps) => {
   const searchParams = useSearchParams()
 
-  const currentTagType = searchParams.get('tagType') || categoryList[0]
+  const currentTagType = searchParams.get('filterType') || categoryList[0]
 
-  const { handleQueryString } = useSetQueryString({ option: 'push' })
+  const { handleQueryString } = useSetQueryString({ option: 'replace' })
 
   return (
-    <div className="mb-5">
+    <div>
       {categoryList.map((type) => (
         <Button
           variant="ghost"
           key={type}
           className={cn({ active: type === currentTagType })}
-          onClick={() => handleQueryString([{ tagType: type }])}
+          onClick={() => handleQueryString([{ filterType: type }])}
         >
           {capitalizeType(type)}
         </Button>

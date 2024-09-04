@@ -1,7 +1,9 @@
 import { Content } from '@/features/explore/CardList/model'
 
+// TODO: type 수정
 export interface GetFavoriteListReqData {
-  tagType: string
+  filterType: string
+  sortingType?: string | null
   size?: number | null
   scrollKey?: string | null
 }

@@ -9,7 +9,7 @@ import { URL_EXPLORE_LIST } from '@/features/explore/CardList/constant'
 const SEAERCH_SIZE = 10
 
 export async function getExploreImages({
-  tagType,
+  filterType,
   size = SEAERCH_SIZE,
   scrollKey
 }: GetExploreListReqData): Promise<GetExploreListResData> {
@@ -17,7 +17,7 @@ export async function getExploreImages({
     GetExploreListReqData,
     AxiosResponse<GetExploreListResData, AxiosError>
   >(
-    `${URL_EXPLORE_LIST}?tagType=${tagType}&size=${size}` +
+    `${URL_EXPLORE_LIST}?filterType=${filterType}&size=${size}` +
       (scrollKey ? `&scrollKey=${scrollKey}` : '')
   )
   return response.data
