@@ -8,6 +8,12 @@ import { useImagePreviewUrlStore } from '@/features/detail/store'
 import { usePostAssetRemoveBackground } from '@/entities/detail/adapter'
 import { cn } from '@/shared/lib/utils'
 
+const IMAGE_MAX_SIZE = 5 * 1024 * 1024
+
+const isValidImageSize = (file: File) => {
+  return file.size > IMAGE_MAX_SIZE ? false : true
+}
+
 type ImageInputBoxProps = {
   boxId: string
   onChangeBrandAsset: () => void
@@ -51,9 +57,6 @@ export const ImageInputBox = ({
   }
 
   const handleChangeImageFile = (file: File) => {
-    // TODO: 유효성 검사
-    // file size check  // 5MB
-    // file mime type check
     const formData = convertFileToFormData(file)
     handleSubmit({ formData })
   }
@@ -61,12 +64,23 @@ export const ImageInputBox = ({
   const handleChangeInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target
     if (!files) return
+
+    if (!isValidImageSize(files[0])) {
+      alert('Image size is too large. Please upload an image smaller than 5MB.')
+      e.target.value = ''
+      return
+    }
+
     handleChangeImageFile(files[0])
-    // 성공하면
     e.target.value = ''
   }
 
   const handleChangeDNDInput = (file: File) => {
+    if (!isValidImageSize(file)) {
+      alert('Image size is too large. Please upload an image smaller than 5MB.')
+      return
+    }
+
     handleChangeImageFile(file)
     onChangeBrandAsset()
   }
