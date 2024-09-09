@@ -20,7 +20,7 @@ export const LikeButton = (props: Props) => {
 
   const handleClick = () => {
     if (!isAuth) {
-      router.push('/login')
+      router.push('/signup')
       return
     }
 
