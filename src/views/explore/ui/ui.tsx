@@ -9,8 +9,11 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuthStore } from '@/entities/user/store'
 import * as React from 'react'
 import { dtsAxios } from '@/shared/api'
+import { useMoveScroll } from '@/shared/lib/hooks/useMoveScroll'
 
 function Explore() {
+  const { element, onMoveToElement } = useMoveScroll()
+
   const searchParams = useSearchParams()
   const router = useRouter()
 
@@ -46,10 +49,15 @@ function Explore() {
 
   return (
     <>
-      <Banner />
+      <Banner onClickSeeExample={onMoveToElement} />
       <Suspense fallback={<div>Loading...</div>}>
         <div className="mb-5">
-          <Category categoryList={FILTER_TYPES} />
+          <Category
+            categoryList={FILTER_TYPES}
+            id="explore-filer"
+            element={element}
+            style={{ scrollMarginTop: '56px' }}
+          />
         </div>
         <CardList />
       </Suspense>

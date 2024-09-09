@@ -1,6 +1,23 @@
+import { useAuthStore } from '@/entities/user/store'
 import { Button } from '@/shared/ui/button'
+import { useRouter } from 'next/navigation'
 
-const Banner = () => {
+interface Props {
+  onClickSeeExample: () => void
+}
+
+export const Banner = (props: Props) => {
+  const { isAuth } = useAuthStore.getState()
+  const router = useRouter()
+
+  const handleClickStart = () => {
+    if (isAuth) {
+      props.onClickSeeExample()
+      return
+    }
+    router.push('/signup')
+  }
+
   return (
     <div className="flex flex-col gap-6 text-center mb-[0.5rem]">
       <div className="font-semibold text-[32px]">
@@ -12,12 +29,12 @@ const Banner = () => {
         generated in seconds
       </div>
       <div className="flex gap-3 justify-center">
-        {/* TODO: add event */}
-        <Button>Get Started for Free</Button>
-        <Button variant="outline">See Examples</Button>
+        {/* TODO: 로그인시 렌더링하지않기 */}
+        <Button onClick={handleClickStart}>Get Started for Free</Button>
+        <Button variant="outline" onClick={props.onClickSeeExample}>
+          See Examples
+        </Button>
       </div>
     </div>
   )
 }
-
-export { Banner }
