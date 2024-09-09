@@ -125,7 +125,10 @@ function Detail() {
               />
 
               {/* related download image /////////////////////////////////////////////  */}
-              <DownloadDropdown containerRef={containerRef} />
+              <DownloadDropdown
+                containerRef={containerRef}
+                selectedVariation={selectedVariation}
+              />
             </div>
           </div>
         </div>

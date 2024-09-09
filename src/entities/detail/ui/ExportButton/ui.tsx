@@ -1,41 +1,44 @@
 import { useCallback } from 'react'
-import { toPng } from 'html-to-image'
+import { toImage } from './utils'
 import { Button } from '@/shared/ui/button'
 import { cn } from '@/shared/lib/utils'
 
-type ExportButtonProps = React.ComponentProps<typeof Button> & {
-  containerRef: React.RefObject<HTMLElement>
+const defaultOption = {
+  includeQueryParams: true,
+  cacheBust: true,
+  pixelRatio: 1,
+  skipFonts: true
 }
 
-export const ExportButton = ({
-  containerRef,
-  className,
-  ...props
-}: ExportButtonProps) => {
-  const onButtonClick = useCallback(() => {
-    if (containerRef.current === null) return
+interface Props extends React.ComponentProps<typeof Button> {
+  containerRef: React.RefObject<HTMLElement>
+  imgType: string
+  imgSize: { width: number; height: number }
+}
 
-    toPng(containerRef.current, {
-      includeQueryParams: true,
-      cacheBust: true,
-      pixelRatio: 2,
-      skipFonts: true
+export const ExportButton = (props: Props) => {
+  const onButtonClick = useCallback(() => {
+    if (props.containerRef.current === null) return
+
+    toImage(props.imgType, props.containerRef.current, {
+      ...defaultOption,
+      ...props.imgSize
     })
       .then((dataUrl) => {
         const link = document.createElement('a')
-        link.download = 'my-image-name.png'
+        link.download = `${props.imgType}-image-name`
         link.href = dataUrl
         link.click()
       })
       .catch((err) => {
         console.log(err)
       })
-  }, [containerRef])
+  }, [props.containerRef])
 
   return (
     <Button
       onClick={onButtonClick}
-      className={cn('leading-[14px]', className)}
+      className={cn('leading-[14px]', props.className)}
       stretch
       {...props}
     ></Button>
