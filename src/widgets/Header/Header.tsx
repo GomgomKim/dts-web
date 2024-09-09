@@ -42,12 +42,16 @@ const NotLoggedInNav = () => {
     <>
       <li>
         <Button asChild variant="link">
-          <Link href="/login">Log in</Link>
+          <Link href="/login" scroll={false}>
+            Log in
+          </Link>
         </Button>
       </li>
       <li>
         <Button asChild className="rounded-full">
-          <Link href="/signup">Sign up</Link>
+          <Link href="/signup" scroll={false}>
+            Sign up
+          </Link>
         </Button>
       </li>
     </>
@@ -58,9 +62,10 @@ const UserInfo = () => {
   const restriction = useAuthStore((state) => state.restriction)
 
   const isZeroRestriction = restriction === 0
+  // || !restriction
 
   return (
-    <div className="flex gap-3 items-center">
+    <div className="flex gap-3 items-center ml-3">
       <div className="flex gap-2 items-center">
         <CreditIcon
           className={cn('stroke-white', {
@@ -70,16 +75,16 @@ const UserInfo = () => {
         <span
           className={cn('text-[14px]', { 'text-[#FF8480]': isZeroRestriction })}
         >
-          {restriction}
+          {restriction || 0}
         </span>
       </div>
       {isZeroRestriction ? (
-        <div className="font-medium text-[0.875rem] text-[#616268]">
+        <div className="font-[14px] text-[0.875rem] text-[#616268]">
           Credits reset at midnight
           <span className="ml-[8px]">🌙</span>
         </div>
       ) : null}
-      <Suspense>
+      <Suspense fallback={<div>profile image</div>}>
         <UserProfile />
       </Suspense>
     </div>
