@@ -36,7 +36,7 @@ const Login = ({ modalRef }: LoginProps) => {
   const router = useRouter()
 
   return (
-    <div className="w-screen h-full flex justify-center absolute bg-neutral-0-90 inset-0 z-50">
+    <div className="flex justify-center fixed bg-neutral-0-90 inset-0 z-50">
       <div
         ref={modalRef}
         className="flex flex-col gap-10 border border-neutral-2 rounded-[12px] m-auto relative w-[400px] p-10 bg-background"
