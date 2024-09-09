@@ -12,37 +12,45 @@ import {
 } from '@/shared/ui/dropdown-menu'
 import { useAuthStore } from './store'
 import { useQueryClient } from '@tanstack/react-query'
-import Image from 'next/image'
+// import Image from 'next/image'
 import CreditIcon from '/public/icons/database.svg'
-import { faker } from '@faker-js/faker'
 import { cn } from '@/shared/lib/utils'
 import Link from 'next/link'
+import { useGetAuthProfile } from './adapter'
 
-export const UserProfile = () => {
+const LogOut = () => {
   const queryClient = useQueryClient()
 
-  const { restriction, isAuth, user, setUser, logOut } = useAuthStore.getState()
-
-  React.useEffect(() => {
-    if (!isAuth) return
-
-    const getUserInfo = async () => {
-      return {
-        data: {
-          email: 'dts-test@example.com',
-          image: faker.image.urlLoremFlickr()
-        }
-      }
-    }
-    getUserInfo().then((res) => {
-      setUser(res.data)
-    })
-  }, [isAuth])
+  const { logOut } = useAuthStore.getState()
 
   const handleClickLogout = () => {
     logOut(queryClient)
   }
-  if (!user) return <div>loading user info ...</div>
+  return (
+    <DropdownMenuItem onClick={handleClickLogout}>Log out</DropdownMenuItem>
+  )
+}
+
+export const UserProfile = () => {
+  const { restriction } = useAuthStore.getState()
+
+  const { data, isError } = useGetAuthProfile()
+
+  if (!data) return null
+  if (isError) return <div>error!</div>
+
+  // console.log(data)
+
+  // setUser({
+  //   data.email,
+  //   data.profileImageUrl
+  // })
+  // setRestriction(data.restriction)
+
+  // const userInfo = {
+  //   email: data?.email || 'asdf',
+  //   image: data?.profileImageUrl || 'fasdf'
+  // }
 
   const isZeroRestriction = restriction === 0
 
@@ -60,9 +68,14 @@ export const UserProfile = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <div>
-          {/* TODO: image 없으면 null profile */}
-          <Image src={user.image} alt="profile image" width={40} height={40} />
+        <div className="w-10 h-10 rounded-full overflow-hidden">
+          dd
+          {/* <Image
+            src={userInfo.image}
+            alt="profile image"
+            width={40}
+            height={40}
+          /> */}
         </div>
       </DropdownMenuTrigger>
 
@@ -70,21 +83,20 @@ export const UserProfile = () => {
         <DropdownMenuLabel>ACCOUNT</DropdownMenuLabel>
         <div className="flex items-center gap-3 py-3 px-5">
           <div className="w-10 h-10 rounded-full overflow-hidden">
-            <Image
-              src={user.image}
+            {/* <Image
+              src={userInfo.image}
               alt="profile image"
               width={40}
               height={40}
-            />
+            /> */}
           </div>
-          <span>{user.email}</span>
+          {/* <span>{userInfo.email}</span> */}
         </div>
 
         <DropdownMenuSeparator />
 
         <DropdownMenuLabel className="pt-2">CREDITS</DropdownMenuLabel>
         <div className="flex items-center justify-between py-3 px-5">
-          {/* [TODO] credit text에 variant 추가*/}
           <div className="flex gap-2 items-center">
             <CreditIcon
               className={cn('stroke-white', {
@@ -115,7 +127,7 @@ export const UserProfile = () => {
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem onClick={handleClickLogout}>Log out</DropdownMenuItem>
+        <LogOut />
       </DropdownMenuContent>
     </DropdownMenu>
   )

@@ -3,6 +3,7 @@ import localFont from 'next/font/local'
 import '@/app/styles/globals.css'
 import MSWComponent from '@/app/providers/msw-component'
 import ReactQueryProviders from '@/app/providers/query-client-provider'
+import AxiosInterceptorWrapper from '@/app/providers/axios-interceptor-wrapper'
 
 const pretendard = localFont({
   src: '../public/fonts/PretendardVariable.woff2',
@@ -28,8 +29,10 @@ export default function RootLayout({
       <MSWComponent />
       <body className={`${pretendard.variable} font-pretendard`}>
         <ReactQueryProviders>
-          {children}
-          {modal}
+          <AxiosInterceptorWrapper>
+            {children}
+            {modal}
+          </AxiosInterceptorWrapper>
         </ReactQueryProviders>
       </body>
     </html>
