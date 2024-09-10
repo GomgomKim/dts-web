@@ -7,7 +7,7 @@ import { Button } from '@/shared/ui/button'
 import LinkIcon from '/public/icons/arrow-thin.svg'
 import { ModelImageItem } from '@/features/explore/CardList/model'
 
-const URL_BASE_IMAGE_FILE = '/image-file'
+const URL_BASE_IMAGE_FILE = '/image-file/download?encryptedImageUrl='
 
 type Props = {
   item: ModelImageItem
@@ -32,7 +32,7 @@ const Card = (props: Props) => {
       <Image
         src={
           process.env.NEXT_PUBLIC_API_URL +
-          `${URL_BASE_IMAGE_FILE}/` +
+          `${URL_BASE_IMAGE_FILE}` +
           encodedMainImageId
         }
         alt={description}

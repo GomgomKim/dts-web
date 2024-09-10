@@ -23,7 +23,6 @@ export const ImageEditingBox = (props: Props) => {
   const imgUrl =
     process.env.NEXT_PUBLIC_API_URL +
     URL_VARIATION_LIST_IMAGE +
-    '/' +
     selectedVariation?.encodedBaseImageId
 
   const getContainerStyle = (): React.CSSProperties => {

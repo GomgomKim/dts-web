@@ -281,7 +281,7 @@ export const VariationsSection = ({
                   <Image
                     src={
                       process.env.NEXT_PUBLIC_API_URL +
-                      `${URL_VARIATION_LIST_IMAGE}/` +
+                      `${URL_VARIATION_LIST_IMAGE}` +
                       item.encodedAiBasedImageId
                     }
                     alt=""
@@ -310,7 +310,7 @@ export const VariationsSection = ({
                 <Image
                   src={
                     process.env.NEXT_PUBLIC_API_URL +
-                    `${URL_VARIATION_LIST_IMAGE}/` +
+                    `${URL_VARIATION_LIST_IMAGE}` +
                     item.encodedBaseImageId
                   }
                   alt=""
