@@ -44,9 +44,7 @@ export default function Page() {
           accessToken: headers['authorization'],
           refreshToken: headers['refresh-token']
         })
-        console.log('토큰 받아와서 스토어에 저장 완료')
       })
-
       router.replace('/explore')
     }
   }, [searchParams])
