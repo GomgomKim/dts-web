@@ -198,7 +198,7 @@ export const VariationsSection = ({
           addAiImageGeneratingList([variation])
           addAiImageItem(variation)
 
-          setRestriction(restriction.current)
+          setRestriction(restriction)
         }
       }
       // onError
