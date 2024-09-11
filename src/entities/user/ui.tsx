@@ -30,7 +30,7 @@ const LogOut = () => {
   )
 }
 
-export const UserProfile = ({ isLoading }) => {
+export const UserProfile = () => {
   const { user, restriction } = useAuthStore.getState()
 
   const remainRestriction = restriction
@@ -54,7 +54,7 @@ export const UserProfile = ({ isLoading }) => {
     <DropdownMenu>
       <DropdownMenuTrigger>
         <div className="w-10 h-10 rounded-full overflow-hidden">
-          {user && !isLoading ? (
+          {user ? (
             <Image
               src={user.profileImageUrl}
               alt="profile image"
@@ -71,7 +71,7 @@ export const UserProfile = ({ isLoading }) => {
         <DropdownMenuLabel>ACCOUNT</DropdownMenuLabel>
         <div className="flex items-center gap-3 py-3 px-5">
           <div className="w-10 h-10 rounded-full overflow-hidden">
-            {user && !isLoading ? (
+            {user ? (
               <Image
                 src={user.profileImageUrl}
                 alt="profile image"
@@ -83,11 +83,7 @@ export const UserProfile = ({ isLoading }) => {
             )}
           </div>
           <React.Suspense>
-            {user && !isLoading ? (
-              <span>{user.email}</span>
-            ) : (
-              <span>user email</span>
-            )}
+            {user ? <span>{user.email}</span> : <span>user email</span>}
           </React.Suspense>
         </div>
 
