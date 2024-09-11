@@ -25,7 +25,7 @@ const Signup = ({ modalRef }: SignupProps) => {
   const router = useRouter()
 
   return (
-    <div className="w-screen h-full flex justify-center absolute bg-neutral-0-90 inset-0 z-50">
+    <div className="flex justify-center fixed bg-neutral-0-90 inset-0 z-50">
       <div
         ref={modalRef}
         className="flex flex-col gap-10 border border-neutral-2 rounded-[12px] m-auto relative p-10 w-[400px] bg-background"
@@ -55,9 +55,13 @@ const Signup = ({ modalRef }: SignupProps) => {
           <div className="w-full border border-neutral-2 my-3"></div>
           <div className="my-6 text-neutral-5 text-[12px] leading-[20px]">
             By clicking “Sign up with Google” you agree to our{' '}
-            <span className="text-white text-nowrap">Terms of Use</span> and
-            acknowledge that you have read and understand our{' '}
-            <span className="text-white text-nowrap">Privacy Policy</span>
+            <span className="text-white text-nowrap text-[12px]">
+              Terms of Use
+            </span>{' '}
+            and acknowledge that you have read and understand our{' '}
+            <span className="text-white text-nowrap text-[12px]">
+              Privacy Policy
+            </span>
           </div>
         </div>
       </div>
