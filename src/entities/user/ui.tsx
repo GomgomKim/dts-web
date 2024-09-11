@@ -12,11 +12,10 @@ import {
 } from '@/shared/ui/dropdown-menu'
 import { useAuthStore } from './store'
 import { useQueryClient } from '@tanstack/react-query'
-// import Image from 'next/image'
+import Image from 'next/image'
 import CreditIcon from '/public/icons/database.svg'
 import { cn } from '@/shared/lib/utils'
 import Link from 'next/link'
-import { useGetAuthProfile } from './adapter'
 
 const LogOut = () => {
   const queryClient = useQueryClient()
@@ -31,28 +30,14 @@ const LogOut = () => {
   )
 }
 
-export const UserProfile = () => {
-  const { restriction } = useAuthStore.getState()
+export const UserProfile = ({ isLoading }) => {
+  const { user, restriction } = useAuthStore.getState()
 
-  const { data, isError } = useGetAuthProfile()
+  const remainRestriction = restriction
+    ? restriction?.max - restriction?.current
+    : null
 
-  if (!data) return null
-  if (isError) return <div>error!</div>
-
-  // console.log(data)
-
-  // setUser({
-  //   data.email,
-  //   data.profileImageUrl
-  // })
-  // setRestriction(data.restriction)
-
-  // const userInfo = {
-  //   email: data?.email || 'asdf',
-  //   image: data?.profileImageUrl || 'fasdf'
-  // }
-
-  const isZeroRestriction = restriction === 0
+  const isZeroRestriction = remainRestriction === 0
 
   const description = isZeroRestriction ? (
     <div className="font-medium text-[0.875rem] text-[#616268]">
@@ -69,13 +54,16 @@ export const UserProfile = () => {
     <DropdownMenu>
       <DropdownMenuTrigger>
         <div className="w-10 h-10 rounded-full overflow-hidden">
-          dd
-          {/* <Image
-            src={userInfo.image}
-            alt="profile image"
-            width={40}
-            height={40}
-          /> */}
+          {user && !isLoading ? (
+            <Image
+              src={user.profileImageUrl}
+              alt="profile image"
+              width={40}
+              height={40}
+            />
+          ) : (
+            <div>user image</div>
+          )}
         </div>
       </DropdownMenuTrigger>
 
@@ -83,14 +71,24 @@ export const UserProfile = () => {
         <DropdownMenuLabel>ACCOUNT</DropdownMenuLabel>
         <div className="flex items-center gap-3 py-3 px-5">
           <div className="w-10 h-10 rounded-full overflow-hidden">
-            {/* <Image
-              src={userInfo.image}
-              alt="profile image"
-              width={40}
-              height={40}
-            /> */}
+            {user && !isLoading ? (
+              <Image
+                src={user.profileImageUrl}
+                alt="profile image"
+                width={40}
+                height={40}
+              />
+            ) : (
+              <div>user image</div>
+            )}
           </div>
-          {/* <span>{userInfo.email}</span> */}
+          <React.Suspense>
+            {user && !isLoading ? (
+              <span>{user.email}</span>
+            ) : (
+              <span>user email</span>
+            )}
+          </React.Suspense>
         </div>
 
         <DropdownMenuSeparator />
@@ -103,13 +101,15 @@ export const UserProfile = () => {
                 'stroke-[#FF8480]': isZeroRestriction
               })}
             />
+            {/* <React.Suspense> */}
             <span
               className={cn('text-[14px]', {
                 'text-[#FF8480]': isZeroRestriction
               })}
             >
-              {restriction}
+              {remainRestriction === null ? 'loading' : remainRestriction}
             </span>
+            {/* </React.Suspense> */}
           </div>
           {description}
         </div>
@@ -117,9 +117,6 @@ export const UserProfile = () => {
         <DropdownMenuSeparator />
 
         <DropdownMenuGroup>
-          <DropdownMenuItem asChild>
-            <Link href="/#">FAQs</Link>
-          </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link href="/#">Feedback</Link>
           </DropdownMenuItem>
