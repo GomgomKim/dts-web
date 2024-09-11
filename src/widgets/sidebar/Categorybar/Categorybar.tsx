@@ -1,7 +1,12 @@
 'use client'
 
+import { useSetQueryString } from '@/shared/lib/hooks/useSetQueryString'
+import { useFilterTypeStore } from '@/shared/lib/stores/useFilterTypeStore'
+import { cn } from '@/shared/lib/utils'
+import { Button } from '@/shared/ui'
 import { Badge } from '@/shared/ui/badge'
 import { MenuGroup } from '@/shared/ui/menubar'
+import { useSearchParams } from 'next/navigation'
 
 const Square = ({ color }: { color: string }) => {
   return (
@@ -20,10 +25,31 @@ type CategoryItemProps = {
   children: React.ReactNode
 }
 const CategoryItem = (props: CategoryItemProps) => {
+  const searchParams = useSearchParams()
+  const { filterType: previousTagType, setFilterType } =
+    useFilterTypeStore.getState()
+
+  const isHere =
+    (searchParams.get('filterType') || previousTagType) ===
+    props.children!.toString().toUpperCase()
+
+  const { handleQueryString } = useSetQueryString({ option: 'replace' })
+  const handleClickFilter = () => {
+    handleQueryString([
+      { filterType: props.children!.toString().toUpperCase() }
+    ])
+    setFilterType(props.children!.toString().toUpperCase())
+  }
+
   return (
-    <div className="p-4">
-      <p className="ml-[36px] text-secondary-foreground">{props.children}</p>
-    </div>
+    <Button
+      variant="ghost"
+      stretch
+      className={cn('block text-left pl-12', { active: isHere })}
+      onClick={handleClickFilter}
+    >
+      {props.children}
+    </Button>
   )
 }
 

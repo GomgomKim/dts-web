@@ -5,26 +5,40 @@ import { useSearchParams } from 'next/navigation'
 import { Button } from '@/shared/ui/button'
 import { cn } from '@/shared/lib/utils'
 import { useSetQueryString } from '@/shared/lib/hooks/useSetQueryString'
+import { useFilterTypeStore } from '@/shared/lib/stores/useFilterTypeStore'
 
-type CategoryProps = {
+interface Props extends React.ComponentPropsWithRef<'div'> {
   categoryList: string[]
+  id: string
+  element?: React.RefObject<HTMLDivElement>
 }
 
-const Category = ({ categoryList }: CategoryProps) => {
+const Category = (props: Props) => {
   const searchParams = useSearchParams()
 
-  const currentTagType = searchParams.get('filterType') || categoryList[0]
+  const { filterType: previousFilterType, setFilterType } =
+    useFilterTypeStore.getState()
+
+  const currentTagType =
+    searchParams.get('filterType') ||
+    previousFilterType ||
+    props.categoryList[0]
 
   const { handleQueryString } = useSetQueryString({ option: 'replace' })
 
+  const handleClickCategory = (type: string) => {
+    setFilterType(type)
+    handleQueryString([{ filterType: type }])
+  }
+
   return (
-    <div>
-      {categoryList.map((type) => (
+    <div {...props} id={props.id} ref={props.element}>
+      {props.categoryList.map((type) => (
         <Button
           variant="ghost"
           key={type}
           className={cn({ active: type === currentTagType })}
-          onClick={() => handleQueryString([{ filterType: type }])}
+          onClick={() => handleClickCategory(type)}
         >
           {capitalizeType(type)}
         </Button>

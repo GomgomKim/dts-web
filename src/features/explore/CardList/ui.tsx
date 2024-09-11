@@ -1,16 +1,11 @@
 import { Fragment, useEffect } from 'react'
-import { useSearchParams } from 'next/navigation'
+// import { useSearchParams } from 'next/navigation'
 import { useInView } from 'react-intersection-observer'
 import { useGetExploreImages } from '@/features/explore/CardList/adapter'
 import { Card } from '@/shared/ui/card'
 import { LikeButton } from '@/features/explore/LikeButton'
 
-const FILTER_TYPES = ['ALL', 'FEATURED', 'MAKEUP', 'SKINCARE', 'HAIR']
-
 export const CardList = () => {
-  const searchParams = useSearchParams()
-  // const params = new URLSearchParams(searchParams)
-
   const {
     data,
     status,
@@ -19,7 +14,7 @@ export const CardList = () => {
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage
-  } = useGetExploreImages(searchParams.get('filterType') || FILTER_TYPES[0])
+  } = useGetExploreImages()
 
   const { ref, inView } = useInView({
     threshold: 1

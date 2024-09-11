@@ -69,7 +69,9 @@ export const MenuGroup = React.forwardRef<HTMLDivElement, MenuGroupProps>(
             <span className="flex justify-center items-center gap-[20px] w-4 h-4">
               {prefix}
             </span>
-            <span className="flex justify-center items-center">{title}</span>
+            <span className="flex justify-center items-center text-[0.875rem]">
+              {title}
+            </span>
           </div>
           {postfix && postfix}
         </div>

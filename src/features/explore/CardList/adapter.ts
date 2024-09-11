@@ -1,8 +1,18 @@
 import { getExploreImages } from '@/features/explore/CardList/api'
 import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query'
 import { GetExploreListResData } from './model'
+import { useSearchParams } from 'next/navigation'
+import { useFilterTypeStore } from '@/shared/lib/stores/useFilterTypeStore'
+import { FILTER_TYPES } from './constant'
 
-const useGetExploreImages = (filterType: string) => {
+const useGetExploreImages = () => {
+  const searchParams = useSearchParams()
+
+  const { filterType: previousFilterType } = useFilterTypeStore.getState()
+
+  const filterType =
+    searchParams.get('filterType') || previousFilterType || FILTER_TYPES[0]
+
   const {
     data,
     status,
