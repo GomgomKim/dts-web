@@ -6,8 +6,10 @@ import { CardList } from '@/features/explore/CardList'
 import { Category } from '@/features/category'
 import { FILTER_TYPES } from '@/features/favorites/FavoriteList/constant'
 import * as React from 'react'
+import { useMoveScroll } from '@/shared/lib/hooks/useMoveScroll'
 
 function Explore() {
+  const { element, onMoveToElement } = useMoveScroll()
   return (
     <>
       <Banner onClickSeeExample={onMoveToElement} />
