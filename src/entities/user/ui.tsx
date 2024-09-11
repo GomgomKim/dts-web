@@ -16,14 +16,17 @@ import Image from 'next/image'
 import CreditIcon from '/public/icons/database.svg'
 import { cn } from '@/shared/lib/utils'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 const LogOut = () => {
   const queryClient = useQueryClient()
+  const router = useRouter()
 
   const { logOut } = useAuthStore.getState()
 
   const handleClickLogout = () => {
     logOut(queryClient)
+    router.replace('/explore')
   }
   return (
     <DropdownMenuItem onClick={handleClickLogout}>Log out</DropdownMenuItem>
