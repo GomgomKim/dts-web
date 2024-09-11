@@ -14,14 +14,12 @@ export default function ExploreLayout({
   children: React.ReactNode
 }>) {
   return (
-    <>
+    <Suspense>
       <Header />
       <div className="flex pt-14 h-screen">
         <Sidebar />
-        <main className="p-12 ml-[280px] flex-1">
-          <Suspense>{children}</Suspense>
-        </main>
+        <main className="p-12 ml-[280px] flex-1">{children}</main>
       </div>
-    </>
+    </Suspense>
   )
 }
