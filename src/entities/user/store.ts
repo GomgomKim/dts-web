@@ -3,16 +3,17 @@ import { create } from 'zustand'
 import { Tokens } from './type'
 import { AuthProfile } from './model'
 import { QueryClient } from '@tanstack/react-query'
+import { Restriction } from '../detail/model'
 
 const PERSIST_KEY = 'dts-auth-store'
 
-export type AuthUser = AuthProfile
+export type AuthUser = Omit<AuthProfile, 'restriction'>
 
 export interface AuthState {
   tokens: Tokens | null
   user: AuthUser | null
   isAuth: boolean | null
-  restriction: number | null
+  restriction: Restriction | null
 }
 
 export interface AuthActions {
@@ -20,7 +21,7 @@ export interface AuthActions {
   logOut: (queryClient: QueryClient) => void
   setIsAuth: (isAuth: boolean) => void
   setUser: (user: AuthUser) => void
-  setRestriction: (restriction: number) => void
+  setRestriction: (restriction: Restriction) => void
 }
 
 export const useAuthStore = create(
@@ -36,7 +37,7 @@ export const useAuthStore = create(
       setIsAuth: (isAuth: boolean) => {
         set({ isAuth })
       },
-      setRestriction: (restriction: number) => {
+      setRestriction: (restriction) => {
         set({ restriction })
       },
       logIn: (tokens) => {
@@ -47,7 +48,8 @@ export const useAuthStore = create(
         set({
           tokens: null,
           user: null,
-          isAuth: false
+          isAuth: false,
+          restriction: null
         })
       }
     }),
