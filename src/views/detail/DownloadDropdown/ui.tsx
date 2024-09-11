@@ -131,7 +131,7 @@ const DownloadDropdown = (props: Props) => {
             imgSize={
               exportQualityOption.find(
                 (option) => option.value === selectedQuality
-              )?.size
+              )?.size || { width: 1280, height: 1280 }
             }
             containerRef={props.containerRef}
             className={cn('rounded-[8px] text-[0.75rem] font-semibold', {
