@@ -4,12 +4,13 @@ import { useAuthStore } from './store'
 import { AuthProfile, GetAuthProfileResData } from './model'
 
 export const useGetAuthProfile = () => {
-  const { isAuth } = useAuthStore.getState()
+  const { user } = useAuthStore.getState()
 
   return useQuery<GetAuthProfileResData, Error, AuthProfile>({
     queryKey: ['authProfile'],
     queryFn: () => getAuthProfile(),
     select: (data) => data.content,
-    enabled: !!isAuth
+    enabled: user === null
+    // && isAuth === true
   })
 }
