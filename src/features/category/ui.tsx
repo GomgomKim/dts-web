@@ -32,7 +32,7 @@ const Category = (props: Props) => {
   }
 
   return (
-    <div {...props} id={props.id} ref={props.element}>
+    <div id={props.id} ref={props.element}>
       {props.categoryList.map((type) => (
         <Button
           variant="ghost"
