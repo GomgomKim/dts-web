@@ -14,15 +14,14 @@ interface Props extends React.ComponentPropsWithRef<'div'> {
 }
 
 const Category = (props: Props) => {
+  const { categoryList, ...restProps } = props
   const searchParams = useSearchParams()
 
   const { filterType: previousFilterType, setFilterType } =
     useFilterTypeStore.getState()
 
   const currentTagType =
-    searchParams.get('filterType') ||
-    previousFilterType ||
-    props.categoryList[0]
+    searchParams.get('filterType') || previousFilterType || categoryList[0]
 
   const { handleQueryString } = useSetQueryString({ option: 'replace' })
 
@@ -32,7 +31,7 @@ const Category = (props: Props) => {
   }
 
   return (
-    <div id={props.id} ref={props.element}>
+    <div {...restProps} id={props.id} ref={props.element}>
       {props.categoryList.map((type) => (
         <Button
           variant="ghost"
