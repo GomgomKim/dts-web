@@ -9,7 +9,7 @@ import { useFilterTypeStore } from '@/shared/lib/stores/useFilterTypeStore'
 
 interface Props extends React.ComponentPropsWithRef<'div'> {
   categoryList: string[]
-  id: string
+  id?: string
   element?: React.RefObject<HTMLDivElement>
 }
 
