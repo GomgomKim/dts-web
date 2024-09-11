@@ -10,10 +10,15 @@ import * as React from 'react'
 function Explore() {
   return (
     <>
-      <Banner />
+      <Banner onClickSeeExample={onMoveToElement} />
       <Suspense fallback={<div>Loading...</div>}>
         <div className="mb-5">
-          <Category categoryList={FILTER_TYPES} />
+          <Category
+            categoryList={FILTER_TYPES}
+            id="explore-filer"
+            element={element}
+            style={{ scrollMarginTop: '56px' }}
+          />
         </div>
         <CardList />
       </Suspense>

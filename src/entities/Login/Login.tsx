@@ -6,14 +6,16 @@ import { Button } from '@/shared/ui'
 import GoogleIcon from '/public/icons/google-logo.svg'
 import { useRouter } from 'next/navigation'
 
-// TODO:
-const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=46244385145-oek5rc3ik17t7dfnsb55hvnu1va0ck98.apps.googleusercontent.com&redirect_uri=http://localhost:3000/explore?oAuthProviderType=GOOGLE&response_type=code&scope=email&access_type=offline&prompt=consent`
-
 const LoginButton = () => {
   const router = useRouter()
 
   const handleClick = () => {
-    router.replace(url)
+    const loginUrl = process.env.NEXT_PUBLIC_GOOGLE_LOGIN_URL
+    if (loginUrl) {
+      router.replace(loginUrl)
+    } else {
+      console.error('Google login URL is not defined')
+    }
   }
 
   return (
@@ -34,7 +36,7 @@ const Login = ({ modalRef }: LoginProps) => {
   const router = useRouter()
 
   return (
-    <div className="w-screen h-full flex justify-center absolute bg-neutral-0-90 inset-0 z-50">
+    <div className="flex justify-center fixed bg-neutral-0-90 inset-0 z-50">
       <div
         ref={modalRef}
         className="flex flex-col gap-10 border border-neutral-2 rounded-[12px] m-auto relative w-[400px] p-10 bg-background"
