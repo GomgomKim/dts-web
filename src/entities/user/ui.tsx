@@ -14,37 +14,30 @@ import { useAuthStore } from './store'
 import { useQueryClient } from '@tanstack/react-query'
 import Image from 'next/image'
 import CreditIcon from '/public/icons/database.svg'
-import { faker } from '@faker-js/faker'
 import { cn } from '@/shared/lib/utils'
 import Link from 'next/link'
 
-export const UserProfile = () => {
+const LogOut = () => {
   const queryClient = useQueryClient()
 
-  const { restriction, isAuth, user, setUser, logOut } = useAuthStore.getState()
-
-  React.useEffect(() => {
-    if (!isAuth) return
-
-    const getUserInfo = async () => {
-      return {
-        data: {
-          email: 'dts-test@example.com',
-          image: faker.image.urlLoremFlickr()
-        }
-      }
-    }
-    getUserInfo().then((res) => {
-      setUser(res.data)
-    })
-  }, [isAuth])
+  const { logOut } = useAuthStore.getState()
 
   const handleClickLogout = () => {
     logOut(queryClient)
   }
-  if (!user) return <div>loading user info ...</div>
+  return (
+    <DropdownMenuItem onClick={handleClickLogout}>Log out</DropdownMenuItem>
+  )
+}
 
-  const isZeroRestriction = restriction === 0
+export const UserProfile = () => {
+  const { user, restriction } = useAuthStore.getState()
+
+  const remainRestriction = restriction
+    ? restriction?.max - restriction?.current
+    : null
+
+  const isZeroRestriction = remainRestriction === 0
 
   const description = isZeroRestriction ? (
     <div className="font-medium text-[0.875rem] text-[#616268]">
@@ -60,9 +53,17 @@ export const UserProfile = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <div>
-          {/* TODO: image 없으면 null profile */}
-          <Image src={user.image} alt="profile image" width={40} height={40} />
+        <div className="w-10 h-10 rounded-full overflow-hidden">
+          {user ? (
+            <Image
+              src={user.profileImageUrl}
+              alt="profile image"
+              width={40}
+              height={40}
+            />
+          ) : (
+            <div>user image</div>
+          )}
         </div>
       </DropdownMenuTrigger>
 
@@ -70,34 +71,41 @@ export const UserProfile = () => {
         <DropdownMenuLabel>ACCOUNT</DropdownMenuLabel>
         <div className="flex items-center gap-3 py-3 px-5">
           <div className="w-10 h-10 rounded-full overflow-hidden">
-            <Image
-              src={user.image}
-              alt="profile image"
-              width={40}
-              height={40}
-            />
+            {user ? (
+              <Image
+                src={user.profileImageUrl}
+                alt="profile image"
+                width={40}
+                height={40}
+              />
+            ) : (
+              <div>user image</div>
+            )}
           </div>
-          <span>{user.email}</span>
+          <React.Suspense>
+            {user ? <span>{user.email}</span> : <span>user email</span>}
+          </React.Suspense>
         </div>
 
         <DropdownMenuSeparator />
 
         <DropdownMenuLabel className="pt-2">CREDITS</DropdownMenuLabel>
         <div className="flex items-center justify-between py-3 px-5">
-          {/* [TODO] credit text에 variant 추가*/}
           <div className="flex gap-2 items-center">
             <CreditIcon
               className={cn('stroke-white', {
                 'stroke-[#FF8480]': isZeroRestriction
               })}
             />
+            {/* <React.Suspense> */}
             <span
               className={cn('text-[14px]', {
                 'text-[#FF8480]': isZeroRestriction
               })}
             >
-              {restriction}
+              {remainRestriction === null ? 'loading' : remainRestriction}
             </span>
+            {/* </React.Suspense> */}
           </div>
           {description}
         </div>
@@ -106,16 +114,13 @@ export const UserProfile = () => {
 
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link href="/#">FAQs</Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
             <Link href="/#">Feedback</Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem onClick={handleClickLogout}>Log out</DropdownMenuItem>
+        <LogOut />
       </DropdownMenuContent>
     </DropdownMenu>
   )

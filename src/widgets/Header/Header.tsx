@@ -61,8 +61,7 @@ const NotLoggedInNav = () => {
 const UserInfo = () => {
   const restriction = useAuthStore((state) => state.restriction)
 
-  const isZeroRestriction = restriction === 0
-  // || !restriction
+  const isZeroRestriction = restriction?.current === 100
 
   return (
     <div className="flex gap-3 items-center ml-3">
@@ -75,7 +74,7 @@ const UserInfo = () => {
         <span
           className={cn('text-[14px]', { 'text-[#FF8480]': isZeroRestriction })}
         >
-          {restriction || 0}
+          {restriction ? restriction?.max - restriction?.current : null}
         </span>
       </div>
       {isZeroRestriction ? (

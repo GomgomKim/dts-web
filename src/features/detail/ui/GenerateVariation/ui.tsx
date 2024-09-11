@@ -61,7 +61,7 @@ export const GenerateVariation = (props: Props) => {
           addAiImageGeneratingList([variation])
           addAiImageItem(variation)
 
-          setRestriction(restriction.current)
+          setRestriction(restriction)
         }
       }
       // onError

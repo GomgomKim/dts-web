@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Sidebar } from '@/widgets'
 import { Header } from '@/widgets/Header'
+import { Suspense } from 'react'
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -17,7 +18,9 @@ export default function ExploreLayout({
       <Header />
       <div className="flex pt-14 h-screen">
         <Sidebar />
-        <main className="p-12 ml-[280px] flex-1">{children}</main>
+        <main className="p-12 ml-[280px] flex-1">
+          <Suspense>{children}</Suspense>
+        </main>
       </div>
     </>
   )

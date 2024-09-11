@@ -22,7 +22,7 @@ export async function getVariationImages({
   const response = await dtsAxios.get<
     GetVariationListReqData,
     AxiosResponse<GetVariationListResData, AxiosError>
-  >(`${URL_VARIATION_LIST}/${encodedBaseImageInfoId}`)
+  >(`${URL_VARIATION_LIST}?encodedImageInfoId=${encodedBaseImageInfoId}`)
   return response.data
 }
 
@@ -47,7 +47,7 @@ export async function getAiImageProgress({
     const response = await dtsAxios.get<
       GetAiImageProgressReqData,
       AxiosResponse<GetAiImageProgressResData, AxiosError>
-    >(`${URL_AI_IMAGE_GENERATE_PROGRESS}/${encodedImageId}/progress`)
+    >(`${URL_AI_IMAGE_GENERATE_PROGRESS}?${encodedImageId}`)
 
     return response.data
   } catch (error) {

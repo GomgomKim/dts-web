@@ -1,19 +1,18 @@
 import * as React from 'react'
 import { useAuthStore } from '@/entities/user/store'
-import { useQueryClient } from '@tanstack/react-query'
+// import { useQueryClient } from '@tanstack/react-query'
 import { InternalAxiosRequestConfig } from 'axios'
 import { dtsAxios } from '@/shared/api'
 
 const useAxiosAuthInterceptor = () => {
-  const queryClient = useQueryClient()
+  // const queryClient = useQueryClient()
 
   React.useEffect(() => {
     const requestHandler = (config: InternalAxiosRequestConfig) => {
       const { tokens } = useAuthStore.getState()
-
       if (tokens) {
-        config.headers['authorization'] = tokens.accessToken
-        config.headers['refresh-token'] = tokens.refreshToken
+        config.headers['Authorization'] = tokens.accessToken
+        config.headers['Refresh-Token'] = tokens.refreshToken
       }
 
       return config
@@ -35,25 +34,8 @@ const useAxiosAuthInterceptor = () => {
       return response
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const responseErrorHandler = async function (error: any) {
-      // const originalRequestConfig = error.config
-      const { tokens, logOut } = useAuthStore.getState()
-
-      // 3004: 로그인 페이지로 이동
-
-      if (!tokens?.accessToken || !tokens?.refreshToken) {
-        // console.log('tokens not found')
-        logOut(queryClient)
-        return Promise.reject(error)
-      }
-
-      // console.log('interceptor error', error.response)
-      return Promise.reject(error)
-    }
-
     dtsAxios.interceptors.request.use(requestHandler)
-    dtsAxios.interceptors.response.use(responseHandler, responseErrorHandler)
+    dtsAxios.interceptors.response.use(responseHandler)
   }, [])
 }
 
