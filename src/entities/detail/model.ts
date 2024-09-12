@@ -18,6 +18,7 @@ export interface Variation {
   encodedBaseImageId: string
   properties: Properties
   isAiGenerated: boolean
+  encryptedImageUrl: string
   progress: number
   encodedAiBasedImageId: string
   isFail: boolean
