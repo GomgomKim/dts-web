@@ -58,6 +58,11 @@
     left: 50%;
     transform: translate(-50%, -50%);
   }
+  @keyframes react-loading-skeleton {
+    100% {
+      transform: translateX(100%);
+    }
+  }
   .loading-skeleton {
     background-color: #202124;
   }
