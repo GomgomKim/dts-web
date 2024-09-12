@@ -47,7 +47,7 @@ export async function getAiImageProgress({
     const response = await dtsAxios.get<
       GetAiImageProgressReqData,
       AxiosResponse<GetAiImageProgressResData, AxiosError>
-    >(`${URL_AI_IMAGE_GENERATE_PROGRESS}?${encodedImageId}`)
+    >(`${URL_AI_IMAGE_GENERATE_PROGRESS}?encodedImageId=${encodedImageId}`)
 
     return response.data
   } catch (error) {
