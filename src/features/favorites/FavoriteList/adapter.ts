@@ -3,16 +3,12 @@ import { getFavoriteList } from './api'
 import { GetFavoriteListResData } from './model'
 import { useSearchParams } from 'next/navigation'
 import { FILTER_TYPES } from '@/features/favorites/FavoriteList/constant'
-import { useFilterTypeStore } from '@/shared/lib/stores/useFilterTypeStore'
 import { SORTING_TYPES } from '../SortDropdown'
 
 const useGetFavoriteList = () => {
   const searchParams = useSearchParams()
 
-  const { filterType: previousFilterType } = useFilterTypeStore.getState()
-
-  const filterType =
-    searchParams.get('filterType') || previousFilterType || FILTER_TYPES[0]
+  const filterType = searchParams.get('filterType') || FILTER_TYPES[0]
 
   const sortingType = searchParams.get('sortingType') || SORTING_TYPES[0]
 

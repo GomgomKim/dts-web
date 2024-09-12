@@ -17,11 +17,9 @@ const Category = (props: Props) => {
   const { categoryList, ...restProps } = props
   const searchParams = useSearchParams()
 
-  const { filterType: previousFilterType, setFilterType } =
-    useFilterTypeStore.getState()
+  const { setFilterType } = useFilterTypeStore.getState()
 
-  const currentTagType =
-    searchParams.get('filterType') || previousFilterType || categoryList[0]
+  const currentTagType = searchParams.get('filterType') || categoryList[0]
 
   const { handleQueryString } = useSetQueryString({ option: 'replace' })
 
