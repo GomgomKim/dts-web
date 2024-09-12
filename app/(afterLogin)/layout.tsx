@@ -12,7 +12,11 @@ export default function Layout({
   const router = useRouter()
   const { isAuth } = useAuthStore.getState()
 
-  if (isAuth === null) return <div>Loading...</div>
+  React.useEffect(() => {
+    if (isAuth !== true) {
+      router.replace('/login')
+    }
+  }, [isAuth])
 
   return isAuth === true ? <>{children}</> : router.replace('/login')
 }
