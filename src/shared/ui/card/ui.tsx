@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 'use client'
 
 import { useState } from 'react'
@@ -6,6 +5,7 @@ import Link from 'next/link'
 import { Button } from '@/shared/ui/button'
 import LinkIcon from '/public/icons/arrow-thin.svg'
 import { ModelImageItem } from '@/features/explore/CardList/model'
+import Image from 'next/image'
 
 const URL_BASE_IMAGE_FILE = '/image-file/download?encryptedImageUrl='
 
@@ -29,14 +29,15 @@ const Card = (props: Props) => {
       onMouseLeave={() => setIsHovering(false)}
       className="relative h-[400px] aspect-[9/16] rounded-[8px] overflow-hidden cursor-auto"
     >
-      <img
+      <Image
         src={
           process.env.NEXT_PUBLIC_API_URL +
           `${URL_BASE_IMAGE_FILE}` +
           encodedMainImageId
         }
         alt={description}
-        style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+        fill
+        style={{ objectFit: 'cover' }}
       />
       {isHovering && (
         <Link

@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 'use client'
 
 import * as React from 'react'
@@ -17,6 +16,7 @@ import CreditIcon from '/public/icons/database.svg'
 import { cn } from '@/shared/lib/utils'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 
 const LogOut = () => {
   const queryClient = useQueryClient()
@@ -58,10 +58,11 @@ export const UserProfile = () => {
       <DropdownMenuTrigger>
         <div className="w-10 h-10 rounded-full overflow-hidden">
           {user ? (
-            <img
+            <Image
               src={user.profileImageUrl}
               alt="profile image"
-              style={{ width: 40, height: 40 }}
+              width={40}
+              height={40}
             />
           ) : (
             <div>user image</div>
@@ -74,10 +75,11 @@ export const UserProfile = () => {
         <div className="flex items-center gap-3 py-3 px-5">
           <div className="w-10 h-10 rounded-full overflow-hidden">
             {user ? (
-              <img
+              <Image
                 src={user.profileImageUrl}
                 alt="profile image"
-                style={{ width: 40, height: 40 }}
+                width={40}
+                height={40}
               />
             ) : (
               <div>user image</div>
