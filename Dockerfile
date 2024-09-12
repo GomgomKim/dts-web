@@ -7,6 +7,7 @@ WORKDIR /app
 COPY public ./public
 COPY --chown=nextjs:nodejs .next/standalone ./
 COPY --chown=nextjs:nodejs .next/static ./.next/static
+COPY --chown=nextjs:nodejs next.config.mjs ./
 
 EXPOSE 3000
 
