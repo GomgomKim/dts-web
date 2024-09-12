@@ -1,6 +1,6 @@
+/* eslint-disable @next/next/no-img-element */
 'use client'
 
-import Image from 'next/image'
 import * as React from 'react'
 
 import AngleBracketIcon from '/public/icons/angle-bracket-open.svg'
@@ -280,15 +280,19 @@ export const VariationsSection = ({
               {isFail ? (
                 // fail card
                 <div className="p-[8px] absolute inset-0">
-                  <Image
+                  <img
                     src={
                       process.env.NEXT_PUBLIC_API_URL +
                       `${URL_VARIATION_LIST_IMAGE}` +
-                      item.encodedAiBasedImageId
+                      item.encryptedImageUrl
                     }
                     alt=""
-                    fill
-                    style={{ objectFit: 'cover', filter: 'blur(1px)' }}
+                    style={{
+                      objectFit: 'cover',
+                      filter: 'blur(1px)',
+                      width: '100%',
+                      height: '100%'
+                    }}
                   />
                   <div className="absolute inset-0 bg-[#FF8480] bg-opacity-20" />
                   <div className="relative h-full">
@@ -309,15 +313,14 @@ export const VariationsSection = ({
                 <div className="loading-skeleton h-full" />
               ) : (
                 // normal card
-                <Image
+                <img
                   src={
                     process.env.NEXT_PUBLIC_API_URL +
                     `${URL_VARIATION_LIST_IMAGE}` +
-                    item.encodedBaseImageId
+                    item.encryptedImageUrl
                   }
                   alt=""
-                  fill
-                  style={{ objectFit: 'cover' }}
+                  style={{ objectFit: 'cover', width: '100%', height: '100%' }}
                 />
               )}
             </div>
