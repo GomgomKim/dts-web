@@ -31,27 +31,34 @@ export const CardList = () => {
   if (isFetching && !isFetchingNextPage) return <p>loading</p>
   if (status === 'error') return <p>{error?.message}</p>
 
+  const Grid = () => {
+    return (
+      <div className="grid grid-cols-auto-fill-px gap-5">
+        {data?.pages.map((page, i) => (
+          <Fragment key={i}>
+            {page.content.images.map((cardItem) => (
+              <Card
+                key={cardItem.encodedMainImageId}
+                item={cardItem}
+                actionSlot={<LikeButton item={cardItem} />}
+              />
+            ))}
+          </Fragment>
+        ))}
+      </div>
+    )
+  }
+
+  const isEmpty = data?.pages[0].content.images.length === 0
+
   const renderCard = () => {
-    if (data?.pages[0]?.content.images.length === 0) {
-      return <p>no data</p>
-    } else {
-      return data?.pages.map((page, i) => (
-        <Fragment key={i}>
-          {page.content.images.map((cardItem) => (
-            <Card
-              key={cardItem.encodedMainImageId}
-              item={cardItem}
-              actionSlot={<LikeButton item={cardItem} />}
-            />
-          ))}
-        </Fragment>
-      ))
-    }
+    if (isEmpty) return <p>no data</p>
+    return <Grid />
   }
 
   return (
     <>
-      <div className="grid grid-cols-auto-fill-px gap-5">{renderCard()}</div>
+      {renderCard()}
       {isFetching && isFetchingNextPage && (
         <div style={{ height: 100 }}>loading more models ...</div>
       )}

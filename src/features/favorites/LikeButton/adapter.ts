@@ -53,10 +53,10 @@ const useDeleteFavoriteRemove = () => {
       queryClient.setQueryData(queryKey, context?.previousData)
       console.log('failed to delete favorite')
       console.error(error)
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: queryKey })
     }
+    // onSettled: () => {
+    //   queryClient.invalidateQueries({ queryKey: queryKey })
+    // }
   })
 }
 

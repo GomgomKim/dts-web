@@ -26,11 +26,10 @@ type CategoryItemProps = {
 }
 const CategoryItem = (props: CategoryItemProps) => {
   const searchParams = useSearchParams()
-  const { filterType: previousTagType, setFilterType } =
-    useFilterTypeStore.getState()
+  const { setFilterType } = useFilterTypeStore.getState()
 
   const isHere =
-    (searchParams.get('filterType') || previousTagType) ===
+    (searchParams.get('filterType') || 'ALL') ===
     props.children!.toString().toUpperCase()
 
   const { handleQueryString } = useSetQueryString({ option: 'replace' })

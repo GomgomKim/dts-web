@@ -27,7 +27,7 @@ const Sidebar = () => {
       <li>
         <MenuItem
           item={{
-            href: '/help',
+            href: { pathname: '/help' },
             title: 'Help',
             prefix: '?'
           }}

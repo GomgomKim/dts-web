@@ -1,19 +1,13 @@
 'use client'
 
-import { Fragment, useEffect } from 'react'
-import { useSearchParams } from 'next/navigation'
-import { useInView } from 'react-intersection-observer'
-import { Card } from '@/shared/ui/card'
-import { useGetFavoriteList } from './adapter'
 import { Nullbox } from '@/entities/favorites/ui/Nullbox'
-import { FILTER_TYPES } from './constant'
-import { Category } from '@/features/category'
+import { Card } from '@/shared/ui/card'
+import { Fragment, useEffect } from 'react'
+import { useInView } from 'react-intersection-observer'
 import { LikeButton } from '../LikeButton'
-import { SortDropdown, SORTING_TYPES } from '../SortDropdown'
+import { useGetFavoriteList } from './adapter'
 
 export const FavoriteList = () => {
-  const searchParams = useSearchParams()
-
   const {
     data,
     status,
@@ -22,10 +16,7 @@ export const FavoriteList = () => {
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage
-  } = useGetFavoriteList({
-    filterType: searchParams.get('filterType') || FILTER_TYPES[0],
-    sortingType: searchParams.get('sortingType') || SORTING_TYPES[0]
-  })
+  } = useGetFavoriteList()
 
   const { ref, inView } = useInView({
     threshold: 1
@@ -70,10 +61,6 @@ export const FavoriteList = () => {
 
   return (
     <>
-      <div className="flex justify-between mb-5">
-        <Category categoryList={FILTER_TYPES} />
-        <SortDropdown />
-      </div>
       {renderContent()}
       {isFetching && isFetchingNextPage && (
         <div style={{ height: 100 }}>loading more items ...</div>

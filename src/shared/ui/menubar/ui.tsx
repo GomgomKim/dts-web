@@ -4,9 +4,16 @@ import { Button } from '@/shared/ui/button'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/shared/lib/utils'
-import { type MenuItem as MenuItemT } from './model'
 import { ComponentProps } from 'react'
 import * as React from 'react'
+
+export type MenuItemType = {
+  href: { pathname: string; query?: { [key: string]: string } }
+  title: string
+  prefix: React.ReactNode
+  postfix?: React.ReactNode
+  disabled?: boolean
+}
 
 // menu
 
@@ -21,12 +28,12 @@ Menu.displayName = 'Menu'
 // menu item
 
 type MenuItemProps = {
-  item: MenuItemT
+  item: MenuItemType
 }
 
 export const MenuItem = ({ item }: MenuItemProps) => {
   const pathname = usePathname()
-  const isHere = pathname === item.href
+  const isHere = pathname === item.href.pathname
 
   return (
     <Button asChild variant="ghost" stretch className={cn({ active: isHere })}>

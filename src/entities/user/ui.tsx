@@ -26,7 +26,7 @@ const LogOut = () => {
 
   const handleClickLogout = () => {
     logOut(queryClient)
-    router.replace('/explore')
+    router.replace('/explore?filterType=ALL')
   }
   return (
     <DropdownMenuItem onClick={handleClickLogout}>Log out</DropdownMenuItem>
