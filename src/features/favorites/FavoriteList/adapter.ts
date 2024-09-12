@@ -1,15 +1,21 @@
 import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query'
 import { getFavoriteList } from './api'
 import { GetFavoriteListResData } from './model'
+import { useSearchParams } from 'next/navigation'
+import { FILTER_TYPES } from '@/features/favorites/FavoriteList/constant'
+import { useFilterTypeStore } from '@/shared/lib/stores/useFilterTypeStore'
+import { SORTING_TYPES } from '../SortDropdown'
 
-// TODO: type 수정
-const useGetFavoriteList = ({
-  filterType,
-  sortingType = 'OLDEST'
-}: {
-  filterType: string
-  sortingType?: string
-}) => {
+const useGetFavoriteList = () => {
+  const searchParams = useSearchParams()
+
+  const { filterType: previousFilterType } = useFilterTypeStore.getState()
+
+  const filterType =
+    searchParams.get('filterType') || previousFilterType || FILTER_TYPES[0]
+
+  const sortingType = searchParams.get('sortingType') || SORTING_TYPES[0]
+
   const {
     data,
     status,
@@ -28,7 +34,7 @@ const useGetFavoriteList = ({
     queryKey: ['favorites', filterType, sortingType],
     queryFn: ({ pageParam }) =>
       getFavoriteList({ filterType, sortingType, scrollKey: pageParam }),
-    enabled: !!filterType,
+    enabled: !!filterType && !!sortingType,
     initialPageParam: null,
     getNextPageParam: (lastPage) => lastPage.content.scrollKey
     // staleTime: 60 * 1000,

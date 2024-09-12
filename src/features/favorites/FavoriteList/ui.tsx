@@ -1,7 +1,6 @@
 'use client'
 
 import { Fragment, useEffect } from 'react'
-import { useSearchParams } from 'next/navigation'
 import { useInView } from 'react-intersection-observer'
 import { Card } from '@/shared/ui/card'
 import { useGetFavoriteList } from './adapter'
@@ -9,11 +8,9 @@ import { Nullbox } from '@/entities/favorites/ui/Nullbox'
 import { FILTER_TYPES } from './constant'
 import { Category } from '@/features/category'
 import { LikeButton } from '../LikeButton'
-import { SortDropdown, SORTING_TYPES } from '../SortDropdown'
+import { SortDropdown } from '../SortDropdown'
 
 export const FavoriteList = () => {
-  const searchParams = useSearchParams()
-
   const {
     data,
     status,
@@ -22,10 +19,7 @@ export const FavoriteList = () => {
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage
-  } = useGetFavoriteList({
-    filterType: searchParams.get('filterType') || FILTER_TYPES[0],
-    sortingType: searchParams.get('sortingType') || SORTING_TYPES[0]
-  })
+  } = useGetFavoriteList()
 
   const { ref, inView } = useInView({
     threshold: 1
