@@ -10,7 +10,6 @@ import { useAuthStore } from '@/entities/user/store'
 import { UserProfile } from '@/entities/user'
 import CreditIcon from '/public/icons/database.svg'
 
-import { Suspense } from 'react'
 import { cn } from '@/shared/lib/utils'
 
 const Links = () => {
@@ -59,7 +58,7 @@ const NotLoggedInNav = () => {
 }
 
 const UserInfo = () => {
-  const restriction = useAuthStore((state) => state.restriction)
+  const { restriction } = useAuthStore.getState()
 
   const isZeroRestriction = restriction?.current === 100
 
@@ -83,9 +82,7 @@ const UserInfo = () => {
           <span className="ml-[8px]">🌙</span>
         </div>
       ) : null}
-      <Suspense fallback={<div>profile image</div>}>
-        <UserProfile />
-      </Suspense>
+      <UserProfile />
     </div>
   )
 }
@@ -122,10 +119,11 @@ const Header = () => {
           <nav className=" text-[14px] text-secondary-foreground flex items-center">
             <ul className="flex items-center">
               {isMainPage ? <Links /> : null}
-              {isAuth ? null : <NotLoggedInNav />}
+              {isAuth === false ? <NotLoggedInNav /> : null}
             </ul>
           </nav>
-          {isAuth ? <UserInfo /> : null}
+          {isAuth === null ? 'auth checking...' : null}
+          {isAuth === true ? <UserInfo /> : null}
         </div>
       </div>
     </header>

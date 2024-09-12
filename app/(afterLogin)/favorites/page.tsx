@@ -1,3 +1,5 @@
+'use client'
+
 import Favorites from '@/views/favorites/ui'
 
 export default function Page() {

@@ -1,3 +1,5 @@
+'use client'
+
 import { Fragment, useEffect } from 'react'
 // import { useSearchParams } from 'next/navigation'
 import { useInView } from 'react-intersection-observer'
