@@ -119,10 +119,9 @@ const Header = () => {
           <nav className=" text-[14px] text-secondary-foreground flex items-center">
             <ul className="flex items-center">
               {isMainPage ? <Links /> : null}
-              {isAuth === false ? <NotLoggedInNav /> : null}
+              {isAuth !== true ? <NotLoggedInNav /> : null}
             </ul>
           </nav>
-          {isAuth === null ? 'auth checking...' : null}
           {isAuth === true ? <UserInfo /> : null}
         </div>
       </div>

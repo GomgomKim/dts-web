@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client'
 
 import * as React from 'react'
@@ -12,7 +13,6 @@ import {
 } from '@/shared/ui/dropdown-menu'
 import { useAuthStore } from './store'
 import { useQueryClient } from '@tanstack/react-query'
-import Image from 'next/image'
 import CreditIcon from '/public/icons/database.svg'
 import { cn } from '@/shared/lib/utils'
 import Link from 'next/link'
@@ -58,11 +58,10 @@ export const UserProfile = () => {
       <DropdownMenuTrigger>
         <div className="w-10 h-10 rounded-full overflow-hidden">
           {user ? (
-            <Image
+            <img
               src={user.profileImageUrl}
               alt="profile image"
-              width={40}
-              height={40}
+              style={{ width: 40, height: 40 }}
             />
           ) : (
             <div>user image</div>
@@ -75,11 +74,10 @@ export const UserProfile = () => {
         <div className="flex items-center gap-3 py-3 px-5">
           <div className="w-10 h-10 rounded-full overflow-hidden">
             {user ? (
-              <Image
+              <img
                 src={user.profileImageUrl}
                 alt="profile image"
-                width={40}
-                height={40}
+                style={{ width: 40, height: 40 }}
               />
             ) : (
               <div>user image</div>

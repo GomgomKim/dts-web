@@ -1,6 +1,5 @@
 'use client'
 
-import Image from 'next/image'
 import { Variation } from '@/entities/detail/model'
 import {
   ASPECT_RATIO_MAP_NUMBER,
@@ -23,7 +22,7 @@ export const ImageEditingBox = (props: Props) => {
   const imgUrl =
     process.env.NEXT_PUBLIC_API_URL +
     URL_VARIATION_LIST_IMAGE +
-    selectedVariation?.encodedBaseImageId
+    selectedVariation?.encryptedImageUrl
 
   const getContainerStyle = (): React.CSSProperties => {
     if (!selectedVariation) return { aspectRatio: 9 / 16, height: '100%' }
@@ -54,12 +53,14 @@ export const ImageEditingBox = (props: Props) => {
           style={{ ...getContainerStyle() }}
         >
           {selectedVariation && (
-            <Image
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
               src={imgUrl}
               alt=""
-              fill
               style={{
-                objectFit: 'contain'
+                objectFit: 'contain',
+                width: '100%',
+                height: '100%'
               }}
             />
           )}

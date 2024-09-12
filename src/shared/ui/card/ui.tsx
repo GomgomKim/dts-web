@@ -1,7 +1,7 @@
+/* eslint-disable @next/next/no-img-element */
 'use client'
 
 import { useState } from 'react'
-import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/shared/ui/button'
 import LinkIcon from '/public/icons/arrow-thin.svg'
@@ -29,15 +29,14 @@ const Card = (props: Props) => {
       onMouseLeave={() => setIsHovering(false)}
       className="relative h-[400px] aspect-[9/16] rounded-[8px] overflow-hidden cursor-auto"
     >
-      <Image
+      <img
         src={
           process.env.NEXT_PUBLIC_API_URL +
           `${URL_BASE_IMAGE_FILE}` +
           encodedMainImageId
         }
         alt={description}
-        fill
-        style={{ objectFit: 'cover' }}
+        style={{ objectFit: 'cover', width: '100%', height: '100%' }}
       />
       {isHovering && (
         <Link
