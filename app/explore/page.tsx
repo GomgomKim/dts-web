@@ -84,7 +84,7 @@ export default function Page() {
               setRestriction(restriction)
             }
           })
-          router.replace('/explore')
+          router.replace('/explore?filterType=ALL')
         }
       })
     }
