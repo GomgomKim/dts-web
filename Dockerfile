@@ -5,9 +5,9 @@ FROM base AS runner
 WORKDIR /app
 
 COPY public ./public
+COPY next.config.mjs ./
 COPY --chown=nextjs:nodejs .next/standalone ./
 COPY --chown=nextjs:nodejs .next/static ./.next/static
-COPY --chown=nextjs:nodejs next.config.mjs ./
 
 EXPOSE 3000
 
