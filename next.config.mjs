@@ -21,6 +21,10 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'loremflickr.com'
+      },
+      {
+        protocol: 'https',
+        hostname: process.env.NEXT_PUBLIC_API_GOOGLE_IMAGE_HOST_NAME
       }
     ]
   }
