@@ -1,8 +1,7 @@
-/* eslint-disable @next/next/no-img-element */
 'use client'
 
 import * as React from 'react'
-
+import Image from 'next/image'
 import AngleBracketIcon from '/public/icons/angle-bracket-open.svg'
 import { Button } from '@/shared/ui'
 import { FaceAngle, Variation } from '@/entities/detail/model'
@@ -280,18 +279,17 @@ export const VariationsSection = ({
               {isFail ? (
                 // fail card
                 <div className="p-[8px] absolute inset-0">
-                  <img
+                  <Image
                     src={
                       process.env.NEXT_PUBLIC_API_URL +
                       `${URL_VARIATION_LIST_IMAGE}` +
                       item.encryptedImageUrl
                     }
                     alt=""
+                    fill
                     style={{
                       objectFit: 'cover',
-                      filter: 'blur(1px)',
-                      width: '100%',
-                      height: '100%'
+                      filter: 'blur(1px)'
                     }}
                   />
                   <div className="absolute inset-0 bg-[#FF8480] bg-opacity-20" />
@@ -313,14 +311,15 @@ export const VariationsSection = ({
                 <div className="loading-skeleton h-full" />
               ) : (
                 // normal card
-                <img
+                <Image
                   src={
                     process.env.NEXT_PUBLIC_API_URL +
                     `${URL_VARIATION_LIST_IMAGE}` +
                     item.encryptedImageUrl
                   }
                   alt=""
-                  style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+                  fill
+                  style={{ objectFit: 'cover' }}
                 />
               )}
             </div>

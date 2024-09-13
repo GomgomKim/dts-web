@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { Variation } from '@/entities/detail/model'
 import {
   ASPECT_RATIO_MAP_NUMBER,
@@ -53,16 +54,7 @@ export const ImageEditingBox = (props: Props) => {
           style={{ ...getContainerStyle() }}
         >
           {selectedVariation && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={imgUrl}
-              alt=""
-              style={{
-                objectFit: 'contain',
-                width: '100%',
-                height: '100%'
-              }}
-            />
+            <Image src={imgUrl} alt="" fill style={{ objectFit: 'contain' }} />
           )}
           <ResizableAndDraggableBoxes
             containerRef={containerRef}

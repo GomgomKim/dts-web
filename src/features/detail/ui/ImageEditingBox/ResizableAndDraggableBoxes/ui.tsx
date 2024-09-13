@@ -1,6 +1,6 @@
-/* eslint-disable @next/next/no-img-element */
 'use client'
 
+import Image from 'next/image'
 import { cn } from '@/shared/lib/utils'
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { Box } from '../type'
@@ -135,10 +135,11 @@ export const ResizableAndDraggableBoxes = (props: Props) => {
           style={getBoxStyle(box, activeBox, isResizing, resizeDirection)}
         >
           <div className="w-full h-full">
-            <img
+            <Image
               src={box.image}
               alt=""
-              style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+              fill
+              style={{ objectFit: 'contain' }}
             />
           </div>
           <span
