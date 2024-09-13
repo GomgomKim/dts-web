@@ -11,10 +11,6 @@ export const Banner = (props: Props) => {
   const router = useRouter()
 
   const handleClickStart = () => {
-    if (isAuth) {
-      props.onClickSeeExample()
-      return
-    }
     router.push('/signup')
   }
 
@@ -29,11 +25,14 @@ export const Banner = (props: Props) => {
         generated in seconds
       </div>
       <div className="flex gap-3 justify-center">
-        {/* TODO: 로그인시 렌더링하지않기 */}
-        <Button onClick={handleClickStart}>Get Started for Free</Button>
-        <Button variant="outline" onClick={props.onClickSeeExample}>
-          See Examples
-        </Button>
+        {isAuth !== true ? (
+          <>
+            <Button onClick={handleClickStart}>Get Started for Free</Button>
+            <Button variant="outline" onClick={props.onClickSeeExample}>
+              See Examples
+            </Button>
+          </>
+        ) : null}
       </div>
     </div>
   )
