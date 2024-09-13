@@ -318,7 +318,8 @@ export const VariationsSection = ({
                     item.encryptedImageUrl
                   }
                   alt=""
-                  style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+                  fill
+                  style={{ objectFit: 'cover' }}
                 />
               )}
             </div>
