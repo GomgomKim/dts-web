@@ -25,11 +25,17 @@ interface Props {
 
 export const GenerateVariation = (props: Props) => {
   const searchParams = useSearchParams()
-  const { addAiImageGeneratingList } = useAiImageGeneratingStore.getState()
+  const addAiImageGeneratingList = useAiImageGeneratingStore(
+    (state) => state.addAiImageGeneratingList
+  )
 
-  const { setRestriction } = useAuthStore.getState()
-  const { setIsAiImageGenerating, addAiImageItem } =
-    useAiImageGeneratingStore.getState()
+  const setRestriction = useAuthStore((state) => state.setRestriction)
+  const setIsAiImageGenerating = useAiImageGeneratingStore(
+    (state) => state.setIsAiImageGenerating
+  )
+  const addAiImageItem = useAiImageGeneratingStore(
+    (state) => state.addAiImageItem
+  )
   const postAiImageMutaion = usePostAiImageGenerate()
 
   const handleClickNewVariation = () => {

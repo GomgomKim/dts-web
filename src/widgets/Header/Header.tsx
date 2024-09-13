@@ -58,7 +58,7 @@ const NotLoggedInNav = () => {
 }
 
 const UserInfo = () => {
-  const { restriction } = useAuthStore.getState()
+  const restriction = useAuthStore((state) => state.restriction)
 
   const isZeroRestriction = restriction?.current === 100
 

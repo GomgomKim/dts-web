@@ -7,7 +7,7 @@ interface Props {
 }
 
 export const Banner = (props: Props) => {
-  const { isAuth } = useAuthStore.getState()
+  const isAuth = useAuthStore((state) => state.isAuth)
   const router = useRouter()
 
   const handleClickStart = () => {

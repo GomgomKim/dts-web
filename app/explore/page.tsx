@@ -17,21 +17,13 @@ export default function Page() {
   const searchParams = useSearchParams()
   const router = useRouter()
 
-  // 이렇게 하면 무조건 explore 페이지로 리다이렉션?
-  const { logIn, isAuth, setUser, setRestriction } = useAuthStore.getState()
+  const logIn = useAuthStore((state) => state.logIn)
+  const isAuth = useAuthStore((state) => state.isAuth)
+  const setUser = useAuthStore((state) => state.setUser)
+  const setRestriction = useAuthStore((state) => state.setRestriction)
 
   React.useEffect(() => {
-    // already logged in
-    if (isAuth === null) {
-      console.log('로그인 전, isAuth === null')
-    }
-
-    if (isAuth === false) {
-      console.log('로그아웃! isAuth === false')
-    }
-
     if (isAuth === true) {
-      console.log('로그인 된 상태, isAuth === true')
       return
     }
 
@@ -88,7 +80,7 @@ export default function Page() {
         }
       })
     }
-  }, [searchParams, isAuth])
+  }, [searchParams])
 
   return <Explore />
 }

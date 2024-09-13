@@ -17,7 +17,7 @@ const Category = (props: Props) => {
   const { categoryList, ...restProps } = props
   const searchParams = useSearchParams()
 
-  const { setFilterType } = useFilterTypeStore.getState()
+  const setFilterType = useFilterTypeStore((state) => state.setFilterType)
 
   const currentTagType = searchParams.get('filterType') || categoryList[0]
 

@@ -8,7 +8,7 @@ import { FILTER_TYPES } from './constant'
 const useGetExploreImages = () => {
   const searchParams = useSearchParams()
 
-  const { filterType: previousFilterType } = useFilterTypeStore.getState()
+  const previousFilterType = useFilterTypeStore((state) => state.filterType)
 
   const filterType =
     searchParams.get('filterType') || previousFilterType || FILTER_TYPES[0]

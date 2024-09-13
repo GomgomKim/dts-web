@@ -50,7 +50,9 @@ const usePostAiImageGenerate = () => {
 }
 
 const useGetAiImageProgress = () => {
-  const { aiImageGeneratingList } = useAiImageGeneratingStore.getState()
+  const aiImageGeneratingList = useAiImageGeneratingStore(
+    (state) => state.aiImageGeneratingList
+  )
 
   return useQueries<UseQueryOptions<GetAiImageProgressResData, AxiosError>[]>({
     queries: aiImageGeneratingList.map((item) => {
