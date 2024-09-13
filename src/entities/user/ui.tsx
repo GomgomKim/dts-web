@@ -15,18 +15,18 @@ import { useQueryClient } from '@tanstack/react-query'
 import CreditIcon from '/public/icons/database.svg'
 import { cn } from '@/shared/lib/utils'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+// import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 
 const LogOut = () => {
   const queryClient = useQueryClient()
-  const router = useRouter()
+  // const router = useRouter()
 
   const { logOut } = useAuthStore.getState()
 
   const handleClickLogout = () => {
     logOut(queryClient)
-    router.replace('/explore?filterType=ALL')
+    // router.replace('/explore?filterType=ALL')
   }
   return (
     <DropdownMenuItem onClick={handleClickLogout}>Log out</DropdownMenuItem>

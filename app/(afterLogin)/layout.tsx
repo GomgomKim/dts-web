@@ -10,13 +10,7 @@ export default function Layout({
   children: React.ReactNode
 }>) {
   const router = useRouter()
-  const { isAuth } = useAuthStore.getState()
-
-  React.useEffect(() => {
-    if (isAuth !== true) {
-      router.replace('/login')
-    }
-  }, [isAuth])
+  const isAuth = useAuthStore((state) => state.isAuth)
 
   return isAuth === true ? <>{children}</> : router.replace('/login')
 }
