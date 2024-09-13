@@ -49,23 +49,37 @@ export const VariationsSection = ({
 }: VariationsSectionProps) => {
   const searchParams = useSearchParams()
   const encodedBaseImageInfoId = searchParams.get('id') || ''
-
-  const {
-    isAiImageFailed,
-    setIsAiImageFailed,
-    //
-    isAiImageGenerating,
-    setIsAiImageGenerating,
-    //
-    aiImageList,
-    setAiImageList,
-    addAiImageItem,
-    updateAiImageItem,
-    //
-    aiImageGeneratingList,
-    addAiImageGeneratingList,
-    removeAiImageGeneratingList
-  } = useAiImageGeneratingStore.getState()
+  const isAiImageFailed = useAiImageGeneratingStore(
+    (state) => state.isAiImageFailed
+  )
+  const setIsAiImageFailed = useAiImageGeneratingStore(
+    (state) => state.setIsAiImageFailed
+  )
+  const isAiImageGenerating = useAiImageGeneratingStore(
+    (state) => state.isAiImageGenerating
+  )
+  const setIsAiImageGenerating = useAiImageGeneratingStore(
+    (state) => state.setIsAiImageGenerating
+  )
+  const aiImageList = useAiImageGeneratingStore((state) => state.aiImageList)
+  const setAiImageList = useAiImageGeneratingStore(
+    (state) => state.setAiImageList
+  )
+  const addAiImageItem = useAiImageGeneratingStore(
+    (state) => state.addAiImageItem
+  )
+  const updateAiImageItem = useAiImageGeneratingStore(
+    (state) => state.updateAiImageItem
+  )
+  const aiImageGeneratingList = useAiImageGeneratingStore(
+    (state) => state.aiImageGeneratingList
+  )
+  const addAiImageGeneratingList = useAiImageGeneratingStore(
+    (state) => state.addAiImageGeneratingList
+  )
+  const removeAiImageGeneratingList = useAiImageGeneratingStore(
+    (state) => state.removeAiImageGeneratingList
+  )
 
   const {
     data: { mainImageIndex, variations }
@@ -74,7 +88,7 @@ export const VariationsSection = ({
 
   const postAiImageMutaion = usePostAiImageGenerate()
 
-  const { setRestriction } = useAuthStore.getState()
+  const setRestriction = useAuthStore((state) => state.setRestriction)
 
   const [initialData, setInitialData] = React.useState<Variation[]>([])
 

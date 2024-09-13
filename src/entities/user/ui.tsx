@@ -22,7 +22,7 @@ const LogOut = () => {
   const queryClient = useQueryClient()
   // const router = useRouter()
 
-  const { logOut } = useAuthStore.getState()
+  const logOut = useAuthStore((state) => state.logOut)
 
   const handleClickLogout = () => {
     logOut(queryClient)

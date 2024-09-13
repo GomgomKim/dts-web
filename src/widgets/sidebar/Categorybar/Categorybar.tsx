@@ -26,7 +26,7 @@ type CategoryItemProps = {
 }
 const CategoryItem = (props: CategoryItemProps) => {
   const searchParams = useSearchParams()
-  const { setFilterType } = useFilterTypeStore.getState()
+  const setFilterType = useFilterTypeStore((state) => state.setFilterType)
 
   const isHere =
     (searchParams.get('filterType') || 'ALL') ===

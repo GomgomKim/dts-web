@@ -4,7 +4,7 @@ import { useAuthStore } from './store'
 import { AuthProfile, GetAuthProfileResData } from './model'
 
 export const useGetAuthProfile = () => {
-  const { user } = useAuthStore.getState()
+  const user = useAuthStore((state) => state.user)
 
   return useQuery<GetAuthProfileResData, Error, AuthProfile>({
     queryKey: ['authProfile'],
