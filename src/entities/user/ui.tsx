@@ -34,7 +34,8 @@ const LogOut = () => {
 }
 
 export const UserProfile = () => {
-  const { user, restriction } = useAuthStore.getState()
+  const user = useAuthStore((state) => state.user)
+  const restriction = useAuthStore((state) => state.restriction)
 
   const remainRestriction = restriction
     ? restriction?.max - restriction?.current
@@ -85,9 +86,7 @@ export const UserProfile = () => {
               <div>user image</div>
             )}
           </div>
-          <React.Suspense>
-            {user ? <span>{user.email}</span> : <span>user email</span>}
-          </React.Suspense>
+          {user ? <span>{user.email}</span> : <span>user email</span>}
         </div>
 
         <DropdownMenuSeparator />
@@ -100,7 +99,6 @@ export const UserProfile = () => {
                 'stroke-[#FF8480]': isZeroRestriction
               })}
             />
-            {/* <React.Suspense> */}
             <span
               className={cn('text-[14px]', {
                 'text-[#FF8480]': isZeroRestriction
@@ -108,7 +106,6 @@ export const UserProfile = () => {
             >
               {remainRestriction === null ? 'loading' : remainRestriction}
             </span>
-            {/* </React.Suspense> */}
           </div>
           {description}
         </div>
