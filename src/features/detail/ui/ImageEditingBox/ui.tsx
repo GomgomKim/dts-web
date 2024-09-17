@@ -21,9 +21,11 @@ export const ImageEditingBox = (props: Props) => {
   const { containerRef, selectedVariation, boxes, setBoxes } = props
 
   const imgUrl =
-    process.env.NEXT_PUBLIC_API_URL +
-    URL_VARIATION_LIST_IMAGE +
-    selectedVariation?.encryptedImageUrl
+    process.env.NEXT_PUBLIC_API_MOCKING === 'enabled'
+      ? selectedVariation!.encryptedImageUrl
+      : process.env.NEXT_PUBLIC_API_URL +
+        URL_VARIATION_LIST_IMAGE +
+        selectedVariation?.encryptedImageUrl
 
   const getContainerStyle = (): React.CSSProperties => {
     if (!selectedVariation) return { aspectRatio: 9 / 16, height: '100%' }

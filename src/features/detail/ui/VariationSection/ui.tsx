@@ -276,6 +276,13 @@ export const VariationsSection = ({
           const isSeletedVariation =
             searchParams.get('variation') === encodedBaseImageId
 
+          const imgUrl =
+            process.env.NEXT_PUBLIC_API_MOCKING === 'enabled'
+              ? item.encryptedImageUrl
+              : process.env.NEXT_PUBLIC_API_URL +
+                `${URL_VARIATION_LIST_IMAGE}` +
+                item.encryptedImageUrl
+
           return (
             <div
               key={encodedAiBasedImageId + encodedBaseImageId + progress + v4()}
@@ -294,11 +301,7 @@ export const VariationsSection = ({
                 // fail card
                 <div className="p-[8px] absolute inset-0">
                   <Image
-                    src={
-                      process.env.NEXT_PUBLIC_API_URL +
-                      `${URL_VARIATION_LIST_IMAGE}` +
-                      item.encryptedImageUrl
-                    }
+                    src={imgUrl}
                     alt=""
                     fill
                     style={{
@@ -326,11 +329,7 @@ export const VariationsSection = ({
               ) : (
                 // normal card
                 <Image
-                  src={
-                    process.env.NEXT_PUBLIC_API_URL +
-                    `${URL_VARIATION_LIST_IMAGE}` +
-                    item.encryptedImageUrl
-                  }
+                  src={imgUrl}
                   alt=""
                   fill
                   style={{ objectFit: 'cover' }}
