@@ -2,11 +2,11 @@ import { useAuthStore } from '@/entities/user/store'
 import { Button } from '@/shared/ui/button'
 import { useRouter } from 'next/navigation'
 
-interface Props {
+interface BannerProps {
   onClickSeeExample: () => void
 }
 
-export const Banner = (props: Props) => {
+export const Banner = (props: BannerProps) => {
   const isAuth = useAuthStore((state) => state.isAuth)
   const router = useRouter()
 

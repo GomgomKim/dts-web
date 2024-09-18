@@ -22,7 +22,7 @@ import AlertCircleIcon from '/public/icons/alert-circle.svg'
 
 import { v4 } from 'uuid'
 
-type VariationsSectionProps = {
+interface VariationsSectionProps {
   handleSelectedVariation: (variation: Variation) => void
 }
 

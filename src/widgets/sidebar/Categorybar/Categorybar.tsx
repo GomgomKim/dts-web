@@ -21,7 +21,7 @@ const Square = ({ color }: { color: string }) => {
   )
 }
 
-type CategoryItemProps = {
+interface CategoryItemProps {
   children: React.ReactNode
 }
 const CategoryItem = (props: CategoryItemProps) => {

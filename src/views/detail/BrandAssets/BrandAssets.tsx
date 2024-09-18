@@ -3,13 +3,13 @@
 import * as React from 'react'
 import { ImageInputBox } from '@/features/detail/ui/ImageInputBox'
 import { Button } from '@/shared/ui/button'
-interface Props {
+interface BrandAssetsProps {
   handleRemoveBox: (boxId: string) => void
   handleAddBrandAssets: () => void
   assetDisabled: boolean
 }
 
-function BrandAssets(props: Props) {
+function BrandAssets(props: BrandAssetsProps) {
   return (
     <section className="sticky flex flex-col gap-5">
       <h2 className="text-[1.25rem] ">Brand Assets</h2>

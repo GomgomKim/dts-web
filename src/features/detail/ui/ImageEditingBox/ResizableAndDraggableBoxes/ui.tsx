@@ -5,18 +5,20 @@ import { cn } from '@/shared/lib/utils'
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { Box } from '../type'
 
-type ActiveBox = Box & {
+interface ActiveBox extends Box {
   offsetX: number
   offsetY: number
 }
 
-type Props = {
+interface ResizableAndDraggableBoxesProps {
   containerRef: React.RefObject<HTMLElement>
   boxes: Box[]
   setBoxes: React.Dispatch<React.SetStateAction<Box[]>>
 }
 
-export const ResizableAndDraggableBoxes = (props: Props) => {
+export const ResizableAndDraggableBoxes = (
+  props: ResizableAndDraggableBoxesProps
+) => {
   const { containerRef, boxes, setBoxes } = props
 
   const [activeBox, setActiveBox] = useState<ActiveBox | null>(null)

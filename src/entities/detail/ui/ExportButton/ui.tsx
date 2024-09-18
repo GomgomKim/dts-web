@@ -10,13 +10,13 @@ const defaultOption = {
   skipFonts: true
 }
 
-interface Props extends React.ComponentProps<typeof Button> {
+interface ExportButtonProps extends React.ComponentProps<typeof Button> {
   containerRef: React.RefObject<HTMLElement>
   imgType: string
   imgSize: { width: number; height: number }
 }
 
-export const ExportButton = (props: Props) => {
+export const ExportButton = (props: ExportButtonProps) => {
   const onButtonClick = useCallback(() => {
     if (props.containerRef.current === null) return
 

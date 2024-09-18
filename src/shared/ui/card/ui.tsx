@@ -9,12 +9,12 @@ import Image from 'next/image'
 
 const URL_BASE_IMAGE_FILE = '/image-file/download?encryptedImageUrl='
 
-type Props = {
+interface CardProps {
   item: ModelImageItem
   actionSlot?: React.ReactNode
 }
 
-const Card = (props: Props) => {
+const Card = (props: CardProps) => {
   const {
     encodedImageInfoId,
     encodedMainImageId,

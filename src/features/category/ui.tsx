@@ -7,13 +7,13 @@ import { cn } from '@/shared/lib/utils'
 import { useSetQueryString } from '@/shared/lib/hooks/useSetQueryString'
 import { useFilterTypeStore } from '@/shared/lib/stores/useFilterTypeStore'
 
-interface Props extends React.ComponentPropsWithRef<'div'> {
+interface CategoryProps extends React.ComponentPropsWithRef<'div'> {
   categoryList: string[]
   id?: string
   element?: React.RefObject<HTMLDivElement>
 }
 
-const Category = (props: Props) => {
+const Category = (props: CategoryProps) => {
   const { categoryList, ...restProps } = props
   const searchParams = useSearchParams()
 

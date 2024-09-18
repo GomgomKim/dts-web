@@ -16,14 +16,14 @@ const SKIN_TEXTURE_OPTIONS = Object.values(SKIN_TEXTURE_MAP)
 const ASPECT_RATIO_OPTIONS = Object.values(ASPECT_RATIO_MAP)
 const FACE_ANGLE_OPTIONS = Object.values(FACE_ANGLE_MAP)
 
-interface Props {
+interface GenerateVariationProps {
   aspectRatio: string
   faceAngle: string
   handleChangeAspectRatio: (value: string) => void
   handleChangeFaceAngle: (value: string) => void
 }
 
-export const GenerateVariation = (props: Props) => {
+export const GenerateVariation = (props: GenerateVariationProps) => {
   const searchParams = useSearchParams()
   const addAiImageGeneratingList = useAiImageGeneratingStore(
     (state) => state.addAiImageGeneratingList

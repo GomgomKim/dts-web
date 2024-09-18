@@ -14,15 +14,12 @@ const isValidImageSize = (file: File) => {
   return file.size > IMAGE_MAX_SIZE ? false : true
 }
 
-type ImageInputBoxProps = {
+interface ImageInputBoxProps {
   boxId: string
   onChangeBrandAsset: () => void
 }
 
-export const ImageInputBox = ({
-  boxId,
-  onChangeBrandAsset
-}: ImageInputBoxProps) => {
+export const ImageInputBox = (props: ImageInputBoxProps) => {
   const {
     imagePreviewUrls,
     addImagePreviewUrl,
@@ -50,7 +47,7 @@ export const ImageInputBox = ({
       {
         onSuccess: (data) => {
           const blob = new Blob([data], { type: 'image/png' })
-          addImagePreviewUrl(boxId, blob)
+          addImagePreviewUrl(props.boxId, blob)
         }
       }
     )
@@ -82,21 +79,21 @@ export const ImageInputBox = ({
     }
 
     handleChangeImageFile(file)
-    onChangeBrandAsset()
+    props?.onChangeBrandAsset()
   }
 
   const handleClickRemoveButton = () => {
-    removeImagePreviewUrl(boxId)
-    onChangeBrandAsset()
+    removeImagePreviewUrl(props.boxId)
+    props?.onChangeBrandAsset()
   }
 
   const renderContent = () => {
-    if (imagePreviewUrls.has(boxId)) {
+    if (imagePreviewUrls.has(props.boxId)) {
       return (
         <div className="h-full">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={imagePreviewUrls.get(boxId)}
+            src={imagePreviewUrls.get(props.boxId)}
             alt=""
             className="h-full absolute-center"
           />
@@ -115,7 +112,7 @@ export const ImageInputBox = ({
         <div className="flex flex-col items-center gap-3 absolute-center">
           <div>
             <Button asChild variant="outline">
-              <label htmlFor={boxId} role="button">
+              <label htmlFor={props.boxId} role="button">
                 Upload
               </label>
             </Button>
@@ -132,7 +129,7 @@ export const ImageInputBox = ({
     <>
       <input
         type="file"
-        id={boxId}
+        id={props.boxId}
         accept=".png,.jpg"
         aria-hidden
         className="a11y-hidden"
@@ -145,7 +142,7 @@ export const ImageInputBox = ({
           'relative rounded-xl bg-neutral-1 bg-opacity-50 aspect-[7/4] max-h-[200px]',
           {
             'border border-neutral-3 border-dashed border-2 border-border':
-              !imagePreviewUrls.has(boxId)
+              !imagePreviewUrls.has(props.boxId)
           }
         )}
       >

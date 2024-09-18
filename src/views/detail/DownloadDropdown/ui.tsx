@@ -19,12 +19,12 @@ import { cn } from '@/shared/lib/utils'
 import { ExportButton } from '@/entities/detail/ui/ExportButton'
 import { Variation } from '@/shared/api/types'
 
-interface Props {
+interface DownloadDropdownProps {
   containerRef: React.RefObject<HTMLDivElement>
   selectedVariation: Variation | null
 }
 
-const DownloadDropdown = (props: Props) => {
+const DownloadDropdown = (props: DownloadDropdownProps) => {
   const [selectedFormat, setSelectedFormat] = useState('png')
   const [selectedQuality] = useState('small')
   const [isError] = useState(false)

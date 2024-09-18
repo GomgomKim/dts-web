@@ -4,7 +4,7 @@ import { cn } from '@/shared/lib/utils'
 import React from 'react'
 import { RadioGroupContext } from './index.context'
 
-type RadioGroupProps = React.ComponentProps<'div'> & {
+interface RadioGroupProps extends React.ComponentProps<'div'> {
   id: string
   value: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -32,7 +32,7 @@ const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
 )
 RadioGroup.displayName = 'RadioGroup'
 
-type RadioGroupItemProps = React.ComponentProps<'div'> & {
+interface RadioGroupItemProps extends React.ComponentProps<'div'> {
   value: string
   label: string
 }

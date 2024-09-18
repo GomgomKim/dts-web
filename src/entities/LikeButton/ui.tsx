@@ -4,7 +4,7 @@ import { cn } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui'
 import LikeIcon from '/public/icons/heart.svg'
 
-type Props = {
+interface LikeButtonProps {
   handleClick: () => void
   isActive: boolean
   className?: string
@@ -15,7 +15,7 @@ export const LikeButton = ({
   isActive,
   className,
   ...props
-}: Props) => {
+}: LikeButtonProps) => {
   return (
     <Button
       asChild

@@ -10,14 +10,14 @@ import { cn } from '@/shared/lib/utils'
 import { ResizableAndDraggableBoxes } from './ResizableAndDraggableBoxes'
 import { Box } from './type'
 
-type Props = {
+interface ImageEditingBoxProps {
   containerRef: React.RefObject<HTMLDivElement>
   boxes: Box[]
   setBoxes: React.Dispatch<React.SetStateAction<Box[]>>
   selectedVariation: Variation | null
 }
 
-export const ImageEditingBox = (props: Props) => {
+export const ImageEditingBox = (props: ImageEditingBoxProps) => {
   const { containerRef, selectedVariation, boxes, setBoxes } = props
 
   const imgUrl =

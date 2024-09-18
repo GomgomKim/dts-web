@@ -4,11 +4,11 @@ import * as entities from '@/entities/LikeButton'
 import { useDeleteFavoriteRemove } from './adapter'
 import { ModelImageItem } from '@/shared/api/types'
 
-export type Props = {
+interface LikeButtonProps {
   item: ModelImageItem
 }
 
-export const LikeButton = (props: Props) => {
+export const LikeButton = (props: LikeButtonProps) => {
   const { encodedImageInfoId } = props.item
   const deleteFavoriteRemove = useDeleteFavoriteRemove()
 
