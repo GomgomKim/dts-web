@@ -8,7 +8,7 @@ import { FILTER_TYPES } from '@/features/favorites/FavoriteList/constant'
 import * as React from 'react'
 import { useMoveScroll } from '@/shared/lib/hooks/useMoveScroll'
 
-function Explore() {
+export default function Explore() {
   const { element, onMoveToElement } = useMoveScroll()
   return (
     <>
@@ -27,4 +27,3 @@ function Explore() {
     </>
   )
 }
-export default Explore

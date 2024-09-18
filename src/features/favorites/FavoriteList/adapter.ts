@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation'
 import { FILTER_TYPES } from '@/features/favorites/FavoriteList/constant'
 import { SORTING_TYPES } from '../SortDropdown'
 
-const useGetFavoriteList = () => {
+export const useGetFavoriteList = () => {
   const searchParams = useSearchParams()
 
   const filterType = searchParams.get('filterType') || FILTER_TYPES[0]
@@ -47,5 +47,3 @@ const useGetFavoriteList = () => {
     isFetchingNextPage
   }
 }
-
-export { useGetFavoriteList }

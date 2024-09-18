@@ -52,7 +52,7 @@ const CategoryItem = (props: CategoryItemProps) => {
   )
 }
 
-const Categorybar = () => {
+export const Categorybar = () => {
   return (
     <div>
       <MenuGroup
@@ -74,5 +74,3 @@ const Categorybar = () => {
     </div>
   )
 }
-
-export { Categorybar }

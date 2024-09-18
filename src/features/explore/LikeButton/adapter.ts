@@ -13,7 +13,7 @@ import {
 
 // TODO: invalidate 작동 후 스크롤 유지
 
-const usePostFavoriteAdd = () => {
+export const usePostFavoriteAdd = () => {
   const queryClient = useQueryClient()
 
   const searchParams = useSearchParams()
@@ -70,7 +70,7 @@ const usePostFavoriteAdd = () => {
   })
 }
 
-const useDeleteFavoriteRemove = () => {
+export const useDeleteFavoriteRemove = () => {
   const queryClient = useQueryClient()
 
   const searchParams = useSearchParams()
@@ -124,5 +124,3 @@ const useDeleteFavoriteRemove = () => {
     // }
   })
 }
-
-export { usePostFavoriteAdd, useDeleteFavoriteRemove }

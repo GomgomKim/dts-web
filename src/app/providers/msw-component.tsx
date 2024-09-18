@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 
-export default function MSWComponent() {
+export function MSWComponent() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       if (process.env.NEXT_PUBLIC_API_MOCKING === 'enabled') {

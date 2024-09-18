@@ -13,7 +13,7 @@ interface CategoryProps extends React.ComponentPropsWithRef<'div'> {
   element?: React.RefObject<HTMLDivElement>
 }
 
-const Category = (props: CategoryProps) => {
+export const Category = (props: CategoryProps) => {
   const { categoryList, ...restProps } = props
   const searchParams = useSearchParams()
 
@@ -43,7 +43,6 @@ const Category = (props: CategoryProps) => {
     </div>
   )
 }
-export { Category }
 
 const capitalizeType = (type: string) => {
   return type[0].toUpperCase() + type.slice(1, type.length).toLocaleLowerCase()

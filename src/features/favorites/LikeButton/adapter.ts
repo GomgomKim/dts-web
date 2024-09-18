@@ -6,7 +6,7 @@ import { GetFavoriteListResData } from '../FavoriteList/model'
 import { FILTER_TYPES } from '../FavoriteList/constant'
 import { SORTING_TYPES } from '../SortDropdown'
 
-const useDeleteFavoriteRemove = () => {
+export const useDeleteFavoriteRemove = () => {
   const queryClient = useQueryClient()
 
   const searchParams = useSearchParams()
@@ -59,5 +59,3 @@ const useDeleteFavoriteRemove = () => {
     // }
   })
 }
-
-export { useDeleteFavoriteRemove }

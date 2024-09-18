@@ -4,7 +4,7 @@ import { FavoriteList } from '@/features/favorites/FavoriteList'
 import { FILTER_TYPES } from '@/features/favorites/FavoriteList/constant'
 import { SortDropdown } from '@/features/favorites/SortDropdown'
 
-function Favorites() {
+export default function Favorites() {
   return (
     <>
       <h1 className="text-xl mb-8 text-2xl font-semibold">Favorites</h1>
@@ -18,4 +18,3 @@ function Favorites() {
     </>
   )
 }
-export default Favorites

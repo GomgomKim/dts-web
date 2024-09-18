@@ -28,11 +28,11 @@ const LoginButton = () => {
   )
 }
 
-type LoginProps = {
+interface LoginProps {
   modalRef?: React.RefObject<HTMLDivElement>
 }
 
-const Login = ({ modalRef }: LoginProps) => {
+export const Login = ({ modalRef }: LoginProps) => {
   const router = useRouter()
 
   return (
@@ -64,5 +64,3 @@ const Login = ({ modalRef }: LoginProps) => {
     </div>
   )
 }
-
-export { Login }

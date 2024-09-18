@@ -100,7 +100,7 @@ const BackButton = () => {
   )
 }
 
-const Header = () => {
+export const Header = () => {
   const pathname = usePathname()
   const isAuth = useAuthStore((state) => state.isAuth)
   const isDetailPage = pathname.startsWith('/archive/')
@@ -128,5 +128,3 @@ const Header = () => {
     </header>
   )
 }
-
-export { Header }

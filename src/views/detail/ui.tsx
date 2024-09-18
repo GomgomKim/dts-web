@@ -6,7 +6,7 @@ import { VariationsSection } from '@/features/detail/ui/VariationSection'
 import { useImagePreviewUrlStore } from '@/features/detail/store'
 import { Box } from '@/features/detail/ui/ImageEditingBox/type'
 import { Variation } from '@/shared/api/types'
-import BrandAssets from './BrandAssets'
+import { BrandAssets } from './BrandAssets'
 import {
   ASPECT_RATIO_MAP,
   FACE_ANGLE_MAP,
@@ -17,7 +17,7 @@ import { useSetQueryString } from '@/shared/lib/hooks/useSetQueryString'
 import { GenerateVariation } from '@/features/detail/ui/GenerateVariation'
 import { DownloadDropdown } from './DownloadDropdown'
 
-function Detail() {
+export default function Detail() {
   // related brand assets
   const containerRef = useRef<HTMLDivElement>(null)
   const { imagePreviewUrls: assetImages } = useImagePreviewUrlStore()
@@ -136,4 +136,3 @@ function Detail() {
     </div>
   )
 }
-export default Detail

@@ -17,11 +17,11 @@ const SignupButton = () => {
   )
 }
 
-type SignupProps = {
+interface SignupProps {
   modalRef?: React.RefObject<HTMLDivElement>
 }
 
-const Signup = ({ modalRef }: SignupProps) => {
+export const Signup = ({ modalRef }: SignupProps) => {
   const router = useRouter()
 
   return (
@@ -68,5 +68,3 @@ const Signup = ({ modalRef }: SignupProps) => {
     </div>
   )
 }
-
-export { Signup }

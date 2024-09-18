@@ -24,7 +24,7 @@ interface DownloadDropdownProps {
   selectedVariation: Variation | null
 }
 
-const DownloadDropdown = (props: DownloadDropdownProps) => {
+export const DownloadDropdown = (props: DownloadDropdownProps) => {
   const [selectedFormat, setSelectedFormat] = useState('png')
   const [selectedQuality] = useState('small')
   const [isError] = useState(false)
@@ -148,8 +148,6 @@ const DownloadDropdown = (props: DownloadDropdownProps) => {
     </DropdownMenu>
   )
 }
-
-export { DownloadDropdown }
 
 const FORMAT_OPTIONS = [
   { label: '.png', value: 'png' },

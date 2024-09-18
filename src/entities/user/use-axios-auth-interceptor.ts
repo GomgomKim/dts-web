@@ -4,7 +4,7 @@ import { useAuthStore } from '@/entities/user/store'
 import { InternalAxiosRequestConfig } from 'axios'
 import { dtsAxios } from '@/shared/api'
 
-const useAxiosAuthInterceptor = () => {
+export const useAxiosAuthInterceptor = () => {
   // const queryClient = useQueryClient()
 
   React.useEffect(() => {
@@ -38,5 +38,3 @@ const useAxiosAuthInterceptor = () => {
     dtsAxios.interceptors.response.use(responseHandler)
   }, [])
 }
-
-export default useAxiosAuthInterceptor

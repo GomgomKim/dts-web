@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation'
 import { useFilterTypeStore } from '@/shared/lib/stores/useFilterTypeStore'
 import { FILTER_TYPES } from './constant'
 
-const useGetExploreImages = () => {
+export const useGetExploreImages = () => {
   // TODO: filtertype 값 밖에서 주입
   const searchParams = useSearchParams()
 
@@ -49,5 +49,3 @@ const useGetExploreImages = () => {
     isFetchingNextPage
   }
 }
-
-export { useGetExploreImages }

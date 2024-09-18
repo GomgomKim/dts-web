@@ -14,7 +14,7 @@ interface CardProps {
   actionSlot?: React.ReactNode
 }
 
-const Card = (props: CardProps) => {
+export const Card = (props: CardProps) => {
   const {
     encodedImageInfoId,
     encodedMainImageId,
@@ -65,5 +65,3 @@ const Card = (props: CardProps) => {
     </div>
   )
 }
-
-export { Card }
