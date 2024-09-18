@@ -2,7 +2,7 @@
 
 import * as entities from '@/entities/LikeButton'
 import { useDeleteFavoriteRemove } from './adapter'
-import { ModelImageItem } from '@/features/explore/CardList/model'
+import { ModelImageItem } from '@/shared/api/types'
 
 export type Props = {
   item: ModelImageItem

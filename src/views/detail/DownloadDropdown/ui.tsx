@@ -17,7 +17,7 @@ import './styles.css'
 import CheckIcon from '/public/icons/check.svg'
 import { cn } from '@/shared/lib/utils'
 import { ExportButton } from '@/entities/detail/ui/ExportButton'
-import { Variation } from '@/entities/detail/model'
+import { Variation } from '@/shared/api/types'
 
 interface Props {
   containerRef: React.RefObject<HTMLDivElement>

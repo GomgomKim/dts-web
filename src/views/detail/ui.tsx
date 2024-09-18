@@ -5,7 +5,7 @@ import { ImageEditingBox } from '@/features/detail/ui/ImageEditingBox'
 import { VariationsSection } from '@/features/detail/ui/VariationSection'
 import { useImagePreviewUrlStore } from '@/features/detail/store'
 import { Box } from '@/features/detail/ui/ImageEditingBox/type'
-import { Variation } from '@/entities/detail/model'
+import { Variation } from '@/shared/api/types'
 import BrandAssets from './BrandAssets'
 import {
   ASPECT_RATIO_MAP,

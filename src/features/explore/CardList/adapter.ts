@@ -1,6 +1,6 @@
 import { getExploreImages } from '@/features/explore/CardList/api'
 import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query'
-import { GetExploreListResData } from './model'
+import { GetExploreListResData } from './types'
 import { useSearchParams } from 'next/navigation'
 import { useFilterTypeStore } from '@/shared/lib/stores/useFilterTypeStore'
 import { FILTER_TYPES } from './constant'

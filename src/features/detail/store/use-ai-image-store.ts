@@ -1,4 +1,4 @@
-import { Variation } from '@/entities/detail/model'
+import { Variation } from '@/shared/api/types'
 import { create } from 'zustand'
 
 type AiImageState = {

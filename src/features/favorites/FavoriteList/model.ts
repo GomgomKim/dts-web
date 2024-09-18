@@ -1,6 +1,5 @@
-import { Content } from '@/features/explore/CardList/model'
+import { ResData, ScrollContent } from '@/shared/api/types'
 
-// TODO: type 수정
 export interface GetFavoriteListReqData {
   filterType: string
   sortingType?: string | null
@@ -8,8 +7,6 @@ export interface GetFavoriteListReqData {
   scrollKey?: string | null
 }
 
-export interface GetFavoriteListResData {
-  code: number
-  message: string
-  content: Content
-}
+export interface GetFavoriteListResData extends ResData<FavoriteListContent> {}
+
+export interface FavoriteListContent extends ScrollContent {}

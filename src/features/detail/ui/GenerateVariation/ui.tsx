@@ -1,6 +1,6 @@
 import { RadioGroup, RadioGroupItem } from '@/shared/ui/radio-group'
 import { useAiImageGeneratingStore } from '@/features/detail/store'
-import { FaceAngle } from '@/entities/detail/model'
+import { FaceAngle } from '@/shared/api/types'
 import {
   ASPECT_RATIO_MAP,
   ASPECT_RATIO_REVERT_MAP,

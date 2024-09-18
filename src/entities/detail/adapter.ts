@@ -11,7 +11,7 @@ import {
   PostAiImageReqData,
   PostAssetRemoveBackgroundReqData,
   GetAiImageProgressResData
-} from './model'
+} from './types'
 import {
   Query,
   useMutation,

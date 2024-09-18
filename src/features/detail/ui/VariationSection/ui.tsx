@@ -4,7 +4,7 @@ import * as React from 'react'
 import Image from 'next/image'
 import AngleBracketIcon from '/public/icons/angle-bracket-open.svg'
 import { Button } from '@/shared/ui'
-import { FaceAngle, Variation } from '@/entities/detail/model'
+import { FaceAngle, Variation } from '@/shared/api/types'
 import {
   ASPECT_RATIO_REVERT_MAP,
   URL_VARIATION_LIST_IMAGE

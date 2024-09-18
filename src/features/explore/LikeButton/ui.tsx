@@ -2,7 +2,7 @@
 
 import * as entities from '@/entities/LikeButton'
 import { useDeleteFavoriteRemove, usePostFavoriteAdd } from './adapter'
-import { ModelImageItem } from '../CardList/model'
+import { ModelImageItem } from '@/shared/api/types'
 import { useAuthStore } from '@/entities/user/store'
 import { useRouter } from 'next/navigation'
 

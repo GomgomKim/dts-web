@@ -8,10 +8,10 @@ import { dtsAxios } from '@/shared/api'
 import {
   GetAuthProfileReqData,
   GetAuthProfileResData
-} from '@/entities/user/model'
+} from '@/entities/user/types'
 import { AxiosError, AxiosResponse } from 'axios'
 import { URL_AUTH_PROFILE } from '@/entities/user/constant'
-import { Tokens } from '@/entities/user/type'
+import { Tokens } from '@/shared/api/types'
 
 export default function Page() {
   const searchParams = useSearchParams()

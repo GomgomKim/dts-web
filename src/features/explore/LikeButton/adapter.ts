@@ -2,14 +2,14 @@ import {
   deleteFavoriteRemove,
   postFavoriteAdd
 } from '@/entities/LikeButton/api'
-import {
-  DeleteFavoriteRemoveReqData,
-  PostFavoriteAddReqData
-} from '@/entities/LikeButton/model'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useSearchParams } from 'next/navigation'
-import { GetExploreListResData } from '../CardList/model'
+import { GetExploreListResData } from '../CardList/types'
 import { FILTER_TYPES } from '@/features/favorites/FavoriteList/constant'
+import {
+  DeleteFavoriteReqData,
+  PostFavoriteReqData
+} from '@/entities/LikeButton/types'
 
 // TODO: invalidate 작동 후 스크롤 유지
 
@@ -21,7 +21,7 @@ const usePostFavoriteAdd = () => {
   const queryKey = ['explore', filterType]
 
   return useMutation({
-    mutationFn: ({ encodedImageInfoId }: PostFavoriteAddReqData) =>
+    mutationFn: ({ encodedImageInfoId }: PostFavoriteReqData) =>
       postFavoriteAdd({ encodedImageInfoId }),
     onMutate: async ({ encodedImageInfoId }) => {
       await queryClient.cancelQueries({
@@ -78,7 +78,7 @@ const useDeleteFavoriteRemove = () => {
   const queryKey = ['explore', filterType]
 
   return useMutation({
-    mutationFn: ({ encodedImageInfoId }: DeleteFavoriteRemoveReqData) =>
+    mutationFn: ({ encodedImageInfoId }: DeleteFavoriteReqData) =>
       deleteFavoriteRemove({ encodedImageInfoId }),
     onMutate: async ({ encodedImageInfoId }) => {
       await queryClient.cancelQueries({

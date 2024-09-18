@@ -1,4 +1,4 @@
-import { AspectRatio, FaceAngle, SkinTexture } from './model'
+import { AspectRatio, FaceAngle, SkinTexture } from '@/shared/api/types'
 
 export const URL_VARIATION_LIST = '/image/base-image/detail'
 export const URL_VARIATION_LIST_IMAGE =

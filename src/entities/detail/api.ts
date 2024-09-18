@@ -8,7 +8,7 @@ import {
   PostAiImageReqData,
   PostAiImageResData,
   PostAssetRemoveBackgroundReqData
-} from './model'
+} from './types'
 import {
   URL_AI_IMAGE_GENERATE,
   URL_AI_IMAGE_GENERATE_PROGRESS,

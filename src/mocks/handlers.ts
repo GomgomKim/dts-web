@@ -1,7 +1,7 @@
 import { URL_EXPLORE_LIST } from '@/features/explore/CardList/constant'
 import { http, HttpResponse } from 'msw'
 import { faker } from '@faker-js/faker'
-import { ModelImageItem } from '@/features/explore/CardList/model'
+
 import { URL_FAVORITE_LIST } from '@/features/favorites/FavoriteList/constant'
 import {
   ASPECT_RATIO_REVERT_MAP,
@@ -10,8 +10,9 @@ import {
   URL_AI_IMAGE_GENERATE_PROGRESS,
   URL_VARIATION_LIST
 } from '@/entities/detail/constant'
-import { PostAiImageReqData, Variation } from '@/entities/detail/model'
+import { PostAiImageReqData } from '@/entities/detail/types'
 import { v4 as uuidv4 } from 'uuid'
+import { ModelImageItem, Variation } from '@/shared/api/types'
 
 const ImageData = {
   MAKEUP: [

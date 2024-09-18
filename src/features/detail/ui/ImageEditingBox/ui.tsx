@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { Variation } from '@/entities/detail/model'
+import { Variation } from '@/shared/api/types'
 import {
   ASPECT_RATIO_MAP_NUMBER,
   URL_VARIATION_LIST_IMAGE
