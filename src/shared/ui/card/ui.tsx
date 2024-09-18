@@ -23,6 +23,13 @@ const Card = (props: Props) => {
   } = props.item
   const [isHovering, setIsHovering] = useState(false)
 
+  const imgUrl =
+    process.env.NEXT_PUBLIC_API_MOCKING === 'enabled'
+      ? encodedMainImageId
+      : process.env.NEXT_PUBLIC_API_URL +
+        `${URL_BASE_IMAGE_FILE}` +
+        encodedMainImageId
+
   return (
     <div
       onMouseOver={() => setIsHovering(true)}
@@ -30,11 +37,7 @@ const Card = (props: Props) => {
       className="relative h-[400px] aspect-[9/16] rounded-[8px] overflow-hidden cursor-auto"
     >
       <Image
-        src={
-          process.env.NEXT_PUBLIC_API_URL +
-          `${URL_BASE_IMAGE_FILE}` +
-          encodedMainImageId
-        }
+        src={imgUrl}
         alt={description}
         fill
         style={{ objectFit: 'cover' }}

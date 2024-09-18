@@ -62,8 +62,6 @@ export const GenerateVariation = (props: Props) => {
       {
         onSuccess: (data) => {
           const { variation, restriction } = data.content
-
-          setIsAiImageGenerating(true)
           addAiImageGeneratingList([variation])
           addAiImageItem(variation)
 
