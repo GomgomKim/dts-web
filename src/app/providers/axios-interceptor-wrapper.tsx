@@ -1,6 +1,6 @@
 'use client'
 
-import { useAxiosAuthInterceptor } from '@/entities/user/use-axios-auth-interceptor'
+import { useAxiosAuthInterceptor } from '@/entities/UserProfile/lib/useAxiosAuthInterceptor'
 
 export function AxiosInterceptorWrapper({ children }: React.PropsWithChildren) {
   useAxiosAuthInterceptor()
