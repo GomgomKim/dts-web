@@ -1,7 +1,7 @@
 'use client'
 
 import * as entities from '@/entities/LikeButton'
-import { useDeleteFavoriteRemove, usePostFavoriteAdd } from './adapter'
+import { useDeleteFavorite, usePostFavorite } from './adapter'
 import { ModelImageItem } from '@/shared/api/types'
 import { useAuthStore } from '@/entities/user/store'
 import { useRouter } from 'next/navigation'
@@ -12,8 +12,8 @@ interface LikeButtonProps {
 
 export const LikeButton = (props: LikeButtonProps) => {
   const { encodedImageInfoId, isFavorite } = props.item
-  const postFavoriteAdd = usePostFavoriteAdd()
-  const deleteFavoriteRemove = useDeleteFavoriteRemove()
+  const addFavoriteMutation = usePostFavorite()
+  const deleteFavoriteMutation = useDeleteFavorite()
 
   const isAuth = useAuthStore((state) => state.isAuth)
   const router = useRouter()
@@ -25,9 +25,9 @@ export const LikeButton = (props: LikeButtonProps) => {
     }
 
     if (isFavorite) {
-      deleteFavoriteRemove.mutate({ encodedImageInfoId })
+      deleteFavoriteMutation.mutate({ encodedImageInfoId })
     } else {
-      postFavoriteAdd.mutate({ encodedImageInfoId })
+      addFavoriteMutation.mutate({ encodedImageInfoId })
     }
   }
   return <entities.LikeButton handleClick={handleClick} isActive={isFavorite} />

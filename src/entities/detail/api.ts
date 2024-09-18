@@ -7,7 +7,7 @@ import {
   GetVariationListResData,
   PostAiImageReqData,
   PostAiImageResData,
-  PostAssetRemoveBackgroundReqData
+  PostRemoveBackgroundReqData
 } from './types'
 import {
   URL_AI_IMAGE_GENERATE,
@@ -16,7 +16,7 @@ import {
   URL_VARIATION_LIST
 } from './constant'
 
-export async function getVariationImages({
+export async function getVariationList({
   encodedBaseImageInfoId
 }: GetVariationListReqData): Promise<GetVariationListResData> {
   const response = await dtsAxios.get<
@@ -59,13 +59,13 @@ export async function getAiImageProgress({
   }
 }
 
-export async function postAssetRemoveBackground({
+export async function postRemoveBackground({
   source
 }: {
   source: FormData
 }): Promise<Blob> {
   const response = await dtsAxios.post<
-    PostAssetRemoveBackgroundReqData,
+    PostRemoveBackgroundReqData,
     AxiosResponse<Blob, AxiosError>
   >(`${URL_ASSET_REMOVE_BACKGROUND}`, source, {
     responseType: 'blob',

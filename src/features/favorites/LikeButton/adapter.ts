@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { DeleteFavoriteReqData } from '@/entities/LikeButton/types'
-import { deleteFavoriteRemove } from '@/entities/LikeButton/api'
+import { deleteFavorite } from '@/entities/LikeButton/api'
 import { useSearchParams } from 'next/navigation'
 import { GetFavoriteListResData } from '../FavoriteList/model'
 import { FILTER_TYPES } from '../FavoriteList/constant'
 import { SORTING_TYPES } from '../SortDropdown'
 
-export const useDeleteFavoriteRemove = () => {
+export const useDeleteFavorite = () => {
   const queryClient = useQueryClient()
 
   const searchParams = useSearchParams()
@@ -16,7 +16,7 @@ export const useDeleteFavoriteRemove = () => {
 
   return useMutation({
     mutationFn: ({ encodedImageInfoId }: DeleteFavoriteReqData) =>
-      deleteFavoriteRemove({ encodedImageInfoId }),
+      deleteFavorite({ encodedImageInfoId }),
     onMutate: async ({ encodedImageInfoId }) => {
       await queryClient.cancelQueries({
         queryKey: queryKey

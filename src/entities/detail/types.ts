@@ -33,7 +33,7 @@ export interface GetAiImageProgressReqData {
 }
 
 // detail - brand asset
-export interface PostAssetRemoveBackgroundReqData {
+export interface PostRemoveBackgroundReqData {
   source: FormData
 }
 

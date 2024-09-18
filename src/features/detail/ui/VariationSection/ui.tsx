@@ -11,7 +11,7 @@ import {
 } from '@/entities/detail/constant'
 import {
   useGetAiImageProgress,
-  useGetVariationImages,
+  useGetVariationList,
   usePostAiImageGenerate
 } from '@/entities/detail/adapter'
 import { useSearchParams } from 'next/navigation'
@@ -83,7 +83,7 @@ export const VariationsSection = ({
 
   const {
     data: { mainImageIndex, variations }
-  } = useGetVariationImages(encodedBaseImageInfoId)
+  } = useGetVariationList(encodedBaseImageInfoId)
   const queries = useGetAiImageProgress()
 
   const postAiImageMutaion = usePostAiImageGenerate()

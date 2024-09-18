@@ -8,7 +8,7 @@ import { URL_EXPLORE_LIST } from '@/features/explore/CardList/constant'
 
 const SEAERCH_SIZE = 10
 
-export async function getExploreImages({
+export async function getExploreList({
   filterType,
   size = SEAERCH_SIZE,
   scrollKey

@@ -1,7 +1,4 @@
-import {
-  deleteFavoriteRemove,
-  postFavoriteAdd
-} from '@/entities/LikeButton/api'
+import { deleteFavorite, postFavorite } from '@/entities/LikeButton/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useSearchParams } from 'next/navigation'
 import { GetExploreListResData } from '../CardList/types'
@@ -13,7 +10,7 @@ import {
 
 // TODO: invalidate 작동 후 스크롤 유지
 
-export const usePostFavoriteAdd = () => {
+export const usePostFavorite = () => {
   const queryClient = useQueryClient()
 
   const searchParams = useSearchParams()
@@ -22,7 +19,7 @@ export const usePostFavoriteAdd = () => {
 
   return useMutation({
     mutationFn: ({ encodedImageInfoId }: PostFavoriteReqData) =>
-      postFavoriteAdd({ encodedImageInfoId }),
+      postFavorite({ encodedImageInfoId }),
     onMutate: async ({ encodedImageInfoId }) => {
       await queryClient.cancelQueries({
         queryKey: queryKey
@@ -70,7 +67,7 @@ export const usePostFavoriteAdd = () => {
   })
 }
 
-export const useDeleteFavoriteRemove = () => {
+export const useDeleteFavorite = () => {
   const queryClient = useQueryClient()
 
   const searchParams = useSearchParams()
@@ -79,7 +76,7 @@ export const useDeleteFavoriteRemove = () => {
 
   return useMutation({
     mutationFn: ({ encodedImageInfoId }: DeleteFavoriteReqData) =>
-      deleteFavoriteRemove({ encodedImageInfoId }),
+      deleteFavorite({ encodedImageInfoId }),
     onMutate: async ({ encodedImageInfoId }) => {
       await queryClient.cancelQueries({
         queryKey: queryKey

@@ -3,7 +3,7 @@
 import { Fragment, useEffect } from 'react'
 // import { useSearchParams } from 'next/navigation'
 import { useInView } from 'react-intersection-observer'
-import { useGetExploreImages } from '@/features/explore/CardList/adapter'
+import { useGetExploreList } from '@/features/explore/CardList/adapter'
 import { Card } from '@/shared/ui/card'
 import { LikeButton } from '@/features/explore/LikeButton'
 
@@ -16,7 +16,7 @@ export const CardList = () => {
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage
-  } = useGetExploreImages()
+  } = useGetExploreList()
 
   const { ref, inView } = useInView({
     threshold: 1

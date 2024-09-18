@@ -1,15 +1,15 @@
 import { useAiImageGeneratingStore } from '@/features/detail/store'
 import {
   getAiImageProgress,
-  getVariationImages,
+  getVariationList,
   postAiImageGenerate,
-  postAssetRemoveBackground
+  postRemoveBackground
 } from './api'
 import {
   GetVariationListResData,
   VariationListContent,
   PostAiImageReqData,
-  PostAssetRemoveBackgroundReqData,
+  PostRemoveBackgroundReqData,
   GetAiImageProgressResData
 } from './types'
 import {
@@ -21,14 +21,14 @@ import {
 } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 
-export const useGetVariationImages = (encodedBaseImageInfoId: string) => {
+export const useGetVariationList = (encodedBaseImageInfoId: string) => {
   const { data, status, error, isFetching } = useSuspenseQuery<
     GetVariationListResData,
     Error,
     VariationListContent
   >({
     queryKey: ['archive', 'variation', encodedBaseImageInfoId],
-    queryFn: () => getVariationImages({ encodedBaseImageInfoId }),
+    queryFn: () => getVariationList({ encodedBaseImageInfoId }),
     select: (data) => data.content
     // staleTime: 60 * 1000,
     // gcTime: 300 * 1000
@@ -94,9 +94,9 @@ export const useGetAiImageProgress = () => {
   })
 }
 
-export const usePostAssetRemoveBackground = () => {
+export const usePostRemoveBackground = () => {
   return useMutation({
-    mutationFn: ({ source }: PostAssetRemoveBackgroundReqData) =>
-      postAssetRemoveBackground({ source })
+    mutationFn: ({ source }: PostRemoveBackgroundReqData) =>
+      postRemoveBackground({ source })
   })
 }

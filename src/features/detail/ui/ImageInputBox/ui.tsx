@@ -5,7 +5,7 @@ import { DndBox } from '@/shared/lib/hocs/DndBox'
 import { Button } from '@/shared/ui/button'
 import DeleteIcon from '/public/icons/delete.svg'
 import { useImagePreviewUrlStore } from '@/features/detail/store'
-import { usePostAssetRemoveBackground } from '@/entities/detail/adapter'
+import { usePostRemoveBackground } from '@/entities/detail/adapter'
 import { cn } from '@/shared/lib/utils'
 
 const IMAGE_MAX_SIZE = 5 * 1024 * 1024
@@ -27,7 +27,7 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
     resetImagePreviewUrls
   } = useImagePreviewUrlStore()
 
-  const { mutate: postAssetBgRemoveMutation } = usePostAssetRemoveBackground()
+  const removeBackgroundMutation = usePostRemoveBackground()
 
   useEffect(() => {
     return () => {
@@ -42,7 +42,7 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
   }
 
   const handleSubmit = ({ formData }: { formData: FormData }) => {
-    postAssetBgRemoveMutation(
+    removeBackgroundMutation.mutate(
       { source: formData },
       {
         onSuccess: (data) => {
