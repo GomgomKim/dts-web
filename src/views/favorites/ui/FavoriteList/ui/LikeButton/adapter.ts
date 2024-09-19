@@ -5,9 +5,9 @@ import { DeleteFavoriteReqData } from '@/entities/LikeButton/types'
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import { SORTING_TYPES } from '../../../SortDropdown'
+import { SORTING_TYPES } from '../../../SortDropdown/constant'
 import { FILTER_TYPES } from '../../constant'
-import { GetFavoriteListResData } from '../../model'
+import { GetFavoriteListResData } from '../../model/types'
 
 export const useDeleteFavorite = () => {
   const queryClient = useQueryClient()

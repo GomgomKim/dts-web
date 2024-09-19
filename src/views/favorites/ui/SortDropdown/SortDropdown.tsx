@@ -17,29 +17,14 @@ import {
 
 import ChevronIcon from '/public/icons/angle-bracket-open.svg'
 
-export const SORTING_TYPES = ['OLDEST', 'NEWEST']
-export type SortingType = 'NEWEST' | 'OLDEST'
-export type SortingTypeLabel = 'Newest first' | 'Oldest first'
-
-const SORT_OPTIONS = [
-  { label: 'Newest first', value: 'newest' },
-  { label: 'Oldest first', value: 'oldest' }
-]
-
-const SORTING_TYPE_MAP: Record<string, SortingType> = {
-  newest: 'NEWEST',
-  oldest: 'OLDEST'
-}
-
-const SORTING_TYPE_REVER_MAP: Record<SortingType, string> = {
-  NEWEST: 'newest',
-  OLDEST: 'oldest'
-}
-
-const SORTING_TYPE_LABEL_MAP: Record<string, SortingTypeLabel> = {
-  newest: 'Newest first',
-  oldest: 'Oldest first'
-}
+import { SortingType } from '../../types'
+import {
+  SORTING_TYPES,
+  SORTING_TYPE_LABEL_MAP,
+  SORTING_TYPE_MAP,
+  SORTING_TYPE_REVER_MAP,
+  SORT_OPTIONS
+} from './constant'
 
 export const SortDropdown = () => {
   const searchParams = useSearchParams()
@@ -58,25 +43,32 @@ export const SortDropdown = () => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger asChild className="group">
         <Button variant="ghost" className="p-3">
-          <div className="flex items-center">
+          <div className="flex items-center gap-[4px]">
             <span>{SORTING_TYPE_LABEL_MAP[sort]}</span>
             <span>
-              <ChevronIcon className="-rotate-90" />
+              <ChevronIcon className="transition-transform duration-300 group-data-[state=closed]:-rotate-90 group-data-[state=open]:rotate-90" />
             </span>
           </div>
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent>
+      <DropdownMenuContent className="w-[140px] py-[0.75rem]">
         <DropdownMenuLabel>ORDER</DropdownMenuLabel>
 
-        {/* TODO: radio ui 수정 */}
         <DropdownMenuRadioGroup value={sort} onValueChange={handleSortChange}>
           {SORT_OPTIONS.map((option) => (
-            <DropdownMenuRadioItem value={option.value} key={option.value}>
-              {option.label}
+            <DropdownMenuRadioItem
+              key={option.value}
+              value={option.value}
+              onSelect={(e) => e.preventDefault()}
+              isViewIndicator={false}
+              isChecked={sort === option.value}
+            >
+              <span className="text-[0.875rem] font-normal">
+                {option.label}
+              </span>
             </DropdownMenuRadioItem>
           ))}
         </DropdownMenuRadioGroup>
