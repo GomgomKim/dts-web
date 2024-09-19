@@ -2,10 +2,10 @@ import { useSearchParams } from 'next/navigation'
 
 import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query'
 
-import { SORTING_TYPES } from '../SortDropdown/constant'
-import { FILTER_TYPES } from './constant'
-import { getFavoriteList } from './model/api'
-import { GetFavoriteListResData } from './model/types'
+import { SORTING_TYPES } from '../../SortDropdown/constant'
+import { FILTER_TYPES } from '../constant'
+import { getFavoriteList } from './api'
+import { GetFavoriteListResData } from './types'
 
 export const useGetFavoriteList = () => {
   const searchParams = useSearchParams()

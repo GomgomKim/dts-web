@@ -5,7 +5,7 @@ import { useInView } from 'react-intersection-observer'
 
 import { Card } from '@/shared/ui/card'
 
-import { useGetFavoriteList } from './adapter'
+import { useGetFavoriteList } from './model/adapter'
 import { LikeButton } from './ui/LikeButton'
 import { Nullbox } from './ui/Nullbox'
 

@@ -17,29 +17,14 @@ import {
 
 import ChevronIcon from '/public/icons/angle-bracket-open.svg'
 
-export const SORTING_TYPES = ['OLDEST', 'NEWEST']
-export type SortingType = 'NEWEST' | 'OLDEST'
-export type SortingTypeLabel = 'Newest first' | 'Oldest first'
-
-const SORT_OPTIONS = [
-  { label: 'Newest first', value: 'newest' },
-  { label: 'Oldest first', value: 'oldest' }
-]
-
-const SORTING_TYPE_MAP: Record<string, SortingType> = {
-  newest: 'NEWEST',
-  oldest: 'OLDEST'
-}
-
-const SORTING_TYPE_REVER_MAP: Record<SortingType, string> = {
-  NEWEST: 'newest',
-  OLDEST: 'oldest'
-}
-
-const SORTING_TYPE_LABEL_MAP: Record<string, SortingTypeLabel> = {
-  newest: 'Newest first',
-  oldest: 'Oldest first'
-}
+import { SortingType } from '../../types'
+import {
+  SORTING_TYPES,
+  SORTING_TYPE_LABEL_MAP,
+  SORTING_TYPE_MAP,
+  SORTING_TYPE_REVER_MAP,
+  SORT_OPTIONS
+} from './constant'
 
 export const SortDropdown = () => {
   const searchParams = useSearchParams()
