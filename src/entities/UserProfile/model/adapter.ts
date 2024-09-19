@@ -1,6 +1,7 @@
-import { getAuthProfile } from './api'
 import { useQuery } from '@tanstack/react-query'
+
 import { useAuthStore } from '../store'
+import { getAuthProfile } from './api'
 import { AuthProfile, GetAuthProfileResData } from './types'
 
 export const useGetAuthProfile = () => {

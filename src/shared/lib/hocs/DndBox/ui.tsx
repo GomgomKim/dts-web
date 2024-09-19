@@ -1,7 +1,8 @@
 'use client'
 
-import { cn } from '@/shared/lib/utils'
 import { useEffect, useState } from 'react'
+
+import { cn } from '@/shared/lib/utils'
 
 interface DndBoxProps extends React.ComponentProps<'div'> {
   children: React.ReactNode

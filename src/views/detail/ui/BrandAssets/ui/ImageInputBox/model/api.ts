@@ -1,8 +1,10 @@
+import { URL_ASSET_REMOVE_BACKGROUND } from '@/entities/detail/constant'
+
 import { dtsAxios } from '@/shared/api'
+
 import { AxiosError, AxiosResponse } from 'axios'
 
 import { PostRemoveBackgroundReqData } from './types'
-import { URL_ASSET_REMOVE_BACKGROUND } from '@/entities/detail/constant'
 
 export async function postRemoveBackground({
   source

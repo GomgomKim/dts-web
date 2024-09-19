@@ -1,9 +1,12 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { ModelImageItem } from '@/shared/api/types'
+
 import * as entities from '@/entities/LikeButton'
 import { useAuthStore } from '@/entities/UserProfile/store'
+
+import { ModelImageItem } from '@/shared/api/types'
+
 import { useDeleteFavorite, usePostFavorite } from './adapter'
 
 interface LikeButtonProps {

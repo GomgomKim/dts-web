@@ -1,12 +1,13 @@
 'use client'
 
+import { useSearchParams } from 'next/navigation'
+
 import { useSetQueryString } from '@/shared/lib/hooks/useSetQueryString'
 import { useFilterTypeStore } from '@/shared/lib/stores/useFilterTypeStore'
 import { cn } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui'
 import { Badge } from '@/shared/ui/badge'
 import { MenuGroup } from '@/shared/ui/menubar'
-import { useSearchParams } from 'next/navigation'
 
 const Square = ({ color }: { color: string }) => {
   return (

@@ -1,10 +1,13 @@
 'use client'
 
-import Link from 'next/link'
 import { forwardRef } from 'react'
+
+import Link from 'next/link'
+
 import { Button, MenuItem } from '@/shared/ui'
-import { Menubar } from './Menubar'
+
 import { Categorybar } from './Categorybar'
+import { Menubar } from './Menubar'
 
 interface SidebarSeparatorProps extends React.ComponentProps<'div'> {}
 const SidebarSeparator = forwardRef<HTMLDivElement, SidebarSeparatorProps>(

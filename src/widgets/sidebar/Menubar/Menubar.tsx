@@ -1,7 +1,7 @@
+import { Menu, MenuItem } from '@/shared/ui'
+
 import ExploreIcon from '/public/icons/compass.svg'
 import FavoriteIcon from '/public/icons/heart.svg'
-
-import { Menu, MenuItem } from '@/shared/ui'
 
 export const Menubar = () => {
   return (

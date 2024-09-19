@@ -1,16 +1,21 @@
 'use client'
 
 import * as React from 'react'
+
 import { useRouter, useSearchParams } from 'next/navigation'
-import { dtsAxios } from '@/shared/api'
-import { Tokens } from '@/shared/api/types'
+
+import Explore from '@/views/explore'
+
 import { URL_AUTH_PROFILE } from '@/entities/UserProfile/constant'
 import {
   GetAuthProfileReqData,
   GetAuthProfileResData
 } from '@/entities/UserProfile/model/types'
 import { useAuthStore } from '@/entities/UserProfile/store'
-import Explore from '@/views/explore'
+
+import { dtsAxios } from '@/shared/api'
+import { Tokens } from '@/shared/api/types'
+
 import { AxiosError, AxiosResponse } from 'axios'
 
 export default function Page() {

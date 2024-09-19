@@ -1,23 +1,28 @@
 'use client'
 
 import * as React from 'react'
+
 import Image from 'next/image'
-import AngleBracketIcon from '/public/icons/angle-bracket-open.svg'
-import { Button } from '@/shared/ui'
-import { FaceAngle, Variation } from '@/shared/api/types'
+import { useSearchParams } from 'next/navigation'
+
+import { useAuthStore } from '@/entities/UserProfile/store'
 import {
   ASPECT_RATIO_REVERT_MAP,
   URL_VARIATION_LIST_IMAGE
 } from '@/entities/detail/constant'
-import { useGetAiImageProgress, useGetVariationList } from './model/adapter'
-import { useSearchParams } from 'next/navigation'
+import { useAiImageGeneratingStore } from '@/entities/detail/store'
+
+import { FaceAngle, Variation } from '@/shared/api/types'
 import { cn } from '@/shared/lib/utils'
+import { Button } from '@/shared/ui'
+
 import AlertCircleIcon from '/public/icons/alert-circle.svg'
+import AngleBracketIcon from '/public/icons/angle-bracket-open.svg'
 
 import { v4 } from 'uuid'
+
 import { usePostAiImageGenerate } from '../EditVariation/model/adapter'
-import { useAiImageGeneratingStore } from '@/entities/detail/store'
-import { useAuthStore } from '@/entities/UserProfile/store'
+import { useGetAiImageProgress, useGetVariationList } from './model/adapter'
 
 interface VariationsSectionProps {
   onChangeSelectedVariation: (variation: Variation) => void

@@ -1,8 +1,11 @@
 'use client'
 
 import * as React from 'react'
-import { useMoveScroll } from '@/shared/lib/hooks/useMoveScroll'
+
 import { Filter } from '@/features/Filter'
+
+import { useMoveScroll } from '@/shared/lib/hooks/useMoveScroll'
+
 import { Banner } from './ui/Banner'
 import { ExploreList } from './ui/ExploreList'
 import { FILTER_TYPES } from './ui/ExploreList/constant'

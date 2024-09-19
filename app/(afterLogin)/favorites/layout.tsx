@@ -1,8 +1,10 @@
 'use client'
 
-import { Sidebar } from '@/widgets'
-import { Header } from '@/widgets/Header'
 import { Suspense } from 'react'
+
+import { Header } from '@/widgets/Header'
+
+import { Sidebar } from '@/widgets'
 
 export default function FavoritePageLayout({
   children

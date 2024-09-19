@@ -1,9 +1,12 @@
 import { useSearchParams } from 'next/navigation'
-import { DeleteFavoriteReqData } from '@/entities/LikeButton/types'
+
 import { deleteFavorite } from '@/entities/LikeButton/api'
+import { DeleteFavoriteReqData } from '@/entities/LikeButton/types'
+
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { FILTER_TYPES } from '../constant'
+
 import { SORTING_TYPES } from '../../SortDropdown'
+import { FILTER_TYPES } from '../constant'
 import { GetFavoriteListResData } from '../model'
 
 export const useDeleteFavorite = () => {

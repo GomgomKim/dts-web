@@ -1,5 +1,6 @@
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useCallback } from 'react'
+
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 type QueryParams = Record<string, string>
 type Optioin = 'push' | 'replace'

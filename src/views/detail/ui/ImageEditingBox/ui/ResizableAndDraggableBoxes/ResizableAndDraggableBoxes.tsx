@@ -1,8 +1,11 @@
 'use client'
 
+import { useCallback, useEffect, useRef, useState } from 'react'
+
 import Image from 'next/image'
+
 import { cn } from '@/shared/lib/utils'
-import { useState, useEffect, useCallback, useRef } from 'react'
+
 import { Box } from '../../types'
 
 interface ActiveBox extends Box {

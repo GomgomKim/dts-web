@@ -1,7 +1,9 @@
-import { AxiosError, AxiosResponse } from 'axios'
 import { dtsAxios } from '@/shared/api'
-import { GetExploreListReqData, GetExploreListResData } from './types'
+
+import { AxiosError, AxiosResponse } from 'axios'
+
 import { URL_EXPLORE_LIST } from '../constant'
+import { GetExploreListReqData, GetExploreListResData } from './types'
 
 const SEAERCH_SIZE = 10
 

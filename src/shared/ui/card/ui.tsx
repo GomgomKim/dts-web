@@ -1,11 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
-import { Button } from '@/shared/ui/button'
-import LinkIcon from '/public/icons/arrow-thin.svg'
-import { ModelImageItem } from '@/shared/api/types'
+
 import Image from 'next/image'
+import Link from 'next/link'
+
+import { ModelImageItem } from '@/shared/api/types'
+import { Button } from '@/shared/ui/button'
+
+import LinkIcon from '/public/icons/arrow-thin.svg'
 
 const URL_BASE_IMAGE_FILE = '/image-file/download?encryptedImageUrl='
 

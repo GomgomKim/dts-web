@@ -1,8 +1,10 @@
-import { persist, createJSONStorage } from 'zustand/middleware'
-import { create } from 'zustand'
-import { AuthProfile } from './model/types'
-import { QueryClient } from '@tanstack/react-query'
 import { Restriction, Tokens } from '@/shared/api/types'
+
+import { QueryClient } from '@tanstack/react-query'
+import { create } from 'zustand'
+import { createJSONStorage, persist } from 'zustand/middleware'
+
+import { AuthProfile } from './model/types'
 
 const PERSIST_KEY = 'dts-auth-store'
 

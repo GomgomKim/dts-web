@@ -1,21 +1,24 @@
 'use client'
 
 import { Suspense, useRef, useState } from 'react'
-import { useSetQueryString } from '@/shared/lib/hooks/useSetQueryString'
-import { Variation } from '@/shared/api/types'
+
 import {
   ASPECT_RATIO_MAP,
   FACE_ANGLE_MAP,
   FACE_ANGLE_REVERT_MAP
 } from '@/entities/detail/constant'
 import { useImagePreviewUrlStore } from '@/entities/detail/store'
+
+import { Variation } from '@/shared/api/types'
+import { useSetQueryString } from '@/shared/lib/hooks/useSetQueryString'
+
 import { convertImagesToBoxData } from './lib'
 import { BrandAssets } from './ui/BrandAssets'
 import { DownloadDropdown } from './ui/DownloadDropdown'
+import { EditVariation } from './ui/EditVariation'
 import { ImageEditingBox } from './ui/ImageEditingBox'
 import { Box } from './ui/ImageEditingBox/types'
 import { VariationsSection } from './ui/VariationList'
-import { EditVariation } from './ui/EditVariation'
 
 export default function Detail() {
   // related brand assets

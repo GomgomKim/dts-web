@@ -1,9 +1,10 @@
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
-import '@/app/styles/globals.css'
+
+import { AxiosInterceptorWrapper } from '@/app/providers/axios-interceptor-wrapper'
 import { MSWComponent } from '@/app/providers/msw-component'
 import { ReactQueryProviders } from '@/app/providers/query-client-provider'
-import { AxiosInterceptorWrapper } from '@/app/providers/axios-interceptor-wrapper'
+import '@/app/styles/globals.css'
 
 const pretendard = localFont({
   src: '../public/fonts/PretendardVariable.woff2',

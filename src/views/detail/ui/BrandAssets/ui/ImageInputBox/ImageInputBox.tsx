@@ -1,11 +1,15 @@
 'use client'
 
 import { useEffect } from 'react'
-import { DndBox } from '@/shared/lib/hocs/DndBox'
-import { Button } from '@/shared/ui/button'
-import DeleteIcon from '/public/icons/delete.svg'
-import { cn } from '@/shared/lib/utils'
+
 import { useImagePreviewUrlStore } from '@/entities/detail/store'
+
+import { DndBox } from '@/shared/lib/hocs/DndBox'
+import { cn } from '@/shared/lib/utils'
+import { Button } from '@/shared/ui/button'
+
+import DeleteIcon from '/public/icons/delete.svg'
+
 import { usePostRemoveBackground } from './model/adapter'
 
 const IMAGE_MAX_SIZE = 5 * 1024 * 1024

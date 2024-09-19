@@ -1,18 +1,21 @@
 'use client'
 
 import * as React from 'react'
+
+import { useSearchParams } from 'next/navigation'
+
+import { useSetQueryString } from '@/shared/lib/hooks/useSetQueryString'
+import { Button } from '@/shared/ui'
 import {
-  DropdownMenuTrigger,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuRadioGroup,
-  DropdownMenuRadioItem
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger
 } from '@/shared/ui/dropdown-menu'
-import { Button } from '@/shared/ui'
+
 import ChevronIcon from '/public/icons/angle-bracket-open.svg'
-import { useSearchParams } from 'next/navigation'
-import { useSetQueryString } from '@/shared/lib/hooks/useSetQueryString'
 
 export const SORTING_TYPES = ['OLDEST', 'NEWEST']
 export type SortingType = 'NEWEST' | 'OLDEST'

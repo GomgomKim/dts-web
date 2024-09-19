@@ -1,6 +1,8 @@
 import { useRouter } from 'next/navigation'
-import { Button } from '@/shared/ui/button'
+
 import { useAuthStore } from '@/entities/UserProfile/store'
+
+import { Button } from '@/shared/ui/button'
 
 interface BannerProps {
   onClickSeeExample: () => void

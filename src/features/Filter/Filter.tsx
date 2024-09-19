@@ -2,10 +2,10 @@
 
 import { useSearchParams } from 'next/navigation'
 
-import { Button } from '@/shared/ui/button'
-import { cn } from '@/shared/lib/utils'
 import { useSetQueryString } from '@/shared/lib/hooks/useSetQueryString'
 import { useFilterTypeStore } from '@/shared/lib/stores/useFilterTypeStore'
+import { cn } from '@/shared/lib/utils'
+import { Button } from '@/shared/ui/button'
 
 interface FilterProps extends React.ComponentPropsWithRef<'div'> {
   filterList: string[]

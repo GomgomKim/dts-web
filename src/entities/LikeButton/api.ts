@@ -1,5 +1,7 @@
-import { AxiosError, AxiosResponse } from 'axios'
 import { dtsAxios } from '@/shared/api'
+
+import { AxiosError, AxiosResponse } from 'axios'
+
 import { URL_FAVORITE_ADD, URL_FAVORITE_REMOVE } from './constant'
 import { DeleteFavoriteReqData, PostFavoriteReqData } from './types'
 

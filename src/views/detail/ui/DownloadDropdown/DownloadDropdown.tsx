@@ -1,7 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import './styles.css'
+
+import { Variation } from '@/shared/api/types'
+import { cn } from '@/shared/lib/utils'
+import { Button } from '@/shared/ui'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,16 +15,16 @@ import {
   DropdownMenuTrigger
 } from '@/shared/ui/dropdown-menu'
 import { Switch } from '@/shared/ui/switch'
-import { Button } from '@/shared/ui'
-import { cn } from '@/shared/lib/utils'
-import { Variation } from '@/shared/api/types'
-import { ExportButton } from './ui/ExportButton'
+
 import CheckIcon from '/public/icons/check.svg'
+
 import {
   EXPORT_QUALITY_OPTIONS_1_1,
   EXPORT_QUALITY_OPTIONS_9_16,
   FORMAT_OPTIONS
 } from './constant'
+import './styles.css'
+import { ExportButton } from './ui/ExportButton'
 
 interface DownloadDropdownProps {
   containerRef: React.RefObject<HTMLDivElement>

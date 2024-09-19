@@ -1,15 +1,18 @@
-import { dtsAxios } from '@/shared/api'
 import {
   URL_AI_IMAGE_GENERATE_PROGRESS,
   URL_VARIATION_LIST
 } from '@/entities/detail/constant'
+
+import { dtsAxios } from '@/shared/api'
+
+import { AxiosError, AxiosResponse, isAxiosError } from 'axios'
+
 import {
   GetAiImageProgressReqData,
   GetAiImageProgressResData,
   GetVariationListReqData,
   GetVariationListResData
 } from './types'
-import { AxiosError, AxiosResponse, isAxiosError } from 'axios'
 
 export async function getVariationList({
   encodedBaseImageInfoId

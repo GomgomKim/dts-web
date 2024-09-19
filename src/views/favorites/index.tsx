@@ -1,5 +1,7 @@
 import { Suspense } from 'react'
+
 import { Filter } from '@/features/Filter'
+
 import { FavoriteList } from './ui/FavoriteList'
 import { FILTER_TYPES } from './ui/FavoriteList/constant'
 import { SortDropdown } from './ui/SortDropdown'

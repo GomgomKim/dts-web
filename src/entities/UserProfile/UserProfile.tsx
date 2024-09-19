@@ -1,6 +1,12 @@
 'use client'
 
 import * as React from 'react'
+
+// import { useRouter } from 'next/navigation'
+import Image from 'next/image'
+import Link from 'next/link'
+
+import { cn } from '@/shared/lib/utils'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,13 +16,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/shared/ui/dropdown-menu'
-import { useAuthStore } from './store'
-import { useQueryClient } from '@tanstack/react-query'
+
 import CreditIcon from '/public/icons/database.svg'
-import { cn } from '@/shared/lib/utils'
-import Link from 'next/link'
-// import { useRouter } from 'next/navigation'
-import Image from 'next/image'
+
+import { useQueryClient } from '@tanstack/react-query'
+
+import { useAuthStore } from './store'
 
 const LogOut = () => {
   const queryClient = useQueryClient()
