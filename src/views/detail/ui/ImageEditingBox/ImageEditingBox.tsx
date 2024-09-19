@@ -1,14 +1,17 @@
 'use client'
 
 import Image from 'next/image'
-import { Variation } from '@/shared/api/types'
+
 import {
   ASPECT_RATIO_MAP_NUMBER,
   URL_VARIATION_LIST_IMAGE
 } from '@/entities/detail/constant'
+
+import { Variation } from '@/shared/api/types'
 import { cn } from '@/shared/lib/utils'
-import { ResizableAndDraggableBoxes } from './ui/ResizableAndDraggableBoxes'
+
 import { Box } from './types'
+import { ResizableAndDraggableBoxes } from './ui/ResizableAndDraggableBoxes'
 
 interface ImageEditingBoxProps {
   containerRef: React.RefObject<HTMLDivElement>

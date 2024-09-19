@@ -1,7 +1,9 @@
 import { dtsAxios } from '@/shared/api'
+
+import { AxiosError, AxiosResponse } from 'axios'
+
 import { URL_AUTH_PROFILE } from '../constant'
 import { GetAuthProfileReqData, GetAuthProfileResData } from './types'
-import { AxiosError, AxiosResponse } from 'axios'
 
 export const getAuthProfile = async () => {
   const response = await dtsAxios.get<

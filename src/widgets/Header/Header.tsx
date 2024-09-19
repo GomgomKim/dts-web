@@ -1,15 +1,18 @@
 'use client'
 
 import Link from 'next/link'
-import DTSLogo from '/public/icons/dts-logo.svg'
 import { usePathname } from 'next/navigation'
 import { useRouter } from 'next/navigation'
-import Arrow from '/public/icons/arrow-thin.svg'
-import CreditIcon from '/public/icons/database.svg'
-import { Button } from '@/shared/ui'
-import { cn } from '@/shared/lib/utils'
+
 import { UserProfile } from '@/entities/UserProfile'
 import { useAuthStore } from '@/entities/UserProfile/store'
+
+import { cn } from '@/shared/lib/utils'
+import { Button } from '@/shared/ui'
+
+import Arrow from '/public/icons/arrow-thin.svg'
+import CreditIcon from '/public/icons/database.svg'
+import DTSLogo from '/public/icons/dts-logo.svg'
 
 const Links = () => {
   return (

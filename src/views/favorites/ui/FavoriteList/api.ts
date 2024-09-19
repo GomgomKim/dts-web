@@ -1,7 +1,9 @@
-import { AxiosError, AxiosResponse } from 'axios'
 import { dtsAxios } from '@/shared/api'
-import { GetFavoriteListReqData, GetFavoriteListResData } from './model'
+
+import { AxiosError, AxiosResponse } from 'axios'
+
 import { URL_FAVORITE_LIST } from './constant'
+import { GetFavoriteListReqData, GetFavoriteListResData } from './model'
 
 const SEAERCH_SIZE = 10
 

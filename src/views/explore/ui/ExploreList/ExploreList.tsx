@@ -2,7 +2,9 @@
 
 import { Fragment, useEffect } from 'react'
 import { useInView } from 'react-intersection-observer'
+
 import { Card } from '@/shared/ui/card'
+
 import { useGetExploreList } from './model/adapter'
 import { LikeButton } from './ui/LikeButton'
 

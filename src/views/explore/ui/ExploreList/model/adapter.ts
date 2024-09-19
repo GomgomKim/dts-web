@@ -1,9 +1,12 @@
-import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query'
-import { GetExploreListResData } from './types'
 import { useSearchParams } from 'next/navigation'
+
 import { useFilterTypeStore } from '@/shared/lib/stores/useFilterTypeStore'
+
+import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query'
+
 import { FILTER_TYPES } from '../constant'
 import { getExploreList } from './api'
+import { GetExploreListResData } from './types'
 
 export const useGetExploreList = () => {
   // TODO: filtertype 값 밖에서 주입

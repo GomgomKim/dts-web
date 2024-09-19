@@ -1,9 +1,11 @@
 'use client'
 
+import React from 'react'
+
 import { cn } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui'
+
 import LikeIcon from '/public/icons/heart.svg'
-import React from 'react'
 
 interface LikeButtonProps extends React.ComponentProps<'button'> {
   onClickLike: () => void

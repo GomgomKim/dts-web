@@ -1,7 +1,10 @@
 import * as React from 'react'
+
+import { dtsAxios } from '@/shared/api'
+
 // import { useQueryClient } from '@tanstack/react-query'
 import { InternalAxiosRequestConfig } from 'axios'
-import { dtsAxios } from '@/shared/api'
+
 import { useAuthStore } from '../store'
 
 export const useAxiosAuthInterceptor = () => {

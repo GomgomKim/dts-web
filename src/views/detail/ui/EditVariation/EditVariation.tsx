@@ -1,16 +1,19 @@
 import { useSearchParams } from 'next/navigation'
-import { RadioGroup, RadioGroupItem } from '@/shared/ui/radio-group'
-import { Badge, Button } from '@/shared/ui'
-import { FaceAngle } from '@/shared/api/types'
+
+import { useAuthStore } from '@/entities/UserProfile/store'
 import {
   ASPECT_RATIO_MAP,
   ASPECT_RATIO_REVERT_MAP,
   FACE_ANGLE_MAP,
   SKIN_TEXTURE_MAP
 } from '@/entities/detail/constant'
-import { usePostAiImageGenerate } from './model/adapter'
 import { useAiImageGeneratingStore } from '@/entities/detail/store'
-import { useAuthStore } from '@/entities/UserProfile/store'
+
+import { FaceAngle } from '@/shared/api/types'
+import { Badge, Button } from '@/shared/ui'
+import { RadioGroup, RadioGroupItem } from '@/shared/ui/radio-group'
+
+import { usePostAiImageGenerate } from './model/adapter'
 
 const SKIN_TEXTURE_OPTIONS = Object.values(SKIN_TEXTURE_MAP)
 const ASPECT_RATIO_OPTIONS = Object.values(ASPECT_RATIO_MAP)

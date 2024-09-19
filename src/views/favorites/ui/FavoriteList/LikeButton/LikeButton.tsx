@@ -1,8 +1,10 @@
 'use client'
 
 import * as entities from '@/entities/LikeButton'
-import { useDeleteFavorite } from './adapter'
+
 import { ModelImageItem } from '@/shared/api/types'
+
+import { useDeleteFavorite } from './adapter'
 
 interface LikeButtonProps {
   item: ModelImageItem

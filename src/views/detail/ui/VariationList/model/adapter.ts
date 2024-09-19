@@ -1,17 +1,19 @@
 import { useAiImageGeneratingStore } from '@/entities/detail/store'
-import { getVariationList, getAiImageProgress } from './api'
+
 import {
-  GetVariationListResData,
-  VariationListContent,
-  GetAiImageProgressResData
-} from './types'
-import {
-  useSuspenseQuery,
-  useQueries,
+  Query,
   UseQueryOptions,
-  Query
+  useQueries,
+  useSuspenseQuery
 } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
+
+import { getAiImageProgress, getVariationList } from './api'
+import {
+  GetAiImageProgressResData,
+  GetVariationListResData,
+  VariationListContent
+} from './types'
 
 export const useGetVariationList = (encodedBaseImageInfoId: string) => {
   const { data, status, error, isFetching } = useSuspenseQuery<

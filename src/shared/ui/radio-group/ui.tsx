@@ -1,7 +1,9 @@
 'use client'
 
-import { cn } from '@/shared/lib/utils'
 import React from 'react'
+
+import { cn } from '@/shared/lib/utils'
+
 import { RadioGroupContext } from './index.context'
 
 interface RadioGroupProps extends React.ComponentProps<'div'> {

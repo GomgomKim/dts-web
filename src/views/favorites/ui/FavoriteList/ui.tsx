@@ -1,11 +1,14 @@
 'use client'
 
-import { Card } from '@/shared/ui/card'
 import { Fragment, useEffect } from 'react'
 import { useInView } from 'react-intersection-observer'
-import { useGetFavoriteList } from './adapter'
-import { LikeButton } from './LikeButton'
+
 import { Nullbox } from '@/entities/Nullbox'
+
+import { Card } from '@/shared/ui/card'
+
+import { LikeButton } from './LikeButton'
+import { useGetFavoriteList } from './adapter'
 
 export const FavoriteList = () => {
   const {
