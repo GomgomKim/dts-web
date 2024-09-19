@@ -37,7 +37,7 @@ export const Card = (props: CardProps) => {
     <div
       onMouseOver={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
-      className="relative h-[400px] aspect-[9/16] rounded-[8px] overflow-hidden cursor-auto"
+      className="relative aspect-[9/16] rounded-[8px] overflow-hidden cursor-auto"
     >
       <Image
         src={imgUrl}

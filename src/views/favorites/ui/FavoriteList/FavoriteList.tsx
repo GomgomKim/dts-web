@@ -3,12 +3,11 @@
 import { Fragment, useEffect } from 'react'
 import { useInView } from 'react-intersection-observer'
 
-import { Nullbox } from '@/entities/Nullbox'
-
 import { Card } from '@/shared/ui/card'
 
-import { LikeButton } from './LikeButton'
 import { useGetFavoriteList } from './adapter'
+import { LikeButton } from './ui/LikeButton'
+import { Nullbox } from './ui/Nullbox'
 
 export const FavoriteList = () => {
   const {
@@ -21,9 +20,7 @@ export const FavoriteList = () => {
     fetchNextPage
   } = useGetFavoriteList()
 
-  const { ref, inView } = useInView({
-    threshold: 1
-  })
+  const { ref, inView } = useInView()
 
   useEffect(() => {
     if (inView) {
@@ -31,12 +28,14 @@ export const FavoriteList = () => {
     }
   }, [inView, isFetching, isFetchingNextPage, hasNextPage, fetchNextPage])
 
-  // TODO: null box di
-  // if (isFetching && !isFetchingNextPage) return <div>loading skeleton ...</div>
   if (status === 'error') return <p>{error?.message}</p>
+  if (isFetching && !isFetchingNextPage) return <div>loading skeleton ...</div>
 
-  const Grid = () => {
-    return (
+  const isEmpty = data?.pages[0].content.images.length === 0
+  if (isEmpty) return <Nullbox />
+
+  return (
+    <>
       <div className="grid grid-cols-auto-fill-px gap-5">
         {data?.pages.map((page, i) => (
           <Fragment key={i}>
@@ -50,21 +49,6 @@ export const FavoriteList = () => {
           </Fragment>
         ))}
       </div>
-    )
-  }
-
-  const isEmpty = data?.pages[0].content.images.length === 0
-
-  const renderContent = () => {
-    if (isEmpty) return <Nullbox />
-    if (isFetching && !isFetchingNextPage)
-      return <div>loading skeleton ...</div>
-    return <Grid />
-  }
-
-  return (
-    <>
-      {renderContent()}
       {isFetching && isFetchingNextPage && (
         <div style={{ height: 100 }}>loading more items ...</div>
       )}
