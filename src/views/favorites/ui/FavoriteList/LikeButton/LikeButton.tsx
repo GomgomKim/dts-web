@@ -16,5 +16,5 @@ export const LikeButton = (props: LikeButtonProps) => {
     deleteFavoriteMutation.mutate({ encodedImageInfoId })
   }
 
-  return <entities.LikeButton handleClick={handleClick} isActive={true} />
+  return <entities.LikeButton onClickLike={handleClick} isActive={true} />
 }

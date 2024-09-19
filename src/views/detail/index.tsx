@@ -71,7 +71,7 @@ export default function Detail() {
       {/* brand assets section */}
       <div className="w-[320px] xl:w-[387px] fixed px-5 bg-background z-20">
         <BrandAssets
-          handleAddBrandAssets={handleAddBrandAssets}
+          onClickAddBrandAssets={handleAddBrandAssets}
           handleRemoveBox={handleRemoveBox}
           assetDisabled={assetImages.size < 1}
         />
@@ -104,7 +104,7 @@ export default function Detail() {
                   <div className="min-h-[180px]">
                     <Suspense fallback={<div>Loading...</div>}>
                       <VariationsSection
-                        handleSelectedVariation={handleSelectedVariation}
+                        onChangeSelectedVariation={handleSelectedVariation}
                       />
                     </Suspense>
                   </div>
@@ -120,8 +120,8 @@ export default function Detail() {
               <EditVariation
                 aspectRatio={aspectRatio}
                 faceAngle={faceAngle}
-                handleChangeAspectRatio={handleChangeAspectRatio}
-                handleChangeFaceAngle={handleChangeFaceAngle}
+                onChangeAspectRatio={handleChangeAspectRatio}
+                onChangeFaceAngle={handleChangeFaceAngle}
               />
 
               {/* related download image /////////////////////////////////////////////  */}

@@ -7,7 +7,7 @@ import { ImageInputBox } from './ui/ImageInputBox'
 
 interface BrandAssetsProps {
   handleRemoveBox: (boxId: string) => void
-  handleAddBrandAssets: () => void
+  onClickAddBrandAssets: () => void
   assetDisabled: boolean
 }
 
@@ -32,7 +32,7 @@ export const BrandAssets = (props: BrandAssetsProps) => {
       {/* <div className="flex flex-col">
               <Button variant="outline">Remove Background</Button> */}
       <Button
-        onClick={props.handleAddBrandAssets}
+        onClick={props.onClickAddBrandAssets}
         disabled={props.assetDisabled}
       >
         Add Brand Assets

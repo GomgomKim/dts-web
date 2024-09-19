@@ -19,8 +19,8 @@ const FACE_ANGLE_OPTIONS = Object.values(FACE_ANGLE_MAP)
 interface EditVariationProps {
   aspectRatio: string
   faceAngle: string
-  handleChangeAspectRatio: (value: string) => void
-  handleChangeFaceAngle: (value: string) => void
+  onChangeAspectRatio: (value: string) => void
+  onChangeFaceAngle: (value: string) => void
 }
 
 export const EditVariation = (props: EditVariationProps) => {
@@ -79,7 +79,7 @@ export const EditVariation = (props: EditVariationProps) => {
         <RadioGroup
           id="aspectRatio"
           value={props.aspectRatio}
-          onValueChange={props.handleChangeAspectRatio}
+          onChangeValue={props.onChangeAspectRatio}
         >
           {ASPECT_RATIO_OPTIONS.map((option) => (
             <RadioGroupItem key={option} value={option} label={option} />
@@ -93,7 +93,7 @@ export const EditVariation = (props: EditVariationProps) => {
         <RadioGroup
           id="faceAngle"
           value={props.faceAngle}
-          onValueChange={props.handleChangeFaceAngle}
+          onChangeValue={props.onChangeFaceAngle}
         >
           {FACE_ANGLE_OPTIONS.map((option) => (
             <RadioGroupItem key={option} value={option} label={option} />
@@ -109,7 +109,7 @@ export const EditVariation = (props: EditVariationProps) => {
           </h3>
           <Badge className="ml-[8px]">Upcoming</Badge>
         </div>
-        <RadioGroup id="skinTexture" value="" onValueChange={() => {}} disabled>
+        <RadioGroup id="skinTexture" value="" onChangeValue={() => {}} disabled>
           {SKIN_TEXTURE_OPTIONS.map((option) => (
             <RadioGroupItem key={option} value={option} label={option} />
           ))}

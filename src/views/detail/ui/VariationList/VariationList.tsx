@@ -20,7 +20,7 @@ import { useAiImageGeneratingStore } from '@/entities/detail/store'
 import { useAuthStore } from '@/entities/UserProfile/store'
 
 interface VariationsSectionProps {
-  handleSelectedVariation: (variation: Variation) => void
+  onChangeSelectedVariation: (variation: Variation) => void
 }
 
 const AMOUNT_PER_PAGE = 4
@@ -41,9 +41,7 @@ const INITIAL_PAGE = 1
 //   }
 // ]
 
-export const VariationsSection = ({
-  handleSelectedVariation
-}: VariationsSectionProps) => {
+export const VariationsSection = (props: VariationsSectionProps) => {
   const searchParams = useSearchParams()
   const encodedBaseImageInfoId = searchParams.get('id') || ''
   const isAiImageFailed = useAiImageGeneratingStore(
@@ -95,7 +93,7 @@ export const VariationsSection = ({
   })
 
   React.useEffect(() => {
-    handleSelectedVariation(variations[mainImageIndex])
+    props.onChangeSelectedVariation(variations[mainImageIndex])
 
     // polling 할 목록 따로 추출
     const successGeneratingList: Variation[] = []
@@ -292,7 +290,7 @@ export const VariationsSection = ({
                   'opacity-50': !isSeletedVariation && !isFail
                 }
               )}
-              onClick={() => handleSelectedVariation(item)}
+              onClick={() => props.onChangeSelectedVariation(item)}
             >
               {isFail ? (
                 // fail card

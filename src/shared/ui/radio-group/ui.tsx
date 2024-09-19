@@ -8,18 +8,18 @@ interface RadioGroupProps extends React.ComponentProps<'div'> {
   id: string
   value: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onValueChange: (value: any) => void
+  onChangeValue: (value: any) => void
   disabled?: boolean
 }
 const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
   (
-    { id, value, onValueChange, className, disabled = false, ...props },
+    { id, value, onChangeValue, className, disabled = false, ...props },
     ref
   ) => {
     const contextValue = {
       id,
       value,
-      onChange: onValueChange,
+      onChange: onChangeValue,
       disabled
     }
 
