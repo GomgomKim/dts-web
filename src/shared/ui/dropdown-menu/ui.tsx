@@ -4,6 +4,8 @@ import * as React from 'react'
 
 import { cn } from '@/shared/lib/utils'
 
+import CheckIcon from '/public/icons/check.svg'
+
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu'
 import { Check, ChevronRight, Circle } from 'lucide-react'
 
@@ -120,24 +122,46 @@ DropdownMenuCheckboxItem.displayName =
 
 const DropdownMenuRadioItem = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.RadioItem>,
-  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.RadioItem>
->(({ className, children, ...props }, ref) => (
-  <DropdownMenuPrimitive.RadioItem
-    ref={ref}
-    className={cn(
-      'relative flex cursor-pointer select-none items-center pl-5 text-[0.875rem] text-[#AEAFB5] outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
-      className
-    )}
-    {...props}
-  >
-    <span className="absolute left-0 flex h-4 w-4 items-center justify-center border border-[#E2E8F0] rounded-full">
-      <DropdownMenuPrimitive.ItemIndicator>
-        <Circle className="h-2 w-2 fill-current border-white" />
-      </DropdownMenuPrimitive.ItemIndicator>
-    </span>
-    {children}
-  </DropdownMenuPrimitive.RadioItem>
-))
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.RadioItem> & {
+    isViewIndicator?: boolean
+    isChecked?: boolean
+  }
+>(
+  (
+    {
+      isViewIndicator = true,
+      isChecked = false,
+      className,
+      children,
+      ...props
+    },
+    ref
+  ) => (
+    <DropdownMenuPrimitive.RadioItem
+      ref={ref}
+      className={cn(
+        'relative flex cursor-pointer select-none items-center pl-5 text-[0.875rem] text-[#AEAFB5] outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+        className,
+        {
+          'flex justify-between px-[1rem] py-[0.75rem] px-[1rem] focus:bg-neutral-2 focus:text-white':
+            isViewIndicator === false,
+          'bg-neutral-2 text-white': isChecked === true
+        }
+      )}
+      {...props}
+    >
+      {isViewIndicator ? (
+        <span className="absolute left-0 flex h-4 w-4 items-center justify-center border border-[#E2E8F0] rounded-full">
+          <DropdownMenuPrimitive.ItemIndicator>
+            <Circle className="h-2 w-2 fill-current border-white" />
+          </DropdownMenuPrimitive.ItemIndicator>
+        </span>
+      ) : null}
+      {children}
+      {isViewIndicator === false && isChecked === true ? <CheckIcon /> : null}
+    </DropdownMenuPrimitive.RadioItem>
+  )
+)
 DropdownMenuRadioItem.displayName = DropdownMenuPrimitive.RadioItem.displayName
 
 const DropdownMenuLabel = React.forwardRef<
