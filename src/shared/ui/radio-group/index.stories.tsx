@@ -32,7 +32,7 @@ export const Default: Story = {
           id="test"
           defaultValue="default"
           value={value}
-          onValueChange={handleValueChange}
+          onChangeValue={handleValueChange}
         >
           {options.map((option) => (
             <div key={option.id} className="flex items-center space-x-2">

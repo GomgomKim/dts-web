@@ -9,7 +9,6 @@ interface FilterTypeActions {
   setFilterType: (filterType: string) => void
 }
 
-// TODO: type 추가
 export const useFilterTypeStore = create(
   persist<FilterTypeState & FilterTypeActions>(
     (set) => ({

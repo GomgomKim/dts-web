@@ -2,15 +2,14 @@
 
 import Link from 'next/link'
 import DTSLogo from '/public/icons/dts-logo.svg'
-import { Button } from '@/shared/ui'
 import { usePathname } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 import Arrow from '/public/icons/arrow-thin.svg'
-import { useAuthStore } from '@/entities/user/store'
-import { UserProfile } from '@/entities/user'
 import CreditIcon from '/public/icons/database.svg'
-
+import { Button } from '@/shared/ui'
 import { cn } from '@/shared/lib/utils'
+import { UserProfile } from '@/entities/UserProfile'
+import { useAuthStore } from '@/entities/UserProfile/store'
 
 const Links = () => {
   return (
@@ -100,7 +99,7 @@ const BackButton = () => {
   )
 }
 
-const Header = () => {
+export const Header = () => {
   const pathname = usePathname()
   const isAuth = useAuthStore((state) => state.isAuth)
   const isDetailPage = pathname.startsWith('/archive/')
@@ -128,5 +127,3 @@ const Header = () => {
     </header>
   )
 }
-
-export { Header }

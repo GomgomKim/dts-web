@@ -4,11 +4,11 @@ import { useCallback } from 'react'
 type QueryParams = Record<string, string>
 type Optioin = 'push' | 'replace'
 
-type Params = {
+interface useSetQueryStringParams {
   option: Optioin
 }
 
-export const useSetQueryString = ({ option }: Params) => {
+export const useSetQueryString = ({ option }: useSetQueryStringParams) => {
   const searchParams = useSearchParams()
   const router = useRouter()
   const pathname = usePathname()

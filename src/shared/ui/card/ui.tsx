@@ -4,17 +4,17 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/shared/ui/button'
 import LinkIcon from '/public/icons/arrow-thin.svg'
-import { ModelImageItem } from '@/features/explore/CardList/model'
+import { ModelImageItem } from '@/shared/api/types'
 import Image from 'next/image'
 
 const URL_BASE_IMAGE_FILE = '/image-file/download?encryptedImageUrl='
 
-type Props = {
+interface CardProps {
   item: ModelImageItem
   actionSlot?: React.ReactNode
 }
 
-const Card = (props: Props) => {
+export const Card = (props: CardProps) => {
   const {
     encodedImageInfoId,
     encodedMainImageId,
@@ -65,5 +65,3 @@ const Card = (props: Props) => {
     </div>
   )
 }
-
-export { Card }

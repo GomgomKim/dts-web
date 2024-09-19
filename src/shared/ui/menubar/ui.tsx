@@ -7,7 +7,7 @@ import { cn } from '@/shared/lib/utils'
 import { ComponentProps } from 'react'
 import * as React from 'react'
 
-export type MenuItemType = {
+interface MenuItemType {
   href: { pathname: string; query?: { [key: string]: string } }
   title: string
   prefix: React.ReactNode
@@ -27,7 +27,7 @@ Menu.displayName = 'Menu'
 
 // menu item
 
-type MenuItemProps = {
+interface MenuItemProps {
   item: MenuItemType
 }
 

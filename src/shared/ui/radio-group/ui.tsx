@@ -4,22 +4,22 @@ import { cn } from '@/shared/lib/utils'
 import React from 'react'
 import { RadioGroupContext } from './index.context'
 
-type RadioGroupProps = React.ComponentProps<'div'> & {
+interface RadioGroupProps extends React.ComponentProps<'div'> {
   id: string
   value: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onValueChange: (value: any) => void
+  onChangeValue: (value: any) => void
   disabled?: boolean
 }
 const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
   (
-    { id, value, onValueChange, className, disabled = false, ...props },
+    { id, value, onChangeValue, className, disabled = false, ...props },
     ref
   ) => {
     const contextValue = {
       id,
       value,
-      onChange: onValueChange,
+      onChange: onChangeValue,
       disabled
     }
 
@@ -32,7 +32,7 @@ const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
 )
 RadioGroup.displayName = 'RadioGroup'
 
-type RadioGroupItemProps = React.ComponentProps<'div'> & {
+interface RadioGroupItemProps extends React.ComponentProps<'div'> {
   value: string
   label: string
 }
