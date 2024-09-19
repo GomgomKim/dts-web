@@ -24,7 +24,7 @@ import { v4 } from 'uuid'
 import { usePostAiImageGenerate } from '../EditVariation/model/adapter'
 import { useGetAiImageProgress, useGetVariationList } from './model/adapter'
 
-interface VariationsSectionProps {
+interface VariationListProps {
   onChangeSelectedVariation: (variation: Variation) => void
 }
 
@@ -46,7 +46,7 @@ const INITIAL_PAGE = 1
 //   }
 // ]
 
-export const VariationsSection = (props: VariationsSectionProps) => {
+export const VariationsList = (props: VariationListProps) => {
   const searchParams = useSearchParams()
   const encodedBaseImageInfoId = searchParams.get('id') || ''
   const isAiImageFailed = useAiImageGeneratingStore(
