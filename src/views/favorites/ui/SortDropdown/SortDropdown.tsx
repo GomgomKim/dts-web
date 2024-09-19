@@ -43,25 +43,32 @@ export const SortDropdown = () => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger asChild className="group">
         <Button variant="ghost" className="p-3">
-          <div className="flex items-center">
+          <div className="flex items-center gap-[4px]">
             <span>{SORTING_TYPE_LABEL_MAP[sort]}</span>
             <span>
-              <ChevronIcon className="-rotate-90" />
+              <ChevronIcon className="transition-transform duration-300 group-data-[state=closed]:-rotate-90 group-data-[state=open]:rotate-90" />
             </span>
           </div>
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent>
+      <DropdownMenuContent className="w-[140px] py-[0.75rem]">
         <DropdownMenuLabel>ORDER</DropdownMenuLabel>
 
-        {/* TODO: radio ui 수정 */}
         <DropdownMenuRadioGroup value={sort} onValueChange={handleSortChange}>
           {SORT_OPTIONS.map((option) => (
-            <DropdownMenuRadioItem value={option.value} key={option.value}>
-              {option.label}
+            <DropdownMenuRadioItem
+              key={option.value}
+              value={option.value}
+              onSelect={(e) => e.preventDefault()}
+              isViewIndicator={false}
+              isChecked={sort === option.value}
+            >
+              <span className="text-[0.875rem] font-normal">
+                {option.label}
+              </span>
             </DropdownMenuRadioItem>
           ))}
         </DropdownMenuRadioGroup>
