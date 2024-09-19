@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react'
 
-type RadioGroupContextState = {
+interface RadioGroupContextState {
   id: string
   value: string
   onChange: (value: string) => void

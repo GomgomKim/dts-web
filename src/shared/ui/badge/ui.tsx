@@ -4,7 +4,7 @@ interface BadgeProps extends React.ComponentProps<'span'> {
   children: React.ReactNode
 }
 
-const Badge = ({ children, className, ...props }: BadgeProps) => {
+export const Badge = ({ children, className, ...props }: BadgeProps) => {
   return (
     <span
       className={cn(
@@ -17,5 +17,3 @@ const Badge = ({ children, className, ...props }: BadgeProps) => {
     </span>
   )
 }
-
-export { Badge }

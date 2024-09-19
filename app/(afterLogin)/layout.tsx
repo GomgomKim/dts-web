@@ -1,8 +1,10 @@
 'use client'
 
 import * as React from 'react'
-import { useAuthStore } from '@/entities/user/store'
+
 import { useRouter } from 'next/navigation'
+
+import { useAuthStore } from '@/entities/UserProfile/store'
 
 export default function Layout({
   children

@@ -1,10 +1,9 @@
-import ExploreIcon from '/public/icons/compass.svg'
-import FavoriteIcon from '/public/icons/heart.svg'
-// import ArchiveIcon from '/public/icons/folder.svg'
-
 import { Menu, MenuItem } from '@/shared/ui'
 
-const Menubar = () => {
+import ExploreIcon from '/public/icons/compass.svg'
+import FavoriteIcon from '/public/icons/heart.svg'
+
+export const Menubar = () => {
   return (
     <Menu>
       <li>
@@ -28,5 +27,3 @@ const Menubar = () => {
     </Menu>
   )
 }
-
-export { Menubar }

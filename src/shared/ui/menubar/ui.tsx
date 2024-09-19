@@ -1,13 +1,15 @@
 'use client'
 
-import { Button } from '@/shared/ui/button'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { cn } from '@/shared/lib/utils'
 import { ComponentProps } from 'react'
 import * as React from 'react'
 
-export type MenuItemType = {
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+
+import { cn } from '@/shared/lib/utils'
+import { Button } from '@/shared/ui/button'
+
+interface MenuItemType {
   href: { pathname: string; query?: { [key: string]: string } }
   title: string
   prefix: React.ReactNode
@@ -27,7 +29,7 @@ Menu.displayName = 'Menu'
 
 // menu item
 
-type MenuItemProps = {
+interface MenuItemProps {
   item: MenuItemType
 }
 

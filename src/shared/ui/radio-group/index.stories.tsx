@@ -1,7 +1,8 @@
+import { useState } from 'react'
+
 import type { Meta, StoryObj } from '@storybook/react'
 
 import { RadioGroup, RadioGroupItem } from '.'
-import { useState } from 'react'
 
 const meta: Meta<typeof RadioGroup> = {
   component: RadioGroup,
@@ -32,7 +33,7 @@ export const Default: Story = {
           id="test"
           defaultValue="default"
           value={value}
-          onValueChange={handleValueChange}
+          onChangeValue={handleValueChange}
         >
           {options.map((option) => (
             <div key={option.id} className="flex items-center space-x-2">

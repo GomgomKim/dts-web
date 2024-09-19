@@ -1,7 +1,8 @@
 'use client'
 
-import { Header } from '@/widgets/Header'
 import { Suspense } from 'react'
+
+import { Header } from '@/widgets/Header'
 
 export default function DetailPageLayout({
   children

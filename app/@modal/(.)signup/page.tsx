@@ -1,10 +1,13 @@
 'use client'
 
+import { useRef } from 'react'
+
+import { useRouter } from 'next/navigation'
+
 import { Signup } from '@/entities/Signup'
+
 import { useOutsideClick } from '@/shared/lib/hooks/useOutsideClick'
 import { usePreventScroll } from '@/shared/lib/hooks/usePreventScroll'
-import { useRouter } from 'next/navigation'
-import { useRef } from 'react'
 
 export default function Page() {
   const router = useRouter()

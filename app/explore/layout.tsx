@@ -1,7 +1,10 @@
-import type { Metadata } from 'next'
-import { Sidebar } from '@/widgets'
-import { Header } from '@/widgets/Header'
 import { Suspense } from 'react'
+
+import type { Metadata } from 'next'
+
+import { Header } from '@/widgets/Header'
+
+import { Sidebar } from '@/widgets'
 
 export const metadata: Metadata = {
   title: 'Create Next App',

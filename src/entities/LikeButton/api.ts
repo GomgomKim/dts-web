@@ -1,22 +1,24 @@
-import { AxiosError, AxiosResponse } from 'axios'
 import { dtsAxios } from '@/shared/api'
+
+import { AxiosError, AxiosResponse } from 'axios'
+
 import { URL_FAVORITE_ADD, URL_FAVORITE_REMOVE } from './constant'
-import { PostFavoriteAddReqData, DeleteFavoriteRemoveReqData } from './model'
+import { DeleteFavoriteReqData, PostFavoriteReqData } from './types'
 
 // TODO: error 처리
-export async function postFavoriteAdd({
+export async function postFavorite({
   encodedImageInfoId
-}: PostFavoriteAddReqData): Promise<void> {
+}: PostFavoriteReqData): Promise<void> {
   const response = await dtsAxios.post<
-    PostFavoriteAddReqData,
+    PostFavoriteReqData,
     AxiosResponse<void, AxiosError>
   >(`${URL_FAVORITE_ADD}?encodedImageInfoId=${encodedImageInfoId}`)
   return response.data
 }
 
-export async function deleteFavoriteRemove({
+export async function deleteFavorite({
   encodedImageInfoId
-}: DeleteFavoriteRemoveReqData): Promise<void> {
+}: DeleteFavoriteReqData): Promise<void> {
   const response = await dtsAxios.delete<null, AxiosResponse<void, AxiosError>>(
     `${URL_FAVORITE_REMOVE}?encodedImageInfoId=${encodedImageInfoId}`
   )

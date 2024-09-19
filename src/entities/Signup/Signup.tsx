@@ -1,10 +1,12 @@
 'use client'
 
 import Link from 'next/link'
-import DTSLogo from '/public/icons/dts-logo.svg'
-import { Button } from '@/shared/ui'
-import GoogleIcon from '/public/icons/google-logo.svg'
 import { useRouter } from 'next/navigation'
+
+import { Button } from '@/shared/ui'
+
+import DTSLogo from '/public/icons/dts-logo.svg'
+import GoogleIcon from '/public/icons/google-logo.svg'
 
 const SignupButton = () => {
   return (
@@ -17,11 +19,11 @@ const SignupButton = () => {
   )
 }
 
-type SignupProps = {
+interface SignupProps {
   modalRef?: React.RefObject<HTMLDivElement>
 }
 
-const Signup = ({ modalRef }: SignupProps) => {
+export const Signup = ({ modalRef }: SignupProps) => {
   const router = useRouter()
 
   return (
@@ -68,5 +70,3 @@ const Signup = ({ modalRef }: SignupProps) => {
     </div>
   )
 }
-
-export { Signup }

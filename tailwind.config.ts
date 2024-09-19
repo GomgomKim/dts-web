@@ -1,5 +1,6 @@
-import { colorMap } from './src/app/styles/colors'
 import type { Config } from 'tailwindcss'
+
+import { colorMap } from './src/app/styles/colors'
 
 const config = {
   darkMode: ['class'],
