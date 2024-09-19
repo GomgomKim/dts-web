@@ -1,5 +1,3 @@
-import { useCallback } from 'react'
-
 import { cn } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui/button'
 
@@ -19,7 +17,7 @@ interface ExportButtonProps extends React.ComponentProps<typeof Button> {
 }
 
 export const ExportButton = (props: ExportButtonProps) => {
-  const onButtonClick = useCallback(() => {
+  const onButtonClick = () => {
     if (props.containerRef.current === null) return
 
     nodeToImage(props.imgType, props.containerRef.current, {
@@ -35,7 +33,7 @@ export const ExportButton = (props: ExportButtonProps) => {
       .catch((err) => {
         console.log(err)
       })
-  }, [props.containerRef])
+  }
 
   return (
     <Button
