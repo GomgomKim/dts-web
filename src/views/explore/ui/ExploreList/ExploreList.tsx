@@ -19,9 +19,7 @@ export const ExploreList = () => {
     fetchNextPage
   } = useGetExploreList()
 
-  const { ref, inView } = useInView({
-    threshold: 1
-  })
+  const { ref, inView } = useInView()
 
   useEffect(() => {
     if (inView) {
@@ -32,8 +30,11 @@ export const ExploreList = () => {
   if (isFetching && !isFetchingNextPage) return <p>loading</p>
   if (status === 'error') return <p>{error?.message}</p>
 
-  const Grid = () => {
-    return (
+  const isEmpty = data?.pages[0].content.images.length === 0
+  if (isEmpty) return <p>no data</p>
+
+  return (
+    <>
       <div className="grid grid-cols-auto-fill-px gap-5">
         {data?.pages.map((page, i) => (
           <Fragment key={i}>
@@ -47,19 +48,6 @@ export const ExploreList = () => {
           </Fragment>
         ))}
       </div>
-    )
-  }
-
-  const isEmpty = data?.pages[0].content.images.length === 0
-
-  const renderCard = () => {
-    if (isEmpty) return <p>no data</p>
-    return <Grid />
-  }
-
-  return (
-    <>
-      {renderCard()}
       {isFetching && isFetchingNextPage && (
         <div style={{ height: 100 }}>loading more models ...</div>
       )}
