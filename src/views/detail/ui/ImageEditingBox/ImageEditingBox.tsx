@@ -78,7 +78,12 @@ export const ImageEditingBox = (props: ImageEditingBoxProps) => {
         style={{ ...containerStyle }}
       >
         {selectedVariation ? (
-          <Image src={imgUrl} alt="" fill style={{ objectFit: 'contain' }} />
+          <Image
+            src={imgUrl || ''}
+            alt=""
+            fill
+            style={{ objectFit: 'contain' }}
+          />
         ) : null}
         <ResizableAndDraggableBoxes
           containerRef={containerRef}
