@@ -18,6 +18,7 @@ import { DownloadDropdown } from './ui/DownloadDropdown'
 import { EditVariation } from './ui/EditVariation'
 import { ImageEditingBox } from './ui/ImageEditingBox'
 import { Box } from './ui/ImageEditingBox/types'
+import { NewGenerateButton } from './ui/NewGenerateButton'
 import { VariationsSection } from './ui/VariationList'
 
 export default function Detail() {
@@ -86,12 +87,15 @@ export default function Detail() {
           {/* generate section - left */}
           <div className="overflow-y-auto overflow-x-hidden basis-[513px] shrink-0 grow">
             <div className="flex flex-col relative h-full">
-              <div className="flex justify-between items-center sticky top-0 w-full z-10">
-                <h2 className="text-[20px]">Generate</h2>
+              <div className="sticky top-0 w-full z-10">
+                <h2 className="text-[1.5rem] inline-block">Generate</h2>
+
+                <span className="absolute top-0 right-0">
+                  <NewGenerateButton />
+                </span>
               </div>
 
               <div className="mt-5 grow">
-                {/* <div className="flex"> */}
                 <div className="flex flex-col gap-5 grow h-full">
                   {/* image editing section */}
                   <div className="grow relative max-h-[720px] min-h-[391px]">
