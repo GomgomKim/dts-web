@@ -4,8 +4,6 @@ import { URL_FAVORITE_LIST } from '@/views/favorites/ui/FavoriteList/constant'
 import { PostAiImageReqData } from '@/features/generate-variation/model/types'
 
 import {
-  ASPECT_RATIO_REVERT_MAP,
-  FACE_ANGLE_REVERT_MAP,
   URL_AI_IMAGE_GENERATE,
   URL_AI_IMAGE_GENERATE_PROGRESS,
   URL_VARIATION_LIST
@@ -222,17 +220,13 @@ export const handlers = [
       throw new Error('Invalid request data')
     }
     const randomString = uuidv4()
-    const {
-      // encodedBaseImageId,
-      properties: { aspectRatio, faceAngle }
-    } = newAiImageInfo as PostAiImageReqData
+    const { encodedBaseImageId } = newAiImageInfo as PostAiImageReqData
 
-    const responseImages = createResponseImages(
-      randomString,
-      10,
-      aspectRatio,
-      faceAngle
-    )
+    if (!encodedBaseImageId) {
+      return sendJsonResponse(0, 'Invalid request data', null, 400)
+    }
+
+    const responseImages = createResponseImages(randomString, 10)
 
     return sendJsonResponse(
       0,
@@ -292,20 +286,18 @@ export const handlers = [
 // Helper function to create response images
 function createResponseImages(
   encodedBaseImageId: string,
-  progress: number,
-  aspectRatio = '1:1',
-  faceAngle = 'Front'
+  progress: number
 ): Variation {
   return {
     encodedBaseImageId,
     properties: {
-      aspectRatio: ASPECT_RATIO_REVERT_MAP[aspectRatio],
-      faceAngle: FACE_ANGLE_REVERT_MAP[faceAngle]
+      aspectRatio: 'ASPECT_RATIO_9_16',
+      faceAngle: 'FRONT'
     },
     isAiGenerated: true,
     encryptedImageUrl: faker.image.urlLoremFlickr({
       width: 1080,
-      height: 1080
+      height: 1920
     }),
     progress,
     encodedAiBasedImageId: encodedBaseImageId,

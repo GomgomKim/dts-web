@@ -6,13 +6,10 @@ import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
 
 import { useAuthStore } from '@/entities/UserProfile/store'
-import {
-  ASPECT_RATIO_REVERT_MAP,
-  URL_VARIATION_LIST_IMAGE
-} from '@/entities/detail/constant'
+import { URL_VARIATION_LIST_IMAGE } from '@/entities/detail/constant'
 import { useAiImageGeneratingStore } from '@/entities/detail/store'
 
-import { FaceAngle, Variation } from '@/shared/api/types'
+import { Variation } from '@/shared/api/types'
 import { cn } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui'
 
@@ -88,7 +85,7 @@ export const VariationsSection = (props: VariationsSectionProps) => {
   } = useGetVariationList(encodedBaseImageInfoId)
   const queries = useGetAiImageProgress()
 
-  const postAiImageMutaion = usePostAiImageGenerate()
+  const postAiImageMutation = usePostAiImageGenerate()
 
   const setRestriction = useAuthStore((state) => state.setRestriction)
 
@@ -188,20 +185,13 @@ export const VariationsSection = (props: VariationsSectionProps) => {
   )
 
   const handleClickRetryButton = ({ item }: { item: Variation }) => {
-    const {
-      encodedBaseImageId,
-      properties: { aspectRatio, faceAngle }
-    } = item
+    const { encodedBaseImageId } = item
 
     removeAiImageGeneratingList(encodedBaseImageId)
 
-    postAiImageMutaion.mutate(
+    postAiImageMutation.mutate(
       {
-        encodedBaseImageId,
-        properties: {
-          aspectRatio: ASPECT_RATIO_REVERT_MAP[aspectRatio],
-          faceAngle: faceAngle as FaceAngle
-        }
+        encodedBaseImageId
       },
       {
         onSuccess: (data) => {
