@@ -19,13 +19,12 @@ import { Button } from '@/shared/ui'
 import AlertCircleIcon from '/public/icons/alert-circle.svg'
 import AngleBracketIcon from '/public/icons/angle-bracket-open.svg'
 import DashedSvg from '/public/icons/dashed.svg'
-import PlusIcon from '/public/icons/plus.svg'
 
 import { v4 } from 'uuid'
 
-import { usePostAiImageGenerate } from '../EditVariation/model/adapter'
-import { useHandleClickNewGenerate } from './lib/useHandleNewGenerate'
+import { usePostAiImageGenerate } from '../../../../features/generate-variation/model/adapter'
 import { useGetAiImageProgress, useGetVariationList } from './model/adapter'
+import { NewGenerateButton } from './ui/NewGenerateButton'
 
 interface VariationsSectionProps {
   onChangeSelectedVariation: (variation: Variation) => void
@@ -217,7 +216,6 @@ export const VariationsSection = (props: VariationsSectionProps) => {
       // onError
     )
   }
-  const { handleClickNewGenerate } = useHandleClickNewGenerate()
 
   return (
     <>
@@ -346,19 +344,11 @@ export const VariationsSection = (props: VariationsSectionProps) => {
               key={index}
               className="rounded-[0.5rem] aspect-[206/219] w-full bg-neutral-1 bg-opacity-50 overflow-hidden"
             >
-              <DashedSvg className="w-full h-full" />
+              <DashedSvg />
             </div>
           ))}
         {/* new generate button */}
-        <button
-          key="new-generate"
-          onClick={handleClickNewGenerate}
-          className="relative rounded-[0.5rem] aspect-[206/219] w-full bg-neutral-1 bg-opacity-50 overflow-hidden group"
-        >
-          <DashedSvg className="w-full h-full" />
-          <PlusIcon className="absolute inset-0 m-auto w-10 h-10 text-neutral-5 stroke-[#76777D] group-hover:stroke-neutral-7 group-active:stroke-neutral-7" />
-          <span className="a11y-hidden">New Generate</span>
-        </button>
+        <NewGenerateButton />
       </div>
     </>
   )

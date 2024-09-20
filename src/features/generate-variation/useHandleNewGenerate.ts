@@ -6,7 +6,7 @@ import { useAiImageGeneratingStore } from '@/entities/detail/store'
 
 import { FaceAngle } from '@/shared/api/types'
 
-import { usePostAiImageGenerate } from '../../EditVariation/model/adapter'
+import { usePostAiImageGenerate } from './model/adapter'
 
 export const useHandleClickNewGenerate = () => {
   const searchParams = useSearchParams()
