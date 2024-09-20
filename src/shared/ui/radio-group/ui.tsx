@@ -51,6 +51,7 @@ const RadioGroupItem = React.forwardRef<HTMLDivElement, RadioGroupItemProps>(
       <div
         ref={ref}
         role="radio"
+        tabIndex={disabled ? -1 : 0}
         aria-checked={value === localValue}
         aria-disabled={disabled}
         className={cn(

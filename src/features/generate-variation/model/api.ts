@@ -7,15 +7,13 @@ import { AxiosError, AxiosResponse } from 'axios'
 import { PostAiImageReqData, PostAiImageResData } from './types'
 
 export async function postAiImageGenerate({
-  encodedBaseImageId,
-  properties
+  encodedBaseImageId
 }: PostAiImageReqData): Promise<PostAiImageResData> {
   const response = await dtsAxios.post<
     PostAiImageReqData,
     AxiosResponse<PostAiImageResData, AxiosError>
   >(`${URL_AI_IMAGE_GENERATE}`, {
-    encodedBaseImageId,
-    properties
+    encodedBaseImageId
   })
   return response.data
 }

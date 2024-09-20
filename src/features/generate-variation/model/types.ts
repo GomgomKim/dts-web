@@ -1,8 +1,7 @@
-import { Properties, ResData, Restriction, Variation } from '@/shared/api/types'
+import { ResData, Restriction, Variation } from '@/shared/api/types'
 
 export interface PostAiImageReqData {
   encodedBaseImageId: string
-  properties: Properties
 }
 
 export interface PostAiImageResData extends ResData<PostAiImageContent> {}

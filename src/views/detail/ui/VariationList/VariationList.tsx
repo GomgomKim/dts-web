@@ -6,13 +6,10 @@ import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
 
 import { useAuthStore } from '@/entities/UserProfile/store'
-import {
-  ASPECT_RATIO_REVERT_MAP,
-  URL_VARIATION_LIST_IMAGE
-} from '@/entities/detail/constant'
+import { URL_VARIATION_LIST_IMAGE } from '@/entities/detail/constant'
 import { useAiImageGeneratingStore } from '@/entities/detail/store'
 
-import { FaceAngle, Variation } from '@/shared/api/types'
+import { Variation } from '@/shared/api/types'
 import { cn } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui'
 
@@ -32,21 +29,6 @@ interface VariationListProps {
 
 const AMOUNT_PER_PAGE = 3
 const INITIAL_PAGE = 1
-
-// const dummy: Variation[] = [
-//   {
-//     encodedAiBasedImageId: 'MTk=',
-//     encodedBaseImageId: '',
-//     properties: {
-//       aspectRatio: 'ASPECT_RATIO_1_1',
-//       faceAngle: 'FRONT'
-//     },
-//     progress: 0,
-//     isAiGenerated: true,
-//     isFail: true,
-//     isTimeout: true
-//   }
-// ]
 
 export const VariationsList = (props: VariationListProps) => {
   const searchParams = useSearchParams()
@@ -88,7 +70,7 @@ export const VariationsList = (props: VariationListProps) => {
   } = useGetVariationList(encodedBaseImageInfoId)
   const queries = useGetAiImageProgress()
 
-  const postAiImageMutaion = usePostAiImageGenerate()
+  const postAiImageMutation = usePostAiImageGenerate()
 
   const setRestriction = useAuthStore((state) => state.setRestriction)
 
@@ -188,20 +170,13 @@ export const VariationsList = (props: VariationListProps) => {
   )
 
   const handleClickRetryButton = ({ item }: { item: Variation }) => {
-    const {
-      encodedBaseImageId,
-      properties: { aspectRatio, faceAngle }
-    } = item
+    const { encodedBaseImageId } = item
 
     removeAiImageGeneratingList(encodedBaseImageId)
 
-    postAiImageMutaion.mutate(
+    postAiImageMutation.mutate(
       {
-        encodedBaseImageId,
-        properties: {
-          aspectRatio: ASPECT_RATIO_REVERT_MAP[aspectRatio],
-          faceAngle: faceAngle as FaceAngle
-        }
+        encodedBaseImageId
       },
       {
         onSuccess: (data) => {
@@ -271,7 +246,7 @@ export const VariationsList = (props: VariationListProps) => {
 
           const isGenerating = isAiGenerated && progress < 100
           const isSeletedVariation =
-            searchParams.get('variation') === encodedBaseImageId
+            searchParams.get('variationId') === encodedBaseImageId
 
           const imgUrl =
             process.env.NEXT_PUBLIC_API_MOCKING === 'enabled'

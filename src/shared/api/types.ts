@@ -34,12 +34,7 @@ export interface Properties {
   faceAngle: FaceAngle
 }
 
-export type AspectRatio =
-  | 'ASPECT_RATIO_16_9'
-  | 'ASPECT_RATIO_9_16'
-  | 'ASPECT_RATIO_1_1'
-  | 'ASPECT_RATIO_4_3'
-  | 'ASPECT_RATIO_3_4'
+export type AspectRatio = 'ASPECT_RATIO_9_16' | 'ASPECT_RATIO_1_1'
 
 export type FaceAngle = 'LEFT' | 'FRONT' | 'RIGHT'
 
