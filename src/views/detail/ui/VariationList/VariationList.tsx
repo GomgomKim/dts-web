@@ -18,17 +18,20 @@ import { Button } from '@/shared/ui'
 
 import AlertCircleIcon from '/public/icons/alert-circle.svg'
 import AngleBracketIcon from '/public/icons/angle-bracket-open.svg'
+import DashedSvg from '/public/icons/dashed.svg'
+import PlusIcon from '/public/icons/plus.svg'
 
 import { v4 } from 'uuid'
 
 import { usePostAiImageGenerate } from '../EditVariation/model/adapter'
+import { useHandleClickNewGenerate } from './lib/useHandleNewGenerate'
 import { useGetAiImageProgress, useGetVariationList } from './model/adapter'
 
 interface VariationsSectionProps {
   onChangeSelectedVariation: (variation: Variation) => void
 }
 
-const AMOUNT_PER_PAGE = 4
+const AMOUNT_PER_PAGE = 3
 const INITIAL_PAGE = 1
 
 // const dummy: Variation[] = [
@@ -149,8 +152,6 @@ export const VariationsSection = (props: VariationsSectionProps) => {
     }
 
     if (query.data?.content.variation.isFail) {
-      // console.log('isFail', query.data?.content)
-
       // TODO: 에러 발생시 처리
       const { encodedBaseImageId } = query.data.content.variation
       setIsAiImageFailed(true)
@@ -160,12 +161,9 @@ export const VariationsSection = (props: VariationsSectionProps) => {
     }
 
     if (query.data?.content.variation.progress === 100) {
-      // console.log('생성 완료!', query.data?.content)
-
       const { encodedBaseImageId } = query.data.content.variation
       removeAiImageGeneratingList(encodedBaseImageId)
       updateAiImageItem(query.data?.content.variation)
-      // TODO: 업데이트되고 다음 렌더링때 이미지가 반영되는 이슈
     }
   }
 
@@ -219,6 +217,7 @@ export const VariationsSection = (props: VariationsSectionProps) => {
       // onError
     )
   }
+  const { handleClickNewGenerate } = useHandleClickNewGenerate()
 
   return (
     <>
@@ -340,15 +339,26 @@ export const VariationsSection = (props: VariationsSectionProps) => {
         })}
         {/* null card */}
         {renderData.length < AMOUNT_PER_PAGE &&
-          Array.from({ length: AMOUNT_PER_PAGE - renderData.length }).map(
-            (_, index) => (
-              <div
-                // Key 변경
-                key={index}
-                className="border border-dashed rounded-[0.5rem] aspect-[206/219] w-full bg-neutral-1 opacity-50"
-              ></div>
-            )
-          )}
+          Array.from({
+            length: AMOUNT_PER_PAGE - renderData.length
+          }).map((_, index) => (
+            <div
+              key={index}
+              className="rounded-[0.5rem] aspect-[206/219] w-full bg-neutral-1 bg-opacity-50 overflow-hidden"
+            >
+              <DashedSvg className="w-full h-full" />
+            </div>
+          ))}
+        {/* new generate button */}
+        <button
+          key="new-generate"
+          onClick={handleClickNewGenerate}
+          className="relative rounded-[0.5rem] aspect-[206/219] w-full bg-neutral-1 bg-opacity-50 overflow-hidden group"
+        >
+          <DashedSvg className="w-full h-full" />
+          <PlusIcon className="absolute inset-0 m-auto w-10 h-10 text-neutral-5 stroke-[#76777D] group-hover:stroke-neutral-7 group-active:stroke-neutral-7" />
+          <span className="a11y-hidden">New Generate</span>
+        </button>
       </div>
     </>
   )
