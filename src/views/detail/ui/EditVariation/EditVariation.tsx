@@ -20,9 +20,11 @@ interface EditVariationProps {
 
 export const EditVariation = (props: EditVariationProps) => {
   return (
-    <>
+    <section className="flex flex-col gap-5">
+      <h2 className="text-[1.5rem]">Edit</h2>
+
       {/* options - Aspect Ratio */}
-      <div className="mt-[78px]">
+      <article>
         <h3 className="mb-5 text-[0.875rem] text-neutral-7">Aspect Ratio</h3>
         <RadioGroup
           id="aspectRatio"
@@ -33,10 +35,10 @@ export const EditVariation = (props: EditVariationProps) => {
             <RadioGroupItem key={option} value={option} label={option} />
           ))}
         </RadioGroup>
-      </div>
+      </article>
 
       {/* options - Face Angle */}
-      <div>
+      <article>
         <h3 className="mb-5 text-[0.875rem] text-neutral-7">Face Angle</h3>
         <RadioGroup
           id="faceAngle"
@@ -47,10 +49,10 @@ export const EditVariation = (props: EditVariationProps) => {
             <RadioGroupItem key={option} value={option} label={option} />
           ))}
         </RadioGroup>
-      </div>
+      </article>
 
       {/* options - Skin Texture */}
-      <div>
+      <article>
         <div className="mb-5 flex items-center">
           <h3 className="text-neutral-7 opacity-50 text-[0.875rem]">
             Skin Texture
@@ -62,15 +64,11 @@ export const EditVariation = (props: EditVariationProps) => {
             <RadioGroupItem key={option} value={option} label={option} />
           ))}
         </RadioGroup>
-      </div>
+      </article>
 
-      <Button
-        stretch
-        className="bg-neautral-1 bg-opacity-50"
-        onClick={() => {}}
-      >
+      <Button stretch onClick={() => {}} className="font-semibold">
         Apply Edit Options
       </Button>
-    </>
+    </section>
   )
 }

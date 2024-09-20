@@ -82,10 +82,10 @@ export default function Detail() {
       </div>
 
       {/* generate section */}
-      <section className="h-full ml-[320px] xl:ml-[407px] grow">
+      <div className="h-full ml-[320px] xl:ml-[407px] grow">
         <div className="h-full overflow-x-scroll flex gap-5">
           {/* generate section - left */}
-          <div className="overflow-y-auto overflow-x-hidden basis-[513px] shrink-0 grow">
+          <section className="overflow-y-auto overflow-x-hidden basis-[513px] shrink-0 grow">
             <div className="flex flex-col relative h-full">
               <div className="sticky top-0 w-full z-10">
                 <h2 className="text-[1.5rem] inline-block">Generate</h2>
@@ -118,7 +118,7 @@ export default function Detail() {
                 </div>
               </div>
             </div>
-          </div>
+          </section>
 
           {/* generate section - right */}
           <div className="overflow-y-auto overflow-x-hidden basis-[407px] shrink-0">
@@ -139,7 +139,7 @@ export default function Detail() {
             </div>
           </div>
         </div>
-      </section>
+      </div>
     </div>
   )
 }
