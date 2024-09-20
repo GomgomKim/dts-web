@@ -18,17 +18,19 @@ import { Button } from '@/shared/ui'
 
 import AlertCircleIcon from '/public/icons/alert-circle.svg'
 import AngleBracketIcon from '/public/icons/angle-bracket-open.svg'
+import DashedSvg from '/public/icons/dashed.svg'
 
 import { v4 } from 'uuid'
 
-import { usePostAiImageGenerate } from '../EditVariation/model/adapter'
+import { usePostAiImageGenerate } from '../../../../features/generate-variation/model/adapter'
 import { useGetAiImageProgress, useGetVariationList } from './model/adapter'
+import { NewGenerateButton } from './ui/NewGenerateButton'
 
 interface VariationsSectionProps {
   onChangeSelectedVariation: (variation: Variation) => void
 }
 
-const AMOUNT_PER_PAGE = 4
+const AMOUNT_PER_PAGE = 3
 const INITIAL_PAGE = 1
 
 // const dummy: Variation[] = [
@@ -149,8 +151,6 @@ export const VariationsSection = (props: VariationsSectionProps) => {
     }
 
     if (query.data?.content.variation.isFail) {
-      // console.log('isFail', query.data?.content)
-
       // TODO: 에러 발생시 처리
       const { encodedBaseImageId } = query.data.content.variation
       setIsAiImageFailed(true)
@@ -160,12 +160,9 @@ export const VariationsSection = (props: VariationsSectionProps) => {
     }
 
     if (query.data?.content.variation.progress === 100) {
-      // console.log('생성 완료!', query.data?.content)
-
       const { encodedBaseImageId } = query.data.content.variation
       removeAiImageGeneratingList(encodedBaseImageId)
       updateAiImageItem(query.data?.content.variation)
-      // TODO: 업데이트되고 다음 렌더링때 이미지가 반영되는 이슈
     }
   }
 
@@ -340,15 +337,18 @@ export const VariationsSection = (props: VariationsSectionProps) => {
         })}
         {/* null card */}
         {renderData.length < AMOUNT_PER_PAGE &&
-          Array.from({ length: AMOUNT_PER_PAGE - renderData.length }).map(
-            (_, index) => (
-              <div
-                // Key 변경
-                key={index}
-                className="border border-dashed rounded-[0.5rem] aspect-[206/219] w-full bg-neutral-1 opacity-50"
-              ></div>
-            )
-          )}
+          Array.from({
+            length: AMOUNT_PER_PAGE - renderData.length
+          }).map((_, index) => (
+            <div
+              key={index}
+              className="rounded-[0.5rem] aspect-[206/219] w-full bg-neutral-1 bg-opacity-50 overflow-hidden"
+            >
+              <DashedSvg />
+            </div>
+          ))}
+        {/* new generate button */}
+        <NewGenerateButton />
       </div>
     </>
   )
