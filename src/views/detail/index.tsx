@@ -2,15 +2,9 @@
 
 import { Suspense, useRef, useState } from 'react'
 
-import {
-  ASPECT_RATIO_MAP,
-  FACE_ANGLE_MAP,
-  FACE_ANGLE_REVERT_MAP
-} from '@/entities/detail/constant'
 import { useImagePreviewUrlStore } from '@/entities/detail/store'
 
 import { Variation } from '@/shared/api/types'
-import { useSetQueryString } from '@/shared/lib/hooks/useSetQueryString'
 
 import { convertImagesToBoxData } from './lib'
 import { BrandAssets } from './ui/BrandAssets'
@@ -41,34 +35,6 @@ export default function Detail() {
   const [selectedVariation, setSelectedVariation] = useState<Variation | null>(
     null
   )
-  const [aspectRatio, setAspectRatio] = useState<string>('')
-  const [faceAngle, setFaceAngle] = useState<string>('')
-
-  const { handleQueryString } = useSetQueryString({ option: 'replace' })
-
-  const handleChangeAspectRatio = (value: string) => {
-    setAspectRatio(value)
-    handleQueryString([{ aspectRatio: value }])
-  }
-
-  const handleChangeFaceAngle = (value: string) => {
-    setFaceAngle(value)
-    handleQueryString([{ faceAngle: FACE_ANGLE_REVERT_MAP[value] }])
-  }
-
-  const handleSelectedVariation = (variation: Variation) => {
-    setSelectedVariation(variation)
-
-    const {
-      encodedBaseImageId,
-      properties: { aspectRatio, faceAngle }
-    } = variation
-
-    handleQueryString([{ variation: encodedBaseImageId }])
-
-    handleChangeAspectRatio(ASPECT_RATIO_MAP[aspectRatio])
-    handleChangeFaceAngle(FACE_ANGLE_MAP[faceAngle])
-  }
 
   return (
     <div className="flex w-full h-full">
@@ -111,7 +77,9 @@ export default function Detail() {
                   <div className="min-h-[180px]">
                     <Suspense fallback={<div>Loading...</div>}>
                       <VariationsSection
-                        onChangeSelectedVariation={handleSelectedVariation}
+                        onChangeSelectedVariation={(variation: Variation) =>
+                          setSelectedVariation(variation)
+                        }
                       />
                     </Suspense>
                   </div>
@@ -124,17 +92,13 @@ export default function Detail() {
           <div className="overflow-y-auto overflow-x-hidden basis-[407px] shrink-0">
             <div className="flex flex-col gap-5 ">
               {/* related variations options /////////////////////////////////////////////  */}
-              <EditVariation
-                aspectRatio={aspectRatio}
-                faceAngle={faceAngle}
-                onChangeAspectRatio={handleChangeAspectRatio}
-                onChangeFaceAngle={handleChangeFaceAngle}
-              />
+              <EditVariation />
 
               {/* related download image /////////////////////////////////////////////  */}
               <DownloadDropdown
                 containerRef={containerRef}
-                selectedVariation={selectedVariation}
+                // TODO:
+                selectedVariation={null} // + history store present options
               />
             </div>
           </div>
