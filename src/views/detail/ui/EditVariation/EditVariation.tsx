@@ -1,19 +1,11 @@
-import { useSearchParams } from 'next/navigation'
-
-import { useAuthStore } from '@/entities/UserProfile/store'
 import {
   ASPECT_RATIO_MAP,
-  ASPECT_RATIO_REVERT_MAP,
   FACE_ANGLE_MAP,
   SKIN_TEXTURE_MAP
 } from '@/entities/detail/constant'
-import { useAiImageGeneratingStore } from '@/entities/detail/store'
 
-import { FaceAngle } from '@/shared/api/types'
 import { Badge, Button } from '@/shared/ui'
 import { RadioGroup, RadioGroupItem } from '@/shared/ui/radio-group'
-
-import { usePostAiImageGenerate } from './model/adapter'
 
 const SKIN_TEXTURE_OPTIONS = Object.values(SKIN_TEXTURE_MAP)
 const ASPECT_RATIO_OPTIONS = Object.values(ASPECT_RATIO_MAP)
@@ -27,53 +19,6 @@ interface EditVariationProps {
 }
 
 export const EditVariation = (props: EditVariationProps) => {
-  const searchParams = useSearchParams()
-  const addAiImageGeneratingList = useAiImageGeneratingStore(
-    (state) => state.addAiImageGeneratingList
-  )
-
-  const setRestriction = useAuthStore((state) => state.setRestriction)
-  const setIsAiImageGenerating = useAiImageGeneratingStore(
-    (state) => state.setIsAiImageGenerating
-  )
-  const addAiImageItem = useAiImageGeneratingStore(
-    (state) => state.addAiImageItem
-  )
-  const postAiImageMutaion = usePostAiImageGenerate()
-
-  const handleClickNewVariation = () => {
-    // TODO: 디바운싱 처리
-    setIsAiImageGenerating(true)
-
-    // request new variation
-    const encodedBaseImageId = searchParams.get('variation')
-    const aspectRatio = searchParams.get('aspectRatio')
-    const faceAngle = searchParams.get('faceAngle')
-
-    if (!encodedBaseImageId || !aspectRatio || !faceAngle) {
-      return
-    }
-
-    postAiImageMutaion.mutate(
-      {
-        encodedBaseImageId,
-        properties: {
-          aspectRatio: ASPECT_RATIO_REVERT_MAP[aspectRatio],
-          faceAngle: faceAngle as FaceAngle
-        }
-      },
-      {
-        onSuccess: (data) => {
-          const { variation, restriction } = data.content
-          addAiImageGeneratingList([variation])
-          addAiImageItem(variation)
-
-          setRestriction(restriction)
-        }
-      }
-      // onError
-    )
-  }
   return (
     <>
       {/* options - Aspect Ratio */}
@@ -120,12 +65,11 @@ export const EditVariation = (props: EditVariationProps) => {
       </div>
 
       <Button
-        variant="outline"
         stretch
         className="bg-neautral-1 bg-opacity-50"
-        onClick={handleClickNewVariation}
+        onClick={() => {}}
       >
-        Generate New Variations
+        Apply Edit Options
       </Button>
     </>
   )

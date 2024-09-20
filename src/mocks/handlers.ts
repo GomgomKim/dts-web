@@ -1,6 +1,7 @@
-import { PostAiImageReqData } from '@/views/detail/ui/EditVariation/model/types'
 import { URL_EXPLORE_LIST } from '@/views/explore/ui/ExploreList/constant'
 import { URL_FAVORITE_LIST } from '@/views/favorites/ui/FavoriteList/constant'
+
+import { PostAiImageReqData } from '@/features/generate-variation/model/types'
 
 import {
   ASPECT_RATIO_REVERT_MAP,
