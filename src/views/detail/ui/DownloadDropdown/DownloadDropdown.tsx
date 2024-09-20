@@ -32,13 +32,15 @@ interface DownloadDropdownProps {
 }
 
 export const DownloadDropdown = (props: DownloadDropdownProps) => {
-  const [selectedFormat, setSelectedFormat] = useState('png')
-  const [selectedQuality] = useState('small')
-  const [isError] = useState(false)
+  const [selectedFormat, setSelectedFormat] = useState<string>('png')
+  const [selectedQuality] = useState<string>('small')
+  const [isError] = useState<boolean>(false)
 
-  const exportQualityOption = props.selectedVariation
-    ? EXPORT_QUALITY_OPTIONS_1_1
-    : EXPORT_QUALITY_OPTIONS_9_16
+  // TODO: selected variation 아니고 현재 작업 보드 이미지 비율 적용하기
+  const exportQualityOption =
+    props.selectedVariation?.properties.aspectRatio === 'ASPECT_RATIO_1_1'
+      ? EXPORT_QUALITY_OPTIONS_1_1
+      : EXPORT_QUALITY_OPTIONS_9_16
 
   return (
     <DropdownMenu>
@@ -52,7 +54,7 @@ export const DownloadDropdown = (props: DownloadDropdownProps) => {
         <DropdownMenuRadioGroup
           className="flex px-5 py-3 w-[252px] justify-between"
           value={selectedFormat}
-          onValueChange={setSelectedFormat}
+          onValueChange={(value) => setSelectedFormat(value)}
         >
           {FORMAT_OPTIONS.map((option) => (
             <DropdownMenuRadioItem
@@ -128,13 +130,12 @@ export const DownloadDropdown = (props: DownloadDropdownProps) => {
 
         {/* export button */}
         <div className="pt-3 px-5">
-          {/* TODO: export img size default value */}
           <ExportButton
             imgType={selectedFormat}
             imgSize={
               exportQualityOption.find(
                 (option) => option.value === selectedQuality
-              )?.size || { width: 1280, height: 1280 }
+              )!.size
             }
             containerRef={props.containerRef}
             className={cn('rounded-[8px] text-[0.75rem] font-semibold', {
