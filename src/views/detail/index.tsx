@@ -5,6 +5,7 @@ import { Suspense, useRef, useState } from 'react'
 import { useImagePreviewUrlStore } from '@/entities/detail/store'
 
 import { Variation } from '@/shared/api/types'
+import { useSetQueryString } from '@/shared/lib/hooks/useSetQueryString'
 
 import { convertImagesToBoxData } from './lib'
 import { BrandAssets } from './ui/BrandAssets'
@@ -35,6 +36,12 @@ export default function Detail() {
   const [selectedVariation, setSelectedVariation] = useState<Variation | null>(
     null
   )
+
+  const { handleQueryString } = useSetQueryString({ option: 'replace' })
+  const handleSelectedVariation = (variation: Variation) => {
+    setSelectedVariation(variation)
+    handleQueryString([{ variationId: variation.encodedBaseImageId }])
+  }
 
   return (
     <div className="flex w-full h-full">
@@ -77,9 +84,7 @@ export default function Detail() {
                   <div className="min-h-[180px]">
                     <Suspense fallback={<div>Loading...</div>}>
                       <VariationsSection
-                        onChangeSelectedVariation={(variation: Variation) =>
-                          setSelectedVariation(variation)
-                        }
+                        onChangeSelectedVariation={handleSelectedVariation}
                       />
                     </Suspense>
                   </div>
