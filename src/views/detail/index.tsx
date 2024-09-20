@@ -19,7 +19,7 @@ import { EditVariation } from './ui/EditVariation'
 import { ImageEditingBox } from './ui/ImageEditingBox'
 import { Box } from './ui/ImageEditingBox/types'
 import { NewGenerateButton } from './ui/NewGenerateButton'
-import { VariationsSection } from './ui/VariationList'
+import { VariationsList } from './ui/VariationList'
 
 export default function Detail() {
   // related brand assets
@@ -110,7 +110,7 @@ export default function Detail() {
                   {/* variations section */}
                   <div className="min-h-[180px]">
                     <Suspense fallback={<div>Loading...</div>}>
-                      <VariationsSection
+                      <VariationsList
                         onChangeSelectedVariation={handleSelectedVariation}
                       />
                     </Suspense>

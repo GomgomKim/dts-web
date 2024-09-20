@@ -1,5 +1,7 @@
 'use client'
 
+import * as React from 'react'
+
 import Image from 'next/image'
 
 import {
@@ -23,51 +25,72 @@ interface ImageEditingBoxProps {
 export const ImageEditingBox = (props: ImageEditingBoxProps) => {
   const { containerRef, selectedVariation, boxes, setBoxes } = props
 
+  const boardRef = React.useRef<HTMLDivElement>(null)
+
   const imgUrl =
     process.env.NEXT_PUBLIC_API_MOCKING === 'enabled'
-      ? selectedVariation!.encryptedImageUrl
+      ? selectedVariation?.encryptedImageUrl
       : process.env.NEXT_PUBLIC_API_URL +
         URL_VARIATION_LIST_IMAGE +
         selectedVariation?.encryptedImageUrl
 
-  const getContainerStyle = (): React.CSSProperties => {
-    if (!selectedVariation) return { aspectRatio: 9 / 16, height: '100%' }
+  const [containerStyle, setContainerStyle] =
+    React.useState<React.CSSProperties>({})
 
-    const aspectRatioValue = selectedVariation?.properties.aspectRatio
+  const getType = () => {
+    const boardRefHeight = boardRef.current?.clientHeight || 0
+    const boardRefWidth = boardRef.current?.clientWidth || 0
 
-    const aspectRatio = ASPECT_RATIO_MAP_NUMBER[aspectRatioValue]
-    const type =
-      aspectRatioValue === 'ASPECT_RATIO_16_9' ||
-      aspectRatioValue === 'ASPECT_RATIO_4_3'
-        ? 'width'
-        : 'height'
-    // 1:1이면 상위 컨테이너의 짧은 길이에 맞추기
-
-    return { aspectRatio: aspectRatio, [type]: '100%' }
+    return boardRefHeight < boardRefWidth ? 'height' : 'width'
   }
 
+  const handleResize = () => {
+    const aspectRatioValue = selectedVariation?.properties.aspectRatio
+    const aspectRatio = ASPECT_RATIO_MAP_NUMBER[aspectRatioValue!]
+
+    const type = aspectRatioValue === 'ASPECT_RATIO_1_1' ? getType() : 'height'
+
+    const newStyle: React.CSSProperties = {
+      aspectRatio: aspectRatio,
+      [type]: '100%'
+    }
+    setContainerStyle(newStyle)
+  }
+
+  React.useEffect(() => {
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [selectedVariation])
+
   return (
-    <>
+    <div
+      ref={boardRef}
+      className={cn(
+        'h-full bg-neutral-1 bg-opacity-50 rounded-[0.5rem] overflow-hidden relative flex justify-center'
+      )}
+    >
       <div
-        className={cn(
-          'h-full bg-neutral-1 bg-opacity-50 rounded-[0.5rem] overflow-hidden relative flex justify-center'
-        )}
+        ref={containerRef}
+        className="relative m-auto"
+        style={{ ...containerStyle }}
       >
-        <div
-          ref={containerRef}
-          className="relative m-auto"
-          style={{ ...getContainerStyle() }}
-        >
-          {selectedVariation && (
-            <Image src={imgUrl} alt="" fill style={{ objectFit: 'contain' }} />
-          )}
-          <ResizableAndDraggableBoxes
-            containerRef={containerRef}
-            boxes={boxes}
-            setBoxes={setBoxes}
+        {selectedVariation ? (
+          <Image
+            src={imgUrl || ''}
+            alt=""
+            fill
+            style={{ objectFit: 'contain' }}
           />
-        </div>
+        ) : null}
+        <ResizableAndDraggableBoxes
+          containerRef={containerRef}
+          boxes={boxes}
+          setBoxes={setBoxes}
+        />
       </div>
-    </>
+    </div>
   )
 }
