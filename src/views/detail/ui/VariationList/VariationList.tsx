@@ -30,21 +30,6 @@ interface VariationsSectionProps {
 const AMOUNT_PER_PAGE = 3
 const INITIAL_PAGE = 1
 
-// const dummy: Variation[] = [
-//   {
-//     encodedAiBasedImageId: 'MTk=',
-//     encodedBaseImageId: '',
-//     properties: {
-//       aspectRatio: 'ASPECT_RATIO_1_1',
-//       faceAngle: 'FRONT'
-//     },
-//     progress: 0,
-//     isAiGenerated: true,
-//     isFail: true,
-//     isTimeout: true
-//   }
-// ]
-
 export const VariationsSection = (props: VariationsSectionProps) => {
   const searchParams = useSearchParams()
   const encodedBaseImageInfoId = searchParams.get('id') || ''
@@ -261,7 +246,7 @@ export const VariationsSection = (props: VariationsSectionProps) => {
 
           const isGenerating = isAiGenerated && progress < 100
           const isSeletedVariation =
-            searchParams.get('variation') === encodedBaseImageId
+            searchParams.get('variationId') === encodedBaseImageId
 
           const imgUrl =
             process.env.NEXT_PUBLIC_API_MOCKING === 'enabled'
