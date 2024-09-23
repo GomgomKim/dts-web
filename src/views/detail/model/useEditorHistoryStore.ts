@@ -12,6 +12,7 @@ type EditState = {
 }
 
 type EditorAction = {
+  setInitialProperty: (variationId: string, properties: Properties) => void // 초기 속성 설정
   applyEdit: (variationId: string, newEdit: Properties) => void // 새로운 편집 적용
   undo: (variationId: string) => void // undo 기능
   redo: (variationId: string) => void // redo 기능
@@ -21,6 +22,21 @@ export const useEditorStore = createStore<EditState & EditorAction>(
   'edit history store',
   (set) => ({
     items: new Map(),
+    setInitialProperty: (variationId, properties) =>
+      set((state) => {
+        const newItem: EditItem = {
+          past: [],
+          present: properties,
+          future: []
+        }
+
+        const newItems = new Map(state.items)
+        newItems.set(variationId, newItem)
+
+        return {
+          items: newItems
+        }
+      }),
     applyEdit: (variationId, newEdit) =>
       set((state) => {
         const currentEditItem = state.items.get(variationId)
