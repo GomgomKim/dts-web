@@ -12,6 +12,7 @@ import {
 import { Variation } from '@/shared/api/types'
 import { cn } from '@/shared/lib/utils'
 
+import { useEditorStore } from '../../model/useEditorHistoryStore'
 import { Box } from './types'
 import { HistoryControl } from './ui/HistoryControl/HistoryControl'
 import { ResizableAndDraggableBoxes } from './ui/ResizableAndDraggableBoxes'
@@ -26,14 +27,9 @@ interface ImageEditingBoxProps {
 export const ImageEditingBox = (props: ImageEditingBoxProps) => {
   const { containerRef, selectedVariation, boxes, setBoxes } = props
 
-  const boardRef = React.useRef<HTMLDivElement>(null)
+  const editedVariationList = useEditorStore((state) => state.items)
 
-  const imgUrl =
-    process.env.NEXT_PUBLIC_API_MOCKING === 'enabled'
-      ? selectedVariation?.encryptedImageUrl
-      : process.env.NEXT_PUBLIC_API_URL +
-        URL_VARIATION_LIST_IMAGE +
-        selectedVariation?.encryptedImageUrl
+  const boardRef = React.useRef<HTMLDivElement>(null)
 
   const [containerStyle, setContainerStyle] =
     React.useState<React.CSSProperties>({})
@@ -66,6 +62,42 @@ export const ImageEditingBox = (props: ImageEditingBoxProps) => {
     }
   }, [selectedVariation])
 
+  const renderImage = React.useCallback(() => {
+    //
+    let imgUrl =
+      process.env.NEXT_PUBLIC_API_URL +
+      URL_VARIATION_LIST_IMAGE +
+      selectedVariation?.encryptedImageUrl
+
+    if (process.env.NEXT_PUBLIC_API_MOCKING === 'enabled') {
+      if (!selectedVariation) return null
+
+      if (editedVariationList.has(selectedVariation.encodedBaseImageId)) {
+        const presentProperty = editedVariationList.get(
+          selectedVariation.encodedBaseImageId
+        )?.present
+        const presentAspectRatio = presentProperty!.aspectRatio
+        const presentFaceAngle = presentProperty!.faceAngle
+
+        const presentVariation = selectedVariation!.variations!.find((item) => {
+          return (
+            item.properties.aspectRatio === presentAspectRatio &&
+            item.properties.faceAngle === presentFaceAngle
+          )
+        })
+
+        imgUrl = presentVariation?.encryptedImageUrl || ''
+      } else {
+        imgUrl = selectedVariation?.encryptedImageUrl
+      }
+    }
+    // TODO: 이미지 컨테이너 스타일도 변경되어야 함 버그버그
+
+    return (
+      <Image src={imgUrl || ''} alt="" fill style={{ objectFit: 'contain' }} />
+    )
+  }, [selectedVariation, editedVariationList])
+
   return (
     <div
       ref={boardRef}
@@ -81,14 +113,7 @@ export const ImageEditingBox = (props: ImageEditingBoxProps) => {
         className="relative m-auto"
         style={{ ...containerStyle }}
       >
-        {selectedVariation ? (
-          <Image
-            src={imgUrl || ''}
-            alt=""
-            fill
-            style={{ objectFit: 'contain' }}
-          />
-        ) : null}
+        {selectedVariation ? renderImage() : null}
         <ResizableAndDraggableBoxes
           containerRef={containerRef}
           boxes={boxes}
