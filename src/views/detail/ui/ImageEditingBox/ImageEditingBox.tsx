@@ -13,6 +13,7 @@ import { Variation } from '@/shared/api/types'
 import { cn } from '@/shared/lib/utils'
 
 import { Box } from './types'
+import { HistoryControl } from './ui/HistoryControl/HistoryControl'
 import { ResizableAndDraggableBoxes } from './ui/ResizableAndDraggableBoxes'
 
 interface ImageEditingBoxProps {
@@ -72,6 +73,9 @@ export const ImageEditingBox = (props: ImageEditingBoxProps) => {
         'h-full bg-neutral-1 bg-opacity-50 rounded-[0.5rem] overflow-hidden relative flex justify-center'
       )}
     >
+      <div className="absolute top-[0.5rem] left-[0.5rem] rounded-[0.25rem] bg-neutral-0 bg-opacity-90 z-[30]">
+        <HistoryControl />
+      </div>
       <div
         ref={containerRef}
         className="relative m-auto"

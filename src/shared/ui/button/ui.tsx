@@ -6,7 +6,7 @@ import { Slot } from '@radix-ui/react-slot'
 import { type VariantProps, cva } from 'class-variance-authority'
 
 export const buttonVariants = cva(
-  'leading-[1.2] text-[0.875rem] inline-flex items-center justify-center whitespace-nowrap rounded-[100px] font-normal ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+  'group leading-[1.2] text-[0.875rem] inline-flex items-center justify-center whitespace-nowrap rounded-[100px] font-normal ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
       variant: {
@@ -25,7 +25,7 @@ export const buttonVariants = cva(
         default: 'px-5 py-3',
         // sm: 'h-9 rounded-md px-3',
         // lg: 'h-11 rounded-md px-8',
-        icon: 'h-10 w-10'
+        icon: 'h-10 w-10 [&>svg]:hover:stroke-white'
       }
     },
     defaultVariants: {
@@ -60,10 +60,14 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const isActive = className?.includes('active')
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, className }), {
-          'w-full': stretch,
-          'text-white bg-secondary': variant === 'ghost' && isActive
-        })}
+        className={cn(
+          buttonVariants({ variant, size }),
+          {
+            'w-full': stretch,
+            'text-white bg-secondary': variant === 'ghost' && isActive
+          },
+          className
+        )}
         disabled={disabled}
         ref={ref}
         {...props}
