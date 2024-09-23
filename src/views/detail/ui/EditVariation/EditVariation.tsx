@@ -1,3 +1,5 @@
+'use client'
+
 import * as React from 'react'
 
 import { useSearchParams } from 'next/navigation'
@@ -10,6 +12,7 @@ import {
   SKIN_TEXTURE_MAP
 } from '@/entities/detail/constant'
 
+import { Variation } from '@/shared/api/types'
 import { Badge, Button } from '@/shared/ui'
 import { RadioGroup, RadioGroupItem } from '@/shared/ui/radio-group'
 
@@ -19,22 +22,34 @@ const SKIN_TEXTURE_OPTIONS = Object.values(SKIN_TEXTURE_MAP)
 const ASPECT_RATIO_OPTIONS = Object.values(ASPECT_RATIO_MAP)
 const FACE_ANGLE_OPTIONS = Object.values(FACE_ANGLE_MAP)
 
-export const EditVariation = () => {
+interface EditVariationProps {
+  selectedVariation: Variation | null
+}
+
+export const EditVariation = (props: EditVariationProps) => {
   const searchParams = useSearchParams()
-  // TODO: url에 variation id 가 바뀌면 history store 확인하고 option 값 업데이트
+
+  const { setInitialProperty, applyEdit } = useEditorStore.getState()
+  const editedVariationList = useEditorStore((state) => state.items)
+
   const [aspectRatio, setAspectRatio] = React.useState<string>('') // 9:16
   const [faceAngle, setFaceAngle] = React.useState<string>('') // front
 
-  // TODO: check apply edit options button disabled - history present === current option values
-
-  const applyEdit = useEditorStore((state) => state.applyEdit)
-
+  const variationId = searchParams.get('variationId')
   const handleClickApplyEditOptions = () => {
-    const variationId = searchParams.get('variationId')
-
     if (!variationId) {
       alert('variationId is not found')
       return
+    }
+
+    if (!props.selectedVariation) {
+      alert('selectedVariation is not found')
+      return
+    }
+
+    if (!editedVariationList.has(variationId)) {
+      const { aspectRatio, faceAngle } = props.selectedVariation.properties
+      setInitialProperty(variationId, { aspectRatio, faceAngle })
     }
 
     applyEdit(variationId, {
@@ -42,6 +57,38 @@ export const EditVariation = () => {
       faceAngle: FACE_ANGLE_REVERT_MAP[faceAngle]
     })
   }
+
+  const isSamePresentOption = React.useCallback(() => {
+    if (!variationId) return true
+    if (editedVariationList.has(variationId)) {
+      const { aspectRatio: presentAspectRatio, faceAngle: presentFaceAngle } =
+        editedVariationList.get(variationId)!.present
+      return (
+        presentAspectRatio === ASPECT_RATIO_REVERT_MAP[aspectRatio] &&
+        presentFaceAngle === FACE_ANGLE_REVERT_MAP[faceAngle]
+      )
+    }
+
+    return aspectRatio === '9:16' && faceAngle === 'Front'
+  }, [variationId, aspectRatio, faceAngle, editedVariationList])
+
+  React.useEffect(() => {
+    if (!variationId) return
+    if (!props.selectedVariation) return
+
+    if (editedVariationList.has(variationId)) {
+      const { aspectRatio, faceAngle } =
+        editedVariationList.get(variationId)!.present
+      setAspectRatio(ASPECT_RATIO_MAP[aspectRatio])
+      setFaceAngle(FACE_ANGLE_MAP[faceAngle])
+      return
+    }
+
+    const { aspectRatio, faceAngle } = props.selectedVariation.properties
+
+    setAspectRatio(ASPECT_RATIO_MAP[aspectRatio])
+    setFaceAngle(FACE_ANGLE_MAP[faceAngle])
+  }, [variationId, props.selectedVariation, editedVariationList])
 
   return (
     <section className="flex flex-col gap-5">
@@ -94,6 +141,7 @@ export const EditVariation = () => {
         stretch
         onClick={handleClickApplyEditOptions}
         className="font-semibold"
+        disabled={isSamePresentOption()}
       >
         Apply Edit Options
       </Button>

@@ -97,7 +97,7 @@ export default function Detail() {
           <div className="overflow-y-auto overflow-x-hidden basis-[407px] shrink-0">
             <div className="flex flex-col gap-5 ">
               {/* related variations options /////////////////////////////////////////////  */}
-              <EditVariation />
+              <EditVariation selectedVariation={selectedVariation} />
 
               {/* related download image /////////////////////////////////////////////  */}
               <DownloadDropdown
