@@ -1,27 +1,46 @@
 import * as React from 'react'
 
+import { useSearchParams } from 'next/navigation'
+
 import {
   ASPECT_RATIO_MAP,
+  ASPECT_RATIO_REVERT_MAP,
   FACE_ANGLE_MAP,
+  FACE_ANGLE_REVERT_MAP,
   SKIN_TEXTURE_MAP
 } from '@/entities/detail/constant'
 
 import { Badge, Button } from '@/shared/ui'
 import { RadioGroup, RadioGroupItem } from '@/shared/ui/radio-group'
 
+import { useEditorStore } from '../../model/useEditorHistoryStore'
+
 const SKIN_TEXTURE_OPTIONS = Object.values(SKIN_TEXTURE_MAP)
 const ASPECT_RATIO_OPTIONS = Object.values(ASPECT_RATIO_MAP)
 const FACE_ANGLE_OPTIONS = Object.values(FACE_ANGLE_MAP)
 
 export const EditVariation = () => {
+  const searchParams = useSearchParams()
   // TODO: url에 variation id 가 바뀌면 history store 확인하고 option 값 업데이트
   const [aspectRatio, setAspectRatio] = React.useState<string>('') // 9:16
   const [faceAngle, setFaceAngle] = React.useState<string>('') // front
 
   // TODO: check apply edit options button disabled - history present === current option values
 
+  const applyEdit = useEditorStore((state) => state.applyEdit)
+
   const handleClickApplyEditOptions = () => {
-    // history store update
+    const variationId = searchParams.get('variationId')
+
+    if (!variationId) {
+      alert('variationId is not found')
+      return
+    }
+
+    applyEdit(variationId, {
+      aspectRatio: ASPECT_RATIO_REVERT_MAP[aspectRatio],
+      faceAngle: FACE_ANGLE_REVERT_MAP[faceAngle]
+    })
   }
 
   return (
