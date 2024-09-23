@@ -16,10 +16,12 @@ import { Button } from '@/shared/ui'
 import AlertCircleIcon from '/public/icons/alert-circle.svg'
 import AngleBracketIcon from '/public/icons/angle-bracket-open.svg'
 import DashedSvg from '/public/icons/dashed.svg'
+import EditIcon from '/public/icons/edit.svg'
 
 import { v4 } from 'uuid'
 
 import { usePostAiImageGenerate } from '../../../../features/generate-variation/model/adapter'
+import { useEditorStore } from '../../model/useEditorHistoryStore'
 import { useGetAiImageProgress, useGetVariationList } from './model/adapter'
 import { NewGenerateButton } from './ui/NewGenerateButton'
 
@@ -33,6 +35,9 @@ const INITIAL_PAGE = 1
 export const VariationsList = (props: VariationListProps) => {
   const searchParams = useSearchParams()
   const encodedBaseImageInfoId = searchParams.get('id') || ''
+
+  const editedVariationList = useEditorStore((state) => state.items)
+
   const isAiImageFailed = useAiImageGeneratingStore(
     (state) => state.isAiImageFailed
   )
@@ -248,6 +253,8 @@ export const VariationsList = (props: VariationListProps) => {
           const isSeletedVariation =
             searchParams.get('variationId') === encodedBaseImageId
 
+          const isEdited = editedVariationList.has(encodedBaseImageId)
+
           const imgUrl =
             process.env.NEXT_PUBLIC_API_MOCKING === 'enabled'
               ? item.encryptedImageUrl
@@ -307,6 +314,11 @@ export const VariationsList = (props: VariationListProps) => {
                   style={{ objectFit: 'cover' }}
                 />
               )}
+              {isEdited ? (
+                <div className="p-[6px] absolute top-[6px] left-[6px] rounded-[4px] bg-neutral-0 bg-opacity-90">
+                  <EditIcon />
+                </div>
+              ) : null}
             </div>
           )
         })}
