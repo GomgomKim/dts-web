@@ -27,6 +27,8 @@ export interface Variation {
   encodedAiBasedImageId: string
   isFail: boolean
   isTimeout: boolean
+  // TODO: temp
+  variations?: Variation[]
 }
 
 export interface Properties {

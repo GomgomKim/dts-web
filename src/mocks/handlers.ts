@@ -9,7 +9,12 @@ import {
   URL_VARIATION_LIST
 } from '@/entities/detail/constant'
 
-import { ModelImageItem, Variation } from '@/shared/api/types'
+import {
+  AspectRatio,
+  FaceAngle,
+  ModelImageItem,
+  Variation
+} from '@/shared/api/types'
 
 import { faker } from '@faker-js/faker'
 import { HttpResponse, http } from 'msw'
@@ -147,56 +152,10 @@ export const handlers = [
     )
   }),
   http.get(`${URL_VARIATION_LIST}`, () => {
-    const responseImages: Variation[] = [
-      {
-        encodedBaseImageId: 'abcd',
-        properties: {
-          aspectRatio: 'ASPECT_RATIO_1_1',
-          faceAngle: 'FRONT'
-        },
-        isAiGenerated: false,
-        encryptedImageUrl: faker.image.urlLoremFlickr({
-          width: 1080,
-          height: 1080
-        }),
-        progress: 100,
-        encodedAiBasedImageId: 'cccc',
-        isFail: false,
-        isTimeout: false
-      },
-      {
-        encodedBaseImageId: 'efg',
-        properties: {
-          aspectRatio: 'ASPECT_RATIO_9_16',
-          faceAngle: 'FRONT'
-        },
-        isAiGenerated: false,
-        encryptedImageUrl: faker.image.urlLoremFlickr({
-          width: 1080,
-          height: 1920
-        }),
-        progress: 100,
-        encodedAiBasedImageId: 'cccc',
-        isFail: false,
-        isTimeout: false
-      },
-      {
-        encodedBaseImageId: 'hij',
-        properties: {
-          aspectRatio: 'ASPECT_RATIO_1_1',
-          faceAngle: 'RIGHT'
-        },
-        isAiGenerated: false,
-        encryptedImageUrl: faker.image.urlLoremFlickr({
-          width: 1920,
-          height: 1920
-        }),
-        progress: 100,
-        encodedAiBasedImageId: 'cccc',
-        isFail: false,
-        isTimeout: false
-      }
-    ]
+    const preset_1 = createResponseImages('abcd', 100)
+    const preset_2 = createResponseImages('efg', 100)
+    const preset_3 = createResponseImages('hij', 100)
+    const responseImages: Variation[] = [preset_1, preset_2, preset_3]
 
     return HttpResponse.json(
       {
@@ -226,7 +185,20 @@ export const handlers = [
       return sendJsonResponse(0, 'Invalid request data', null, 400)
     }
 
-    const responseImages = createResponseImages(randomString, 10)
+    const responseImages = {
+      encodedBaseImageId: randomString,
+      properties: {
+        aspectRatio: 'ASPECT_RATIO_9_16',
+        faceAngle: 'FRONT'
+      },
+      isAiGenerated: true,
+      encryptedImageUrl: '', // nullable??
+      progress: 10,
+      encodedAiBasedImageId: randomString,
+      isFail: false,
+      isTimeout: false,
+      variations: null
+    }
 
     return sendJsonResponse(
       0,
@@ -275,7 +247,20 @@ export const handlers = [
     }
 
     if (elapsedTime < 10) {
-      const responseImages = createResponseImages(encodedImageId, 80)
+      const responseImages = {
+        encodedBaseImageId: encodedImageId,
+        properties: {
+          aspectRatio: 'ASPECT_RATIO_9_16',
+          faceAngle: 'FRONT'
+        },
+        isAiGenerated: true,
+        encryptedImageUrl: '', // nullable??
+        progress: 80,
+        encodedAiBasedImageId: encodedImageId,
+        isFail: false,
+        isTimeout: false,
+        variations: null
+      }
       return sendJsonResponse(0, null, { variation: responseImages }, 200, {
         'Cache-Control': 'no-store'
       })
@@ -283,26 +268,81 @@ export const handlers = [
   })
 ]
 
+function createVariation(properties: {
+  aspectRatio: string
+  faceAngle: string
+}) {
+  const randomString = uuidv4()
+
+  let size = {
+    width: 1080,
+    height: 1920
+  }
+
+  if (properties.aspectRatio === 'ASPECT_RATIO_1_1') {
+    size = {
+      width: 1080,
+      height: 1080
+    }
+  }
+
+  return {
+    encodedBaseImageId: randomString,
+    properties: {
+      aspectRatio: properties.aspectRatio as AspectRatio,
+      faceAngle: properties.faceAngle as FaceAngle
+    },
+    isAiGenerated: true,
+    encryptedImageUrl: faker.image.urlLoremFlickr(size),
+    progress: 100,
+    encodedAiBasedImageId: '',
+    isFail: false,
+    isTimeout: false
+  }
+}
+
 // Helper function to create response images
 function createResponseImages(
   encodedBaseImageId: string,
   progress: number
-): Variation {
+): Variation & { variations: Variation[] } {
+  const variation_1 = createVariation({
+    aspectRatio: 'ASPECT_RATIO_9_16',
+    faceAngle: 'LEFT'
+  })
+  const variation_2 = createVariation({
+    aspectRatio: 'ASPECT_RATIO_9_16',
+    faceAngle: 'FRONT'
+  })
+  const variation_3 = createVariation({
+    aspectRatio: 'ASPECT_RATIO_9_16',
+    faceAngle: 'RIGHT'
+  })
+  const variation_4 = createVariation({
+    aspectRatio: 'ASPECT_RATIO_1_1',
+    faceAngle: 'LEFT'
+  })
+  const variation_5 = createVariation({
+    aspectRatio: 'ASPECT_RATIO_1_1',
+    faceAngle: 'FRONT'
+  })
+  const variation_6 = createVariation({
+    aspectRatio: 'ASPECT_RATIO_1_1',
+    faceAngle: 'RIGHT'
+  })
+
   return {
+    ...variation_2,
     encodedBaseImageId,
-    properties: {
-      aspectRatio: 'ASPECT_RATIO_9_16',
-      faceAngle: 'FRONT'
-    },
-    isAiGenerated: true,
-    encryptedImageUrl: faker.image.urlLoremFlickr({
-      width: 1080,
-      height: 1920
-    }),
     progress,
-    encodedAiBasedImageId: encodedBaseImageId,
-    isFail: false,
-    isTimeout: false
+    variations: [
+      variation_1,
+      variation_2,
+      variation_3,
+      variation_4,
+      variation_5,
+      variation_6
+    ]
   }
 }
 
