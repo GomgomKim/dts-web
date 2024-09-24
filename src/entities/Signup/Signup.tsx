@@ -1,31 +1,14 @@
-'use client'
-
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 
-import { Button } from '@/shared/ui'
+import { LoginButton } from '@/shared/ui/LoginButton/LoginButton'
 
 import DTSLogo from '/public/icons/dts-logo.svg'
-import GoogleIcon from '/public/icons/google-logo.svg'
-
-const SignupButton = () => {
-  return (
-    <Button className="bg-white relative">
-      <span className="absolute left-[20px]">
-        <GoogleIcon />
-      </span>
-      Sign up with Google
-    </Button>
-  )
-}
 
 interface SignupProps {
   modalRef?: React.RefObject<HTMLDivElement>
 }
 
 export const Signup = ({ modalRef }: SignupProps) => {
-  const router = useRouter()
-
   return (
     <div className="flex justify-center fixed bg-neutral-0-90 inset-0 z-50">
       <div
@@ -33,9 +16,9 @@ export const Signup = ({ modalRef }: SignupProps) => {
         className="flex flex-col gap-10 border border-neutral-2 rounded-[12px] m-auto relative p-10 w-[400px] bg-background"
       >
         <div>
-          <button onClick={() => router.back()}>
+          <Link href="/explore?filterType=ALL">
             <DTSLogo />
-          </button>
+          </Link>
         </div>
         <div>
           <div className="flex flex-col gap-8">
@@ -50,7 +33,7 @@ export const Signup = ({ modalRef }: SignupProps) => {
                 </Link>
               </div>
             </div>
-            <SignupButton />
+            <LoginButton>Sign up with google</LoginButton>
           </div>
         </div>
         <div>

@@ -1,4 +1,4 @@
-import { useSearchParams } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 
 import { useFilterTypeStore } from '@/shared/lib/stores/useFilterTypeStore'
 
@@ -9,13 +9,15 @@ import { getExploreList } from './api'
 import { GetExploreListResData } from './types'
 
 export const useGetExploreList = () => {
-  // TODO: filtertype 값 밖에서 주입
   const searchParams = useSearchParams()
+  const pathname = usePathname()
 
   const previousFilterType = useFilterTypeStore((state) => state.filterType)
 
   const filterType =
-    searchParams.get('filterType') || previousFilterType || FILTER_TYPES[0]
+    pathname !== '/explore'
+      ? previousFilterType
+      : searchParams.get('filterType') || FILTER_TYPES[0]
 
   const {
     data,
@@ -35,11 +37,10 @@ export const useGetExploreList = () => {
     queryKey: ['explore', filterType],
     queryFn: ({ pageParam }) =>
       getExploreList({ filterType, scrollKey: pageParam }),
-    enabled: !!filterType,
     initialPageParam: null,
-    getNextPageParam: (lastPage) => lastPage.content.scrollKey
-    // staleTime: 60 * 1000,
-    // gcTime: 300 * 1000,
+    getNextPageParam: (lastPage) => lastPage.content.scrollKey,
+    staleTime: 60 * 1000,
+    gcTime: 300 * 1000
   })
 
   return {

@@ -1,5 +1,7 @@
 'use client'
 
+import React from 'react'
+
 import { useSearchParams } from 'next/navigation'
 
 import { useSetQueryString } from '@/shared/lib/hooks/useSetQueryString'
@@ -19,14 +21,19 @@ export const Filter = (props: FilterProps) => {
 
   const setFilterType = useFilterTypeStore((state) => state.setFilterType)
 
-  const currentFilterType = searchParams.get('filterType') || filterList[0]
+  const currentFilterType =
+    searchParams.get('filterType') || filterList[0].toUpperCase()
 
   const { handleQueryString } = useSetQueryString({ option: 'replace' })
 
   const handleClickFilter = (type: string) => {
-    setFilterType(type)
+    // setFilterType(type)
     handleQueryString([{ filterType: type }])
   }
+
+  React.useEffect(() => {
+    currentFilterType && setFilterType(currentFilterType)
+  }, [searchParams])
 
   return (
     <div {...restProps} id={props.id} ref={props.element}>
