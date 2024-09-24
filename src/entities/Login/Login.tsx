@@ -1,34 +1,8 @@
-'use client'
-
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 
-import { Button } from '@/shared/ui'
+import { LoginButton } from '@/shared/ui/LoginButton/LoginButton'
 
 import DTSLogo from '/public/icons/dts-logo.svg'
-import GoogleIcon from '/public/icons/google-logo.svg'
-
-const LoginButton = () => {
-  const router = useRouter()
-
-  const handleClick = () => {
-    const loginUrl = process.env.NEXT_PUBLIC_GOOGLE_LOGIN_URL
-    if (loginUrl) {
-      router.replace(loginUrl)
-    } else {
-      console.error('Google login URL is not defined')
-    }
-  }
-
-  return (
-    <Button className="bg-white relative" onClick={handleClick}>
-      <span className="absolute left-[20px]">
-        <GoogleIcon />
-      </span>
-      Log in with Google
-    </Button>
-  )
-}
 
 interface LoginProps {
   modalRef?: React.RefObject<HTMLDivElement>
@@ -58,7 +32,7 @@ export const Login = ({ modalRef }: LoginProps) => {
               </Link>
             </div>
           </div>
-          <LoginButton />
+          <LoginButton>Log in with google</LoginButton>
         </div>
       </div>
     </div>

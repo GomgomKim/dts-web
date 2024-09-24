@@ -1,22 +1,8 @@
-'use client'
-
 import Link from 'next/link'
 
-import { Button } from '@/shared/ui'
+import { LoginButton } from '@/shared/ui/LoginButton/LoginButton'
 
 import DTSLogo from '/public/icons/dts-logo.svg'
-import GoogleIcon from '/public/icons/google-logo.svg'
-
-const SignupButton = () => {
-  return (
-    <Button className="bg-white relative">
-      <span className="absolute left-[20px]">
-        <GoogleIcon />
-      </span>
-      Sign up with Google
-    </Button>
-  )
-}
 
 interface SignupProps {
   modalRef?: React.RefObject<HTMLDivElement>
@@ -47,7 +33,7 @@ export const Signup = ({ modalRef }: SignupProps) => {
                 </Link>
               </div>
             </div>
-            <SignupButton />
+            <LoginButton>Sign up with google</LoginButton>
           </div>
         </div>
         <div>
