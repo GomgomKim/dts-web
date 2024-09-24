@@ -2,7 +2,6 @@
 
 import * as React from 'react'
 
-// import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -25,13 +24,11 @@ import { useAuthStore } from './store'
 
 const LogOut = () => {
   const queryClient = useQueryClient()
-  // const router = useRouter()
 
   const logOut = useAuthStore((state) => state.logOut)
 
   const handleClickLogout = () => {
     logOut(queryClient)
-    // router.replace('/explore?filterType=ALL')
   }
   return (
     <DropdownMenuItem onClick={handleClickLogout}>Log out</DropdownMenuItem>
