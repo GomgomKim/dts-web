@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 
+import { PathStorage } from '@/app/providers/PathStorage'
 import { AxiosInterceptorWrapper } from '@/app/providers/axios-interceptor-wrapper'
 import { MSWComponent } from '@/app/providers/msw-component'
 import { ReactQueryProviders } from '@/app/providers/query-client-provider'
@@ -31,6 +32,7 @@ export default function RootLayout({
       <body className={`${pretendard.variable} font-pretendard`}>
         <ReactQueryProviders>
           <AxiosInterceptorWrapper>
+            <PathStorage />
             {children}
             {modal}
           </AxiosInterceptorWrapper>
