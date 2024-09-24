@@ -35,8 +35,6 @@ interface LoginProps {
 }
 
 export const Login = ({ modalRef }: LoginProps) => {
-  const router = useRouter()
-
   return (
     <div className="flex justify-center fixed bg-neutral-0-90 inset-0 z-50">
       <div
@@ -44,9 +42,9 @@ export const Login = ({ modalRef }: LoginProps) => {
         className="flex flex-col gap-10 border border-neutral-2 rounded-[12px] m-auto relative w-[400px] p-10 bg-background"
       >
         <div>
-          <button onClick={() => router.back()}>
+          <Link href="/explore?filterType=ALL">
             <DTSLogo />
-          </button>
+          </Link>
         </div>
         <div className="flex flex-col gap-8">
           <div>
