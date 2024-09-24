@@ -20,9 +20,12 @@ export const ExportButton = (props: ExportButtonProps) => {
   const onButtonClick = () => {
     if (props.containerRef.current === null) return
 
+    const { width, height } = props.imageSize
+
     nodeToImage(props.imageType, props.containerRef.current, {
       ...defaultOption,
-      ...props.imageSize
+      canvasWidth: width,
+      canvasHeight: height
     })
       .then((dataUrl) => {
         const link = document.createElement('a')
