@@ -12,21 +12,21 @@ const defaultOption = {
 
 interface ExportButtonProps extends React.ComponentProps<typeof Button> {
   containerRef: React.RefObject<HTMLElement>
-  imgType: string
-  imgSize: { width: number; height: number }
+  imageType: string
+  imageSize: { width: number; height: number }
 }
 
 export const ExportButton = (props: ExportButtonProps) => {
   const onButtonClick = () => {
     if (props.containerRef.current === null) return
 
-    nodeToImage(props.imgType, props.containerRef.current, {
+    nodeToImage(props.imageType, props.containerRef.current, {
       ...defaultOption,
-      ...props.imgSize
+      ...props.imageSize
     })
       .then((dataUrl) => {
         const link = document.createElement('a')
-        link.download = `${props.imgType}-image-name`
+        link.download = `${props.imageType}-image-name`
         link.href = dataUrl
         link.click()
       })

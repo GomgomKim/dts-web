@@ -131,8 +131,8 @@ export const DownloadDropdown = (props: DownloadDropdownProps) => {
         {/* export button */}
         <div className="pt-3 px-5">
           <ExportButton
-            imgType={selectedFormat}
-            imgSize={
+            imageType={selectedFormat}
+            imageSize={
               exportQualityOption.find(
                 (option) => option.value === selectedQuality
               )!.size
