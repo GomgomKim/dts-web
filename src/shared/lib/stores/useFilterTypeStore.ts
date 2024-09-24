@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { createJSONStorage, persist } from 'zustand/middleware'
 
 interface FilterTypeState {
   filterType: string
@@ -17,7 +17,7 @@ export const useFilterTypeStore = create(
     }),
     {
       name: 'filter-type',
-      getStorage: () => sessionStorage
+      storage: createJSONStorage(() => sessionStorage)
     }
   )
 )
