@@ -42,15 +42,13 @@ export const MenuItem = ({ item }: MenuItemProps) => {
       <Link
         href={item.href}
         aria-disabled={item.disabled}
-        className={cn('group justify-between items-center !px-[12px]', {
+        className={cn('justify-between items-center !px-[12px]', {
           'pointer-events-none': item.disabled
         })}
       >
-        <div className="flex justify-center items-center gap-5 ">
-          <span className="[&>svg]:stroke-secondary-foreground [&>svg]:group-hover:stroke-white [&>svg]:group-active:stroke-white">
-            {item.prefix}
-          </span>
-          <span>{item.title}</span>
+        <div className="flex justify-center items-center gap-5">
+          <span className="[&>svg]:stroke-current">{item.prefix}</span>
+          <span className="text-[0.875rem]">{item.title}</span>
         </div>
         {item.postfix ? <span>{item.postfix}</span> : null}
       </Link>

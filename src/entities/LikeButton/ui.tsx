@@ -27,7 +27,7 @@ export const LikeButton = (props: LikeButtonProps) => {
     >
       <span>
         <LikeIcon
-          className={`stroke-current group-active:fill-primary group-active:stroke-primary ${props.isActive ? 'fill-primary stroke-primary' : ''}`}
+          className={`cursor-pointer group-active:fill-primary group-active:stroke-primary ${props.isActive ? 'fill-primary stroke-primary' : 'stroke-current'}`}
         />
       </span>
     </Button>

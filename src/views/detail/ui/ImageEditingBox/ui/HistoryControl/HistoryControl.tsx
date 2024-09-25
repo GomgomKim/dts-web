@@ -46,7 +46,7 @@ export const HistoryControl = () => {
   }
 
   return (
-    <div className="flex gap-1">
+    <div className="flex gap-1 svg-color-parent">
       <Button
         variant="ghost"
         size="icon"
@@ -54,7 +54,7 @@ export const HistoryControl = () => {
         onClick={handleUndo}
         disabled={!hasPast}
       >
-        <UndoIcon stroke="#AEAFB5" />
+        <UndoIcon />
       </Button>
       <Button
         variant="ghost"
@@ -63,7 +63,7 @@ export const HistoryControl = () => {
         onClick={handleRedo}
         disabled={!hasFuture}
       >
-        <UndoIcon stroke="#AEAFB5" className="-scale-x-100" />
+        <UndoIcon className="-scale-x-100" />
       </Button>
       <Button
         variant="ghost"
@@ -72,7 +72,7 @@ export const HistoryControl = () => {
         onClick={handleRestore}
         // present가 초기값이면 disabled
       >
-        <RestoreIcon stroke="#AEAFB5" />
+        <RestoreIcon />
       </Button>
     </div>
   )
