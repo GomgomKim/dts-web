@@ -108,17 +108,15 @@ export const ImageEditingBox = (props: ImageEditingBoxProps) => {
       <div className="absolute top-[0.5rem] left-[0.5rem] rounded-[0.25rem] bg-neutral-0 bg-opacity-90 z-[30]">
         <HistoryControl />
       </div>
-      <div
-        ref={containerRef}
-        className="relative m-auto"
-        style={{ ...containerStyle }}
-      >
-        {selectedVariation ? renderImage() : null}
-        <ResizableAndDraggableBoxes
-          containerRef={containerRef}
-          boxes={boxes}
-          setBoxes={setBoxes}
-        />
+      <div className="relative" style={{ ...containerStyle }}>
+        <div className="w-full h-full" ref={containerRef}>
+          {selectedVariation ? renderImage() : null}
+          <ResizableAndDraggableBoxes
+            containerRef={containerRef}
+            boxes={boxes}
+            setBoxes={setBoxes}
+          />
+        </div>
       </div>
     </div>
   )
