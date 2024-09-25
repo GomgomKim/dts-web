@@ -63,16 +63,21 @@ interface MenuGroupProps extends Omit<React.ComponentProps<'div'>, 'prefix'> {
   prefix: React.ReactNode
   postfix?: React.ReactNode
   children?: React.ReactNode
+  disabled?: boolean
 }
 export const MenuGroup = React.forwardRef<HTMLDivElement, MenuGroupProps>(
   (
-    { title, prefix, postfix, children, ...props },
+    { title, prefix, postfix, children, disabled = false, ...props },
     ref: React.Ref<HTMLDivElement>
   ) => {
     return (
       <div ref={ref} className="text-[14px]" {...props} role="group">
         <div className="flex justify-between items-center p-3 rounded-lg text-[#aeafb5]">
-          <div className="flex justify-center items-center gap-5">
+          <div
+            className={cn('flex justify-center items-center gap-5', {
+              'pointer-events-none opacity-50': disabled
+            })}
+          >
             <span className="flex justify-center items-center gap-[20px] w-4 h-4">
               {prefix}
             </span>

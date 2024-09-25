@@ -66,6 +66,7 @@ export const Categorybar = () => {
       </MenuGroup>
 
       <MenuGroup
+        disabled
         title="Fashion"
         prefix={<Square color={'rgba(170, 74, 203, 1)'} />}
         postfix={<Badge>Upcoming</Badge>}
