@@ -52,8 +52,8 @@ export const Card = (props: CardProps) => {
         >
           <Button
             asChild
-            variant="link"
-            className="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-white"
+            variant="outline"
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white"
           >
             <div>
               Start with This Model
