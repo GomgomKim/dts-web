@@ -21,9 +21,9 @@ export const usePostFavorite = () => {
   const queryKey = ['explore', filterType]
 
   return useMutation({
-    mutationFn: ({ encodedImageInfoId }: PostFavoriteReqData) =>
-      postFavorite({ encodedImageInfoId }),
-    onMutate: async ({ encodedImageInfoId }) => {
+    mutationFn: ({ mainImageId }: PostFavoriteReqData) =>
+      postFavorite({ mainImageId }),
+    onMutate: async ({ mainImageId }) => {
       await queryClient.cancelQueries({
         queryKey: queryKey
       })
@@ -45,7 +45,7 @@ export const usePostFavorite = () => {
               content: {
                 ...page.content,
                 images: page.content.images.map((item) => {
-                  if (item.encodedImageInfoId === encodedImageInfoId) {
+                  if (item.id.toString() === mainImageId) {
                     return { ...item, isFavorite: true }
                   }
                   return item
@@ -78,9 +78,9 @@ export const useDeleteFavorite = () => {
   const queryKey = ['explore', filterType]
 
   return useMutation({
-    mutationFn: ({ encodedImageInfoId }: DeleteFavoriteReqData) =>
-      deleteFavorite({ encodedImageInfoId }),
-    onMutate: async ({ encodedImageInfoId }) => {
+    mutationFn: ({ mainImageId }: DeleteFavoriteReqData) =>
+      deleteFavorite({ mainImageId }),
+    onMutate: async ({ mainImageId }) => {
       await queryClient.cancelQueries({
         queryKey: queryKey
       })
@@ -102,7 +102,7 @@ export const useDeleteFavorite = () => {
               content: {
                 ...page.content,
                 images: page.content.images.map((item) => {
-                  if (item.encodedImageInfoId === encodedImageInfoId)
+                  if (item.id.toString() === mainImageId)
                     return { ...item, isFavorite: false }
                   return item
                 })

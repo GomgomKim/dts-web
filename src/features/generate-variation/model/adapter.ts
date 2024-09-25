@@ -5,7 +5,7 @@ import { PostAiImageReqData } from './types'
 
 export const usePostAiImageGenerate = () => {
   return useMutation({
-    mutationFn: ({ encodedBaseImageId }: PostAiImageReqData) =>
-      postAiImageGenerate({ encodedBaseImageId })
+    mutationFn: ({ mainImageId }: PostAiImageReqData) =>
+      postAiImageGenerate({ mainImageId })
   })
 }

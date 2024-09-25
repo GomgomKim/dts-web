@@ -15,23 +15,23 @@ import {
 } from './types'
 
 export async function getVariationList({
-  encodedBaseImageInfoId
+  mainImageId
 }: GetVariationListReqData): Promise<GetVariationListResData> {
   const response = await dtsAxios.get<
     GetVariationListReqData,
     AxiosResponse<GetVariationListResData, AxiosError>
-  >(`${URL_VARIATION_LIST}?encodedImageInfoId=${encodedBaseImageInfoId}`)
+  >(`${URL_VARIATION_LIST}?mainImageId=${mainImageId}`)
   return response.data
 }
 
 export async function getAiImageProgress({
-  encodedImageId
+  variationImageId
 }: GetAiImageProgressReqData) {
   try {
     const response = await dtsAxios.get<
       GetAiImageProgressReqData,
       AxiosResponse<GetAiImageProgressResData, AxiosError>
-    >(`${URL_AI_IMAGE_GENERATE_PROGRESS}?encodedImageId=${encodedImageId}`)
+    >(`${URL_AI_IMAGE_GENERATE_PROGRESS}?variationImageId=${variationImageId}`)
 
     return response.data
   } catch (error) {

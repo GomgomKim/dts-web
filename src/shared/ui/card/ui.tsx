@@ -5,7 +5,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { ModelImageItem } from '@/shared/api/types'
+import { MainItem } from '@/shared/api/types'
 import { Button } from '@/shared/ui/button'
 
 import LinkIcon from '/public/icons/arrow-thin.svg'
@@ -13,25 +13,20 @@ import LinkIcon from '/public/icons/arrow-thin.svg'
 const URL_BASE_IMAGE_FILE = '/image-file/download?encryptedImageUrl='
 
 interface CardProps {
-  item: ModelImageItem
+  item: MainItem
   actionSlot?: React.ReactNode
 }
 
 export const Card = (props: CardProps) => {
-  const {
-    encodedImageInfoId,
-    encodedMainImageId,
-    name: modelname,
-    description
-  } = props.item
+  const { id, name: modelname, description, encryptedThumbnailUrl } = props.item
   const [isHovering, setIsHovering] = useState(false)
 
   const imgUrl =
     process.env.NEXT_PUBLIC_API_MOCKING === 'enabled'
-      ? encodedMainImageId
+      ? encryptedThumbnailUrl
       : process.env.NEXT_PUBLIC_API_URL +
         `${URL_BASE_IMAGE_FILE}` +
-        encodedMainImageId
+        encryptedThumbnailUrl
 
   return (
     <div
@@ -47,7 +42,7 @@ export const Card = (props: CardProps) => {
       />
       {isHovering && (
         <Link
-          href={`/archive/${modelname}?id=${encodedImageInfoId}`}
+          href={`/archive/${modelname}?id=${id}`}
           className="absolute inset-0 z-10 bg-custom-gradient"
         >
           <Button

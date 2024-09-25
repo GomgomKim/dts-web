@@ -1,7 +1,7 @@
 import { ResData, Restriction, Variation } from '@/shared/api/types'
 
 export interface PostAiImageReqData {
-  encodedBaseImageId: string
+  mainImageId: number
 }
 
 export interface PostAiImageResData extends ResData<PostAiImageContent> {}

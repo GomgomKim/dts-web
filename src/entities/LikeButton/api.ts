@@ -7,20 +7,20 @@ import { DeleteFavoriteReqData, PostFavoriteReqData } from './types'
 
 // TODO: error 처리
 export async function postFavorite({
-  encodedImageInfoId
+  mainImageId
 }: PostFavoriteReqData): Promise<void> {
   const response = await dtsAxios.post<
     PostFavoriteReqData,
     AxiosResponse<void, AxiosError>
-  >(`${URL_FAVORITE_ADD}?encodedImageInfoId=${encodedImageInfoId}`)
+  >(`${URL_FAVORITE_ADD}?mainImageId=${mainImageId}`)
   return response.data
 }
 
 export async function deleteFavorite({
-  encodedImageInfoId
+  mainImageId
 }: DeleteFavoriteReqData): Promise<void> {
   const response = await dtsAxios.delete<null, AxiosResponse<void, AxiosError>>(
-    `${URL_FAVORITE_REMOVE}?encodedImageInfoId=${encodedImageInfoId}`
+    `${URL_FAVORITE_REMOVE}?mainImageId=${mainImageId}`
   )
   return response.data
 }

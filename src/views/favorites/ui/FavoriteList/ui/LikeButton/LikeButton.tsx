@@ -2,20 +2,20 @@
 
 import * as entities from '@/entities/LikeButton'
 
-import { ModelImageItem } from '@/shared/api/types'
+import { MainItem } from '@/shared/api/types'
 
 import { useDeleteFavorite } from './adapter'
 
 interface LikeButtonProps {
-  item: ModelImageItem
+  item: MainItem
 }
 
 export const LikeButton = (props: LikeButtonProps) => {
-  const { encodedImageInfoId } = props.item
+  const { id } = props.item
   const deleteFavoriteMutation = useDeleteFavorite()
 
   const handleClick = () => {
-    deleteFavoriteMutation.mutate({ encodedImageInfoId })
+    deleteFavoriteMutation.mutate({ mainImageId: id.toString() })
   }
 
   return <entities.LikeButton onClickLike={handleClick} isActive={true} />

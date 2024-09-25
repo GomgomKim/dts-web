@@ -1,10 +1,10 @@
 import { AspectRatio, FaceAngle, SkinTexture } from '@/shared/api/types'
 
-export const URL_VARIATION_LIST = '/image/base-image/detail'
-export const URL_VARIATION_LIST_IMAGE =
-  '/image-file/download?encryptedImageUrl='
-export const URL_AI_IMAGE_GENERATE = '/image/ai-image/generate'
-export const URL_AI_IMAGE_GENERATE_PROGRESS = '/image/ai-image/progress'
+export const URL_VARIATION_LIST = '/image/variation-image'
+export const URL_VARIATION_IMAGE = '/image-file/download?encryptedImageUrl='
+export const URL_AI_IMAGE_GENERATE = '/image/variation-ai-image/generate'
+export const URL_AI_IMAGE_GENERATE_PROGRESS =
+  '/image/variation-ai-image/progress'
 export const URL_ASSET_REMOVE_BACKGROUND = '/image-file/asset/remove_background'
 
 export const ASPECT_RATIO_MAP: Record<AspectRatio, string> = {

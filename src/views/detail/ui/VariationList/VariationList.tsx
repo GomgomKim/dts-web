@@ -5,22 +5,19 @@ import * as React from 'react'
 import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
 
-import { useAuthStore } from '@/entities/UserProfile/store'
-import { URL_VARIATION_LIST_IMAGE } from '@/entities/detail/constant'
+import { URL_VARIATION_IMAGE } from '@/entities/detail/constant'
 import { useAiImageGeneratingStore } from '@/entities/detail/store'
 
 import { Variation } from '@/shared/api/types'
 import { cn } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui'
 
-import AlertCircleIcon from '/public/icons/alert-circle.svg'
 import AngleBracketIcon from '/public/icons/angle-bracket-open.svg'
 import DashedSvg from '/public/icons/dashed.svg'
 import EditIcon from '/public/icons/edit.svg'
 
 import { v4 } from 'uuid'
 
-import { usePostAiImageGenerate } from '../../../../features/generate-variation/model/adapter'
 import { useEditorStore } from '../../model/useEditorHistoryStore'
 import { useGetAiImageProgress, useGetVariationList } from './model/adapter'
 import { NewGenerateButton } from './ui/NewGenerateButton'
@@ -34,16 +31,10 @@ const INITIAL_PAGE = 1
 
 export const VariationsList = (props: VariationListProps) => {
   const searchParams = useSearchParams()
-  const encodedBaseImageInfoId = searchParams.get('id') || ''
+  const mainImageId = searchParams.get('id') || ''
 
   const editedVariationList = useEditorStore((state) => state.items)
 
-  const isAiImageFailed = useAiImageGeneratingStore(
-    (state) => state.isAiImageFailed
-  )
-  const setIsAiImageFailed = useAiImageGeneratingStore(
-    (state) => state.setIsAiImageFailed
-  )
   const isAiImageGenerating = useAiImageGeneratingStore(
     (state) => state.isAiImageGenerating
   )
@@ -53,9 +44,6 @@ export const VariationsList = (props: VariationListProps) => {
   const aiImageList = useAiImageGeneratingStore((state) => state.aiImageList)
   const setAiImageList = useAiImageGeneratingStore(
     (state) => state.setAiImageList
-  )
-  const addAiImageItem = useAiImageGeneratingStore(
-    (state) => state.addAiImageItem
   )
   const updateAiImageItem = useAiImageGeneratingStore(
     (state) => state.updateAiImageItem
@@ -71,13 +59,9 @@ export const VariationsList = (props: VariationListProps) => {
   )
 
   const {
-    data: { mainImageIndex, variations }
-  } = useGetVariationList(encodedBaseImageInfoId)
+    data: { variations }
+  } = useGetVariationList(mainImageId)
   const queries = useGetAiImageProgress()
-
-  const postAiImageMutation = usePostAiImageGenerate()
-
-  const setRestriction = useAuthStore((state) => state.setRestriction)
 
   const [initialData, setInitialData] = React.useState<Variation[]>([])
 
@@ -87,12 +71,11 @@ export const VariationsList = (props: VariationListProps) => {
   })
 
   React.useEffect(() => {
-    props.onChangeSelectedVariation(variations[mainImageIndex])
+    props.onChangeSelectedVariation(variations[0])
 
     // polling 할 목록 따로 추출
     const successGeneratingList: Variation[] = []
     const newGeneratingList: Variation[] = []
-    // const failGeneratingList: Variation[] = []
     for (let i = 0; i < variations.length; i++) {
       const variation = variations[i]
 
@@ -100,10 +83,6 @@ export const VariationsList = (props: VariationListProps) => {
         successGeneratingList.push(variation)
         continue
       }
-      // if (variation.isFail) {
-      //   failGeneratingList.push(variation)
-      //   continue
-      // }
       newGeneratingList.push(variation)
     }
 
@@ -116,11 +95,6 @@ export const VariationsList = (props: VariationListProps) => {
       addAiImageGeneratingList(newGeneratingList)
       setAiImageList(newGeneratingList)
     }
-
-    // if (failGeneratingList.length > 0) {
-    //   setIsAiImageFailed(true)
-    //   // console.log('에러 발생한 목록', failGeneratingList)
-    // }
   }, [])
 
   for (let i = 0; i < queries.length; i++) {
@@ -137,18 +111,9 @@ export const VariationsList = (props: VariationListProps) => {
       continue
     }
 
-    if (query.data?.content.variation.isFail) {
-      // TODO: 에러 발생시 처리
-      const { encodedBaseImageId } = query.data.content.variation
-      setIsAiImageFailed(true)
-      removeAiImageGeneratingList(encodedBaseImageId)
-      updateAiImageItem(query.data?.content.variation)
-      continue
-    }
-
     if (query.data?.content.variation.progress === 100) {
-      const { encodedBaseImageId } = query.data.content.variation
-      removeAiImageGeneratingList(encodedBaseImageId)
+      const { variationId } = query.data.content.variation
+      removeAiImageGeneratingList(variationId)
       updateAiImageItem(query.data?.content.variation)
     }
   }
@@ -174,35 +139,11 @@ export const VariationsList = (props: VariationListProps) => {
     (currentPage - 1) * AMOUNT_PER_PAGE + AMOUNT_PER_PAGE
   )
 
-  const handleClickRetryButton = ({ item }: { item: Variation }) => {
-    const { encodedBaseImageId } = item
-
-    removeAiImageGeneratingList(encodedBaseImageId)
-
-    postAiImageMutation.mutate(
-      {
-        encodedBaseImageId
-      },
-      {
-        onSuccess: (data) => {
-          const { variation, restriction } = data.content
-
-          addAiImageGeneratingList([variation])
-          addAiImageItem(variation)
-
-          setRestriction(restriction)
-        }
-      }
-      // onError
-    )
-  }
-
   return (
     <>
       <div className="flex justify-between items-center mb-5">
         <div className="flex items-center gap-2">
           <h3 className="text-neutral-7 text-[0.875rem]">Variations</h3>
-          {isAiImageFailed ? <AlertCircleIcon /> : null}
           {isAiImageGenerating ? (
             <span className="text-primary text-[0.875rem]">Generating ...</span>
           ) : null}
@@ -241,68 +182,40 @@ export const VariationsList = (props: VariationListProps) => {
       <div className="flex gap-2 min-h-[120px] h-">
         {/*  */}
         {renderData.map((item) => {
-          const {
-            encodedAiBasedImageId,
-            encodedBaseImageId,
-            isAiGenerated,
-            progress,
-            isFail
-          } = item
+          const { variationId, isAiGenerated, progress } = item
 
           const isGenerating = isAiGenerated && progress < 100
           const isSeletedVariation =
-            searchParams.get('variationId') === encodedBaseImageId
+            searchParams.get('variationId') === variationId.toString()
 
-          const isEdited = editedVariationList.has(encodedBaseImageId)
+          const isEdited = editedVariationList.has(variationId.toString())
 
-          const imgUrl =
-            process.env.NEXT_PUBLIC_API_MOCKING === 'enabled'
-              ? item.encryptedImageUrl
-              : process.env.NEXT_PUBLIC_API_URL +
-                `${URL_VARIATION_LIST_IMAGE}` +
-                item.encryptedImageUrl
+          let imgUrl = ''
+
+          if (process.env.NEXT_PUBLIC_API_MOCKING === 'enabled') {
+            imgUrl = item.images[0]?.encryptedImageUrl
+          } else {
+            imgUrl =
+              process.env.NEXT_PUBLIC_API_URL +
+              `${URL_VARIATION_IMAGE}` +
+              item.images[0]?.encryptedImageUrl
+          }
 
           return (
             <div
-              key={encodedAiBasedImageId + encodedBaseImageId + progress + v4()}
+              key={variationId + v4()}
               aria-disabled={isGenerating}
               className={cn(
                 'rounded-[0.5rem] overflow-hidden relative aspect-[206/219] w-full border border-border',
                 {
                   'cursor-pointer': !isGenerating,
                   'pointer-events-none': isGenerating,
-                  'opacity-50': !isSeletedVariation && !isFail
+                  'opacity-50': !isSeletedVariation
                 }
               )}
               onClick={() => props.onChangeSelectedVariation(item)}
             >
-              {isFail ? (
-                // fail card
-                <div className="p-[8px] absolute inset-0">
-                  <Image
-                    src={imgUrl}
-                    alt=""
-                    fill
-                    style={{
-                      objectFit: 'cover',
-                      filter: 'blur(1px)'
-                    }}
-                  />
-                  <div className="absolute inset-0 bg-[#FF8480] bg-opacity-20" />
-                  <div className="relative h-full">
-                    <Button
-                      variant="outline"
-                      className="absolute bottom-0 rounded-[8px] py-[8px] w-full mt-auto text-white text-[12px] z-20 pointer-events-auto"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        handleClickRetryButton({ item })
-                      }}
-                    >
-                      Try Again
-                    </Button>
-                  </div>
-                </div>
-              ) : isGenerating ? (
+              {isGenerating ? (
                 // generating skeleton card
                 <div className="loading-skeleton h-full" />
               ) : (

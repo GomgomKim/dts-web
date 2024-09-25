@@ -5,35 +5,30 @@ export interface ResData<T> {
 }
 
 export interface ScrollContent {
-  images: ModelImageItem[]
+  images: MainItem[]
   hasNext: boolean
   scrollKey: string
 }
 
-export interface ModelImageItem {
-  encodedImageInfoId: string
+export interface MainItem {
+  id: number
   name: string
   description: string
   isFavorite: boolean
-  encodedMainImageId: string
+  encryptedThumbnailUrl: string
 }
 
 export interface Variation {
-  encodedBaseImageId: string
-  properties: Properties
+  variationId: number
   isAiGenerated: boolean
-  encryptedImageUrl: string
+  images: VariationImage[]
   progress: number
-  encodedAiBasedImageId: string
-  isFail: boolean
-  isTimeout: boolean
-  // TODO: temp
-  variations?: Variation[]
 }
 
-export interface Properties {
-  aspectRatio: AspectRatio
-  faceAngle: FaceAngle
+export interface VariationImage {
+  ratio: AspectRatio
+  angle: FaceAngle
+  encryptedImageUrl: string
 }
 
 export type AspectRatio = 'ASPECT_RATIO_9_16' | 'ASPECT_RATIO_1_1'

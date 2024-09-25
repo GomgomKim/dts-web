@@ -15,14 +15,14 @@ import {
   VariationListContent
 } from './types'
 
-export const useGetVariationList = (encodedBaseImageInfoId: string) => {
+export const useGetVariationList = (mainImageId: string) => {
   const { data, status, error, isFetching } = useSuspenseQuery<
     GetVariationListResData,
     Error,
     VariationListContent
   >({
-    queryKey: ['archive', 'variation', encodedBaseImageInfoId],
-    queryFn: () => getVariationList({ encodedBaseImageInfoId }),
+    queryKey: ['archive', 'variation', mainImageId],
+    queryFn: () => getVariationList({ mainImageId }),
     select: (data) => data.content
     // staleTime: 60 * 1000,
     // gcTime: 300 * 1000
@@ -43,19 +43,19 @@ export const useGetAiImageProgress = () => {
 
   return useQueries<UseQueryOptions<GetAiImageProgressResData, AxiosError>[]>({
     queries: aiImageGeneratingList.map((item) => {
-      const { encodedAiBasedImageId, encodedBaseImageId } = item
+      const { variationId } = item
 
       return {
         queryKey: [
           'archive',
-          encodedAiBasedImageId,
+          // mainImageId,
           'aiImage',
           'progress',
-          encodedBaseImageId
+          variationId
         ],
         queryFn: async () => {
           const response = await getAiImageProgress({
-            encodedImageId: encodedBaseImageId
+            variationImageId: variationId
           })
           if (response instanceof AxiosError || response === undefined) {
             throw new Error('Failed to fetch AI image progress')
@@ -65,12 +65,6 @@ export const useGetAiImageProgress = () => {
         refetchInterval: (
           query: Query<GetAiImageProgressResData, AxiosError>
         ) => {
-          if (
-            query.state.data?.content?.variation.isFail === true ||
-            query.state.data?.content?.variation.isTimeout === true
-          ) {
-            return false
-          }
           if (query.state.data?.content?.variation.progress === 100) {
             return false
           }

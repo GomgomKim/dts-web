@@ -1,8 +1,8 @@
 // like
 export interface PostFavoriteReqData {
-  encodedImageInfoId: string
+  mainImageId: string
 }
 
 export interface DeleteFavoriteReqData {
-  encodedImageInfoId: string
+  mainImageId: string
 }

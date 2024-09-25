@@ -40,7 +40,7 @@ export default function Detail() {
   const { handleQueryString } = useSetQueryString({ option: 'replace' })
   const handleSelectedVariation = (variation: Variation) => {
     setSelectedVariation(variation)
-    handleQueryString([{ variationId: variation.encodedBaseImageId }])
+    handleQueryString([{ variationId: variation.variationId.toString() }])
   }
 
   return (
