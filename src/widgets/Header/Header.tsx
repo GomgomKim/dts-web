@@ -66,7 +66,7 @@ const UserInfo = () => {
 
   return (
     <div className="flex gap-3 items-center ml-3">
-      <div className="flex gap-2 items-center">
+      <div className="flex gap-2 items-center px-3">
         <CreditIcon
           className={cn('stroke-white', {
             'stroke-[#FF8480]': isZeroRestriction
@@ -77,13 +77,14 @@ const UserInfo = () => {
         >
           {restriction ? restriction?.max - restriction?.current : null}
         </span>
+        {isZeroRestriction ? (
+          <div className="font-[14px] text-[0.875rem] text-[#616268]">
+            Credits reset at midnight
+            <span className="ml-[8px]">🌙</span>
+          </div>
+        ) : null}
       </div>
-      {isZeroRestriction ? (
-        <div className="font-[14px] text-[0.875rem] text-[#616268]">
-          Credits reset at midnight
-          <span className="ml-[8px]">🌙</span>
-        </div>
-      ) : null}
+
       <UserProfile />
     </div>
   )

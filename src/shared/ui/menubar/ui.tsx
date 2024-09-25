@@ -42,15 +42,13 @@ export const MenuItem = ({ item }: MenuItemProps) => {
       <Link
         href={item.href}
         aria-disabled={item.disabled}
-        className={cn('group justify-between items-center !px-[12px]', {
+        className={cn('justify-between items-center !px-[12px]', {
           'pointer-events-none': item.disabled
         })}
       >
-        <div className="flex justify-center items-center gap-5 ">
-          <span className="[&>svg]:stroke-secondary-foreground [&>svg]:group-hover:stroke-white [&>svg]:group-active:stroke-white">
-            {item.prefix}
-          </span>
-          <span>{item.title}</span>
+        <div className="flex justify-center items-center gap-5">
+          <span className="[&>svg]:stroke-current">{item.prefix}</span>
+          <span className="text-[0.875rem]">{item.title}</span>
         </div>
         {item.postfix ? <span>{item.postfix}</span> : null}
       </Link>
@@ -65,16 +63,21 @@ interface MenuGroupProps extends Omit<React.ComponentProps<'div'>, 'prefix'> {
   prefix: React.ReactNode
   postfix?: React.ReactNode
   children?: React.ReactNode
+  disabled?: boolean
 }
 export const MenuGroup = React.forwardRef<HTMLDivElement, MenuGroupProps>(
   (
-    { title, prefix, postfix, children, ...props },
+    { title, prefix, postfix, children, disabled = false, ...props },
     ref: React.Ref<HTMLDivElement>
   ) => {
     return (
       <div ref={ref} className="text-[14px]" {...props} role="group">
         <div className="flex justify-between items-center p-3 rounded-lg text-[#aeafb5]">
-          <div className="flex justify-center items-center gap-5">
+          <div
+            className={cn('flex justify-center items-center gap-5', {
+              'pointer-events-none opacity-50': disabled
+            })}
+          >
             <span className="flex justify-center items-center gap-[20px] w-4 h-4">
               {prefix}
             </span>
