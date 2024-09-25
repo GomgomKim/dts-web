@@ -6,7 +6,6 @@ import Link from 'next/link'
 
 import { Button, MenuItem } from '@/shared/ui'
 
-import HelpCircle from '/public/icons/help-circle.svg'
 import Smile from '/public/icons/smile.svg'
 
 import { Categorybar } from './Categorybar'
@@ -39,15 +38,6 @@ export const Sidebar = () => {
             href: { pathname: '/feedback' },
             title: 'Feedback',
             prefix: <Smile />
-          }}
-        />
-      </li>
-      <li>
-        <MenuItem
-          item={{
-            href: { pathname: '/help' },
-            title: 'Help',
-            prefix: <HelpCircle />
           }}
         />
       </li>
