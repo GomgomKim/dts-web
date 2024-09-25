@@ -6,6 +6,8 @@ import Link from 'next/link'
 
 import { Button, MenuItem } from '@/shared/ui'
 
+import HelpCircle from '/public/icons/help-circle.svg'
+
 import { Categorybar } from './Categorybar'
 import { Menubar } from './Menubar'
 
@@ -35,20 +37,20 @@ export const Sidebar = () => {
           item={{
             href: { pathname: '/help' },
             title: 'Help',
-            prefix: '?'
+            prefix: <HelpCircle />
           }}
         />
       </li>
       <li>
-        <Button asChild variant="link" className="p-[12px] text-inherit">
-          <Link href="/terms" className="block">
-            <p className="text-[12px] text-nowrap font-medium">
-              Terms of Use
-              <span className="font-normal text-neutral-7"> and </span>
-              Privacy Policy
-            </p>
-          </Link>
-        </Button>
+        <div className="p-[12px]">
+          <Button asChild variant="link" className="text-white p-0 text-[12px]">
+            <Link href="/terms">Terms of Use</Link>
+          </Button>
+          <span className="font-normal text-neutral-7 text-[12px]"> and </span>
+          <Button asChild variant="link" className="text-white p-0 text-[12px]">
+            <Link href="/policy">Privacy Policy</Link>
+          </Button>
+        </div>
       </li>
     </div>
   )
