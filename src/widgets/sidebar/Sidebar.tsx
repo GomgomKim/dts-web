@@ -6,7 +6,6 @@ import Link from 'next/link'
 
 import { Button, MenuItem } from '@/shared/ui'
 
-import HelpCircle from '/public/icons/help-circle.svg'
 import Smile from '/public/icons/smile.svg'
 
 import { Categorybar } from './Categorybar'
@@ -43,22 +42,23 @@ export const Sidebar = () => {
         />
       </li>
       <li>
-        <MenuItem
-          item={{
-            href: { pathname: '/help' },
-            title: 'Help',
-            prefix: <HelpCircle />
-          }}
-        />
-      </li>
-      <li>
         <div className="p-[12px]">
           <Button asChild variant="link" className="text-white p-0 text-[12px]">
-            <Link href="/terms">Terms of Use</Link>
+            <Link
+              href="https://www.notion.so/ec82e5e0bba54f4b8a4ca2229eb16a22?pvs=4"
+              target="_blank"
+            >
+              Terms of Use
+            </Link>
           </Button>
           <span className="font-normal text-neutral-7 text-[12px]"> and </span>
           <Button asChild variant="link" className="text-white p-0 text-[12px]">
-            <Link href="/policy">Privacy Policy</Link>
+            <Link
+              href="https://www.notion.so/2b06e9bc71ab4d26bdcdd9cec7c8edae?pvs=4"
+              target="_blank"
+            >
+              Privacy Policy
+            </Link>
           </Button>
         </div>
       </li>
