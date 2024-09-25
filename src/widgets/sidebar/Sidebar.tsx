@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { Button, MenuItem } from '@/shared/ui'
 
 import HelpCircle from '/public/icons/help-circle.svg'
+import Smile from '/public/icons/smile.svg'
 
 import { Categorybar } from './Categorybar'
 import { Menubar } from './Menubar'
@@ -32,6 +33,15 @@ export const Sidebar = () => {
       <SidebarSeparator />
       <Categorybar />
       <SidebarSeparator />
+      <li>
+        <MenuItem
+          item={{
+            href: { pathname: '/feedback' },
+            title: 'Feedback',
+            prefix: <Smile />
+          }}
+        />
+      </li>
       <li>
         <MenuItem
           item={{
