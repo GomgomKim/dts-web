@@ -18,9 +18,9 @@ export const useDeleteFavorite = () => {
   const queryKey = ['favorites', filterType, sortingType]
 
   return useMutation({
-    mutationFn: ({ encodedImageInfoId }: DeleteFavoriteReqData) =>
-      deleteFavorite({ encodedImageInfoId }),
-    onMutate: async ({ encodedImageInfoId }) => {
+    mutationFn: ({ mainImageId }: DeleteFavoriteReqData) =>
+      deleteFavorite({ mainImageId }),
+    onMutate: async ({ mainImageId }) => {
       await queryClient.cancelQueries({
         queryKey: queryKey
       })
@@ -42,7 +42,7 @@ export const useDeleteFavorite = () => {
               content: {
                 ...page.content,
                 images: page.content.images.filter(
-                  (item) => item.encodedImageInfoId !== encodedImageInfoId
+                  (item) => item.id.toString() !== mainImageId
                 )
               }
             }))

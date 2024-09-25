@@ -1,8 +1,6 @@
 import { URL_EXPLORE_LIST } from '@/views/explore/ui/ExploreList/constant'
 import { URL_FAVORITE_LIST } from '@/views/favorites/ui/FavoriteList/constant'
 
-import { PostAiImageReqData } from '@/features/generate-variation/model/types'
-
 import {
   URL_AI_IMAGE_GENERATE,
   URL_AI_IMAGE_GENERATE_PROGRESS,
@@ -12,75 +10,75 @@ import {
 import {
   AspectRatio,
   FaceAngle,
-  ModelImageItem,
-  Variation
+  MainItem,
+  Variation,
+  VariationImage
 } from '@/shared/api/types'
 
 import { faker } from '@faker-js/faker'
 import { HttpResponse, http } from 'msw'
-import { v4 as uuidv4 } from 'uuid'
 
 const ImageData = {
   MAKEUP: [
     {
-      encodedImageInfoId: 'aaaa',
+      id: 1,
       name: 'jisoo',
       description: '지수의 메인 이미지',
       isFavorite: false,
-      encodedMainImageId: faker.image.urlLoremFlickr()
+      encryptedThumbnailUrl: faker.image.urlLoremFlickr()
     },
     {
-      encodedImageInfoId: 'bbbb',
+      id: 2,
       name: 'jisoo',
       description: '지수의 메인 이미지',
       isFavorite: false,
-      encodedMainImageId: faker.image.urlLoremFlickr()
+      encryptedThumbnailUrl: faker.image.urlLoremFlickr()
     },
     {
-      encodedImageInfoId: 'cccc',
+      id: 3,
       name: 'jisoo',
       description: '지수의 메인 이미지',
       isFavorite: true,
-      encodedMainImageId: faker.image.urlLoremFlickr()
+      encryptedThumbnailUrl: faker.image.urlLoremFlickr()
     },
     {
-      encodedImageInfoId: 'dddd',
+      id: 4,
       name: 'jisoo',
       description: '지수의 메인 이미지',
       isFavorite: false,
-      encodedMainImageId: faker.image.urlLoremFlickr()
+      encryptedThumbnailUrl: faker.image.urlLoremFlickr()
     }
   ],
   SKINCARE: [
     {
-      encodedImageInfoId: 'AAA',
+      id: 5,
       name: 'jisoo',
       description: '지수의 메인 이미지',
       isFavorite: true,
-      encodedMainImageId: faker.image.urlLoremFlickr()
+      encryptedThumbnailUrl: faker.image.urlLoremFlickr()
     },
     {
-      encodedImageInfoId: 'BBB',
+      id: 6,
       name: 'jisoo',
       description: '지수의 메인 이미지',
       isFavorite: true,
-      encodedMainImageId: faker.image.urlLoremFlickr()
+      encryptedThumbnailUrl: faker.image.urlLoremFlickr()
     }
   ],
   HAIR: [
     {
-      encodedImageInfoId: 'qqqq',
+      id: 7,
       name: 'jisoo',
       description: '지수의 메인 이미지',
       isFavorite: false,
-      encodedMainImageId: faker.image.urlLoremFlickr()
+      encryptedThumbnailUrl: faker.image.urlLoremFlickr()
     }
   ]
 }
 
 let current = 0
 
-// encodedImageId마다 상태를 저장할 Map
+// variationId마다 상태를 저장할 Map
 const imageProgressMap = new Map<
   string,
   { startTime: number; finalProgressSent: boolean }
@@ -92,7 +90,7 @@ export const handlers = [
     const filterType = url.searchParams.get('filterType')
     const cursor = parseInt(url.searchParams.get('scrollKey') as string) || 1
 
-    let responseImages: ModelImageItem[] = []
+    let responseImages: MainItem[] = []
     if (filterType === 'FEATURED' || filterType === 'ALL') {
       responseImages = [
         ...ImageData.MAKEUP,
@@ -124,7 +122,7 @@ export const handlers = [
   http.get(`${URL_FAVORITE_LIST}`, ({ request }) => {
     const url = new URL(request.url)
     const filterType = url.searchParams.get('filterType')
-    let responseImages: ModelImageItem[] = []
+    let responseImages: MainItem[] = []
     if (filterType === 'FEATURED' || filterType === 'ALL') {
       responseImages = [
         ...ImageData.MAKEUP.filter((i) => i.isFavorite),
@@ -152,18 +150,17 @@ export const handlers = [
     )
   }),
   http.get(`${URL_VARIATION_LIST}`, () => {
-    const preset_1 = createResponseImages('abcd', 100)
-    const preset_2 = createResponseImages('efg', 100)
-    const preset_3 = createResponseImages('hij', 100)
-    const responseImages: Variation[] = [preset_1, preset_2, preset_3]
+    const preset_1 = createVariationItem(111, 100)
+    const preset_2 = createVariationItem(112, 100)
+    const preset_3 = createVariationItem(113, 100)
+    const responseVariations: Variation[] = [preset_1, preset_2, preset_3]
 
     return HttpResponse.json(
       {
         code: 0,
         message: null,
         content: {
-          mainImageIndex: 0,
-          variations: responseImages,
+          variations: responseVariations,
           restriction: {
             current: current,
             max: 100
@@ -174,30 +171,18 @@ export const handlers = [
     )
   }),
   http.post(`${URL_AI_IMAGE_GENERATE}`, async ({ request }) => {
-    const newAiImageInfo = await request.json()
-    if (!newAiImageInfo) {
-      throw new Error('Invalid request data')
-    }
-    const randomString = uuidv4()
-    const { encodedBaseImageId } = newAiImageInfo as PostAiImageReqData
+    const url = new URL(request.url)
+    const mainImageId = url.searchParams.get('mainImageId')
 
-    if (!encodedBaseImageId) {
+    if (!mainImageId) {
       return sendJsonResponse(0, 'Invalid request data', null, 400)
     }
 
     const responseImages = {
-      encodedBaseImageId: randomString,
-      properties: {
-        aspectRatio: 'ASPECT_RATIO_9_16',
-        faceAngle: 'FRONT'
-      },
+      variationId: Date.now(),
       isAiGenerated: true,
-      encryptedImageUrl: '', // nullable??
-      progress: 10,
-      encodedAiBasedImageId: randomString,
-      isFail: false,
-      isTimeout: false,
-      variations: null
+      images: [],
+      progress: 10
     }
 
     return sendJsonResponse(
@@ -212,20 +197,20 @@ export const handlers = [
   }),
   http.get(`${URL_AI_IMAGE_GENERATE_PROGRESS}`, ({ request }) => {
     const url = new URL(request.url)
-    const encodedImageId = url.searchParams.get('encodedImageId')
+    const variationImageId = url.searchParams.get('variationImageId')
 
-    if (!encodedImageId) {
-      return sendJsonResponse(0, 'no encodedImageId', null, 400)
+    if (!variationImageId) {
+      return sendJsonResponse(0, 'no variation Image Id', null, 400)
     }
 
-    if (!imageProgressMap.has(encodedImageId)) {
-      imageProgressMap.set(encodedImageId, {
+    if (!imageProgressMap.has(variationImageId)) {
+      imageProgressMap.set(variationImageId, {
         startTime: Date.now(),
         finalProgressSent: false
       })
     }
 
-    const imageState = imageProgressMap.get(encodedImageId)
+    const imageState = imageProgressMap.get(variationImageId)
     if (!imageState) {
       return sendJsonResponse(
         0,
@@ -239,47 +224,35 @@ export const handlers = [
     const elapsedTime = (currentTime - imageState.startTime) / 1000
 
     if (elapsedTime >= 10 && !imageState.finalProgressSent) {
-      imageProgressMap.delete(encodedImageId)
-      const responseImages = createResponseImages(encodedImageId, 100)
-      return sendJsonResponse(0, null, { variation: responseImages }, 200, {
+      imageProgressMap.delete(variationImageId)
+      const responseVariation = createVariationItem(
+        Number(variationImageId),
+        100
+      )
+      return sendJsonResponse(0, null, { variation: responseVariation }, 200, {
         'Cache-Control': 'no-store'
       })
     }
 
     if (elapsedTime < 10) {
-      const responseImages = {
-        encodedBaseImageId: encodedImageId,
-        properties: {
-          aspectRatio: 'ASPECT_RATIO_9_16',
-          faceAngle: 'FRONT'
-        },
-        isAiGenerated: true,
-        encryptedImageUrl: '', // nullable??
-        progress: 80,
-        encodedAiBasedImageId: encodedImageId,
-        isFail: false,
-        isTimeout: false,
-        variations: null
-      }
-      return sendJsonResponse(0, null, { variation: responseImages }, 200, {
+      const responseVariation = createVariationItem(
+        Number(variationImageId),
+        75
+      )
+      return sendJsonResponse(0, null, { variation: responseVariation }, 200, {
         'Cache-Control': 'no-store'
       })
     }
   })
 ]
 
-function createVariation(properties: {
-  aspectRatio: string
-  faceAngle: string
-}) {
-  const randomString = uuidv4()
-
+function createVariationImage(properties: { ratio: string; angle: string }) {
   let size = {
     width: 1080,
     height: 1920
   }
 
-  if (properties.aspectRatio === 'ASPECT_RATIO_1_1') {
+  if (properties.ratio === 'ASPECT_RATIO_1_1') {
     size = {
       width: 1080,
       height: 1080
@@ -287,62 +260,55 @@ function createVariation(properties: {
   }
 
   return {
-    encodedBaseImageId: randomString,
-    properties: {
-      aspectRatio: properties.aspectRatio as AspectRatio,
-      faceAngle: properties.faceAngle as FaceAngle
-    },
-    isAiGenerated: true,
-    encryptedImageUrl: faker.image.urlLoremFlickr(size),
-    progress: 100,
-    encodedAiBasedImageId: '',
-    isFail: false,
-    isTimeout: false
+    ratio: properties.ratio as AspectRatio,
+    angle: properties.angle as FaceAngle,
+    encryptedImageUrl: faker.image.urlLoremFlickr(size)
   }
 }
 
 // Helper function to create response images
-function createResponseImages(
-  encodedBaseImageId: string,
-  progress: number
-): Variation & { variations: Variation[] } {
-  const variation_1 = createVariation({
-    aspectRatio: 'ASPECT_RATIO_9_16',
-    faceAngle: 'LEFT'
+function createResponseImages(): VariationImage[] {
+  const variation_1 = createVariationImage({
+    ratio: 'ASPECT_RATIO_9_16',
+    angle: 'FRONT'
   })
-  const variation_2 = createVariation({
-    aspectRatio: 'ASPECT_RATIO_9_16',
-    faceAngle: 'FRONT'
+  const variation_2 = createVariationImage({
+    ratio: 'ASPECT_RATIO_9_16',
+    angle: 'LEFT'
   })
-  const variation_3 = createVariation({
-    aspectRatio: 'ASPECT_RATIO_9_16',
-    faceAngle: 'RIGHT'
+  const variation_3 = createVariationImage({
+    ratio: 'ASPECT_RATIO_9_16',
+    angle: 'RIGHT'
   })
-  const variation_4 = createVariation({
-    aspectRatio: 'ASPECT_RATIO_1_1',
-    faceAngle: 'LEFT'
+  const variation_4 = createVariationImage({
+    ratio: 'ASPECT_RATIO_1_1',
+    angle: 'FRONT'
   })
-  const variation_5 = createVariation({
-    aspectRatio: 'ASPECT_RATIO_1_1',
-    faceAngle: 'FRONT'
+  const variation_5 = createVariationImage({
+    ratio: 'ASPECT_RATIO_1_1',
+    angle: 'LEFT'
   })
-  const variation_6 = createVariation({
-    aspectRatio: 'ASPECT_RATIO_1_1',
-    faceAngle: 'RIGHT'
+  const variation_6 = createVariationImage({
+    ratio: 'ASPECT_RATIO_1_1',
+    angle: 'RIGHT'
   })
 
+  return [
+    variation_1,
+    variation_2,
+    variation_3,
+    variation_4,
+    variation_5,
+    variation_6
+  ]
+}
+
+function createVariationItem(id: number, progress: number): Variation {
   return {
-    ...variation_2,
-    encodedBaseImageId,
-    progress,
-    variations: [
-      variation_1,
-      variation_2,
-      variation_3,
-      variation_4,
-      variation_5,
-      variation_6
-    ]
+    variationId: id,
+    isAiGenerated: true,
+    images: createResponseImages(),
+    progress
   }
 }
 

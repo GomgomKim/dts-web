@@ -24,16 +24,16 @@ export const useHandleClickNewGenerate = () => {
     // TODO: 디바운싱 처리
     setIsAiImageGenerating(true)
 
-    const encodedBaseImageId = searchParams.get('id')
+    const mainImageId = searchParams.get('id')
 
-    if (!encodedBaseImageId) {
-      alert('Invalid image id')
+    if (!mainImageId) {
+      alert('Invalid main image id')
       return
     }
 
     postAiImageMutation.mutate(
       {
-        encodedBaseImageId
+        mainImageId: Number(mainImageId)
       },
       {
         onSuccess: (data) => {

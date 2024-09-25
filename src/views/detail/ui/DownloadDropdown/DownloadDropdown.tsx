@@ -18,6 +18,7 @@ import { Switch } from '@/shared/ui/switch'
 
 import CheckIcon from '/public/icons/check.svg'
 
+import { useEditorStore } from '../../model/useEditorHistoryStore'
 import {
   EXPORT_QUALITY_OPTIONS_1_1,
   EXPORT_QUALITY_OPTIONS_9_16,
@@ -36,11 +37,20 @@ export const DownloadDropdown = (props: DownloadDropdownProps) => {
   const [selectedQuality] = useState<string>('small')
   const [isError] = useState<boolean>(false)
 
-  // TODO: selected variation 아니고 현재 작업 보드 이미지 비율 적용하기
-  const exportQualityOption =
-    props.selectedVariation?.properties.aspectRatio === 'ASPECT_RATIO_1_1'
-      ? EXPORT_QUALITY_OPTIONS_1_1
-      : EXPORT_QUALITY_OPTIONS_9_16
+  const editedVariationList = useEditorStore((state) => state.items)
+
+  let exportQualityOption = EXPORT_QUALITY_OPTIONS_9_16
+
+  if (props.selectedVariation) {
+    const variationId = props.selectedVariation.variationId.toString()
+    if (editedVariationList.has(variationId)) {
+      const { ratio } = editedVariationList.get(variationId)!.present
+      exportQualityOption =
+        ratio === 'ASPECT_RATIO_1_1'
+          ? EXPORT_QUALITY_OPTIONS_1_1
+          : EXPORT_QUALITY_OPTIONS_9_16
+    }
+  }
 
   return (
     <DropdownMenu>

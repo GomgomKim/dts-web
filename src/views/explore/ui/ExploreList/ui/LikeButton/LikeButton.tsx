@@ -5,16 +5,16 @@ import { useRouter } from 'next/navigation'
 import * as entities from '@/entities/LikeButton'
 import { useAuthStore } from '@/entities/UserProfile/store'
 
-import { ModelImageItem } from '@/shared/api/types'
+import { MainItem } from '@/shared/api/types'
 
 import { useDeleteFavorite, usePostFavorite } from './adapter'
 
 interface LikeButtonProps {
-  item: ModelImageItem
+  item: MainItem
 }
 
 export const LikeButton = (props: LikeButtonProps) => {
-  const { encodedImageInfoId, isFavorite } = props.item
+  const { id, isFavorite } = props.item
   const addFavoriteMutation = usePostFavorite()
   const deleteFavoriteMutation = useDeleteFavorite()
 
@@ -28,9 +28,9 @@ export const LikeButton = (props: LikeButtonProps) => {
     }
 
     if (isFavorite) {
-      deleteFavoriteMutation.mutate({ encodedImageInfoId })
+      deleteFavoriteMutation.mutate({ mainImageId: id.toString() })
     } else {
-      addFavoriteMutation.mutate({ encodedImageInfoId })
+      addFavoriteMutation.mutate({ mainImageId: id.toString() })
     }
   }
   return <entities.LikeButton onClickLike={handleClick} isActive={isFavorite} />

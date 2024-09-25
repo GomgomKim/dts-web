@@ -1,5 +1,10 @@
-import { Properties } from '@/shared/api/types'
+import { AspectRatio, FaceAngle } from '@/shared/api/types'
 import { createStore } from '@/shared/lib/zustand'
+
+type Properties = {
+  ratio: AspectRatio
+  angle: FaceAngle
+}
 
 type EditItem = {
   past: Properties[] // 또는 편집 내용에 맞는 타입

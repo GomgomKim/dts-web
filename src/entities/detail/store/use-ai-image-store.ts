@@ -13,7 +13,7 @@ type AiImageAction = {
   setIsAiImageFailed: (isAiImageFailed: boolean) => void
   setIsAiImageGenerating: (isAiImageGenerating: boolean) => void
   addAiImageGeneratingList: (items: Variation[]) => void
-  removeAiImageGeneratingList: (generateId: string) => void
+  removeAiImageGeneratingList: (variationId: number) => void
   setAiImageList: (items: Variation[]) => void
   addAiImageItem: (items: Variation) => void
   updateAiImageItem: (updatedItem: Variation) => void
@@ -33,10 +33,10 @@ export const useAiImageGeneratingStore = create<AiImageState & AiImageAction>(
         const mergedList = state.aiImageGeneratingList.concat(newItems)
         return { ...state, aiImageGeneratingList: mergedList }
       }),
-    removeAiImageGeneratingList: (encodedBaseImageId: string) =>
+    removeAiImageGeneratingList: (variationId: number) =>
       set((state) => {
         const newList = state.aiImageGeneratingList.filter(
-          (item) => item.encodedBaseImageId !== encodedBaseImageId
+          (item) => item.variationId !== variationId
         )
 
         return { ...state, aiImageGeneratingList: newList }
@@ -54,7 +54,7 @@ export const useAiImageGeneratingStore = create<AiImageState & AiImageAction>(
       set((state) => {
         const newList = state.aiImageList.map((item) => {
           console.log('update Ai Image item', item, updatedItem)
-          return item.encodedBaseImageId === updatedItem.encodedBaseImageId
+          return item.variationId === updatedItem.variationId
             ? updatedItem
             : item
         })

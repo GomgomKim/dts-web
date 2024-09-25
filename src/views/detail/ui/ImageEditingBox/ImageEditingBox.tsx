@@ -4,11 +4,9 @@ import * as React from 'react'
 
 import Image from 'next/image'
 
-import {
-  ASPECT_RATIO_MAP_NUMBER,
-  URL_VARIATION_LIST_IMAGE
-} from '@/entities/detail/constant'
+import { URL_VARIATION_IMAGE } from '@/entities/detail/constant'
 
+// import { ASPECT_RATIO_MAP_NUMBER } from '@/entities/detail/constant'
 import { Variation } from '@/shared/api/types'
 import { cn } from '@/shared/lib/utils'
 
@@ -34,18 +32,21 @@ export const ImageEditingBox = (props: ImageEditingBoxProps) => {
   const [containerStyle, setContainerStyle] =
     React.useState<React.CSSProperties>({})
 
-  const getType = () => {
-    const boardRefHeight = boardRef.current?.clientHeight || 0
-    const boardRefWidth = boardRef.current?.clientWidth || 0
+  // const getType = () => {
+  //   const boardRefHeight = boardRef.current?.clientHeight || 0
+  //   const boardRefWidth = boardRef.current?.clientWidth || 0
 
-    return boardRefHeight < boardRefWidth ? 'height' : 'width'
-  }
+  //   return boardRefHeight < boardRefWidth ? 'height' : 'width'
+  // }
 
   const handleResize = () => {
-    const aspectRatioValue = selectedVariation?.properties.aspectRatio
-    const aspectRatio = ASPECT_RATIO_MAP_NUMBER[aspectRatioValue!]
+    // const aspectRatioValue = selectedVariation?.aspectRatio
+    // const aspectRatio = ASPECT_RATIO_MAP_NUMBER[aspectRatioValue!]
+    //TODO: 수정수정
+    const aspectRatio = 9 / 16
 
-    const type = aspectRatioValue === 'ASPECT_RATIO_1_1' ? getType() : 'height'
+    // const type = aspectRatioValue === 'ASPECT_RATIO_1_1' ? getType() : 'height'
+    const type = 'height'
 
     const newStyle: React.CSSProperties = {
       aspectRatio: aspectRatio,
@@ -64,38 +65,40 @@ export const ImageEditingBox = (props: ImageEditingBoxProps) => {
 
   const renderImage = React.useCallback(() => {
     //
-    let imgUrl =
-      process.env.NEXT_PUBLIC_API_URL +
-      URL_VARIATION_LIST_IMAGE +
-      selectedVariation?.encryptedImageUrl
+    let imgUrl = ''
 
-    if (process.env.NEXT_PUBLIC_API_MOCKING === 'enabled') {
-      if (!selectedVariation) return null
+    if (!selectedVariation) return null
 
-      if (editedVariationList.has(selectedVariation.encodedBaseImageId)) {
-        const presentProperty = editedVariationList.get(
-          selectedVariation.encodedBaseImageId
-        )?.present
-        const presentAspectRatio = presentProperty!.aspectRatio
-        const presentFaceAngle = presentProperty!.faceAngle
+    const variationId = selectedVariation.variationId.toString()
 
-        const presentVariation = selectedVariation!.variations!.find((item) => {
-          return (
-            item.properties.aspectRatio === presentAspectRatio &&
-            item.properties.faceAngle === presentFaceAngle
-          )
-        })
+    if (editedVariationList.has(variationId)) {
+      const presentProperty = editedVariationList.get(variationId)?.present
+      const presentAspectRatio = presentProperty!.ratio
+      const presentFaceAngle = presentProperty!.angle
 
-        imgUrl = presentVariation?.encryptedImageUrl || ''
-      } else {
-        imgUrl = selectedVariation?.encryptedImageUrl
-      }
+      const presentVariation = selectedVariation!.images!.find((item) => {
+        return (
+          item.ratio === presentAspectRatio && item.angle === presentFaceAngle
+        )
+      })
+
+      imgUrl =
+        process.env.NEXT_PUBLIC_API_MOCKING === 'enabled'
+          ? presentVariation!.encryptedImageUrl
+          : process.env.NEXT_PUBLIC_API_URL +
+            URL_VARIATION_IMAGE +
+            presentVariation!.encryptedImageUrl
+    } else {
+      imgUrl =
+        process.env.NEXT_PUBLIC_API_MOCKING === 'enabled'
+          ? selectedVariation?.images[0]?.encryptedImageUrl
+          : process.env.NEXT_PUBLIC_API_URL +
+            URL_VARIATION_IMAGE +
+            selectedVariation.images[0]?.encryptedImageUrl
     }
     // TODO: 이미지 컨테이너 스타일도 변경되어야 함 버그버그
 
-    return (
-      <Image src={imgUrl || ''} alt="" fill style={{ objectFit: 'contain' }} />
-    )
+    return <Image src={imgUrl} alt="" fill style={{ objectFit: 'contain' }} />
   }, [selectedVariation, editedVariationList])
 
   return (

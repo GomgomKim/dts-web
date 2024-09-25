@@ -5,6 +5,8 @@ import { useInView } from 'react-intersection-observer'
 
 import { Card } from '@/shared/ui/card'
 
+import { v4 } from 'uuid'
+
 import { useGetFavoriteList } from './model/adapter'
 import { LikeButton } from './ui/LikeButton'
 import { Nullbox } from './ui/Nullbox'
@@ -41,7 +43,7 @@ export const FavoriteList = () => {
           <Fragment key={i}>
             {page.content.images.map((cardItem) => (
               <Card
-                key={cardItem.encodedMainImageId}
+                key={cardItem.id + v4()}
                 item={cardItem}
                 actionSlot={<LikeButton item={cardItem} />}
               />

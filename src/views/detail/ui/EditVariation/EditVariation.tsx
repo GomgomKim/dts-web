@@ -48,20 +48,20 @@ export const EditVariation = (props: EditVariationProps) => {
     }
 
     if (!editedVariationList.has(variationId)) {
-      const { aspectRatio, faceAngle } = props.selectedVariation.properties
-      setInitialProperty(variationId, { aspectRatio, faceAngle })
+      const { ratio, angle } = props.selectedVariation.images[0]
+      setInitialProperty(variationId, { ratio, angle })
     }
 
     applyEdit(variationId, {
-      aspectRatio: ASPECT_RATIO_REVERT_MAP[aspectRatio],
-      faceAngle: FACE_ANGLE_REVERT_MAP[faceAngle]
+      ratio: ASPECT_RATIO_REVERT_MAP[aspectRatio],
+      angle: FACE_ANGLE_REVERT_MAP[faceAngle]
     })
   }
 
   const isSamePresentOption = React.useCallback(() => {
     if (!variationId) return true
     if (editedVariationList.has(variationId)) {
-      const { aspectRatio: presentAspectRatio, faceAngle: presentFaceAngle } =
+      const { ratio: presentAspectRatio, angle: presentFaceAngle } =
         editedVariationList.get(variationId)!.present
       return (
         presentAspectRatio === ASPECT_RATIO_REVERT_MAP[aspectRatio] &&
@@ -77,17 +77,16 @@ export const EditVariation = (props: EditVariationProps) => {
     if (!props.selectedVariation) return
 
     if (editedVariationList.has(variationId)) {
-      const { aspectRatio, faceAngle } =
-        editedVariationList.get(variationId)!.present
-      setAspectRatio(ASPECT_RATIO_MAP[aspectRatio])
-      setFaceAngle(FACE_ANGLE_MAP[faceAngle])
+      const { ratio, angle } = editedVariationList.get(variationId)!.present
+      setAspectRatio(ASPECT_RATIO_MAP[ratio])
+      setFaceAngle(FACE_ANGLE_MAP[angle])
       return
     }
 
-    const { aspectRatio, faceAngle } = props.selectedVariation.properties
+    const { ratio, angle } = props.selectedVariation.images[0]
 
-    setAspectRatio(ASPECT_RATIO_MAP[aspectRatio])
-    setFaceAngle(FACE_ANGLE_MAP[faceAngle])
+    setAspectRatio(ASPECT_RATIO_MAP[ratio])
+    setFaceAngle(FACE_ANGLE_MAP[angle])
   }, [variationId, props.selectedVariation, editedVariationList])
 
   return (
