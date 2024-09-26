@@ -179,7 +179,7 @@ export const VariationsList = (props: VariationListProps) => {
         </div>
       </div>
 
-      <div className="flex gap-2 min-h-[120px] h-">
+      <div className="flex gap-2 min-h-[120px]">
         {/*  */}
         {renderData.map((item) => {
           const { variationId, isAiGenerated, progress } = item
