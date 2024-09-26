@@ -113,9 +113,9 @@ export const Header = () => {
   return (
     <header className="fixed top-0 inset-0 z-40 h-14 py-[7.5px] px-5 bg-background">
       <div className="flex items-center gap-[0.5rem]">
-        <span className="mr-5">
+        <Link href="/explore?filterType=ALL" className="mr-5">
           <DTSLogo />
-        </span>
+        </Link>
 
         {isDetailPage ? <BackButton /> : null}
         <div className="flex items-center ml-auto">
