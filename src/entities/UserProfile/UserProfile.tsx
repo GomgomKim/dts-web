@@ -116,7 +116,9 @@ export const UserProfile = () => {
 
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link href="/#">Feedback</Link>
+            <Link href="https://tally.so/r/314QEg" target="_blank">
+              Feedback
+            </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
 

@@ -35,7 +35,8 @@ export const Sidebar = () => {
       <li>
         <MenuItem
           item={{
-            href: { pathname: '/feedback' },
+            href: { pathname: 'https://tally.so/r/314QEg' },
+            target: '_blank',
             title: 'Feedback',
             prefix: <Smile />
           }}
