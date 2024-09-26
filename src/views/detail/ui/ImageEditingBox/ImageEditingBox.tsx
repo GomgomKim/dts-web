@@ -20,6 +20,7 @@ interface ImageEditingBoxProps {
   boxes: Box[]
   setBoxes: React.Dispatch<React.SetStateAction<Box[]>>
   selectedVariation: Variation | null
+  boxRefs: React.MutableRefObject<Map<string, HTMLDivElement | null>>
 }
 
 export const ImageEditingBox = (props: ImageEditingBoxProps) => {
@@ -118,6 +119,7 @@ export const ImageEditingBox = (props: ImageEditingBoxProps) => {
             containerRef={containerRef}
             boxes={boxes}
             setBoxes={setBoxes}
+            boxRefs={props.boxRefs}
           />
         </div>
       </div>

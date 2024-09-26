@@ -1,5 +1,3 @@
-'use client'
-
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import Image from 'next/image'
@@ -8,91 +6,125 @@ import { cn } from '@/shared/lib/utils'
 
 import { Box } from '../../types'
 
-interface ActiveBox extends Box {
-  offsetX: number
-  offsetY: number
-}
-
 interface ResizableAndDraggableBoxesProps {
   containerRef: React.RefObject<HTMLElement>
   boxes: Box[]
   setBoxes: React.Dispatch<React.SetStateAction<Box[]>>
+  boxRefs: React.MutableRefObject<Map<string, HTMLDivElement | null>>
 }
 
-export const ResizableAndDraggableBoxes = (
-  props: ResizableAndDraggableBoxesProps
-) => {
-  const { containerRef, boxes, setBoxes } = props
-
-  const [activeBox, setActiveBox] = useState<ActiveBox | null>(null)
+export const ResizableAndDraggableBoxes = ({
+  containerRef,
+  boxes,
+  boxRefs
+}: ResizableAndDraggableBoxesProps) => {
+  const [activeBoxId, setActiveBoxId] = useState<string | null>(null)
   const [isDragging, setIsDragging] = useState(false)
   const [isResizing, setIsResizing] = useState(false)
   const [resizeDirection, setResizeDirection] = useState('')
-  const boxRefs = useRef<Map<string, HTMLDivElement | null>>(new Map())
+  const offsetRef = useRef({ x: 0, y: 0 })
 
-  const handleMouseDown = useCallback(
-    (e: React.MouseEvent, boxId: string) => {
-      e.preventDefault()
-      const box = boxes.find((b) => b.id === boxId)
-      if (!box) return
+  const handleMouseDown = (e: React.MouseEvent, boxId: string) => {
+    e.preventDefault()
+    const boxRef = boxRefs.current.get(boxId)
+    if (!boxRef) return
 
-      const boxRect = e.currentTarget.getBoundingClientRect()
-      const offsetX = e.clientX - boxRect.left
-      const offsetY = e.clientY - boxRect.top
+    const boxRect = boxRef.getBoundingClientRect()
+    offsetRef.current.x = e.clientX - boxRect.left
+    offsetRef.current.y = e.clientY - boxRect.top
 
-      setActiveBox({ ...box, offsetX, offsetY })
-
-      const edgeThreshold = 10
-      if (
-        offsetX < edgeThreshold ||
-        offsetY < edgeThreshold ||
-        offsetX > boxRect.width - edgeThreshold ||
-        offsetY > boxRect.height - edgeThreshold
-      ) {
-        setIsResizing(true)
-        setResizeDirection(
-          (offsetY < edgeThreshold ? 'n' : '') +
-            (offsetY > boxRect.height - edgeThreshold ? 's' : '') +
-            (offsetX < edgeThreshold ? 'w' : '') +
-            (offsetX > boxRect.width - edgeThreshold ? 'e' : '')
-        )
-      } else {
-        setIsDragging(true)
-      }
-
-      setBoxes((prevBoxes) => {
-        const updatedBoxes = prevBoxes.map((box) =>
-          box.id === boxId ? { ...box, zIndex: 10 } : { ...box, zIndex: 1 }
-        )
-        return updatedBoxes
-      })
-    },
-    [boxes, setBoxes]
-  )
+    const edgeThreshold = 10
+    if (
+      offsetRef.current.x < edgeThreshold ||
+      offsetRef.current.y < edgeThreshold ||
+      offsetRef.current.x > boxRect.width - edgeThreshold ||
+      offsetRef.current.y > boxRect.height - edgeThreshold
+    ) {
+      setIsResizing(true)
+      setResizeDirection(
+        (offsetRef.current.y < edgeThreshold ? 'n' : '') +
+          (offsetRef.current.y > boxRect.height - edgeThreshold ? 's' : '') +
+          (offsetRef.current.x < edgeThreshold ? 'w' : '') +
+          (offsetRef.current.x > boxRect.width - edgeThreshold ? 'e' : '')
+      )
+    } else {
+      setIsDragging(true)
+      setActiveBoxId(boxId)
+    }
+  }
 
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
       e.preventDefault()
-      if (!activeBox || (!isDragging && !isResizing)) return
+      if (!activeBoxId || (!isDragging && !isResizing)) return
       if (!containerRef.current) return
 
-      const containerRect = containerRef.current.getBoundingClientRect()
-      const updatedBox = calculateNewBoxPosition(
-        e,
-        activeBox,
-        containerRect,
-        isDragging,
-        isResizing,
-        resizeDirection
-      )
+      const boxRef = boxRefs.current.get(activeBoxId)
+      if (!boxRef) return
 
-      setBoxes((prevBoxes) =>
-        prevBoxes?.map((box) =>
-          box.id === activeBox.id ? { ...box, ...updatedBox } : box
+      const containerRect = containerRef.current.getBoundingClientRect()
+
+      if (isDragging) {
+        let newLeft = e.clientX - containerRect.left - offsetRef.current.x
+        let newTop = e.clientY - containerRect.top - offsetRef.current.y
+
+        // 컨테이너 경계 내에서 이동할 수 있도록 제한
+        newLeft = Math.max(
+          0,
+          Math.min(newLeft, containerRect.width - boxRef.offsetWidth)
         )
-      )
+        newTop = Math.max(
+          0,
+          Math.min(newTop, containerRect.height - boxRef.offsetHeight)
+        )
+
+        // 박스 위치 업데이트
+        boxRef.style.left = `${newLeft}px`
+        boxRef.style.top = `${newTop}px`
+      } else if (isResizing) {
+        const boxStyle = boxRef.style
+        let newLeft = boxRef.offsetLeft
+        let newTop = boxRef.offsetTop
+        let newWidth = boxRef.offsetWidth
+        let newHeight = boxRef.offsetHeight
+
+        if (resizeDirection.includes('e')) {
+          newWidth = e.clientX - containerRect.left - newLeft
+        }
+        if (resizeDirection.includes('s')) {
+          newHeight = e.clientY - containerRect.top - newTop
+        }
+        if (resizeDirection.includes('w')) {
+          const widthAdjustment = newLeft - (e.clientX - containerRect.left)
+          newLeft = e.clientX - containerRect.left
+          newWidth += widthAdjustment
+        }
+        if (resizeDirection.includes('n')) {
+          const heightAdjustment = newTop - (e.clientY - containerRect.top)
+          newTop = e.clientY - containerRect.top
+          newHeight += heightAdjustment
+        }
+
+        // 컨테이너 경계 내에서 리사이징할 수 있도록 제한
+        newLeft = Math.max(0, Math.min(newLeft, containerRect.width - newWidth))
+        newTop = Math.max(0, Math.min(newTop, containerRect.height - newHeight))
+        newWidth = Math.max(
+          50,
+          Math.min(newWidth, containerRect.width - newLeft)
+        )
+        newHeight = Math.max(
+          50,
+          Math.min(newHeight, containerRect.height - newTop)
+        )
+
+        // 박스 스타일 업데이트
+        boxStyle.left = `${newLeft}px`
+        boxStyle.top = `${newTop}px`
+        boxStyle.width = `${newWidth}px`
+        boxStyle.height = `${newHeight}px`
+      }
     },
-    [activeBox, isDragging, isResizing, resizeDirection, containerRef, setBoxes]
+    [activeBoxId, isDragging, isResizing, resizeDirection, containerRef]
   )
 
   const handleMouseUp = useCallback(() => {
@@ -106,7 +138,7 @@ export const ResizableAndDraggableBoxes = (
       (ref) => ref && ref.contains(e.target as Node)
     )
     if (!clickedInsideBox) {
-      setActiveBox(null)
+      setActiveBoxId(null)
     }
   }
 
@@ -125,119 +157,65 @@ export const ResizableAndDraggableBoxes = (
       container.removeEventListener('mouseleave', handleMouseUp)
       window.addEventListener('mousedown', handleClickOutside)
     }
-  }, [handleMouseMove, handleMouseUp, containerRef])
+  }, [containerRef, handleMouseMove, handleMouseUp, handleClickOutside])
 
   return (
     <>
-      {boxes?.map((box) => (
-        <div
-          key={box.id}
-          ref={(el) => {
-            boxRefs.current.set(box.id, el)
-          }}
-          onMouseDown={(e) => handleMouseDown(e, box.id)}
-          className="relative"
-          style={getBoxStyle(box, activeBox, isResizing, resizeDirection)}
-        >
-          <div className="w-full h-full">
-            <Image
-              src={box.image}
-              alt=""
-              fill
-              style={{ objectFit: 'contain' }}
-            />
+      {boxes.map((box) => {
+        return (
+          <div
+            key={box.id + box.createdAt}
+            ref={(el) => {
+              if (el) {
+                boxRefs.current.set(box.id, el)
+              }
+            }}
+            onMouseDown={(e) => handleMouseDown(e, box.id)}
+            style={{
+              position: 'absolute',
+              bottom: `${box.bottom}px`,
+              left:
+                box.left === undefined
+                  ? `calc(50% - ${box.width / 2}px)` // 상위 컨테이너 가운데에 위치
+                  : `${box.left}px`,
+              width: `${box.width}px`,
+              height: `${box.height}px`,
+              zIndex: activeBoxId === box.id ? 2 : 1,
+              cursor:
+                isResizing && activeBoxId === box.id
+                  ? `${resizeDirection}-resize`
+                  : 'move',
+              outline:
+                activeBoxId === box.id ? '2px solid var(--primary)' : 'none'
+            }}
+          >
+            <div className="w-full h-full">
+              <Image
+                src={box.image}
+                alt=""
+                fill
+                style={{ objectFit: 'contain' }}
+              />
+            </div>
+            <span
+              className={cn('absolute top-0 w-full', {
+                ["before:content-[''] before:absolute before:top-[-4px] before:left-[-4px] before:w-2 before:h-2 before:rounded-full before:bg-primary"]:
+                  activeBoxId === box.id,
+                ["after:content-[''] after:absolute after:top-[-4px] after:right-[-4px] after:w-2 after:h-2 after:rounded-full after:bg-primary"]:
+                  activeBoxId === box.id
+              })}
+            ></span>
+            <span
+              className={cn('absolute bottom-0 w-full', {
+                ["before:content-[''] before:absolute before:bottom-[-4px] before:left-[-4px] before:w-2 before:h-2 before:rounded-full before:bg-primary"]:
+                  activeBoxId === box.id,
+                ["after:content-[''] after:absolute after:bottom-[-4px] after:right-[-4px] after:w-2 after:h-2 after:rounded-full after:bg-primary"]:
+                  activeBoxId === box.id
+              })}
+            ></span>
           </div>
-          <span
-            className={cn('absolute top-0 w-full', {
-              ["before:content-[''] before:absolute before:top-[-4px] before:left-[-4px] before:w-2 before:h-2 before:rounded-full before:bg-primary"]:
-                activeBox?.id === box.id,
-              ["after:content-[''] after:absolute after:top-[-4px] after:right-[-4px] after:w-2 after:h-2 after:rounded-full after:bg-primary"]:
-                activeBox?.id === box.id
-            })}
-          ></span>
-          <span
-            className={cn('absolute bottom-0 w-full', {
-              ["before:content-[''] before:absolute before:bottom-[-4px] before:left-[-4px] before:w-2 before:h-2 before:rounded-full before:bg-primary"]:
-                activeBox?.id === box.id,
-              ["after:content-[''] after:absolute after:bottom-[-4px] after:right-[-4px] after:w-2 after:h-2 after:rounded-full after:bg-primary"]:
-                activeBox?.id === box.id
-            })}
-          ></span>
-        </div>
-      ))}
+        )
+      })}
     </>
   )
 }
-
-const calculateNewBoxPosition = (
-  e: MouseEvent,
-  activeBox: ActiveBox,
-  containerRect: DOMRect,
-  isDragging: boolean,
-  isResizing: boolean,
-  resizeDirection: string
-): Box => {
-  const newBox = { ...activeBox }
-
-  if (isDragging) {
-    newBox.left = e.clientX - containerRect.left - activeBox.offsetX
-    newBox.top = e.clientY - containerRect.top - activeBox.offsetY
-  } else if (isResizing) {
-    if (resizeDirection.includes('e')) {
-      newBox.width = e.clientX - containerRect.left - newBox.left
-    }
-    if (resizeDirection.includes('s')) {
-      newBox.height = e.clientY - containerRect.top - newBox.top
-    }
-    if (resizeDirection.includes('w')) {
-      const newWidth =
-        newBox.width + (newBox.left - (e.clientX - containerRect.left))
-      newBox.left = e.clientX - containerRect.left
-      newBox.width = newWidth
-    }
-    if (resizeDirection.includes('n')) {
-      const newHeight =
-        newBox.height + (newBox.top - (e.clientY - containerRect.top))
-      newBox.top = e.clientY - containerRect.top
-      newBox.height = newHeight
-    }
-  }
-
-  newBox.left = Math.max(
-    0,
-    Math.min(newBox.left, containerRect.width - newBox.width)
-  )
-  newBox.top = Math.max(
-    0,
-    Math.min(newBox.top, containerRect.height - newBox.height)
-  )
-  newBox.width = Math.max(
-    50,
-    Math.min(newBox.width, containerRect.width - newBox.left)
-  )
-  newBox.height = Math.max(
-    50,
-    Math.min(newBox.height, containerRect.height - newBox.top)
-  )
-
-  return newBox
-}
-
-const getBoxStyle = (
-  box: Box,
-  activeBox: ActiveBox | null,
-  isResizing: boolean,
-  resizeDirection: string
-): React.CSSProperties => ({
-  position: 'absolute',
-  left: `${box.left}px`,
-  top: `${box.top}px`,
-  width: `${box.width}px`,
-  height: `${box.height}px`,
-  cursor:
-    isResizing && activeBox?.id === box.id
-      ? `${resizeDirection}-resize`
-      : 'move',
-  zIndex: box.zIndex || 1,
-  outline: activeBox?.id === box.id ? '2px solid var(--primary)' : 'none'
-})
