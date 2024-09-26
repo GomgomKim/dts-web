@@ -19,15 +19,19 @@ import { VariationsList } from './ui/VariationList'
 export default function Detail() {
   // related brand assets
   const containerRef = useRef<HTMLDivElement>(null)
-  const { imagePreviewUrls: assetImages } = useImagePreviewUrlStore()
+  const { imagePreviewUrls: assetImages, removeImagePreviewUrl } =
+    useImagePreviewUrlStore()
   const [boxes, setBoxes] = useState<Box[]>([])
+  const boxRefs = useRef<Map<string, HTMLDivElement | null>>(new Map())
 
   const handleAddBrandAssets = () => {
     const boxesData = convertImagesToBoxData(assetImages)
     setBoxes(boxesData)
+    boxRefs.current.clear()
   }
 
   const handleRemoveBox = (id: string) => {
+    removeImagePreviewUrl(id)
     const newBoxes = boxes.filter((box) => box.id !== id)
     setBoxes(newBoxes)
   }
@@ -76,12 +80,13 @@ export default function Detail() {
                       containerRef={containerRef}
                       boxes={boxes}
                       setBoxes={setBoxes}
+                      boxRefs={boxRefs}
                       selectedVariation={selectedVariation}
                     />
                   </div>
 
                   {/* variations section */}
-                  <div className="min-h-[180px]">
+                  <div className="min-h-[180px] max-h-[395px]">
                     <Suspense fallback={<div>Loading...</div>}>
                       <VariationsList
                         onChangeSelectedVariation={handleSelectedVariation}

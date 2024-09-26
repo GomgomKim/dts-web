@@ -60,6 +60,9 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
   const handleChangeImageFile = (file: File) => {
     const formData = convertFileToFormData(file)
     handleSubmit({ formData })
+    // TODO: remove this code after the API is ready
+    // const blob = new Blob([file], { type: 'image/png' })
+    // addImagePreviewUrl(props.boxId, blob)
   }
 
   const handleChangeInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
