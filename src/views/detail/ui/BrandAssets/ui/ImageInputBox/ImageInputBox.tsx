@@ -5,9 +5,9 @@ import { useEffect } from 'react'
 import { useImagePreviewUrlStore } from '@/entities/detail/store'
 
 import { DndBox } from '@/shared/lib/hocs/DndBox'
-import { cn } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui/button'
 
+import DashedSvg from '/public/icons/dashed.svg'
 import DeleteIcon from '/public/icons/delete.svg'
 
 import { usePostRemoveBackground } from './model/adapter'
@@ -108,9 +108,9 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
             variant="secondary"
             size="icon"
             onClick={handleClickRemoveButton}
-            className="absolute top-[1rem] right-[1rem]"
+            className="absolute top-[1rem] right-[1rem] group"
           >
-            <DeleteIcon />
+            <DeleteIcon className="stroke-current group-hover:stroke-white" />
           </Button>
         </div>
       )
@@ -145,14 +145,9 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
       <DndBox
         width="100%"
         onDropped={(e) => handleChangeDNDInput(e.dataTransfer.files[0])}
-        className={cn(
-          'relative rounded-xl bg-neutral-1 bg-opacity-50 aspect-[7/4] max-h-[200px]',
-          {
-            'border border-neutral-3 border-dashed border-2 border-border':
-              !imagePreviewUrls.has(props.boxId)
-          }
-        )}
+        className="relative rounded-xl bg-neutral-1 bg-opacity-50 aspect-[7/4] max-h-[200px]"
       >
+        {!imagePreviewUrls.has(props.boxId) ? <DashedSvg /> : null}
         {renderContent()}
       </DndBox>
     </>
