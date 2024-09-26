@@ -11,6 +11,7 @@ import { Button } from '@/shared/ui/button'
 
 interface MenuItemType {
   href: { pathname: string; query?: { [key: string]: string } }
+  target?: React.AnchorHTMLAttributes<HTMLAnchorElement>['target']
   title: string
   prefix: React.ReactNode
   postfix?: React.ReactNode
@@ -41,6 +42,7 @@ export const MenuItem = ({ item }: MenuItemProps) => {
     <Button asChild variant="ghost" stretch className={cn({ active: isHere })}>
       <Link
         href={item.href}
+        target={item.target}
         aria-disabled={item.disabled}
         className={cn('justify-between items-center !px-[12px]', {
           'pointer-events-none': item.disabled
