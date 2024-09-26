@@ -1,5 +1,6 @@
 import Link from 'next/link'
 
+import { Button } from '@/shared/ui'
 import { LoginButton } from '@/shared/ui/LoginButton/LoginButton'
 
 import DTSLogo from '/public/icons/dts-logo.svg'
@@ -40,13 +41,31 @@ export const Signup = ({ modalRef }: SignupProps) => {
           <div className="w-full border border-neutral-2 my-3"></div>
           <div className="my-6 text-neutral-5 text-[12px] leading-[20px]">
             By clicking “Sign up with Google” you agree to our{' '}
-            <span className="text-white text-nowrap text-[12px]">
-              Terms of Use
-            </span>{' '}
+            <Button
+              asChild
+              variant="link"
+              className="text-white p-0 text-[12px]"
+            >
+              <Link
+                href="https://www.notion.so/ec82e5e0bba54f4b8a4ca2229eb16a22?pvs=4"
+                target="_blank"
+              >
+                Terms of Use
+              </Link>
+            </Button>{' '}
             and acknowledge that you have read and understand our{' '}
-            <span className="text-white text-nowrap text-[12px]">
-              Privacy Policy
-            </span>
+            <Button
+              asChild
+              variant="link"
+              className="text-white text-nowrap p-0 text-[12px]"
+            >
+              <Link
+                href="https://www.notion.so/2b06e9bc71ab4d26bdcdd9cec7c8edae?pvs=4"
+                target="_blank"
+              >
+                Privacy Policy
+              </Link>
+            </Button>
           </div>
         </div>
       </div>
