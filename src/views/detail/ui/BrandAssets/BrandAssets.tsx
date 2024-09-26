@@ -30,15 +30,12 @@ export const BrandAssets = (props: BrandAssetsProps) => {
           onChangeBrandAsset={() => props.handleRemoveBox('logo')}
         />
       </div>
-      {/* <div className="flex flex-col">
-              <Button variant="outline">Remove Background</Button> */}
       <Button
         onClick={props.onClickAddBrandAssets}
         disabled={props.assetDisabled}
       >
         Add Brand Assets
       </Button>
-      {/* </div> */}
     </section>
   )
 }
