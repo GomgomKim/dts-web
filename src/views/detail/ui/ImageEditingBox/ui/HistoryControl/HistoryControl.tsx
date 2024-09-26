@@ -46,33 +46,33 @@ export const HistoryControl = () => {
   }
 
   return (
-    <div className="flex gap-1 svg-color-parent">
+    <div className="flex gap-1">
       <Button
         variant="ghost"
         size="icon"
-        className="bg-inherit h-8 w-8 rounded-[0.25rem]"
+        className="bg-inherit h-8 w-8 rounded-[0.25rem] group"
         onClick={handleUndo}
         disabled={!hasPast}
       >
-        <UndoIcon />
+        <UndoIcon className="stroke-current group-hover:stroke-white" />
       </Button>
       <Button
         variant="ghost"
         size="icon"
-        className="bg-inherit h-8 w-8 rounded-[0.25rem]"
+        className="bg-inherit h-8 w-8 rounded-[0.25rem] group"
         onClick={handleRedo}
         disabled={!hasFuture}
       >
-        <UndoIcon className="-scale-x-100" />
+        <UndoIcon className="-scale-x-100 stroke-current group-hover:stroke-white" />
       </Button>
       <Button
         variant="ghost"
         size="icon"
-        className="bg-inherit h-8 w-8 rounded-[0.25rem]"
+        className="bg-inherit h-8 w-8 rounded-[0.25rem] group"
         onClick={handleRestore}
         disabled={!editedVariationList.has(variationId)}
       >
-        <RestoreIcon />
+        <RestoreIcon className="stroke-current group-hover:stroke-white" />
       </Button>
     </div>
   )
