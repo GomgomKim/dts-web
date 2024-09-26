@@ -15,8 +15,7 @@ export const HistoryControl = () => {
   const variationId = searchParams.get('variationId')
 
   const editedVariationList = useEditorStore((state) => state.items)
-  const undo = useEditorStore((state) => state.undo)
-  const redo = useEditorStore((state) => state.redo)
+  const { undo, redo, applyEdit } = useEditorStore.getState()
 
   if (!variationId) {
     console.log('variationId is not found')
@@ -38,11 +37,12 @@ export const HistoryControl = () => {
     redo(variationId)
   }
 
-  // TODO: restore 기능 구현
   const handleRestore = () => {
-    console.log('restore clicked')
-    // present가 초기값이면 적용하지 않음
-    // present가 초기값이 아니면 초기값으로 되돌림
+    const present = editedVariationList.get(variationId)?.present
+    if (present?.angle === 'FRONT' && present?.ratio === 'ASPECT_RATIO_9_16') {
+      return
+    }
+    applyEdit(variationId, { ratio: 'ASPECT_RATIO_9_16', angle: 'FRONT' })
   }
 
   return (
@@ -70,7 +70,7 @@ export const HistoryControl = () => {
         size="icon"
         className="bg-inherit h-8 w-8 rounded-[0.25rem]"
         onClick={handleRestore}
-        // present가 초기값이면 disabled
+        disabled={!editedVariationList.has(variationId)}
       >
         <RestoreIcon />
       </Button>
