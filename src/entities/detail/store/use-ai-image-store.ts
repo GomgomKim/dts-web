@@ -53,7 +53,6 @@ export const useAiImageGeneratingStore = create<AiImageState & AiImageAction>(
     updateAiImageItem: (updatedItem: Variation) =>
       set((state) => {
         const newList = state.aiImageList.map((item) => {
-          console.log('update Ai Image item', item, updatedItem)
           return item.variationId === updatedItem.variationId
             ? updatedItem
             : item

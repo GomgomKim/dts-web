@@ -2,17 +2,13 @@
 
 import * as React from 'react'
 
-import Image from 'next/image'
-
-import { URL_VARIATION_IMAGE } from '@/entities/detail/constant'
-
-// import { ASPECT_RATIO_MAP_NUMBER } from '@/entities/detail/constant'
 import { Variation } from '@/shared/api/types'
 import { cn } from '@/shared/lib/utils'
 
-import { useEditorStore } from '../../model/useEditorHistoryStore'
+import { useGetNewStyleContainerWrapper } from './lib/useGetNewStyleContainerWrapper'
 import { Box } from './types'
 import { HistoryControl } from './ui/HistoryControl/HistoryControl'
+import { ImageView } from './ui/ImageView/ImageView'
 import { ResizableAndDraggableBoxes } from './ui/ResizableAndDraggableBoxes'
 
 interface ImageEditingBoxProps {
@@ -25,96 +21,56 @@ interface ImageEditingBoxProps {
 
 export const ImageEditingBox = (props: ImageEditingBoxProps) => {
   const { containerRef, selectedVariation, boxes, setBoxes } = props
-
-  const editedVariationList = useEditorStore((state) => state.items)
-
   const boardRef = React.useRef<HTMLDivElement>(null)
 
-  const [containerStyle, setContainerStyle] =
+  const [styleContainerWrapper, setStyleContainerWrapper] =
     React.useState<React.CSSProperties>({})
 
-  // const getType = () => {
-  //   const boardRefHeight = boardRef.current?.clientHeight || 0
-  //   const boardRefWidth = boardRef.current?.clientWidth || 0
-
-  //   return boardRefHeight < boardRefWidth ? 'height' : 'width'
-  // }
+  // TODO: memo) 훅 내에서 searchParams의 variationId를 사용하는게 아니라 selectedVariation을 넘겨줘야 히스토리 스토어 present 옵션이랑 싱크됨
+  const getNewStyleContainerWrapper = useGetNewStyleContainerWrapper(
+    boardRef,
+    selectedVariation
+  )
 
   const handleResize = () => {
-    // const aspectRatioValue = selectedVariation?.aspectRatio
-    // const aspectRatio = ASPECT_RATIO_MAP_NUMBER[aspectRatioValue!]
-    //TODO: 수정수정
-    const aspectRatio = 9 / 16
+    if (!selectedVariation) return
 
-    // const type = aspectRatioValue === 'ASPECT_RATIO_1_1' ? getType() : 'height'
-    const type = 'height'
+    const updatedStyle = getNewStyleContainerWrapper()
 
-    const newStyle: React.CSSProperties = {
-      aspectRatio: aspectRatio,
-      [type]: '100%'
-    }
-    setContainerStyle(newStyle)
+    if (updatedStyle !== null) setStyleContainerWrapper(updatedStyle)
   }
 
   React.useEffect(() => {
-    handleResize()
     window.addEventListener('resize', handleResize)
     return () => {
       window.removeEventListener('resize', handleResize)
     }
-  }, [selectedVariation])
-
-  const renderImage = React.useCallback(() => {
-    //
-    let imgUrl = ''
-
-    if (!selectedVariation) return null
-
-    const variationId = selectedVariation.variationId.toString()
-
-    if (editedVariationList.has(variationId)) {
-      const presentProperty = editedVariationList.get(variationId)?.present
-      const presentAspectRatio = presentProperty!.ratio
-      const presentFaceAngle = presentProperty!.angle
-
-      const presentVariation = selectedVariation!.images!.find((item) => {
-        return (
-          item.ratio === presentAspectRatio && item.angle === presentFaceAngle
-        )
-      })
-
-      imgUrl =
-        process.env.NEXT_PUBLIC_API_MOCKING === 'enabled'
-          ? presentVariation!.encryptedImageUrl
-          : process.env.NEXT_PUBLIC_API_URL +
-            URL_VARIATION_IMAGE +
-            presentVariation!.encryptedImageUrl
-    } else {
-      imgUrl =
-        process.env.NEXT_PUBLIC_API_MOCKING === 'enabled'
-          ? selectedVariation?.images[0]?.encryptedImageUrl
-          : process.env.NEXT_PUBLIC_API_URL +
-            URL_VARIATION_IMAGE +
-            selectedVariation.images[0]?.encryptedImageUrl
-    }
-    // TODO: 이미지 컨테이너 스타일도 변경되어야 함 버그버그
-
-    return <Image src={imgUrl} alt="" fill style={{ objectFit: 'contain' }} />
-  }, [selectedVariation, editedVariationList])
+  }, [handleResize])
 
   return (
     <div
+      id="board"
       ref={boardRef}
       className={cn(
         'h-full bg-neutral-1 bg-opacity-50 rounded-[0.5rem] overflow-hidden relative flex justify-center'
       )}
     >
-      <div className="absolute top-[0.5rem] left-[0.5rem] rounded-[0.25rem] bg-neutral-0 bg-opacity-90 z-[30]">
+      <div
+        id="history-controller"
+        className="absolute top-[0.5rem] left-[0.5rem] rounded-[0.25rem] bg-neutral-0 bg-opacity-90 z-[30]"
+      >
         <HistoryControl />
       </div>
-      <div className="relative" style={{ ...containerStyle }}>
-        <div className="w-full h-full" ref={containerRef}>
-          {selectedVariation ? renderImage() : null}
+      <div
+        id="container-wrapper"
+        className="relative"
+        style={{ ...styleContainerWrapper }}
+      >
+        <div id="container" className="w-full h-full" ref={containerRef}>
+          <ImageView
+            selectedVariation={selectedVariation}
+            onChangeImage={handleResize}
+          />
           <ResizableAndDraggableBoxes
             containerRef={containerRef}
             boxes={boxes}
