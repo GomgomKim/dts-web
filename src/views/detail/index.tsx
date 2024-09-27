@@ -108,8 +108,7 @@ export default function Detail() {
               {/* related download image /////////////////////////////////////////////  */}
               <DownloadDropdown
                 containerRef={containerRef}
-                // TODO:
-                selectedVariation={null} // + history store present options
+                selectedVariation={selectedVariation}
               />
             </div>
           </div>
