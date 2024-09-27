@@ -1,10 +1,27 @@
-export const FORMAT_OPTIONS = [
+import { EXPORT_IMAGE_FORMAT, EXPORT_IMAGE_QUALITY } from './type'
+
+interface ExportFormatOption {
+  label: string
+  value: EXPORT_IMAGE_FORMAT
+}
+
+interface ExportQualityOption {
+  label: string
+  value: EXPORT_IMAGE_QUALITY
+  subText: string
+  size: {
+    width: number
+    height: number
+  }
+}
+
+export const FORMAT_OPTIONS: ExportFormatOption[] = [
   { label: '.png', value: 'png' },
   { label: '.jpeg', value: 'jpeg' },
   { label: '.webp', value: 'webp' }
 ]
 
-export const EXPORT_QUALITY_OPTIONS_9_16 = [
+export const EXPORT_QUALITY_OPTIONS_9_16: ExportQualityOption[] = [
   {
     label: 'Small',
     value: 'small',
@@ -25,7 +42,7 @@ export const EXPORT_QUALITY_OPTIONS_9_16 = [
   }
 ]
 
-export const EXPORT_QUALITY_OPTIONS_1_1 = [
+export const EXPORT_QUALITY_OPTIONS_1_1: ExportQualityOption[] = [
   {
     label: 'Small',
     value: 'small',
