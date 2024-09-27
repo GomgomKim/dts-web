@@ -15,7 +15,7 @@ export default function MobileLayout({
   return (
     <>
       <MobileHeader />
-      <div className="flex pt-14 h-screen">
+      <div className="pt-14 h-screen">
         <main>{children}</main>
       </div>
     </>
