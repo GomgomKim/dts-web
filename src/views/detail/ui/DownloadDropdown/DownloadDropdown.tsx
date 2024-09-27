@@ -1,6 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import * as React from 'react'
+
+import { usePathname } from 'next/navigation'
 
 import { Variation } from '@/shared/api/types'
 import { cn } from '@/shared/lib/utils'
@@ -25,6 +27,7 @@ import {
   FORMAT_OPTIONS
 } from './constant'
 import './styles.css'
+import { EXPORT_IMAGE_FORMAT, EXPORT_IMAGE_QUALITY } from './type'
 import { ExportButton } from './ui/ExportButton'
 
 interface DownloadDropdownProps {
@@ -33,29 +36,38 @@ interface DownloadDropdownProps {
 }
 
 export const DownloadDropdown = (props: DownloadDropdownProps) => {
-  const [selectedFormat, setSelectedFormat] = useState<string>('png')
-  const [selectedQuality] = useState<string>('small')
-  const [isError] = useState<boolean>(false)
+  const pathname = usePathname()
+  const modelName = pathname.split('/')[2]
+
+  const [selectedFormat, setSelectedFormat] =
+    React.useState<EXPORT_IMAGE_FORMAT>('png')
+  const [selectedQuality] = React.useState<EXPORT_IMAGE_QUALITY>('small')
+  const [isError] = React.useState<boolean>(false)
 
   const editedVariationList = useEditorStore((state) => state.items)
 
+  const variationId = props.selectedVariation?.variationId.toString()
+
   let exportQualityOption = EXPORT_QUALITY_OPTIONS_9_16
 
-  if (props.selectedVariation) {
-    const variationId = props.selectedVariation.variationId.toString()
-    if (editedVariationList.has(variationId)) {
-      const { ratio } = editedVariationList.get(variationId)!.present
-      exportQualityOption =
-        ratio === 'ASPECT_RATIO_1_1'
-          ? EXPORT_QUALITY_OPTIONS_1_1
-          : EXPORT_QUALITY_OPTIONS_9_16
-    }
+  if (variationId !== undefined && editedVariationList.has(variationId)) {
+    const { ratio } = editedVariationList.get(variationId)!.present
+    exportQualityOption =
+      ratio === 'ASPECT_RATIO_1_1'
+        ? EXPORT_QUALITY_OPTIONS_1_1
+        : EXPORT_QUALITY_OPTIONS_9_16
   }
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button>Free Download</Button>
+        <Button
+          variant="outline"
+          className="bg-neutral-1 bg-opacity-50"
+          disabled={!variationId || !props.containerRef}
+        >
+          Free Download
+        </Button>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="w-[400px]" sideOffset={-20}>
@@ -64,7 +76,9 @@ export const DownloadDropdown = (props: DownloadDropdownProps) => {
         <DropdownMenuRadioGroup
           className="flex px-5 py-3 w-[252px] justify-between"
           value={selectedFormat}
-          onValueChange={(value) => setSelectedFormat(value)}
+          onValueChange={(value) =>
+            setSelectedFormat(value as EXPORT_IMAGE_FORMAT)
+          }
         >
           {FORMAT_OPTIONS.map((option) => (
             <DropdownMenuRadioItem
@@ -140,7 +154,9 @@ export const DownloadDropdown = (props: DownloadDropdownProps) => {
 
         {/* export button */}
         <div className="pt-3 px-5">
+          {/* TODO: 디바운싱 */}
           <ExportButton
+            imageName={modelName}
             imageType={selectedFormat}
             imageSize={
               exportQualityOption.find(
