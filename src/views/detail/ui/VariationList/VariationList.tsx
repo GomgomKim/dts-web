@@ -99,7 +99,6 @@ export const VariationsList = (props: VariationListProps) => {
 
   for (let i = 0; i < queries.length; i++) {
     const query = queries[i]
-    console.log('query', query)
 
     if (query.isLoading) {
       console.log('로딩중')
