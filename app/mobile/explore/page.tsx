@@ -50,15 +50,27 @@ export default function Page() {
       })
     }
   }, [searchParams])
-
   React.useEffect(() => {
+    let isTimeover: NodeJS.Timeout | null = null
+
     if (isAuth === null) {
       setLoading(true)
-      // 3초 뒤 로그인 페이지로 이동 ?
+      isTimeover = setTimeout(() => {
+        if (isAuth === null) {
+          setLoading(false)
+          router.replace('/signup')
+        }
+      }, 3000)
     } else {
       setLoading(false)
-      if (isAuth !== true) {
-        router.replace('/signup')
+      if (isAuth === false) {
+        router.replace('/mobile')
+      }
+    }
+
+    return () => {
+      if (isTimeover) {
+        clearTimeout(isTimeover)
       }
     }
   }, [isAuth])

@@ -16,7 +16,7 @@ export default function Page() {
     if (isAuth === true) {
       router.replace('/mobile/explore')
     }
-  }, [isAuth, router])
+  }, [isAuth])
 
   return <>{isAuth !== true ? <Mobile /> : null}</>
 }
