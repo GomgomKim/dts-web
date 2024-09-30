@@ -17,7 +17,7 @@ export const Signup = ({ modalRef }: SignupProps) => {
         className="flex flex-col gap-10 border border-neutral-2 rounded-[12px] m-auto relative p-10 w-[400px] bg-background mx-2"
       >
         <div>
-          <Link href="/explore?filterType=ALL">
+          <Link href="/">
             <DTSLogo />
           </Link>
         </div>
