@@ -1,3 +1,5 @@
+'use client'
+
 import { useRouter } from 'next/navigation'
 
 import { useAuthStore } from '@/entities/UserProfile/store'
@@ -5,7 +7,7 @@ import { useAuthStore } from '@/entities/UserProfile/store'
 import { Button } from '@/shared/ui/button'
 
 interface BannerProps {
-  onClickSeeExample: () => void
+  onClickSeeExample?: () => void
 }
 
 export const Banner = (props: BannerProps) => {
@@ -30,9 +32,11 @@ export const Banner = (props: BannerProps) => {
         {isAuth !== true ? (
           <>
             <Button onClick={handleClickStart}>Get Started for Free</Button>
-            <Button variant="outline" onClick={props.onClickSeeExample}>
-              See Examples
-            </Button>
+            {props.onClickSeeExample ? (
+              <Button variant="outline" onClick={props.onClickSeeExample}>
+                See Examples
+              </Button>
+            ) : null}
           </>
         ) : null}
       </div>

@@ -14,10 +14,10 @@ export const Signup = ({ modalRef }: SignupProps) => {
     <div className="flex justify-center fixed bg-neutral-0-90 inset-0 z-50">
       <div
         ref={modalRef}
-        className="flex flex-col gap-10 border border-neutral-2 rounded-[12px] m-auto relative p-10 w-[400px] bg-background"
+        className="flex flex-col gap-10 border border-neutral-2 rounded-[12px] m-auto relative p-10 w-[400px] bg-background mx-2"
       >
         <div>
-          <Link href="/explore?filterType=ALL">
+          <Link href="/">
             <DTSLogo />
           </Link>
         </div>
