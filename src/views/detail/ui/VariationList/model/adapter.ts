@@ -21,7 +21,7 @@ export const useGetVariationList = (mainImageId: string) => {
     Error,
     VariationListContent
   >({
-    queryKey: ['archive', 'variation', mainImageId],
+    queryKey: ['archive', mainImageId, 'variations'],
     queryFn: () => getVariationList({ mainImageId }),
     select: (data) => data.content
     // staleTime: 60 * 1000,
@@ -36,7 +36,7 @@ export const useGetVariationList = (mainImageId: string) => {
   }
 }
 
-export const useGetAiImageProgress = () => {
+export const useGetAiImageProgress = (mainImageId: string) => {
   const aiImageGeneratingList = useAiImageGeneratingStore(
     (state) => state.aiImageGeneratingList
   )
@@ -46,13 +46,7 @@ export const useGetAiImageProgress = () => {
       const { variationId } = item
 
       return {
-        queryKey: [
-          'archive',
-          // mainImageId,
-          'aiImage',
-          'progress',
-          variationId
-        ],
+        queryKey: ['archive', mainImageId, 'aiImage', 'progress', variationId],
         queryFn: async () => {
           const response = await getAiImageProgress({
             variationImageId: variationId
