@@ -17,6 +17,7 @@ type AiImageAction = {
   setAiImageList: (items: Variation[]) => void
   addAiImageItem: (items: Variation) => void
   updateAiImageItem: (updatedItem: Variation) => void
+  resetAiImageGeneratingList: () => void
 }
 
 export const useAiImageGeneratingStore = create<AiImageState & AiImageAction>(
@@ -59,6 +60,10 @@ export const useAiImageGeneratingStore = create<AiImageState & AiImageAction>(
         })
 
         return { ...state, aiImageList: newList }
+      }),
+    resetAiImageGeneratingList: () =>
+      set((state) => {
+        return { ...state, aiImageGeneratingList: [], aiImageList: [] }
       })
   })
 )
