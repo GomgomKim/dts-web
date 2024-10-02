@@ -9,7 +9,7 @@ import { debounce } from '@/shared/lib/utils'
 
 import { usePostAiImageGenerate } from './model/adapter'
 
-const DELAY_NEW_GENERATE = 1000
+const DELAY_NEW_GENERATE = 500
 
 export const useHandleClickNewGenerate = () => {
   const searchParams = useSearchParams()
