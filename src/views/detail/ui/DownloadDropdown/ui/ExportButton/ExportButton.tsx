@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 
-import { cn } from '@/shared/lib/utils'
+import { cn, debounce } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui/button'
 
 import { v4 } from 'uuid'
@@ -22,13 +22,15 @@ interface ExportButtonProps extends React.ComponentProps<typeof Button> {
   imageSize: { width: number; height: number }
 }
 
+const DELAY_DOWNLOAD_IMAGE = 1000
+
 export const ExportButton = (props: ExportButtonProps) => {
   const { containerRef, imageName, imageSize, imageType } = props
 
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState(false)
 
-  const onButtonClick = () => {
+  const HandleButtonClick = () => {
     if (containerRef.current === null) return
 
     setIsLoading(true)
@@ -59,10 +61,15 @@ export const ExportButton = (props: ExportButtonProps) => {
       })
   }
 
+  const debounceHandleButtonClick = useCallback(
+    debounce(HandleButtonClick, DELAY_DOWNLOAD_IMAGE),
+    [containerRef, imageName, imageSize, imageType, isLoading, isError]
+  )
+
   return (
     <Button
       disabled={!isError && isLoading}
-      onClick={onButtonClick}
+      onClick={debounceHandleButtonClick}
       className={cn(
         'leading-[14px] rounded-[8px] text-[0.75rem] font-semibold',
         {
