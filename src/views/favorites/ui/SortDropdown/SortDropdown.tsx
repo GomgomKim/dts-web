@@ -42,7 +42,7 @@ export const SortDropdown = () => {
   }
 
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild className="group">
         <Button variant="ghost" className="p-3">
           <div className="flex items-center gap-[4px]">
