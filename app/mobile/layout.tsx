@@ -15,8 +15,8 @@ export default function MobileLayout({
   return (
     <>
       <MobileHeader />
-      <div className="pt-14 h-screen">
-        <main>{children}</main>
+      <div className="pt-14 overflow-hidden h-screen">
+        <main className="h-full">{children}</main>
       </div>
     </>
   )
