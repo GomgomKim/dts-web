@@ -1,9 +1,15 @@
+import * as React from 'react'
+
 import { useSearchParams } from 'next/navigation'
 
 import { useAuthStore } from '@/entities/UserProfile/store'
 import { useAiImageGeneratingStore } from '@/entities/detail/store'
 
+import { debounce } from '@/shared/lib/utils'
+
 import { usePostAiImageGenerate } from './model/adapter'
+
+const DELAY_NEW_GENERATE = 1000
 
 export const useHandleClickNewGenerate = () => {
   const searchParams = useSearchParams()
@@ -21,7 +27,6 @@ export const useHandleClickNewGenerate = () => {
   const postAiImageMutation = usePostAiImageGenerate()
 
   const handleClickNewGenerate = () => {
-    // TODO: 디바운싱 처리
     setIsAiImageGenerating(true)
 
     const mainImageId = searchParams.get('id')
@@ -48,5 +53,10 @@ export const useHandleClickNewGenerate = () => {
     )
   }
 
-  return { handleClickNewGenerate }
+  const debounceHandleClickNewGenerate = React.useCallback(
+    debounce(handleClickNewGenerate, DELAY_NEW_GENERATE),
+    []
+  )
+
+  return { debounceHandleClickNewGenerate }
 }
