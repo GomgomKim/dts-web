@@ -57,11 +57,13 @@ export const VariationsList = (props: VariationListProps) => {
   const removeAiImageGeneratingList = useAiImageGeneratingStore(
     (state) => state.removeAiImageGeneratingList
   )
+  const { resetAiImageGeneratingList } = useAiImageGeneratingStore.getState()
 
   const {
-    data: { variations }
+    data: { variations },
+    isFetching
   } = useGetVariationList(mainImageId)
-  const queries = useGetAiImageProgress()
+  const queries = useGetAiImageProgress(mainImageId)
 
   const [initialData, setInitialData] = React.useState<Variation[]>([])
 
@@ -71,6 +73,12 @@ export const VariationsList = (props: VariationListProps) => {
   })
 
   React.useEffect(() => {
+    return () => resetAiImageGeneratingList()
+  }, [variations])
+
+  React.useEffect(() => {
+    if (isFetching) return
+
     props.onChangeSelectedVariation(variations[0])
 
     // polling 할 목록 따로 추출
@@ -89,13 +97,12 @@ export const VariationsList = (props: VariationListProps) => {
     setInitialData(successGeneratingList)
 
     if (newGeneratingList.length > 0) {
-      setIsAiImageGenerating(true) // false 처리는 polling 완료시
       setCurrentPage(totalPages)
 
       addAiImageGeneratingList(newGeneratingList)
       setAiImageList(newGeneratingList)
     }
-  }, [])
+  }, [variations, isFetching])
 
   for (let i = 0; i < queries.length; i++) {
     const query = queries[i]
