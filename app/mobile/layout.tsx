@@ -1,3 +1,5 @@
+import { Suspense } from 'react'
+
 import type { Metadata } from 'next'
 
 import { MobileHeader } from '@/widgets/MobileHeader'
@@ -16,7 +18,9 @@ export default function MobileLayout({
     <>
       <MobileHeader />
       <div className="pt-14 overflow-hidden h-screen">
-        <main className="h-full">{children}</main>
+        <main className="h-full">
+          <Suspense>{children}</Suspense>
+        </main>
       </div>
     </>
   )
