@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 import { cn } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui/button'
 
@@ -21,10 +23,16 @@ interface ExportButtonProps extends React.ComponentProps<typeof Button> {
 }
 
 export const ExportButton = (props: ExportButtonProps) => {
-  const { containerRef, imageName, imageSize, imageType, ...restProps } = props
+  const { containerRef, imageName, imageSize, imageType } = props
+
+  const [isLoading, setIsLoading] = useState(false)
+  const [isError, setIsError] = useState(false)
 
   const onButtonClick = () => {
     if (containerRef.current === null) return
+
+    setIsLoading(true)
+    setIsError(false)
 
     const { width, height } = imageSize
 
@@ -41,19 +49,31 @@ export const ExportButton = (props: ExportButtonProps) => {
         link.download = downloadName
         link.href = dataUrl
         link.click()
+        setIsLoading(false)
+        // setIsError(false)
       })
       .catch((err) => {
         console.log(err)
+        setIsLoading(false)
+        setIsError(true)
       })
   }
 
   return (
     <Button
+      disabled={!isError && isLoading}
       onClick={onButtonClick}
-      className={cn('leading-[14px]', props.className)}
+      className={cn(
+        'leading-[14px] rounded-[8px] text-[0.75rem] font-semibold',
+        {
+          'bg-[#FF8480]': isError
+        }
+      )}
       stretch
-      {...restProps}
-    ></Button>
+    >
+      {!isError && (isLoading ? 'Downloading ...' : 'Continue')}
+      {isError && 'Try Again'}
+    </Button>
   )
 }
 
