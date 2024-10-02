@@ -42,7 +42,6 @@ export const DownloadDropdown = (props: DownloadDropdownProps) => {
   const [selectedFormat, setSelectedFormat] =
     React.useState<EXPORT_IMAGE_FORMAT>('png')
   const [selectedQuality] = React.useState<EXPORT_IMAGE_QUALITY>('small')
-  const [isError] = React.useState<boolean>(false)
 
   const editedVariationList = useEditorStore((state) => state.items)
 
@@ -154,7 +153,6 @@ export const DownloadDropdown = (props: DownloadDropdownProps) => {
 
         {/* export button */}
         <div className="pt-3 px-5">
-          {/* TODO: 디바운싱 */}
           <ExportButton
             imageName={modelName}
             imageType={selectedFormat}
@@ -164,13 +162,8 @@ export const DownloadDropdown = (props: DownloadDropdownProps) => {
               )!.size
             }
             containerRef={props.containerRef}
-            className={cn('rounded-[8px] text-[0.75rem] font-semibold', {
-              'bg-[#FF8480]': isError
-            })}
             stretch
-          >
-            Continue
-          </ExportButton>
+          />
         </div>
       </DropdownMenuContent>
     </DropdownMenu>

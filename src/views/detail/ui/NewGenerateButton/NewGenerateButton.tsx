@@ -5,12 +5,13 @@ import { Button } from '@/shared/ui'
 import PlusIcon from '/public/icons/plus.svg'
 
 export const NewGenerateButton = () => {
-  const { handleClickNewGenerate } = useHandleClickNewGenerate()
+  const { debounceHandleClickNewGenerate } = useHandleClickNewGenerate()
+
   return (
     <Button
       variant="outline"
       className="bg-background bg-opacity-50 rounded-[0.5rem] group border-neutral-1 text-neutral-7"
-      onClick={handleClickNewGenerate}
+      onClick={debounceHandleClickNewGenerate}
     >
       <PlusIcon
         width="1rem"

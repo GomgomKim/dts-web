@@ -1,4 +1,6 @@
-import { cn } from '@/shared/lib/utils'
+import { useCallback, useState } from 'react'
+
+import { cn, debounce } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui/button'
 
 import { v4 } from 'uuid'
@@ -20,11 +22,19 @@ interface ExportButtonProps extends React.ComponentProps<typeof Button> {
   imageSize: { width: number; height: number }
 }
 
-export const ExportButton = (props: ExportButtonProps) => {
-  const { containerRef, imageName, imageSize, imageType, ...restProps } = props
+const DELAY_DOWNLOAD_IMAGE = 1000
 
-  const onButtonClick = () => {
+export const ExportButton = (props: ExportButtonProps) => {
+  const { containerRef, imageName, imageSize, imageType } = props
+
+  const [isLoading, setIsLoading] = useState(false)
+  const [isError, setIsError] = useState(false)
+
+  const HandleButtonClick = () => {
     if (containerRef.current === null) return
+
+    setIsLoading(true)
+    setIsError(false)
 
     const { width, height } = imageSize
 
@@ -41,19 +51,36 @@ export const ExportButton = (props: ExportButtonProps) => {
         link.download = downloadName
         link.href = dataUrl
         link.click()
+        setIsLoading(false)
+        // setIsError(false)
       })
       .catch((err) => {
         console.log(err)
+        setIsLoading(false)
+        setIsError(true)
       })
   }
 
+  const debounceHandleButtonClick = useCallback(
+    debounce(HandleButtonClick, DELAY_DOWNLOAD_IMAGE),
+    [containerRef, imageName, imageSize, imageType, isLoading, isError]
+  )
+
   return (
     <Button
-      onClick={onButtonClick}
-      className={cn('leading-[14px]', props.className)}
+      disabled={!isError && isLoading}
+      onClick={debounceHandleButtonClick}
+      className={cn(
+        'leading-[14px] rounded-[8px] text-[0.75rem] font-semibold',
+        {
+          'bg-[#FF8480]': isError
+        }
+      )}
       stretch
-      {...restProps}
-    ></Button>
+    >
+      {!isError && (isLoading ? 'Downloading ...' : 'Continue')}
+      {isError && 'Try Again'}
+    </Button>
   )
 }
 

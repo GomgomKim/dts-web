@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 
+import { debounce } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui/button'
 
 import { ImageInputBox } from './ui/ImageInputBox'
@@ -12,7 +13,13 @@ interface BrandAssetsProps {
   assetDisabled: boolean
 }
 
+const DELAY_ADD_BRAND_ASSETS = 300
 export const BrandAssets = (props: BrandAssetsProps) => {
+  const debounceHandleAddBrandAssets = React.useCallback(
+    debounce(props.onClickAddBrandAssets, DELAY_ADD_BRAND_ASSETS),
+    []
+  )
+
   return (
     <section className="sticky flex flex-col gap-5">
       <h2 className="text-[1.25rem] ">Brand Assets</h2>
@@ -31,7 +38,7 @@ export const BrandAssets = (props: BrandAssetsProps) => {
         />
       </div>
       <Button
-        onClick={props.onClickAddBrandAssets}
+        onClick={debounceHandleAddBrandAssets}
         disabled={props.assetDisabled}
       >
         Add Brand Assets

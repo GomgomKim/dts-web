@@ -4,12 +4,12 @@ import DashedSvg from '/public/icons/dashed.svg'
 import PlusIcon from '/public/icons/plus.svg'
 
 export const NewGenerateButton = () => {
-  const { handleClickNewGenerate } = useHandleClickNewGenerate()
+  const { debounceHandleClickNewGenerate } = useHandleClickNewGenerate()
 
   return (
     <button
       key="new-generate"
-      onClick={handleClickNewGenerate}
+      onClick={debounceHandleClickNewGenerate}
       className="relative rounded-[0.5rem] aspect-[206/219] w-full bg-neutral-1 bg-opacity-50 overflow-hidden group"
     >
       <DashedSvg />
