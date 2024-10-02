@@ -57,7 +57,7 @@ export const UserProfile = () => {
   )
 
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger>
         <div className="w-10 h-10 rounded-full overflow-hidden">
           {user ? (
