@@ -38,7 +38,7 @@ export const FavoriteList = () => {
 
   return (
     <>
-      <div className="grid grid-cols-auto-fill-px gap-5">
+      <div className="grid grid-cols-auto-fill-small gap-5">
         {data?.pages.map((page, i) => (
           <Fragment key={i}>
             {page.content.images.map((cardItem) => (

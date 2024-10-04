@@ -5,7 +5,7 @@ import { AxiosError, AxiosResponse } from 'axios'
 import { URL_EXPLORE_LIST } from '../constant'
 import { GetExploreListReqData, GetExploreListResData } from './types'
 
-const SEAERCH_SIZE = 10
+const SEAERCH_SIZE = 25
 
 export async function getExploreList({
   filterType,

@@ -1,3 +1,5 @@
+import { Suspense } from 'react'
+
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 
@@ -6,6 +8,8 @@ import { AxiosInterceptorWrapper } from '@/app/providers/axios-interceptor-wrapp
 import { MSWComponent } from '@/app/providers/msw-component'
 import { ReactQueryProviders } from '@/app/providers/query-client-provider'
 import '@/app/styles/globals.css'
+
+import Loading from './loading'
 
 const pretendard = localFont({
   src: '../public/fonts/PretendardVariable.woff2',
@@ -33,8 +37,10 @@ export default function RootLayout({
         <ReactQueryProviders>
           <AxiosInterceptorWrapper>
             <PathStorage />
-            {children}
-            {modal}
+            <Suspense fallback={<Loading />}>
+              {children}
+              {modal}
+            </Suspense>
           </AxiosInterceptorWrapper>
         </ReactQueryProviders>
       </body>

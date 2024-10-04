@@ -28,7 +28,7 @@ export const Banner = (props: BannerProps) => {
         Enhance your brands presence with lifelike, customizable models
         generated in seconds
       </div>
-      <div className="flex gap-3 justify-center">
+      <div className="flex gap-3 justify-center h-[43px]">
         {isAuth !== true ? (
           <>
             <Button onClick={handleClickStart}>Get Started for Free</Button>
