@@ -21,7 +21,7 @@ export default function ExploreLayout({
       <Header />
       <div className="flex pt-14 h-screen">
         <Sidebar />
-        <main className="p-12 ml-[280px] flex-1">{children}</main>
+        <main className="px-12 py-14 ml-[280px] flex-1">{children}</main>
       </div>
     </Suspense>
   )
