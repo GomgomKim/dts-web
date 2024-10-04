@@ -49,9 +49,16 @@
 }
 
 @layer utilities {
-  .grid-cols-auto-fill-px {
+  .grid-cols-auto-fill-small {
     grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
   }
+  .grid-cols-auto-fill-medium {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+  .grid-cols-auto-fill-large {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+
   .absolute-center {
     position: absolute;
     top: 50%;

@@ -15,7 +15,7 @@ export default function Explore() {
   return (
     <>
       <Banner onClickSeeExample={onMoveToElement} />
-      <React.Suspense fallback={<div>Loading...</div>}>
+      <div className="max-w-[1136px] min-[3200px]:max-w-[1646px] min-[3840px]:max-w-[2184px] m-auto">
         <div className="mb-5">
           <Filter
             filterList={FILTER_TYPES}
@@ -25,7 +25,7 @@ export default function Explore() {
           />
         </div>
         <ExploreList />
-      </React.Suspense>
+      </div>
     </>
   )
 }

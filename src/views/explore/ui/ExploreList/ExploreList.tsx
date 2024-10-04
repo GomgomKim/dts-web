@@ -37,7 +37,7 @@ export const ExploreList = () => {
 
   return (
     <>
-      <div className="grid grid-cols-auto-fill-px gap-5">
+      <div className="grid grid-cols-auto-fill-small min-[3200px]:grid-cols-auto-fill-medium min-[3840px]:grid-cols-auto-fill-large gap-5">
         {data?.pages.map((page, i) => (
           <Fragment key={i}>
             {page.content.images.map((cardItem) => (

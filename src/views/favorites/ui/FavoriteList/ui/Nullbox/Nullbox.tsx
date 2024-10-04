@@ -5,7 +5,7 @@ import { Button } from '@/shared/ui/button'
 export const Nullbox = () => {
   return (
     <div className="relative">
-      <div className="grid grid-cols-auto-fill-px gap-5">
+      <div className="grid grid-cols-auto-fill-medium gap-5">
         {Array.from({ length: 5 }).map((_value, idx) => (
           <div
             key={idx}
