@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { ComponentProps, useState } from 'react'
 
 import Image from 'next/image'
 import Link from 'next/link'
@@ -12,9 +12,10 @@ import LinkIcon from '/public/icons/arrow-thin.svg'
 
 const URL_BASE_IMAGE_FILE = '/image-file/download?encryptedImageUrl='
 
-interface CardProps {
+interface CardProps extends ComponentProps<'div'> {
   item: MainItem
   actionSlot?: React.ReactNode
+  inViewRef?: React.Ref<HTMLDivElement>
 }
 
 export const Card = (props: CardProps) => {
@@ -33,6 +34,7 @@ export const Card = (props: CardProps) => {
       onMouseOver={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
       className="relative aspect-[9/16] rounded-[8px] overflow-hidden cursor-auto bg-neutral-1"
+      ref={props.inViewRef}
     >
       <Image
         src={imgUrl}
