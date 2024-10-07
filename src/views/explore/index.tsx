@@ -16,14 +16,8 @@ export default function Explore() {
     <>
       <Banner onClickSeeExample={onMoveToElement} />
       <div className="max-w-[1136px] min-[3200px]:max-w-[1646px] min-[3840px]:max-w-[2184px] m-auto">
-        <div className="mb-5">
-          <Filter
-            id="explore-filer"
-            filterList={FILTER_TYPES}
-            style={{ scrollMarginTop: '56px' }}
-            element={element}
-            onClickFilter={onMoveToElement}
-          />
+        <div className="mb-5 scroll-mt-[56px]" ref={element}>
+          <Filter id="explore-filter" filterList={FILTER_TYPES} />
         </div>
         <ExploreList />
       </div>
