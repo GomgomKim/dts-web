@@ -26,12 +26,17 @@ interface VariationListProps {
   onChangeSelectedVariation: (variation: Variation) => void
 }
 
-const AMOUNT_PER_PAGE = 3
 const INITIAL_PAGE = 1
 
 export const VariationsList = (props: VariationListProps) => {
   const searchParams = useSearchParams()
   const mainImageId = searchParams.get('id') || ''
+
+  const [amountPerPage, setAmountPerPage] = React.useState<number>(() => {
+    if (window.innerWidth < 2560) return 3
+    if (window.innerWidth < 3840) return 5
+    return 7
+  })
 
   const editedVariationList = useEditorStore((state) => state.items)
 
@@ -59,6 +64,16 @@ export const VariationsList = (props: VariationListProps) => {
   )
   const { resetAiImageGeneratingList } = useAiImageGeneratingStore.getState()
 
+  const handleAmountPerPage = () => {
+    if (window.innerWidth < 2560) setAmountPerPage(3)
+    else if (window.innerWidth < 3840) setAmountPerPage(5)
+    else setAmountPerPage(7)
+  }
+  React.useEffect(() => {
+    window.addEventListener('resize', handleAmountPerPage)
+    return () => window.removeEventListener('resize', handleAmountPerPage)
+  })
+
   const {
     data: { variations },
     isFetching
@@ -69,7 +84,7 @@ export const VariationsList = (props: VariationListProps) => {
 
   const [currentPage, setCurrentPage] = React.useState<number>(INITIAL_PAGE)
   const [totalPages, setTotalPages] = React.useState<number>(() => {
-    return Math.ceil(variations.length / AMOUNT_PER_PAGE)
+    return Math.ceil(variations.length / amountPerPage)
   })
 
   React.useEffect(() => {
@@ -131,18 +146,18 @@ export const VariationsList = (props: VariationListProps) => {
 
   React.useEffect(() => {
     if (variationsLength === 0 || variationsLength === variations.length) return
-    const updatePage = Math.ceil(variationsLength / AMOUNT_PER_PAGE)
+    const updatePage = Math.ceil(variationsLength / amountPerPage)
     setCurrentPage(updatePage)
   }, [variationsLength])
 
-  if (variationsLength > totalPages * AMOUNT_PER_PAGE) {
-    const updatePage = Math.ceil(variationsLength / AMOUNT_PER_PAGE)
+  if (variationsLength > totalPages * amountPerPage) {
+    const updatePage = Math.ceil(variationsLength / amountPerPage)
     setTotalPages(updatePage)
   }
 
   const renderData = [...initialData, ...aiImageList].slice(
-    (currentPage - 1) * AMOUNT_PER_PAGE,
-    (currentPage - 1) * AMOUNT_PER_PAGE + AMOUNT_PER_PAGE
+    (currentPage - 1) * amountPerPage,
+    (currentPage - 1) * amountPerPage + amountPerPage
   )
 
   return (
@@ -185,7 +200,7 @@ export const VariationsList = (props: VariationListProps) => {
         </div>
       </div>
 
-      <div className="flex gap-2 min-h-[120px]">
+      <div className="flex gap-4 min-h-[120px]">
         {/*  */}
         {renderData.map((item) => {
           const { variationId, isAiGenerated, progress } = item
@@ -242,9 +257,9 @@ export const VariationsList = (props: VariationListProps) => {
           )
         })}
         {/* null card */}
-        {renderData.length < AMOUNT_PER_PAGE &&
+        {renderData.length < amountPerPage &&
           Array.from({
-            length: AMOUNT_PER_PAGE - renderData.length
+            length: amountPerPage - renderData.length
           }).map((_, index) => (
             <div
               key={index}
