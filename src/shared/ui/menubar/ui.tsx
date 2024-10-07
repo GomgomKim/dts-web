@@ -52,7 +52,11 @@ export const MenuItem = ({ item }: MenuItemProps) => {
       variant="ghost"
       stretch
       className={cn({
-        active: isHere && (isExplorePage ? isValidFilterType : true)
+        active:
+          isHere &&
+          (isExplorePage
+            ? searchParams.get('filterType') === null || isValidFilterType
+            : true)
       })}
     >
       <Link
