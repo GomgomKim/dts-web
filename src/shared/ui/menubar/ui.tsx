@@ -4,7 +4,7 @@ import { ComponentProps } from 'react'
 import * as React from 'react'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 
 import { cn } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui/button'
@@ -36,10 +36,25 @@ interface MenuItemProps {
 
 export const MenuItem = ({ item }: MenuItemProps) => {
   const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const currentSearchParams = searchParams.get('filterType')
+
   const isHere = pathname === item.href.pathname
 
+  const isValidFilterType =
+    currentSearchParams === 'ALL' || currentSearchParams === 'FEATURED'
+
+  const isExplorePage = pathname.startsWith('/explore')
+
   return (
-    <Button asChild variant="ghost" stretch className={cn({ active: isHere })}>
+    <Button
+      asChild
+      variant="ghost"
+      stretch
+      className={cn({
+        active: isHere && (isExplorePage ? isValidFilterType : true)
+      })}
+    >
       <Link
         href={item.href}
         target={item.target}

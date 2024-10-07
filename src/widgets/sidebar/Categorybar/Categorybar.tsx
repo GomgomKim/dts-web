@@ -1,9 +1,7 @@
 'use client'
 
-import { useSearchParams } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
-import { useSetQueryString } from '@/shared/lib/hooks/useSetQueryString'
-import { useFilterTypeStore } from '@/shared/lib/stores/useFilterTypeStore'
 import { cn } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui'
 import { Badge } from '@/shared/ui/badge'
@@ -27,18 +25,21 @@ interface CategoryItemProps {
 }
 const CategoryItem = (props: CategoryItemProps) => {
   const searchParams = useSearchParams()
-  const setFilterType = useFilterTypeStore((state) => state.setFilterType)
+  const router = useRouter()
+  const pathName = usePathname()
+
+  const isExplorePage = pathName.startsWith('/explore')
 
   const isHere =
+    isExplorePage &&
     (searchParams.get('filterType') || 'ALL') ===
-    props.children!.toString().toUpperCase()
+      props.children!.toString().toUpperCase()
 
-  const { handleQueryString } = useSetQueryString({ action: 'replace' })
   const handleClickFilter = () => {
-    handleQueryString([
-      { filterType: props.children!.toString().toUpperCase() }
-    ])
-    setFilterType(props.children!.toString().toUpperCase())
+    router.replace(
+      `/explore?filterType=${props.children!.toString().toUpperCase()}`,
+      { scroll: false }
+    )
   }
 
   return (
