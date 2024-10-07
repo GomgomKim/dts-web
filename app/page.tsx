@@ -1,5 +1,8 @@
-import { redirect } from 'next/navigation'
+'use client'
+
+import { useRouter } from 'next/navigation'
 
 export default function Page() {
-  redirect('/explore?filterType=ALL')
+  const router = useRouter()
+  router.replace('/explore?filterType=ALL')
 }
