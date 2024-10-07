@@ -13,26 +13,32 @@ interface FilterProps extends React.ComponentPropsWithRef<'div'> {
   filterList: string[]
   id?: string
   element?: React.RefObject<HTMLDivElement>
+  onClickFilter?: () => void
 }
 
 export const Filter = (props: FilterProps) => {
-  const { filterList, ...restProps } = props
+  const { filterList, onClickFilter, ...restProps } = props
+  const isMounted = React.useRef(false)
   const searchParams = useSearchParams()
-
   const setFilterType = useFilterTypeStore((state) => state.setFilterType)
+
+  const { handleQueryString } = useSetQueryString({ action: 'replace' })
 
   const currentFilterType =
     searchParams.get('filterType') || filterList[0].toUpperCase()
 
-  const { handleQueryString } = useSetQueryString({ option: 'replace' })
-
   const handleClickFilter = (type: string) => {
-    // setFilterType(type)
     handleQueryString([{ filterType: type }])
   }
 
   React.useEffect(() => {
-    currentFilterType && setFilterType(currentFilterType)
+    searchParams.get('filterType') !== null && setFilterType(currentFilterType)
+
+    if (isMounted.current) {
+      searchParams.get('filterType') !== null && onClickFilter?.()
+    } else {
+      isMounted.current = true
+    }
   }, [searchParams])
 
   return (

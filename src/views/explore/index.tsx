@@ -18,10 +18,11 @@ export default function Explore() {
       <div className="max-w-[1136px] min-[3200px]:max-w-[1646px] min-[3840px]:max-w-[2184px] m-auto">
         <div className="mb-5">
           <Filter
-            filterList={FILTER_TYPES}
             id="explore-filer"
-            element={element}
+            filterList={FILTER_TYPES}
             style={{ scrollMarginTop: '56px' }}
+            element={element}
+            onClickFilter={onMoveToElement}
           />
         </div>
         <ExploreList />
