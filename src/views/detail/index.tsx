@@ -41,7 +41,7 @@ export default function Detail() {
     null
   )
 
-  const { handleQueryString } = useSetQueryString({ option: 'replace' })
+  const { handleQueryString } = useSetQueryString({ action: 'replace' })
   const handleSelectedVariation = (variation: Variation) => {
     setSelectedVariation(variation)
     // handleResize()

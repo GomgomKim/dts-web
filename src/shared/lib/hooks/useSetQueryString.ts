@@ -3,40 +3,42 @@ import { useCallback } from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 type QueryParams = Record<string, string>
-type Optioin = 'push' | 'replace'
+type Action = 'push' | 'replace'
 
 interface useSetQueryStringParams {
-  option: Optioin
+  action: Action
+  scroll?: boolean
 }
 
-export const useSetQueryString = ({ option }: useSetQueryStringParams) => {
+export const useSetQueryString = (props: useSetQueryStringParams) => {
   const searchParams = useSearchParams()
   const router = useRouter()
   const pathname = usePathname()
   const params = new URLSearchParams(searchParams.toString())
 
-  const createQueryStrings = useCallback(
-    (queryParams: QueryParams[]) => {
-      queryParams.forEach((param) => {
-        Object.entries(param).forEach(([key, value]) => {
-          if (value) {
-            params.set(key, value)
-          } else {
-            params.delete(key)
-          }
-        })
+  const createQueryStrings = useCallback((queryParams: QueryParams[]) => {
+    queryParams.forEach((param) => {
+      Object.entries(param).forEach(([key, value]) => {
+        if (value) {
+          params.set(key, value)
+        } else {
+          params.delete(key)
+        }
       })
-      return params.toString()
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [searchParams]
-  )
+    })
+    return params.toString()
+  }, [])
+
   const handleQueryString = (queryParams: QueryParams[]) => {
     const queryString = createQueryStrings(queryParams)
-    if (option === 'replace') {
-      router.replace(pathname + '?' + queryString)
+    if (props.action === 'replace') {
+      router.replace(pathname + '?' + queryString, {
+        scroll: props.scroll || false
+      })
     } else {
-      router.push(pathname + '?' + queryString)
+      router.push(pathname + '?' + queryString, {
+        scroll: props.scroll || false
+      })
     }
   }
 

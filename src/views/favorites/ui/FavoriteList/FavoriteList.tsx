@@ -31,7 +31,8 @@ export const FavoriteList = () => {
   }, [inView, isFetching, isFetchingNextPage, hasNextPage, fetchNextPage])
 
   if (status === 'error') return <p>{error?.message}</p>
-  if (isFetching && !isFetchingNextPage) return <div>loading skeleton ...</div>
+  if (isFetching && !isFetchingNextPage)
+    return <div className="h-full">loading skeleton ...</div>
 
   const isEmpty = data?.pages[0].content.images.length === 0
   if (isEmpty) return <Nullbox />
