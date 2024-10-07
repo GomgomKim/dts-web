@@ -4,6 +4,8 @@ import * as React from 'react'
 
 import { useRouter, useSearchParams } from 'next/navigation'
 
+import AuthCheck from '@/app/providers/AuthCheck'
+
 import { useAuthStore } from '@/entities/UserProfile/store'
 import { Instructions } from '@/entities/mobile/ui/Instructions'
 
@@ -13,9 +15,8 @@ export default function Page() {
   const searchParams = useSearchParams()
   const router = useRouter()
 
-  const logIn = useAuthStore((state) => state.logIn)
   const isAuth = useAuthStore((state) => state.isAuth)
-  const [loading, setLoading] = React.useState(true)
+  const logIn = useAuthStore((state) => state.logIn)
 
   React.useEffect(() => {
     if (isAuth === true) return
@@ -50,40 +51,12 @@ export default function Page() {
       })
     }
   }, [searchParams])
-  React.useEffect(() => {
-    let isTimeover: NodeJS.Timeout | null = null
-
-    if (isAuth === null) {
-      setLoading(true)
-      isTimeover = setTimeout(() => {
-        if (isAuth === null) {
-          setLoading(false)
-          router.replace('/signup')
-        }
-      }, 3000)
-    } else {
-      setLoading(false)
-      if (isAuth === false) {
-        router.replace('/mobile')
-      }
-    }
-
-    return () => {
-      if (isTimeover) {
-        clearTimeout(isTimeover)
-      }
-    }
-  }, [isAuth])
-
-  if (loading) {
-    return <div>auth checking...</div>
-  }
-
-  if (isAuth !== true) return null
 
   return (
-    <div className="absolute-center">
-      <Instructions />
-    </div>
+    <AuthCheck routePath="/mobile">
+      <div className="absolute-center">
+        <Instructions />
+      </div>
+    </AuthCheck>
   )
 }
