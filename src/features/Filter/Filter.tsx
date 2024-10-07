@@ -2,7 +2,7 @@
 
 import React from 'react'
 
-import { useSearchParams } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 
 import { useMoveScroll } from '@/shared/lib/hooks/useMoveScroll'
 import { useSetQueryString } from '@/shared/lib/hooks/useSetQueryString'
@@ -19,14 +19,19 @@ export const Filter = (props: FilterProps) => {
   const { filterList, ...restProps } = props
   const isMounted = React.useRef(false)
   const { element, onMoveToElement } = useMoveScroll()
+  const pathname = usePathname()
 
   const searchParams = useSearchParams()
+  const previousFilterType = useFilterTypeStore((state) => state.filterType)
   const setFilterType = useFilterTypeStore((state) => state.setFilterType)
 
   const { handleQueryString } = useSetQueryString({ action: 'replace' })
 
   const currentFilterType =
-    searchParams.get('filterType') || filterList[0].toUpperCase()
+    searchParams.get('filterType') ||
+    (pathname.startsWith('/explore')
+      ? filterList[0].toUpperCase()
+      : previousFilterType)
 
   const handleClickFilter = (type: string) => {
     handleQueryString([{ filterType: type }])

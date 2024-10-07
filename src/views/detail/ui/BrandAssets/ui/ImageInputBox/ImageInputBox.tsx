@@ -145,9 +145,11 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
       <DndBox
         width="100%"
         onDropped={(e) => handleChangeDNDInput(e.dataTransfer.files[0])}
-        className="relative rounded-xl bg-neutral-1 bg-opacity-50 aspect-[7/4] max-h-[200px]"
+        className="relative rounded-xl bg-neutral-1 bg-opacity-50 p-5 w-[280px] h-[160px] min-[1920px]:w-[387px] min-[1920px]:h-[240px]"
       >
-        {!imagePreviewUrls.has(props.boxId) ? <DashedSvg /> : null}
+        {!imagePreviewUrls.has(props.boxId) ? (
+          <DashedSvg className="absolute inset-0" />
+        ) : null}
         {renderContent()}
       </DndBox>
     </>

@@ -15,12 +15,11 @@ interface LikeButtonProps extends React.ComponentProps<'button'> {
 export const LikeButton = (props: LikeButtonProps) => {
   return (
     <Button
-      {...props}
       asChild
       variant="secondary"
       size="icon"
       onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        e.preventDefault()
+        e.stopPropagation()
         props.onClickLike()
       }}
       className={cn('group', props.className)}
