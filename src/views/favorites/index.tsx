@@ -12,9 +12,11 @@ export default function Favorites() {
       <h1 className="text-xl mb-8 text-[2rem] font-semibold">Favorites</h1>
       <Suspense fallback={<div>Loading...</div>}>
         <div className="flex justify-between mb-5">
-          <Filter filterList={FILTER_TYPES} />
+          <Filter id="favorites-filter" filterList={FILTER_TYPES} />
           <SortDropdown />
         </div>
+      </Suspense>
+      <Suspense fallback={<div>Loading...</div>}>
         <FavoriteList />
       </Suspense>
     </>
