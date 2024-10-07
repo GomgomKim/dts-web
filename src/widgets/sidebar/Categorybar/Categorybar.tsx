@@ -33,7 +33,7 @@ const CategoryItem = (props: CategoryItemProps) => {
     (searchParams.get('filterType') || 'ALL') ===
     props.children!.toString().toUpperCase()
 
-  const { handleQueryString } = useSetQueryString({ option: 'replace' })
+  const { handleQueryString } = useSetQueryString({ action: 'replace' })
   const handleClickFilter = () => {
     handleQueryString([
       { filterType: props.children!.toString().toUpperCase() }

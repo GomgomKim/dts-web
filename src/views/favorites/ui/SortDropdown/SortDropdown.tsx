@@ -29,7 +29,7 @@ import {
 export const SortDropdown = () => {
   const searchParams = useSearchParams()
   const sortingType = searchParams.get('sortingType') || SORTING_TYPES[0]
-  const { handleQueryString } = useSetQueryString({ option: 'replace' })
+  const { handleQueryString } = useSetQueryString({ action: 'replace' })
 
   const [sort, setSort] = React.useState(
     SORTING_TYPE_REVER_MAP[sortingType as SortingType]
