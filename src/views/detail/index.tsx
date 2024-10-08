@@ -65,7 +65,9 @@ export default function Detail() {
           <section className="overflow-y-auto overflow-x-hidden basis-[513px] shrink-0 grow">
             <div className="flex flex-col relative h-full">
               <div className="sticky top-0 w-full z-40">
-                <h2 className="text-[1.5rem] inline-block">Generate</h2>
+                <h2 className="text-[1.5rem] inline-block font-semibold">
+                  Generate
+                </h2>
 
                 <span className="absolute top-0 right-0">
                   <NewGenerateButton />

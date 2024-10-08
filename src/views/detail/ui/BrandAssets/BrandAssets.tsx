@@ -26,7 +26,7 @@ export const BrandAssets = (props: BrandAssetsProps) => {
 
   return (
     <section className="sticky flex flex-col gap-5">
-      <h2 className="text-[1.25rem] ">Brand Assets</h2>
+      <h2 className="text-[1.5rem] font-semibold">Brand Assets</h2>
       <div>
         <h3 className="mb-3 text-neutral-7">Product</h3>
         <ImageInputBox
