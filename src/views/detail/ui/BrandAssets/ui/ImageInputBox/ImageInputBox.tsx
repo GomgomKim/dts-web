@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import * as React from 'react'
 
 import { useImagePreviewUrlStore } from '@/entities/detail/store'
 
@@ -9,6 +9,7 @@ import { Button } from '@/shared/ui/button'
 
 import DashedSvg from '/public/icons/dashed.svg'
 import DeleteIcon from '/public/icons/delete.svg'
+import SpinnerIcon from '/public/icons/loading-spinner.svg'
 
 import { usePostRemoveBackground } from './model/adapter'
 
@@ -24,6 +25,8 @@ interface ImageInputBoxProps {
 }
 
 export const ImageInputBox = (props: ImageInputBoxProps) => {
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
+
   const {
     imagePreviewUrls,
     addImagePreviewUrl,
@@ -33,7 +36,7 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
 
   const removeBackgroundMutation = usePostRemoveBackground()
 
-  useEffect(() => {
+  React.useEffect(() => {
     return () => {
       resetImagePreviewUrls()
     }
@@ -46,12 +49,17 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
   }
 
   const handleSubmit = ({ formData }: { formData: FormData }) => {
+    setErrorMessage(null)
+
     removeBackgroundMutation.mutate(
       { source: formData },
       {
         onSuccess: (data) => {
           const blob = new Blob([data], { type: 'image/png' })
           addImagePreviewUrl(props.boxId, blob)
+        },
+        onError: () => {
+          setErrorMessage('Oops! Try again.')
         }
       }
     )
@@ -70,9 +78,11 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
     if (!files) return
 
     if (!isValidImageSize(files[0])) {
-      alert('Image size is too large. Please upload an image smaller than 5MB.')
+      setErrorMessage('Check the file size or format.')
       e.target.value = ''
       return
+    } else {
+      setErrorMessage(null)
     }
 
     handleChangeImageFile(files[0])
@@ -81,8 +91,10 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
 
   const handleChangeDNDInput = (file: File) => {
     if (!isValidImageSize(file)) {
-      alert('Image size is too large. Please upload an image smaller than 5MB.')
+      setErrorMessage('Check the file size or format.')
       return
+    } else {
+      setErrorMessage(null)
     }
 
     handleChangeImageFile(file)
@@ -116,18 +128,18 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
       )
     } else {
       return (
-        <div className="flex flex-col items-center gap-3 absolute-center">
-          <div>
-            <Button asChild variant="outline">
-              <label htmlFor={props.boxId} role="button">
-                Upload
-              </label>
-            </Button>
-          </div>
-          <p className="text-neutral-5 whitespace-nowrap text-[0.875rem]">
-            Supports JPG and PNG up to 5MB
-          </p>
-        </div>
+        <>
+          {removeBackgroundMutation.isPending ? (
+            <LoadingInstruction />
+          ) : (
+            <div className="relative">
+              <UploadButton id={props.boxId} />
+              {errorMessage !== null ? (
+                <ErrorInstruction errorMessage={errorMessage} />
+              ) : null}
+            </div>
+          )}
+        </>
       )
     }
   }
@@ -145,7 +157,7 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
       <DndBox
         width="100%"
         onDropped={(e) => handleChangeDNDInput(e.dataTransfer.files[0])}
-        className="relative rounded-xl bg-neutral-1 bg-opacity-50 p-5 w-[280px] h-[160px] min-[1920px]:w-[387px] min-[1920px]:h-[240px]"
+        className="relative rounded-xl bg-neutral-1 bg-opacity-50 p-5 w-[280px] h-[160px] min-[1512px]:w-[387px] min-[1512px]:h-[240px]"
       >
         {!imagePreviewUrls.has(props.boxId) ? (
           <DashedSvg className="absolute inset-0" />
@@ -153,5 +165,43 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
         {renderContent()}
       </DndBox>
     </>
+  )
+}
+
+const LoadingInstruction = () => {
+  return (
+    <div>
+      <div className="w-4 h-4 m-auto mb-2">
+        <SpinnerIcon className="animate-spin" width="16" height="16" />
+      </div>
+      <p className="text-neutral-7 text-nowrap text-[0.875rem]">
+        Tweaking the background...
+      </p>
+    </div>
+  )
+}
+
+const ErrorInstruction = ({ errorMessage }: { errorMessage: string }) => {
+  return (
+    <p className="absolute bottom-[-0.25rem] translate-y-full w-full text-center text-[0.875rem] text-[#FF8480]">
+      {errorMessage}
+    </p>
+  )
+}
+
+const UploadButton = ({ id }: { id: string }) => {
+  return (
+    <div>
+      <div className="mb-3 text-center">
+        <Button asChild variant="outline">
+          <label htmlFor={id} role="button">
+            Upload
+          </label>
+        </Button>
+      </div>
+      <p className="text-neutral-5 whitespace-nowrap text-[0.875rem]">
+        Supports JPG and PNG up to 5MB
+      </p>
+    </div>
   )
 }
