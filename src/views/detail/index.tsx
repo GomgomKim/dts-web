@@ -24,13 +24,13 @@ export default function Detail() {
   const [boxes, setBoxes] = useState<Box[]>([])
   const boxRefs = useRef<Map<string, HTMLDivElement | null>>(new Map())
 
-  const handleAddBrandAssets = () => {
+  const handleClickAddBrandAssets = () => {
     const boxesData = convertImagesToBoxData(assetImages)
     setBoxes(boxesData)
     boxRefs.current.clear()
   }
 
-  const handleRemoveBox = (id: string) => {
+  const handleChangeBrandAsset = (id: string) => {
     removeImagePreviewUrl(id)
     const newBoxes = boxes.filter((box) => box.id !== id)
     setBoxes(newBoxes)
@@ -51,22 +51,23 @@ export default function Detail() {
   return (
     <div className="flex w-full h-full">
       {/* brand assets section */}
-      <div className="px-5 w-[320px] min-[1920px]:w-[427px] fixed bg-background z-20">
+      <div className="px-5 w-[320px] min-[1512px]:w-[427px] fixed bg-background z-20">
         <BrandAssets
-          onClickAddBrandAssets={handleAddBrandAssets}
-          handleRemoveBox={handleRemoveBox}
-          assetDisabled={assetImages.size < 1}
+          onClickAddBrandAssets={handleClickAddBrandAssets}
+          onChangeBrandAsset={handleChangeBrandAsset}
         />
       </div>
 
       {/* generate section */}
-      <div className="h-full ml-[320px] min-[1920px]:ml-[427px] grow">
+      <div className="h-full ml-[320px] min-[1512px]:ml-[427px] grow">
         <div className="h-full overflow-x-scroll flex gap-5">
           {/* generate section - left */}
           <section className="overflow-y-auto overflow-x-hidden basis-[513px] shrink-0 grow">
             <div className="flex flex-col relative h-full">
               <div className="sticky top-0 w-full z-40">
-                <h2 className="text-[1.5rem] inline-block">Generate</h2>
+                <h2 className="text-[1.5rem] inline-block font-semibold">
+                  Generate
+                </h2>
 
                 <span className="absolute top-0 right-0">
                   <NewGenerateButton />

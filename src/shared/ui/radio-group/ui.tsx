@@ -55,11 +55,11 @@ const RadioGroupItem = React.forwardRef<HTMLDivElement, RadioGroupItemProps>(
         aria-checked={value === localValue}
         aria-disabled={disabled}
         className={cn(
-          'p-3 rounded-[0.5rem] bg-inherit text-neutral-7 border border-neutral-1 flex items-center justify-center flex-1 text-[14px]',
+          'p-3 flex items-center justify-center flex-1 text-[14px] rounded-[0.5rem] bg-inherit text-neutral-7 border border-neutral-1',
           className,
           {
             'bg-neutral-1 text-white': value === localValue,
-            'cursor-pointer': !disabled,
+            'cursor-pointer hover:bg-neutral-1 hover:text-white': !disabled,
             'opacity-50': disabled
           }
         )}

@@ -46,12 +46,12 @@ export const UserProfile = () => {
   const isZeroRestriction = remainRestriction === 0
 
   const description = isZeroRestriction ? (
-    <div className="font-medium text-[0.875rem] text-[#616268]">
+    <div className="font-medium text-[0.875rem] text-neutral-4">
       Credits reset at midnight
       <span className="ml-[8px]">🌙</span>
     </div>
   ) : (
-    <span className="font-medium text-[0.875rem] text-[#616268]">
+    <span className="font-medium text-[0.875rem] text-neutral-4">
       100 credits per day
     </span>
   )

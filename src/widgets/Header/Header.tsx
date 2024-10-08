@@ -78,7 +78,7 @@ const UserInfo = () => {
           {restriction ? restriction?.max - restriction?.current : null}
         </span>
         {isZeroRestriction ? (
-          <div className="font-[14px] text-[0.875rem] text-[#616268]">
+          <div className="font-[14px] text-[0.875rem] text-neutral-4">
             Credits reset at midnight
             <span className="ml-[8px]">🌙</span>
           </div>

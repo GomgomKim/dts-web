@@ -23,7 +23,7 @@ export const Nullbox = () => {
           on models you like to add them to your favorites
         </p>
         <div>
-          <Button variant="outline" asChild>
+          <Button variant="sub1" asChild>
             <Link href="/explore">Go to Explore</Link>
           </Button>
         </div>

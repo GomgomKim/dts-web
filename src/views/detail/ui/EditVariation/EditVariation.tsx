@@ -91,7 +91,7 @@ export const EditVariation = (props: EditVariationProps) => {
 
   return (
     <section className="flex flex-col gap-5">
-      <h2 className="text-[1.5rem]">Edit</h2>
+      <h2 className="text-[1.5rem] font-semibold">Edit</h2>
 
       {/* options - Aspect Ratio */}
       <article>
