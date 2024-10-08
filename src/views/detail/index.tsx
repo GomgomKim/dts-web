@@ -24,13 +24,13 @@ export default function Detail() {
   const [boxes, setBoxes] = useState<Box[]>([])
   const boxRefs = useRef<Map<string, HTMLDivElement | null>>(new Map())
 
-  const handleAddBrandAssets = () => {
+  const handleClickAddBrandAssets = () => {
     const boxesData = convertImagesToBoxData(assetImages)
     setBoxes(boxesData)
     boxRefs.current.clear()
   }
 
-  const handleRemoveBox = (id: string) => {
+  const handleChangeBrandAsset = (id: string) => {
     removeImagePreviewUrl(id)
     const newBoxes = boxes.filter((box) => box.id !== id)
     setBoxes(newBoxes)
@@ -53,9 +53,8 @@ export default function Detail() {
       {/* brand assets section */}
       <div className="px-5 w-[320px] min-[1512px]:w-[427px] fixed bg-background z-20">
         <BrandAssets
-          onClickAddBrandAssets={handleAddBrandAssets}
-          handleRemoveBox={handleRemoveBox}
-          assetDisabled={assetImages.size < 1}
+          onClickAddBrandAssets={handleClickAddBrandAssets}
+          onChangeBrandAsset={handleChangeBrandAsset}
         />
       </div>
 

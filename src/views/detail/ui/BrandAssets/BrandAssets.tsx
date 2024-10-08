@@ -2,20 +2,24 @@
 
 import * as React from 'react'
 
+import { useImagePreviewUrlStore } from '@/entities/detail/store'
+
 import { debounce } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui/button'
 
 import { ImageInputBox } from './ui/ImageInputBox'
 
+const DELAY_ADD_BRAND_ASSETS = 300
+
 interface BrandAssetsProps {
-  handleRemoveBox: (boxId: string) => void
+  onChangeBrandAsset: (boxId: string) => void
   onClickAddBrandAssets: () => void
-  assetDisabled: boolean
 }
 
-const DELAY_ADD_BRAND_ASSETS = 300
 export const BrandAssets = (props: BrandAssetsProps) => {
-  const debounceHandleAddBrandAssets = React.useCallback(
+  const { imagePreviewUrls } = useImagePreviewUrlStore()
+
+  const debounceHandleClickAddBrandAssets = React.useCallback(
     debounce(props.onClickAddBrandAssets, DELAY_ADD_BRAND_ASSETS),
     []
   )
@@ -27,19 +31,20 @@ export const BrandAssets = (props: BrandAssetsProps) => {
         <h3 className="mb-3 text-neutral-7">Product</h3>
         <ImageInputBox
           boxId="product"
-          onChangeBrandAsset={() => props.handleRemoveBox('product')}
+          onChangeBrandAsset={() => props.onChangeBrandAsset('product')}
         />
       </div>
       <div>
         <h3 className="mb-3 text-neutral-7">Brand Logo</h3>
         <ImageInputBox
           boxId="logo"
-          onChangeBrandAsset={() => props.handleRemoveBox('logo')}
+          onChangeBrandAsset={() => props.onChangeBrandAsset('logo')}
         />
       </div>
       <Button
-        onClick={debounceHandleAddBrandAssets}
-        disabled={props.assetDisabled}
+        onClick={debounceHandleClickAddBrandAssets}
+        disabled={imagePreviewUrls.size < 1}
+        className="disabled:bg-neutral-2 disabled:text-neutral-4 disabled:opacity-1"
       >
         Add Brand Assets
       </Button>
