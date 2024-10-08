@@ -51,7 +51,7 @@ export default function Detail() {
   return (
     <div className="flex w-full h-full">
       {/* brand assets section */}
-      <div className="px-5 w-[320px] min-[1920px]:w-[427px] fixed bg-background z-20">
+      <div className="px-5 w-[320px] min-[1512px]:w-[427px] fixed bg-background z-20">
         <BrandAssets
           onClickAddBrandAssets={handleAddBrandAssets}
           handleRemoveBox={handleRemoveBox}
@@ -60,7 +60,7 @@ export default function Detail() {
       </div>
 
       {/* generate section */}
-      <div className="h-full ml-[320px] min-[1920px]:ml-[427px] grow">
+      <div className="h-full ml-[320px] min-[1512px]:ml-[427px] grow">
         <div className="h-full overflow-x-scroll flex gap-5">
           {/* generate section - left */}
           <section className="overflow-y-auto overflow-x-hidden basis-[513px] shrink-0 grow">
