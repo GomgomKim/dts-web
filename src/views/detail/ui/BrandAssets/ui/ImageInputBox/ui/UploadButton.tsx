@@ -4,7 +4,7 @@ export const UploadButton = ({ boxId }: { boxId: string }) => {
   return (
     <div>
       <div className="mb-3 text-center">
-        <Button asChild variant="outline">
+        <Button asChild variant="sub1" className="hover:bg-border">
           <label htmlFor={boxId} role="button">
             Upload
           </label>

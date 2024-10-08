@@ -28,15 +28,17 @@ const config = {
         foreground: 'hsl(var(--foreground))',
         primary: {
           DEFAULT: 'var(--primary)',
-          foreground: 'var(--primary-foreground)'
+          foreground: 'var(--primary-foreground)',
+          hover: 'var(--primary-hover)'
         },
         secondary: {
           DEFAULT: 'var(--secondary)',
           foreground: 'var(--secondary-foreground)'
         },
         destructive: {
-          DEFAULT: 'hsl(var(--destructive))',
-          foreground: 'hsl(var(--destructive-foreground))'
+          DEFAULT: 'var(--destructive)',
+          foreground: 'var(--destructive-foreground)',
+          hover: 'var(--destructive-hover)'
         },
         muted: {
           DEFAULT: 'hsl(var(--muted))',

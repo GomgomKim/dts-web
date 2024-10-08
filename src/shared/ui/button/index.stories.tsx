@@ -41,9 +41,15 @@ export const Destructive: Story = {
   }
 }
 
-export const Outline: Story = {
+export const Sub1: Story = {
   render: () => {
-    return <Button variant="outline">outline</Button>
+    return <Button variant="sub1">Sub1</Button>
+  }
+}
+
+export const Sub2: Story = {
+  render: () => {
+    return <Button variant="sub2">Sub2</Button>
   }
 }
 
@@ -72,7 +78,7 @@ export const LinkButton: Story = {
         <Button asChild>
           <Link href="#">Get Started for Free</Link>
         </Button>
-        <Button asChild variant="outline">
+        <Button asChild variant="sub1">
           <Link href="#">See Examples</Link>
         </Button>
       </>
@@ -132,7 +138,13 @@ export const Disabled: Story = {
     return (
       <>
         <Button disabled>button</Button>
-        <Button variant="outline" disabled>
+        <Button variant="sub1" disabled>
+          button
+        </Button>
+        <Button variant="sub2" disabled>
+          button
+        </Button>
+        <Button variant="secondary" disabled>
           button
         </Button>
       </>
@@ -145,7 +157,7 @@ export const Stretch: Story = {
     return (
       <>
         <Button stretch>button</Button>
-        <Button variant="outline" stretch>
+        <Button variant="sub1" stretch>
           button
         </Button>
       </>

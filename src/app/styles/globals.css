@@ -15,6 +15,7 @@
 
     --primary: #6effb6;
     --primary-foreground: #0f1011;
+    --primary-hover: #a2ffd1;
 
     --secondary: #2d2e33;
     --secondary-foreground: #aeafb5;
@@ -25,8 +26,9 @@
     --accent: #202124;
     --accent-foreground: 0 0% 98%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: #ff8480;
+    --destructive-foreground: #0f1011;
+    --destructive-hover: #ff9d99;
 
     --border: #393a40;
     --input: 0 0% 16%;

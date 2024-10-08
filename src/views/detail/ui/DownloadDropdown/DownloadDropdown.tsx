@@ -61,7 +61,7 @@ export const DownloadDropdown = (props: DownloadDropdownProps) => {
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button
-          variant="outline"
+          variant="sub1"
           className="bg-neutral-1 bg-opacity-50"
           disabled={!variationId || !props.containerRef}
         >
@@ -110,7 +110,7 @@ export const DownloadDropdown = (props: DownloadDropdownProps) => {
                 >
                   <div className="flex gap-x-2">
                     <span className="text-[0.875rem]">{option.label}</span>
-                    <span className="font-medium text-[0.875rem] text-[#616268]">
+                    <span className="font-medium text-[0.875rem] text-neutral-4">
                       {option.subText}
                     </span>
                   </div>
@@ -125,7 +125,7 @@ export const DownloadDropdown = (props: DownloadDropdownProps) => {
                 >
                   <div className="flex gap-x-2">
                     <span className="text-[0.875rem]">{option.label}</span>
-                    <span className="font-medium text-[0.875rem] text-[#616268]">
+                    <span className="font-medium text-[0.875rem] text-neutral-4">
                       {option.subText}
                     </span>
                   </div>

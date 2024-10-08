@@ -8,11 +8,7 @@ export const NewGenerateButton = () => {
   const { debounceHandleClickNewGenerate } = useHandleClickNewGenerate()
 
   return (
-    <Button
-      variant="outline"
-      className="bg-background bg-opacity-50 rounded-[0.5rem] group border-neutral-1 text-neutral-7"
-      onClick={debounceHandleClickNewGenerate}
-    >
+    <Button variant="sub2" onClick={debounceHandleClickNewGenerate}>
       <PlusIcon
         width="1rem"
         height="1rem"

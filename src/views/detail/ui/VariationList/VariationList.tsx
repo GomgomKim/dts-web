@@ -171,9 +171,9 @@ export const VariationsList = (props: VariationListProps) => {
         </div>
         <div className="flex gap-1">
           <Button
-            variant="outline"
+            variant="sub2"
             size="icon"
-            className="w-5 h-5 rounded-[4px] bg-inherit hover:bg-secondary"
+            className="w-5 h-5 rounded-[0.25rem]"
             disabled={currentPage === INITIAL_PAGE}
             onClick={() =>
               setCurrentPage((prev) => Math.max(prev - 1, INITIAL_PAGE))
@@ -187,9 +187,9 @@ export const VariationsList = (props: VariationListProps) => {
             <span className="block w-[25px]">{totalPages}</span>
           </div>
           <Button
-            variant="outline"
+            variant="sub2"
             size="icon"
-            className="w-5 h-5 rounded-[4px] bg-inherit hover:bg-secondary"
+            className="w-5 h-5 rounded-[0.25rem]"
             disabled={currentPage >= totalPages}
             onClick={() =>
               setCurrentPage((prev) => Math.min(prev + 1, totalPages))
