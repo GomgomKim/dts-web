@@ -1,11 +1,11 @@
-'use client'
-
 import Explore from '@/views/explore'
-
-import { useGetAuthToken } from '@/shared/lib/hooks/useGetAuthToken'
+import { Banner } from '@/views/explore/ui/Banner'
 
 export default function Page() {
-  useGetAuthToken({ redirectPath: '/explore?filterType=ALL' })
-
-  return <Explore />
+  return (
+    <>
+      <Banner />
+      <Explore />
+    </>
+  )
 }
