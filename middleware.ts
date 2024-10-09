@@ -9,6 +9,11 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
+  if (!isMobile && pathname === '/') {
+    const newUrl = new URL('/explore?filterType=ALL', request.url)
+    return NextResponse.redirect(newUrl)
+  }
+
   if (
     isMobile &&
     pathname.startsWith('/explore') &&
