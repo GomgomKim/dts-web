@@ -43,7 +43,7 @@ export const SortDropdown = () => {
 
   return (
     <DropdownMenu modal={false}>
-      <DropdownMenuTrigger asChild className="group">
+      <DropdownMenuTrigger asChild className="group mb-5">
         <Button variant="ghost" className="p-3">
           <div className="flex items-center gap-[4px]">
             <span>{SORTING_TYPE_LABEL_MAP[sort]}</span>

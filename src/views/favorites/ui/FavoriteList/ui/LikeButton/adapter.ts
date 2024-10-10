@@ -6,16 +6,14 @@ import { DeleteFavoriteReqData } from '@/entities/LikeButton/types'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { SORTING_TYPES } from '../../../SortDropdown/constant'
-import { FILTER_TYPES } from '../../constant'
 import { GetFavoriteListResData } from '../../model/types'
 
 export const useDeleteFavorite = () => {
   const queryClient = useQueryClient()
 
   const searchParams = useSearchParams()
-  const filterType = searchParams.get('filterType') || FILTER_TYPES[0]
   const sortingType = searchParams.get('sortingType') || SORTING_TYPES[0]
-  const queryKey = ['favorites', filterType, sortingType]
+  const queryKey = ['favorites', sortingType]
 
   return useMutation({
     mutationFn: ({ mainImageId }: DeleteFavoriteReqData) =>

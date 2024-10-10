@@ -8,7 +8,6 @@ import { GetFavoriteListReqData, GetFavoriteListResData } from './types'
 const SEAERCH_SIZE = 10
 
 export async function getFavoriteList({
-  filterType,
   size = SEAERCH_SIZE,
   sortingType,
   scrollKey
@@ -17,7 +16,7 @@ export async function getFavoriteList({
     GetFavoriteListReqData,
     AxiosResponse<GetFavoriteListResData, AxiosError>
   >(
-    `${URL_FAVORITE_LIST}?filterType=${filterType}&size=${size}&sortingType=${sortingType}` +
+    `${URL_FAVORITE_LIST}?size=${size}&sortingType=${sortingType}` +
       (scrollKey ? `&scrollKey=${scrollKey}` : '')
   )
   return response.data

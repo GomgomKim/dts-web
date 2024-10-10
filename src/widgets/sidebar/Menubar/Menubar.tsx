@@ -18,7 +18,7 @@ export const Menubar = () => {
       <li>
         <MenuItem
           item={{
-            href: { pathname: '/favorites', query: { filterType: 'ALL' } },
+            href: { pathname: '/favorites', query: { sortingType: 'OLDEST' } },
             title: 'Favorites',
             prefix: <FavoriteIcon />
           }}
