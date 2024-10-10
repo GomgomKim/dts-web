@@ -181,7 +181,7 @@ export const VariationsList = (props: VariationListProps) => {
           const { variationId, isAiGenerated, progress } = item
 
           const isGenerating = isAiGenerated && progress < 100
-          const isSeletedVariation =
+          const isSelectedVariation =
             searchParams.get('variationId') === variationId.toString()
 
           const isEdited = editedVariationList.has(variationId.toString())
@@ -206,7 +206,7 @@ export const VariationsList = (props: VariationListProps) => {
                 {
                   'cursor-pointer': !isGenerating,
                   'pointer-events-none': isGenerating,
-                  'opacity-50': !isSeletedVariation
+                  'opacity-50': !isSelectedVariation
                 }
               )}
               onClick={() => props.onChangeSelectedVariation(item)}
