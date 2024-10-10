@@ -10,9 +10,7 @@ import { useAiImageGeneratingStore } from '@/entities/detail/store'
 
 import { Variation } from '@/shared/api/types'
 import { cn } from '@/shared/lib/utils'
-import { Button } from '@/shared/ui'
 
-import AngleBracketIcon from '/public/icons/angle-bracket-open.svg'
 import DashedSvg from '/public/icons/dashed.svg'
 import EditIcon from '/public/icons/edit.svg'
 
@@ -21,6 +19,7 @@ import { v4 } from 'uuid'
 import { useEditorStore } from '../../model/useEditorHistoryStore'
 import { useGetAiImageProgress, useGetVariationList } from './model/adapter'
 import { NewGenerateButton } from './ui/NewGenerateButton'
+import { Pagination } from './ui/Pagination'
 
 interface VariationListProps {
   onChangeSelectedVariation: (variation: Variation) => void
@@ -83,7 +82,7 @@ export const VariationsList = (props: VariationListProps) => {
   const [initialData, setInitialData] = React.useState<Variation[]>([])
 
   const [currentPage, setCurrentPage] = React.useState<number>(INITIAL_PAGE)
-  const [totalPages, setTotalPages] = React.useState<number>(() => {
+  const [totalPage, setTotalPage] = React.useState<number>(() => {
     return Math.ceil(variations.length / amountPerPage)
   })
 
@@ -112,7 +111,7 @@ export const VariationsList = (props: VariationListProps) => {
     setInitialData(successGeneratingList)
 
     if (newGeneratingList.length > 0) {
-      setCurrentPage(totalPages)
+      setCurrentPage(totalPage)
 
       addAiImageGeneratingList(newGeneratingList)
       setAiImageList(newGeneratingList)
@@ -150,9 +149,9 @@ export const VariationsList = (props: VariationListProps) => {
     setCurrentPage(updatePage)
   }, [variationsLength])
 
-  if (variationsLength > totalPages * amountPerPage) {
+  if (variationsLength > totalPage * amountPerPage) {
     const updatePage = Math.ceil(variationsLength / amountPerPage)
-    setTotalPages(updatePage)
+    setTotalPage(updatePage)
   }
 
   const renderData = [...initialData, ...aiImageList].slice(
@@ -169,35 +168,11 @@ export const VariationsList = (props: VariationListProps) => {
             <span className="text-primary text-[0.875rem]">Generating ...</span>
           ) : null}
         </div>
-        <div className="flex gap-1">
-          <Button
-            variant="sub2"
-            size="icon"
-            className="w-5 h-5 rounded-[0.25rem]"
-            disabled={currentPage === INITIAL_PAGE}
-            onClick={() =>
-              setCurrentPage((prev) => Math.max(prev - 1, INITIAL_PAGE))
-            }
-          >
-            <AngleBracketIcon />
-          </Button>
-          <div className="flex items-center text-center text-neutral-5">
-            <span className="block w-[25px]">{currentPage}</span>
-            <span> / </span>
-            <span className="block w-[25px]">{totalPages}</span>
-          </div>
-          <Button
-            variant="sub2"
-            size="icon"
-            className="w-5 h-5 rounded-[0.25rem]"
-            disabled={currentPage >= totalPages}
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-            }
-          >
-            <AngleBracketIcon className="rotate-180" />
-          </Button>
-        </div>
+        <Pagination
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          totalPage={totalPage}
+        />
       </div>
 
       <div className="flex gap-4 min-h-[120px]">
