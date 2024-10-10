@@ -202,7 +202,7 @@ export const VariationsList = (props: VariationListProps) => {
               key={variationId + v4()}
               aria-disabled={isGenerating}
               className={cn(
-                'rounded-[0.5rem] overflow-hidden relative aspect-[206/219] w-full border border-border',
+                'rounded-[0.5rem] overflow-hidden relative aspect-[206/219] w-full border border-border hover:opacity-100',
                 {
                   'cursor-pointer': !isGenerating,
                   'pointer-events-none': isGenerating,
