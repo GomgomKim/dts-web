@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 
 import { useImagePreviewUrlStore } from '@/entities/detail/store'
 
@@ -89,11 +89,9 @@ export default function Detail() {
 
                   {/* variations section */}
                   <div className="min-h-[180px] max-h-[395px]">
-                    <Suspense fallback={<div>Loading...</div>}>
-                      <VariationsList
-                        onChangeSelectedVariation={handleSelectedVariation}
-                      />
-                    </Suspense>
+                    <VariationsList
+                      onChangeSelectedVariation={handleSelectedVariation}
+                    />
                   </div>
                 </div>
               </div>

@@ -164,7 +164,7 @@ export const VariationsList = (props: VariationListProps) => {
       <div className="flex justify-between items-center mb-5">
         <div className="flex items-center gap-2">
           <h3 className="text-neutral-7 text-[0.875rem]">Variations</h3>
-          {isAiImageGenerating ? (
+          {isAiImageGenerating || isFetching ? (
             <span className="text-primary text-[0.875rem]">Generating ...</span>
           ) : null}
         </div>
@@ -224,17 +224,26 @@ export const VariationsList = (props: VariationListProps) => {
                 />
               )}
               {isEdited ? (
-                <div className="p-[6px] absolute top-[6px] left-[6px] rounded-[4px] bg-neutral-0 bg-opacity-90">
+                <div className="p-[6px] absolute top-[6px] left-[6px] rounded-[4px] bg-neutral-0 bg-opacity-90 hover:opacity-100">
                   <EditIcon />
                 </div>
               ) : null}
             </div>
           )
         })}
+        {/* loading initial data */}
+        {isFetching && initialData.length === 0 && (
+          <div
+            aria-disabled={isFetching}
+            className="rounded-[0.5rem] overflow-hidden relative aspect-[206/219] w-full border border-border"
+          >
+            <div className="loading-skeleton h-full" />
+          </div>
+        )}
         {/* null card */}
         {renderData.length < amountPerPage &&
           Array.from({
-            length: amountPerPage - renderData.length
+            length: amountPerPage - renderData.length - (isFetching ? 1 : 0)
           }).map((_, index) => (
             <div
               key={index}
