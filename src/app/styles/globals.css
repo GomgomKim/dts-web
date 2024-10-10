@@ -51,6 +51,14 @@
 }
 
 @layer utilities {
+  .grid-empty {
+    grid-template-columns: repeat(5, minmax(176px, 1fr));
+    max-width: calc(211px * 5 + 20px * 4);
+  }
+  .grid-empty-large {
+    grid-template-columns: repeat(8, 256px);
+    max-width: calc(256px * 8 + 20px * 7);
+  }
   .grid-cols-auto-fill-small {
     grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
   }

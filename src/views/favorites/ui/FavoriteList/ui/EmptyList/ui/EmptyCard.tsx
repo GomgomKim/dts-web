@@ -1,7 +1,7 @@
 export const EmptyCard = () => {
   return (
-    <div className="grid grid-cols-auto-fill-small gap-5">
-      {Array.from({ length: 5 }).map((_value, idx) => (
+    <div className="grid gap-5 m-auto grid-row-1 auto-rows-[0] grid-empty min-[3840px]:grid-empty-large">
+      {Array.from({ length: 8 }).map((_value, idx) => (
         <div
           key={idx}
           className="aspect-[9/16] rounded-[8px] bg-[#0f1011] bg-custom-180-gradient"
