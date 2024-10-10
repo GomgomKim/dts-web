@@ -21,7 +21,7 @@ export const LoginButton = ({ children }: { children: React.ReactNode }) => {
   }
 
   return (
-    <Button className="bg-white relative" onClick={handleClick}>
+    <Button className="bg-white relative hover:bg-white" onClick={handleClick}>
       <span className="absolute left-[20px]">
         <GoogleIcon />
       </span>
