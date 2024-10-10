@@ -8,8 +8,9 @@ import { Card } from '@/shared/ui/card'
 import { v4 } from 'uuid'
 
 import { useGetFavoriteList } from './model/adapter'
+import { EmptyList } from './ui/EmptyList'
 import { LikeButton } from './ui/LikeButton'
-import { Nullbox } from './ui/Nullbox'
+import { FavoriteListSkeleton } from './ui/Skeleton/FavoriteListSkeleton'
 
 export const FavoriteList = () => {
   const {
@@ -31,10 +32,10 @@ export const FavoriteList = () => {
   }, [inView, isFetching, isFetchingNextPage, hasNextPage, fetchNextPage])
 
   if (status === 'error') return <p>{error?.message}</p>
-  if (isFetching && !isFetchingNextPage) return <div>loading skeleton ...</div>
+  if (isFetching && !isFetchingNextPage) return <FavoriteListSkeleton />
 
   const isEmpty = data?.pages[0].content.images.length === 0
-  if (isEmpty) return <Nullbox />
+  if (isEmpty) return <EmptyList />
 
   return (
     <>
@@ -51,6 +52,7 @@ export const FavoriteList = () => {
           </Fragment>
         ))}
       </div>
+      {/* TODO: 로딩 및 스켈레톤 */}
       {isFetching && isFetchingNextPage && (
         <div style={{ height: 100 }}>loading more items ...</div>
       )}
