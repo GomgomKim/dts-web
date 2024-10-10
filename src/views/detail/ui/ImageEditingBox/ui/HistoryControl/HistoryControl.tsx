@@ -39,10 +39,10 @@ export const HistoryControl = () => {
 
   const handleRestore = () => {
     const present = editedVariationList.get(variationId)?.present
-    if (present?.angle === 'FRONT' && present?.ratio === 'ASPECT_RATIO_9_16') {
+    if (present?.ratio === 'ASPECT_RATIO_9_16') {
       return
     }
-    applyEdit(variationId, { ratio: 'ASPECT_RATIO_9_16', angle: 'FRONT' })
+    applyEdit(variationId, { ratio: 'ASPECT_RATIO_9_16' })
   }
 
   return (
