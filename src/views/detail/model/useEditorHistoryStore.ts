@@ -1,9 +1,9 @@
-import { AspectRatio, FaceAngle } from '@/shared/api/types'
+import { AspectRatio } from '@/shared/api/types'
 import { createStore } from '@/shared/lib/zustand'
 
 type Properties = {
   ratio: AspectRatio
-  angle: FaceAngle
+  // angle: FaceAngle
 }
 
 type EditItem = {

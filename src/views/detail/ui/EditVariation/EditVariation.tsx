@@ -8,7 +8,6 @@ import {
   ASPECT_RATIO_MAP,
   ASPECT_RATIO_REVERT_MAP,
   FACE_ANGLE_MAP,
-  FACE_ANGLE_REVERT_MAP,
   SKIN_TEXTURE_MAP
 } from '@/entities/detail/constant'
 
@@ -33,7 +32,6 @@ export const EditVariation = (props: EditVariationProps) => {
   const editedVariationList = useEditorStore((state) => state.items)
 
   const [aspectRatio, setAspectRatio] = React.useState<string>('') // 9:16
-  const [faceAngle, setFaceAngle] = React.useState<string>('') // front
 
   const variationId = searchParams.get('variationId')
   const handleClickApplyEditOptions = () => {
@@ -48,45 +46,39 @@ export const EditVariation = (props: EditVariationProps) => {
     }
 
     if (!editedVariationList.has(variationId)) {
-      const { ratio, angle } = props.selectedVariation.images[0]
-      setInitialProperty(variationId, { ratio, angle })
+      const { ratio } = props.selectedVariation.images[0]
+      setInitialProperty(variationId, { ratio })
     }
 
     applyEdit(variationId, {
-      ratio: ASPECT_RATIO_REVERT_MAP[aspectRatio],
-      angle: FACE_ANGLE_REVERT_MAP[faceAngle]
+      ratio: ASPECT_RATIO_REVERT_MAP[aspectRatio]
     })
   }
 
   const isSamePresentOption = React.useCallback(() => {
     if (!variationId) return true
     if (editedVariationList.has(variationId)) {
-      const { ratio: presentAspectRatio, angle: presentFaceAngle } =
+      const { ratio: presentAspectRatio } =
         editedVariationList.get(variationId)!.present
-      return (
-        presentAspectRatio === ASPECT_RATIO_REVERT_MAP[aspectRatio] &&
-        presentFaceAngle === FACE_ANGLE_REVERT_MAP[faceAngle]
-      )
+      return presentAspectRatio === ASPECT_RATIO_REVERT_MAP[aspectRatio]
     }
 
-    return aspectRatio === '9:16' && faceAngle === 'Front'
-  }, [variationId, aspectRatio, faceAngle, editedVariationList])
+    return aspectRatio === '9:16'
+  }, [variationId, aspectRatio, editedVariationList])
 
   React.useEffect(() => {
     if (!variationId) return
     if (!props.selectedVariation) return
 
     if (editedVariationList.has(variationId)) {
-      const { ratio, angle } = editedVariationList.get(variationId)!.present
+      const { ratio } = editedVariationList.get(variationId)!.present
       setAspectRatio(ASPECT_RATIO_MAP[ratio])
-      setFaceAngle(FACE_ANGLE_MAP[angle])
       return
     }
 
-    const { ratio, angle } = props.selectedVariation.images[0]
+    const { ratio } = props.selectedVariation.images[0]
 
     setAspectRatio(ASPECT_RATIO_MAP[ratio])
-    setFaceAngle(FACE_ANGLE_MAP[angle])
   }, [variationId, props.selectedVariation, editedVariationList])
 
   return (
@@ -109,12 +101,13 @@ export const EditVariation = (props: EditVariationProps) => {
 
       {/* options - Face Angle */}
       <article>
-        <h3 className="mb-5 text-[0.875rem] text-neutral-7">Face Angle</h3>
-        <RadioGroup
-          id="faceAngle"
-          value={faceAngle}
-          onChangeValue={(value: string) => setFaceAngle(value)}
-        >
+        <div className="mb-5 flex items-center">
+          <h3 className="text-neutral-7 text-[0.875rem] opacity-50">
+            Face Angle
+          </h3>
+          <Badge className="ml-[8px]">Upcoming</Badge>
+        </div>
+        <RadioGroup id="faceAngle" value="" onChangeValue={() => {}} disabled>
           {FACE_ANGLE_OPTIONS.map((option) => (
             <RadioGroupItem key={option} value={option} label={option} />
           ))}
@@ -124,7 +117,7 @@ export const EditVariation = (props: EditVariationProps) => {
       {/* options - Skin Texture */}
       <article>
         <div className="mb-5 flex items-center">
-          <h3 className="text-neutral-7 opacity-50 text-[0.875rem]">
+          <h3 className="text-neutral-7 text-[0.875rem] opacity-50">
             Skin Texture
           </h3>
           <Badge className="ml-[8px]">Upcoming</Badge>

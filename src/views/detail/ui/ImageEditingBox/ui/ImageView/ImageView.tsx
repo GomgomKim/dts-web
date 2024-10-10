@@ -38,12 +38,9 @@ export const ImageView = (props: ImageViewProps) => {
       variationId.toString()
     )?.present
     const presentAspectRatio = presentProperty!.ratio
-    const presentFaceAngle = presentProperty!.angle
 
     const presentVariation = props.selectedVariation!.images!.find((item) => {
-      return (
-        item.ratio === presentAspectRatio && item.angle === presentFaceAngle
-      )
+      return item.ratio === presentAspectRatio
     })
 
     imgUrl =
