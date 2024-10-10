@@ -1,0 +1,230 @@
+'use client'
+
+import * as React from 'react'
+
+import Image from 'next/image'
+import { useSearchParams } from 'next/navigation'
+
+import { URL_VARIATION_IMAGE } from '@/entities/detail/constant'
+import { useAiImageGeneratingStore } from '@/entities/detail/store'
+
+import { Variation } from '@/shared/api/types'
+import { cn } from '@/shared/lib/utils'
+
+import DashedSvg from '/public/icons/dashed.svg'
+import EditIcon from '/public/icons/edit.svg'
+
+import { v4 } from 'uuid'
+
+import { useEditorStore } from '../../../model/useEditorHistoryStore'
+import { useGetAiImageProgress, useGetVariationList } from '../model/adapter'
+
+interface VariationListProps {
+  currentPage: number
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>
+  totalPage: number
+  setTotalPage: React.Dispatch<React.SetStateAction<number>>
+  onChangeSelectedVariation: (variation: Variation) => void
+}
+
+export const VariationList = (props: VariationListProps) => {
+  const searchParams = useSearchParams()
+  const mainImageId = searchParams.get('id') || ''
+
+  const [amountPerPage, setAmountPerPage] = React.useState<number>(() => {
+    if (window.innerWidth < 2560) return 3
+    if (window.innerWidth < 3840) return 5
+    return 7
+  })
+
+  const editedVariationList = useEditorStore((state) => state.items)
+
+  const setIsAiImageGenerating = useAiImageGeneratingStore(
+    (state) => state.setIsAiImageGenerating
+  )
+  const aiImageList = useAiImageGeneratingStore((state) => state.aiImageList)
+  const setAiImageList = useAiImageGeneratingStore(
+    (state) => state.setAiImageList
+  )
+  const updateAiImageItem = useAiImageGeneratingStore(
+    (state) => state.updateAiImageItem
+  )
+  const aiImageGeneratingList = useAiImageGeneratingStore(
+    (state) => state.aiImageGeneratingList
+  )
+  const addAiImageGeneratingList = useAiImageGeneratingStore(
+    (state) => state.addAiImageGeneratingList
+  )
+  const removeAiImageGeneratingList = useAiImageGeneratingStore(
+    (state) => state.removeAiImageGeneratingList
+  )
+  const { resetAiImageGeneratingList } = useAiImageGeneratingStore.getState()
+
+  const handleAmountPerPage = () => {
+    if (window.innerWidth < 2560) setAmountPerPage(3)
+    else if (window.innerWidth < 3840) setAmountPerPage(5)
+    else setAmountPerPage(7)
+  }
+  React.useEffect(() => {
+    window.addEventListener('resize', handleAmountPerPage)
+    return () => window.removeEventListener('resize', handleAmountPerPage)
+  })
+
+  const {
+    data: { variations },
+    isFetching
+  } = useGetVariationList(mainImageId)
+  const queries = useGetAiImageProgress(mainImageId)
+
+  const [initialData, setInitialData] = React.useState<Variation[]>([])
+
+  React.useEffect(() => {
+    return () => resetAiImageGeneratingList()
+  }, [variations])
+
+  React.useEffect(() => {
+    if (isFetching) return
+
+    props.onChangeSelectedVariation(variations[0])
+    props.setTotalPage(() => {
+      return Math.ceil(variations.length / amountPerPage)
+    })
+
+    // polling 할 목록 따로 추출
+    const successGeneratingList: Variation[] = []
+    const newGeneratingList: Variation[] = []
+    for (let i = 0; i < variations.length; i++) {
+      const variation = variations[i]
+
+      if (!variation.isAiGenerated || variation.progress >= 100) {
+        successGeneratingList.push(variation)
+        continue
+      }
+      newGeneratingList.push(variation)
+    }
+
+    setInitialData(successGeneratingList)
+
+    if (newGeneratingList.length > 0) {
+      props.setCurrentPage(props.totalPage)
+
+      addAiImageGeneratingList(newGeneratingList)
+      setAiImageList(newGeneratingList)
+    }
+  }, [variations, isFetching])
+
+  for (let i = 0; i < queries.length; i++) {
+    const query = queries[i]
+
+    if (query.isLoading) {
+      console.log('로딩중')
+      continue
+    }
+
+    if (query.isError) {
+      console.log('에러 발생')
+      continue
+    }
+
+    if (query.data?.content.variation.progress === 100) {
+      const { variationId } = query.data.content.variation
+      removeAiImageGeneratingList(variationId)
+      updateAiImageItem(query.data?.content.variation)
+    }
+  }
+
+  if (aiImageGeneratingList.length === 0) setIsAiImageGenerating(false)
+  else setIsAiImageGenerating(true)
+
+  const variationsLength = initialData.length + aiImageList.length
+
+  React.useEffect(() => {
+    if (variationsLength === 0 || variationsLength === variations.length) return
+    const updatePage = Math.ceil(variationsLength / amountPerPage)
+    props.setCurrentPage(updatePage)
+  }, [variationsLength])
+
+  if (variationsLength > props.totalPage * amountPerPage) {
+    const updatePage = Math.ceil(variationsLength / amountPerPage)
+    props.setTotalPage(updatePage)
+  }
+
+  const renderData = [...initialData, ...aiImageList].slice(
+    (props.currentPage - 1) * amountPerPage,
+    (props.currentPage - 1) * amountPerPage + amountPerPage
+  )
+  return (
+    <>
+      {renderData.map((item) => {
+        const { variationId, isAiGenerated, progress } = item
+
+        const isGenerating = isAiGenerated && progress < 100
+        const isSelectedVariation =
+          searchParams.get('variationId') === variationId.toString()
+
+        const isEdited = editedVariationList.has(variationId.toString())
+
+        let imgUrl = ''
+
+        if (process.env.NEXT_PUBLIC_API_MOCKING === 'enabled') {
+          imgUrl = item.images[0]?.encryptedImageUrl
+        } else {
+          imgUrl =
+            process.env.NEXT_PUBLIC_API_URL +
+            `${URL_VARIATION_IMAGE}` +
+            item.images[0]?.encryptedImageUrl
+        }
+
+        return (
+          <div
+            key={variationId + v4()}
+            aria-disabled={isGenerating}
+            className={cn(
+              'rounded-[0.5rem] overflow-hidden relative aspect-[206/219] w-full border border-border hover:opacity-100',
+              {
+                'cursor-pointer': !isGenerating,
+                'pointer-events-none': isGenerating,
+                'opacity-50': !isSelectedVariation
+              }
+            )}
+            onClick={() => props.onChangeSelectedVariation(item)}
+          >
+            {isGenerating ? (
+              // generating skeleton card
+              <div className="loading-skeleton h-full" />
+            ) : (
+              // normal card
+              <Image src={imgUrl} alt="" fill style={{ objectFit: 'cover' }} />
+            )}
+            {isEdited ? (
+              <div className="p-[6px] absolute top-[6px] left-[6px] rounded-[4px] bg-neutral-0 bg-opacity-90 hover:opacity-100">
+                <EditIcon />
+              </div>
+            ) : null}
+          </div>
+        )
+      })}
+      {/* loading initial data */}
+      {isFetching && (
+        <div
+          aria-disabled={isFetching}
+          className="rounded-[0.5rem] overflow-hidden relative aspect-[206/219] w-full border border-border"
+        >
+          <div className="loading-skeleton h-full" />
+        </div>
+      )}
+      {/* null card */}
+      {renderData.length < amountPerPage &&
+        Array.from({
+          length: amountPerPage - renderData.length - (isFetching ? 1 : 0)
+        }).map((_, index) => (
+          <div
+            key={index}
+            className="rounded-[0.5rem] aspect-[206/219] w-full bg-neutral-1 bg-opacity-50 overflow-hidden"
+          >
+            <DashedSvg />
+          </div>
+        ))}
+    </>
+  )
+}

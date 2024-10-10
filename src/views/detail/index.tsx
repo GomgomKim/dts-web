@@ -14,7 +14,7 @@ import { EditVariation } from './ui/EditVariation'
 import { ImageEditingBox } from './ui/ImageEditingBox'
 import { Box } from './ui/ImageEditingBox/types'
 import { NewGenerateButton } from './ui/NewGenerateButton'
-import { VariationsList } from './ui/VariationList'
+import { Variations } from './ui/Variations'
 
 export default function Detail() {
   // related brand assets
@@ -89,7 +89,7 @@ export default function Detail() {
 
                   {/* variations section */}
                   <div className="min-h-[180px] max-h-[395px]">
-                    <VariationsList
+                    <Variations
                       onChangeSelectedVariation={handleSelectedVariation}
                     />
                   </div>

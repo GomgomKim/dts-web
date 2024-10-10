@@ -21,6 +21,7 @@ export async function getVariationList({
     GetVariationListReqData,
     AxiosResponse<GetVariationListResData, AxiosError>
   >(`${URL_VARIATION_LIST}?mainImageId=${mainImageId}`)
+  // await new Promise((resolve) => setTimeout(resolve, 5000))
   return response.data
 }
 
