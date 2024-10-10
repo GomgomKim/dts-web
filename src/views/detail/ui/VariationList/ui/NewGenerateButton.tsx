@@ -13,7 +13,7 @@ export const NewGenerateButton = () => {
       className="relative rounded-[0.5rem] aspect-[206/219] w-full bg-neutral-1 bg-opacity-50 overflow-hidden group"
     >
       <DashedSvg />
-      <PlusIcon className="absolute inset-0 m-auto w-10 h-10 stroke-[#76777D] group-hover:stroke-neutral-7 group-active:stroke-neutral-7" />
+      <PlusIcon className="absolute inset-0 m-auto w-10 h-10 stroke-neutral-7 group-hover:stroke-white group-active:stroke-white" />
       <span className="a11y-hidden">New Generate</span>
     </button>
   )
