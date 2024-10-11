@@ -84,11 +84,15 @@ export const EditVariation = (props: EditVariationProps) => {
 
   return (
     <section className="flex flex-col gap-5">
-      <h2 className="text-[1.5rem] font-semibold">Edit</h2>
+      <h2 className="text-[1.5rem] min-[3840px]:text-[2rem] font-semibold">
+        Edit
+      </h2>
 
       {/* options - Aspect Ratio */}
       <article>
-        <h3 className="mb-5 text-[0.875rem] text-neutral-7">Aspect Ratio</h3>
+        <h3 className="mb-5 text-[0.875rem] min-[3840px]:text-[1.25rem] text-neutral-7">
+          Aspect Ratio
+        </h3>
         <RadioGroup
           id="aspectRatio"
           value={aspectRatio}
@@ -104,7 +108,7 @@ export const EditVariation = (props: EditVariationProps) => {
       {/* options - Face Angle */}
       <article>
         <div className="mb-5 flex items-center">
-          <h3 className="text-neutral-7 text-[0.875rem] opacity-50">
+          <h3 className="text-neutral-7 text-[0.875rem] min-[3840px]:text-[1.25rem] opacity-50">
             Face Angle
           </h3>
           <Badge className="ml-[8px]">Upcoming</Badge>
@@ -119,7 +123,7 @@ export const EditVariation = (props: EditVariationProps) => {
       {/* options - Skin Texture */}
       <article>
         <div className="mb-5 flex items-center">
-          <h3 className="text-neutral-7 text-[0.875rem] opacity-50">
+          <h3 className="text-neutral-7 text-[0.875rem] min-[3840px]:text-[1.25rem] opacity-50">
             Skin Texture
           </h3>
           <Badge className="ml-[8px]">Upcoming</Badge>
@@ -134,7 +138,7 @@ export const EditVariation = (props: EditVariationProps) => {
       <Button
         stretch
         onClick={handleClickApplyEditOptions}
-        className="font-semibold"
+        className="font-semibold min-[3840px]:text-[1.5rem]"
         disabled={isSamePresentOption() || props.isLoading}
       >
         Apply Edit Options

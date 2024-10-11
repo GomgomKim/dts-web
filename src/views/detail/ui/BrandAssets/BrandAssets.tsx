@@ -26,18 +26,24 @@ export const BrandAssets = (props: BrandAssetsProps) => {
   )
 
   return (
-    <section className="sticky flex flex-col gap-5">
-      <h2 className="text-[1.5rem] font-semibold">Brand Assets</h2>
-      <div>
-        <h3 className="mb-3 text-neutral-7">Product</h3>
+    <section className="sticky flex flex-col gap-5 h-full">
+      <h2 className="text-[1.5rem] min-[3840px]:text-[2rem] font-semibold">
+        Brand Assets
+      </h2>
+      <div className="grow">
+        <h3 className="mb-3 text-neutral-7 text-[0.875rem] min-[3840px]:text-[1.25rem]">
+          Product
+        </h3>
         <ImageInputBox
           disabled={props.isLoading}
           boxId="product"
           onChangeBrandAsset={() => props.onChangeBrandAsset('product')}
         />
       </div>
-      <div>
-        <h3 className="mb-3 text-neutral-7">Brand Logo</h3>
+      <div className="grow">
+        <h3 className="mb-3 text-neutral-7 text-[0.875rem] min-[3840px]:text-[1.25rem]">
+          Brand Logo
+        </h3>
         <ImageInputBox
           disabled={props.isLoading}
           boxId="logo"

@@ -52,7 +52,7 @@ export default function Detail() {
   return (
     <div className="flex w-full h-full">
       {/* brand assets section */}
-      <div className="px-5 w-[320px] min-[1512px]:w-[427px] fixed bg-background z-20">
+      <div className="px-5 w-[320px] min-[1512px]:w-[427px] fixed bg-background z-20 h-[calc(100%-64px-20px)]">
         <BrandAssets
           isLoading={isLoading}
           onClickAddBrandAssets={handleClickAddBrandAssets}
@@ -67,7 +67,7 @@ export default function Detail() {
           <section className="overflow-y-auto overflow-x-hidden basis-[513px] shrink-0 grow">
             <div className="flex flex-col relative h-full">
               <div className="sticky top-0 w-full z-40">
-                <h2 className="text-[1.5rem] inline-block font-semibold">
+                <h2 className="text-[1.5rem] min-[3840px]:text-[2rem] inline-block font-semibold">
                   Generate
                 </h2>
 
