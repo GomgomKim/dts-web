@@ -14,7 +14,7 @@ export const NewGenerateButton = (props: NewGenerateButtonProps) => {
     <button
       key="new-generate"
       onClick={debounceHandleClickNewGenerate}
-      className="relative rounded-[0.5rem] aspect-[206/219] w-full bg-neutral-1 bg-opacity-50 overflow-hidden group enabled:hover:bg-opacity-100"
+      className="relative rounded-[0.5rem] aspect-[206/219] w-full bg-neutral-1 bg-opacity-50 overflow-hidden group enabled:hover:bg-opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       disabled={props.disabled || false}
     >
       <DashedSvg />

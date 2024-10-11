@@ -47,6 +47,20 @@ const RadioGroupItem = React.forwardRef<HTMLDivElement, RadioGroupItemProps>(
   ({ value: localValue, label, className, ...props }, ref) => {
     const { value, onChange, disabled } = React.useContext(RadioGroupContext)!
 
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
+      if (disabled) return
+
+      if (
+        e.target instanceof HTMLElement &&
+        e.target.getAttribute('role') === 'radio'
+      ) {
+        if (e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault()
+          onChange(localValue)
+        }
+      }
+    }
+
     return (
       <div
         ref={ref}
@@ -55,7 +69,7 @@ const RadioGroupItem = React.forwardRef<HTMLDivElement, RadioGroupItemProps>(
         aria-checked={value === localValue}
         aria-disabled={disabled}
         className={cn(
-          'p-3 flex items-center justify-center flex-1 text-[14px] rounded-[0.5rem] bg-inherit text-neutral-7 border border-neutral-1',
+          'p-3 flex items-center justify-center flex-1 text-[14px] rounded-[0.5rem] bg-inherit text-neutral-7 border border-neutral-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring',
           className,
           {
             'bg-neutral-1 text-white': value === localValue,
@@ -63,7 +77,11 @@ const RadioGroupItem = React.forwardRef<HTMLDivElement, RadioGroupItemProps>(
             'opacity-50': disabled
           }
         )}
-        onClick={() => onChange(localValue)}
+        onClick={() => {
+          if (disabled) return
+          onChange(localValue)
+        }}
+        onKeyDown={handleKeyDown}
         {...props}
       >
         <label
