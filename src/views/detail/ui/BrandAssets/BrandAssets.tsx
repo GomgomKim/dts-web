@@ -30,8 +30,8 @@ export const BrandAssets = (props: BrandAssetsProps) => {
       <h2 className="text-[1.25rem] min-[1512px]:text-[1.5rem] min-[3840px]:text-[2rem] font-semibold">
         Brand Assets
       </h2>
-      <div className="grow">
-        <h3 className="mb-3 text-neutral-7 text-[0.875rem] min-[3840px]:text-[1.25rem]">
+      <div className="grow-[1] max-h-[calc(50%-(60px-40px-29px)/2)] min-[3840px]:max-h-[calc(50%-(60px-40px-38px)/2)]">
+        <h3 className="mb-3 text-neutral-7 text-[0.875rem] min-[3840px]:text-[1.25rem] leading-[17px] min-[3840px]:leading-[24px]">
           Product
         </h3>
         <ImageInputBox
@@ -40,8 +40,8 @@ export const BrandAssets = (props: BrandAssetsProps) => {
           onChangeBrandAsset={() => props.onChangeBrandAsset('product')}
         />
       </div>
-      <div className="grow">
-        <h3 className="mb-3 text-neutral-7 text-[0.875rem] min-[3840px]:text-[1.25rem]">
+      <div className="grow-[1] max-h-[calc(50%-(60px+40px+29px)/2)]  min-[3840px]:max-h-[calc(50%-(60px+80px+38px)/2)]">
+        <h3 className="mb-3 text-neutral-7 text-[0.875rem] min-[3840px]:text-[1.25rem] leading-[17px] min-[3840px]:leading-[24px]">
           Brand Logo
         </h3>
         <ImageInputBox
@@ -53,7 +53,7 @@ export const BrandAssets = (props: BrandAssetsProps) => {
       <Button
         onClick={debounceHandleClickAddBrandAssets}
         disabled={imagePreviewUrls.size < 1}
-        className="disabled:bg-neutral-2 disabled:text-neutral-4 disabled:opacity-1"
+        className="disabled:bg-neutral-2 disabled:text-neutral-4 disabled:opacity-1 min-[3840px]:text-[1.5rem] min-[3840px]:h-[80px]"
       >
         Add Brand Assets
       </Button>

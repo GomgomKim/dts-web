@@ -138,7 +138,7 @@ export const EditVariation = (props: EditVariationProps) => {
       <Button
         stretch
         onClick={handleClickApplyEditOptions}
-        className="font-semibold min-[3840px]:text-[1.5rem]"
+        className="font-semibold min-[3840px]:text-[1.5rem] min-[3840px]:h-[80px]"
         disabled={isSamePresentOption() || props.isLoading}
       >
         Apply Edit Options

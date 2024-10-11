@@ -42,7 +42,8 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
           <img
             src={imagePreviewUrls.get(props.boxId)}
             alt={props.boxId}
-            className="h-full absolute-center"
+            // TODO: 80%??
+            className="object-contain w-full h-full"
           />
           <RemoveButton
             onClickRemoveButton={() => props.onChangeBrandAsset()}
@@ -77,7 +78,7 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
         if (props.disabled) return
         handleChangeDNDInput(e.dataTransfer.files[0])
       }}
-      className="group relative rounded-xl bg-neutral-1 bg-opacity-50 p-5 w-[280px] h-[160px] min-[1512px]:w-[387px] min-[1512px]:h-[240px]"
+      className="group relative rounded-xl bg-neutral-1 bg-opacity-50 p-5 w-[280px] min-[1512px]:w-[387px] h-[calc(100%-17px-12px)] min-[3840px]:h-[calc(100%-24px-12px)]"
     >
       <input
         type="file"

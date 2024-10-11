@@ -27,12 +27,16 @@ export const Variations = (props: VariationsProps) => {
   )
 
   return (
-    <>
+    <div>
       <div className="flex justify-between items-center mb-5">
         <div className="flex items-center gap-2">
-          <h3 className="text-neutral-7 text-[0.875rem]">Variations</h3>
+          <h3 className="text-neutral-7 text-[0.875rem] min-[3840px]:text-[1.25rem]">
+            Variations
+          </h3>
           {isAiImageGenerating || props.isLoading ? (
-            <span className="text-primary text-[0.875rem]">Generating ...</span>
+            <span className="text-primary text-[0.875rem] min-[3840px]:text-[1.25rem]">
+              Generating...
+            </span>
           ) : null}
         </div>
         <Pagination
@@ -54,6 +58,6 @@ export const Variations = (props: VariationsProps) => {
         {/* new generate button */}
         <NewGenerateButton disabled={props.isLoading} />
       </div>
-    </>
+    </div>
   )
 }
