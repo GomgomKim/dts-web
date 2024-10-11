@@ -17,6 +17,7 @@ import {
 } from './ui'
 
 interface ImageInputBoxProps {
+  disabled: boolean
   boxId: string
   onChangeBrandAsset: () => void
 }
@@ -54,12 +55,15 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
           {isPending ? (
             <LoadingInstruction />
           ) : (
-            <div className="relative">
-              <UploadButton boxId={props.boxId} />
-              {errorMessage !== null ? (
-                <ErrorInstruction>{errorMessage}</ErrorInstruction>
-              ) : null}
-            </div>
+            <>
+              <div className="relative">
+                <UploadButton boxId={props.boxId} />
+                {errorMessage !== null ? (
+                  <ErrorInstruction>{errorMessage}</ErrorInstruction>
+                ) : null}
+              </div>
+              <DashedSvg className="absolute inset-0" />
+            </>
           )}
         </>
       )
@@ -67,25 +71,23 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
   }
 
   return (
-    <>
+    <DndBox
+      width="100%"
+      onDropped={(e) => {
+        if (props.disabled) return
+        handleChangeDNDInput(e.dataTransfer.files[0])
+      }}
+      className="group relative rounded-xl bg-neutral-1 bg-opacity-50 p-5 w-[280px] h-[160px] min-[1512px]:w-[387px] min-[1512px]:h-[240px]"
+    >
       <input
         type="file"
         id={props.boxId}
         accept=".png,.jpg"
-        aria-hidden
-        className="a11y-hidden"
+        className="a11y-hidden peer"
         onChange={handleChangeInput}
+        disabled={props.disabled}
       />
-      <DndBox
-        width="100%"
-        onDropped={(e) => handleChangeDNDInput(e.dataTransfer.files[0])}
-        className="relative rounded-xl bg-neutral-1 bg-opacity-50 p-5 w-[280px] h-[160px] min-[1512px]:w-[387px] min-[1512px]:h-[240px]"
-      >
-        {!imagePreviewUrls.has(props.boxId) ? (
-          <DashedSvg className="absolute inset-0" />
-        ) : null}
-        {renderContent()}
-      </DndBox>
-    </>
+      {renderContent()}
+    </DndBox>
   )
 }

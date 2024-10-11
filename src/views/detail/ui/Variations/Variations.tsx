@@ -11,6 +11,8 @@ import { Pagination } from './ui/Pagination'
 import { VariationListSection } from './ui/VariationListSection'
 
 interface VariationsProps {
+  isLoading: boolean
+  onDataLoaded: () => void
   onChangeSelectedVariation: (variation: Variation) => void
 }
 
@@ -19,8 +21,6 @@ const INITIAL_PAGE = 1
 export const Variations = (props: VariationsProps) => {
   const [currentPage, setCurrentPage] = React.useState<number>(INITIAL_PAGE)
   const [totalPage, setTotalPage] = React.useState<number>(INITIAL_PAGE)
-
-  const [isLoading, setIsLoading] = React.useState(true)
 
   const isAiImageGenerating = useAiImageGeneratingStore(
     (state) => state.isAiImageGenerating
@@ -31,7 +31,7 @@ export const Variations = (props: VariationsProps) => {
       <div className="flex justify-between items-center mb-5">
         <div className="flex items-center gap-2">
           <h3 className="text-neutral-7 text-[0.875rem]">Variations</h3>
-          {isAiImageGenerating || isLoading ? (
+          {isAiImageGenerating || props.isLoading ? (
             <span className="text-primary text-[0.875rem]">Generating ...</span>
           ) : null}
         </div>
@@ -44,7 +44,7 @@ export const Variations = (props: VariationsProps) => {
 
       <div className="flex gap-4 min-h-[120px]">
         <VariationListSection
-          onDataLoaded={() => setIsLoading(false)}
+          onDataLoaded={props.onDataLoaded}
           onChangeSelectedVariation={props.onChangeSelectedVariation}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
@@ -52,7 +52,7 @@ export const Variations = (props: VariationsProps) => {
           setTotalPage={setTotalPage}
         />
         {/* new generate button */}
-        <NewGenerateButton disabled={isLoading} />
+        <NewGenerateButton disabled={props.isLoading} />
       </div>
     </>
   )

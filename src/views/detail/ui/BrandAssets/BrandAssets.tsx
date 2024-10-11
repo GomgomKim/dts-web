@@ -12,6 +12,7 @@ import { ImageInputBox } from './ui/ImageInputBox'
 const DELAY_ADD_BRAND_ASSETS = 300
 
 interface BrandAssetsProps {
+  isLoading: boolean
   onChangeBrandAsset: (boxId: string) => void
   onClickAddBrandAssets: () => void
 }
@@ -30,6 +31,7 @@ export const BrandAssets = (props: BrandAssetsProps) => {
       <div>
         <h3 className="mb-3 text-neutral-7">Product</h3>
         <ImageInputBox
+          disabled={props.isLoading}
           boxId="product"
           onChangeBrandAsset={() => props.onChangeBrandAsset('product')}
         />
@@ -37,6 +39,7 @@ export const BrandAssets = (props: BrandAssetsProps) => {
       <div>
         <h3 className="mb-3 text-neutral-7">Brand Logo</h3>
         <ImageInputBox
+          disabled={props.isLoading}
           boxId="logo"
           onChangeBrandAsset={() => props.onChangeBrandAsset('logo')}
         />

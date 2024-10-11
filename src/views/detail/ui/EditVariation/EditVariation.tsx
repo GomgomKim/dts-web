@@ -22,6 +22,7 @@ const ASPECT_RATIO_OPTIONS = Object.values(ASPECT_RATIO_MAP)
 const FACE_ANGLE_OPTIONS = Object.values(FACE_ANGLE_MAP)
 
 interface EditVariationProps {
+  isLoading: boolean
   selectedVariation: Variation | null
 }
 
@@ -92,6 +93,7 @@ export const EditVariation = (props: EditVariationProps) => {
           id="aspectRatio"
           value={aspectRatio}
           onChangeValue={(value: string) => setAspectRatio(value)}
+          disabled={props.isLoading}
         >
           {ASPECT_RATIO_OPTIONS.map((option) => (
             <RadioGroupItem key={option} value={option} label={option} />
@@ -133,7 +135,7 @@ export const EditVariation = (props: EditVariationProps) => {
         stretch
         onClick={handleClickApplyEditOptions}
         className="font-semibold"
-        disabled={isSamePresentOption()}
+        disabled={isSamePresentOption() || props.isLoading}
       >
         Apply Edit Options
       </Button>

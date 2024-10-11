@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import * as React from 'react'
 
 import { useImagePreviewUrlStore } from '@/entities/detail/store'
 
@@ -17,12 +17,14 @@ import { NewGenerateButton } from './ui/NewGenerateButton'
 import { Variations } from './ui/Variations'
 
 export default function Detail() {
+  const [isLoading, setIsLoading] = React.useState(true)
+
   // related brand assets
-  const containerRef = useRef<HTMLDivElement>(null)
+  const containerRef = React.useRef<HTMLDivElement>(null)
   const { imagePreviewUrls: assetImages, removeImagePreviewUrl } =
     useImagePreviewUrlStore()
-  const [boxes, setBoxes] = useState<Box[]>([])
-  const boxRefs = useRef<Map<string, HTMLDivElement | null>>(new Map())
+  const [boxes, setBoxes] = React.useState<Box[]>([])
+  const boxRefs = React.useRef<Map<string, HTMLDivElement | null>>(new Map())
 
   const handleClickAddBrandAssets = () => {
     const boxesData = convertImagesToBoxData(assetImages)
@@ -37,9 +39,8 @@ export default function Detail() {
   }
 
   // related variations
-  const [selectedVariation, setSelectedVariation] = useState<Variation | null>(
-    null
-  )
+  const [selectedVariation, setSelectedVariation] =
+    React.useState<Variation | null>(null)
 
   const { handleQueryString } = useSetQueryString({ action: 'replace' })
   const handleSelectedVariation = (variation: Variation) => {
@@ -53,6 +54,7 @@ export default function Detail() {
       {/* brand assets section */}
       <div className="px-5 w-[320px] min-[1512px]:w-[427px] fixed bg-background z-20">
         <BrandAssets
+          isLoading={isLoading}
           onClickAddBrandAssets={handleClickAddBrandAssets}
           onChangeBrandAsset={handleChangeBrandAsset}
         />
@@ -70,7 +72,7 @@ export default function Detail() {
                 </h2>
 
                 <span className="absolute top-0 right-0">
-                  <NewGenerateButton />
+                  <NewGenerateButton disabled={isLoading} />
                 </span>
               </div>
 
@@ -79,6 +81,7 @@ export default function Detail() {
                   {/* image editing section */}
                   <div className="grow relative max-h-[720px] min-h-[391px]">
                     <ImageEditingBox
+                      isLoading={isLoading}
                       containerRef={containerRef}
                       boxes={boxes}
                       setBoxes={setBoxes}
@@ -90,6 +93,8 @@ export default function Detail() {
                   {/* variations section */}
                   <div className="min-h-[180px] max-h-[395px]">
                     <Variations
+                      isLoading={isLoading}
+                      onDataLoaded={() => setIsLoading(false)}
                       onChangeSelectedVariation={handleSelectedVariation}
                     />
                   </div>
@@ -102,10 +107,14 @@ export default function Detail() {
           <div className="overflow-y-auto overflow-x-hidden basis-[407px] shrink-0">
             <div className="flex flex-col gap-5 ">
               {/* related variations options /////////////////////////////////////////////  */}
-              <EditVariation selectedVariation={selectedVariation} />
+              <EditVariation
+                selectedVariation={selectedVariation}
+                isLoading={isLoading}
+              />
 
               {/* related download image /////////////////////////////////////////////  */}
               <DownloadDropdown
+                isLoading={isLoading}
                 containerRef={containerRef}
                 selectedVariation={selectedVariation}
               />

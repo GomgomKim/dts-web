@@ -31,6 +31,7 @@ import { EXPORT_IMAGE_FORMAT, EXPORT_IMAGE_QUALITY } from './type'
 import { ExportButton } from './ui/ExportButton'
 
 interface DownloadDropdownProps {
+  isLoading: boolean
   containerRef: React.RefObject<HTMLDivElement>
   selectedVariation: Variation | null
 }
@@ -63,7 +64,7 @@ export const DownloadDropdown = (props: DownloadDropdownProps) => {
         <Button
           variant="sub1"
           className="bg-neutral-1 bg-opacity-50"
-          disabled={!variationId || !props.containerRef}
+          disabled={!variationId || !props.containerRef || props.isLoading}
         >
           Free Download
         </Button>
