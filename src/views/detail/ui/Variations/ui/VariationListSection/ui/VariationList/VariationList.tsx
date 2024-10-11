@@ -63,13 +63,20 @@ export const VariationList = (props: VariationListProps) => {
     return () => resetAiImageGeneratingList()
   }, [variations])
 
+  // 페이지당 아이템 수 변경
+  React.useEffect(() => {
+    const totalPage = Math.ceil(variations.length / props.amountPerPage)
+
+    props.setTotalPage(totalPage)
+    if (totalPage < props.currentPage) props.setCurrentPage(totalPage)
+
+    console.log(totalPage, props.currentPage, props.totalPage)
+  }, [variations, props.amountPerPage])
+
   React.useEffect(() => {
     if (isFetching) return
 
     props.onChangeSelectedVariation(variations[0])
-    props.setTotalPage(() => {
-      return Math.ceil(variations.length / props.amountPerPage)
-    })
     props.onDataLoaded()
 
     // polling 할 목록 따로 추출

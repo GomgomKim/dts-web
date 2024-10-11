@@ -16,15 +16,14 @@ interface VariationListSectionProps {
 export const VariationListSection = (props: VariationListSectionProps) => {
   const [amountPerPage, setAmountPerPage] = React.useState<number>(() => {
     if (window.innerWidth < 2560) return 3
-    if (window.innerWidth < 3840) return 5
-    return 7
+    return 5
   })
 
   const handleAmountPerPage = () => {
     if (window.innerWidth < 2560) setAmountPerPage(3)
-    else if (window.innerWidth < 3840) setAmountPerPage(5)
-    else setAmountPerPage(7)
+    else setAmountPerPage(5)
   }
+
   React.useEffect(() => {
     window.addEventListener('resize', handleAmountPerPage)
     return () => window.removeEventListener('resize', handleAmountPerPage)
