@@ -56,13 +56,13 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
             <LoadingInstruction />
           ) : (
             <>
+              <DashedSvg className="absolute inset-0 w-full h-full" />
               <div className="relative">
                 <UploadButton boxId={props.boxId} />
                 {errorMessage !== null ? (
                   <ErrorInstruction>{errorMessage}</ErrorInstruction>
                 ) : null}
               </div>
-              <DashedSvg className="absolute inset-0" />
             </>
           )}
         </>
