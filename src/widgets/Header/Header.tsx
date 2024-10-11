@@ -97,7 +97,7 @@ const BackButton = () => {
     <Button variant="ghost" onClick={() => router.back()} className="group">
       <div className="flex gap-[4px] items-center">
         <Arrow className="rotate-[-135deg] stroke-secondary-foreground group-hover:stroke-white" />
-        <span className="text-[0.875rem]">back to explore</span>
+        <span className="text-[0.875rem]">Back to Explore</span>
       </div>
     </Button>
   )
