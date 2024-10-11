@@ -84,7 +84,7 @@ export const EditVariation = (props: EditVariationProps) => {
 
   return (
     <section className="flex flex-col gap-5">
-      <h2 className="text-[1.5rem] min-[3840px]:text-[2rem] font-semibold">
+      <h2 className="text-[1.25rem] min-[1512px]:text-[1.5rem] min-[3840px]:text-[2rem] font-semibold">
         Edit
       </h2>
 
