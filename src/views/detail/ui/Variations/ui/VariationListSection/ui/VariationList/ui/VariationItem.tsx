@@ -45,9 +45,9 @@ export const VariationItem = (props: VariationItemProps) => {
   if (isGenerating) return <VariationLoadingSkeleton />
 
   return (
-    <div
+    <button
       className={cn(
-        'rounded-[0.5rem] overflow-hidden relative aspect-[206/219] w-full border border-border hover:opacity-100 cursor-pointer',
+        'rounded-[0.5rem] overflow-hidden relative aspect-[206/219] w-full border border-border hover:opacity-100 cursor-pointer focus-visible:ring-2 focus-visible:ring-ring',
         {
           'opacity-50': !isSelectedVariation
         }
@@ -57,7 +57,7 @@ export const VariationItem = (props: VariationItemProps) => {
       <Image src={imgUrl} alt="" fill style={{ objectFit: 'cover' }} />
 
       {isEdited ? <EditIndicator /> : null}
-    </div>
+    </button>
   )
 }
 
