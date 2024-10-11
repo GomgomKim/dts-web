@@ -105,7 +105,7 @@ export default function Detail() {
 
           {/* generate section - right */}
           <div className="overflow-y-auto overflow-x-hidden basis-[407px] shrink-0">
-            <div className="flex flex-col gap-5 ">
+            <div className="flex flex-col gap-3">
               {/* related variations options /////////////////////////////////////////////  */}
               <EditVariation
                 selectedVariation={selectedVariation}
