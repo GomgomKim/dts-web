@@ -7,12 +7,14 @@ import { usePostRemoveBackground } from './adapter'
 
 interface ImageInputBoxParams {
   boxId: string
-  onChangeBrandAsset?: () => void
-  setErrorMessage: React.Dispatch<React.SetStateAction<string | null>>
+  handleChangeBrandAsset: () => void
+  handleSuccess: () => void
+  handleErrorMessage: (msg: string | null) => void
 }
 
 export const useImageInputBox = (params: ImageInputBoxParams) => {
-  const { boxId, onChangeBrandAsset, setErrorMessage } = params
+  const { boxId, handleChangeBrandAsset, handleSuccess, handleErrorMessage } =
+    params
 
   const removeBackgroundMutation = usePostRemoveBackground()
 
@@ -26,7 +28,7 @@ export const useImageInputBox = (params: ImageInputBoxParams) => {
   }, [resetImagePreviewUrls])
 
   const handleSubmit = ({ formData }: { formData: FormData }) => {
-    setErrorMessage(null)
+    handleErrorMessage(null)
 
     removeBackgroundMutation.mutate(
       { source: formData },
@@ -34,9 +36,10 @@ export const useImageInputBox = (params: ImageInputBoxParams) => {
         onSuccess: (data) => {
           const blob = new Blob([data], { type: 'image/png' })
           addImagePreviewUrl(boxId, blob)
+          handleSuccess()
         },
         onError: () => {
-          setErrorMessage('Oops! Try again.')
+          handleErrorMessage('Oops! Try again.')
         }
       }
     )
@@ -55,34 +58,35 @@ export const useImageInputBox = (params: ImageInputBoxParams) => {
     if (!files) return
 
     if (!isValidImageSize(files[0])) {
-      setErrorMessage('Check the file size or format.')
+      handleErrorMessage('Check the file size or format.')
       e.target.value = ''
       return
     } else {
-      setErrorMessage(null)
+      handleErrorMessage(null)
     }
 
     handleChangeImageFile(files[0])
     e.target.value = ''
 
-    onChangeBrandAsset?.()
+    handleChangeBrandAsset()
   }
 
   const handleChangeDNDInput = (file: File) => {
     if (!isValidImageSize(file)) {
-      setErrorMessage('Check the file size or format.')
+      handleErrorMessage('Check the file size or format.')
       return
     } else {
-      setErrorMessage(null)
+      handleErrorMessage(null)
     }
 
     handleChangeImageFile(file)
-    onChangeBrandAsset?.()
+    handleChangeBrandAsset()
   }
 
   return {
     handleChangeInput,
     handleChangeDNDInput,
-    isPending: removeBackgroundMutation.isPending
+    isPending: removeBackgroundMutation.isPending,
+    isSuccess: removeBackgroundMutation.isSuccess
   }
 }

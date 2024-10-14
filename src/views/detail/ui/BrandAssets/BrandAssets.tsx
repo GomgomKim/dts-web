@@ -21,14 +21,9 @@ export const BrandAssets = (props: BrandAssetsProps) => {
   const btnRef = React.useRef<HTMLButtonElement | null>(null)
   const { imagePreviewUrls } = useImagePreviewUrlStore()
 
-  const toggleButton = (disabled: boolean) => {
+  const toggleButtonState = (able: boolean) => {
     if (btnRef.current === null) return
-    btnRef.current.disabled = disabled
-  }
-
-  const handleChangeBrandAsset = (boxId: string) => {
-    toggleButton(false)
-    props.onChangeBrandAsset(boxId)
+    btnRef.current.disabled = !able
   }
 
   const debounceHandleClickAddBrandAssets = React.useCallback(
@@ -37,7 +32,7 @@ export const BrandAssets = (props: BrandAssetsProps) => {
   )
 
   const handleClickAddBrandAssets = () => {
-    toggleButton(true)
+    toggleButtonState(false)
     debounceHandleClickAddBrandAssets()
   }
 
@@ -53,8 +48,8 @@ export const BrandAssets = (props: BrandAssetsProps) => {
         <ImageInputBox
           disabled={props.isLoading}
           boxId="product"
-          onChangeBrandAsset={() => handleChangeBrandAsset('product')}
-          onRemoveBrandAsset={() => props.onChangeBrandAsset('product')}
+          onChangeBrandAsset={() => props.onChangeBrandAsset('product')}
+          toggleAddBrandAssetButton={toggleButtonState}
         />
       </div>
       <div className="grow-[1] max-h-[calc(50%-(60px+40px+29px)/2)]  min-[3840px]:max-h-[calc(50%-(60px+80px+38px)/2)]">
@@ -64,8 +59,8 @@ export const BrandAssets = (props: BrandAssetsProps) => {
         <ImageInputBox
           disabled={props.isLoading}
           boxId="logo"
-          onChangeBrandAsset={() => handleChangeBrandAsset('logo')}
-          onRemoveBrandAsset={() => props.onChangeBrandAsset('logo')}
+          onChangeBrandAsset={() => props.onChangeBrandAsset('logo')}
+          toggleAddBrandAssetButton={toggleButtonState}
         />
       </div>
       <Button
