@@ -64,6 +64,8 @@ export const useImageInputBox = (params: ImageInputBoxParams) => {
 
     handleChangeImageFile(files[0])
     e.target.value = ''
+
+    onChangeBrandAsset?.()
   }
 
   const handleChangeDNDInput = (file: File) => {

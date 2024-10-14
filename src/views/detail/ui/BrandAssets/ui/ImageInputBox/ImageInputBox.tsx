@@ -20,6 +20,7 @@ interface ImageInputBoxProps {
   disabled: boolean
   boxId: string
   onChangeBrandAsset: () => void
+  onRemoveBrandAsset: () => void
 }
 
 export const ImageInputBox = (props: ImageInputBoxProps) => {
@@ -46,7 +47,7 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
             className="object-contain w-full h-full"
           />
           <RemoveButton
-            onClickRemoveButton={() => props.onChangeBrandAsset()}
+            onClickRemoveButton={() => props.onRemoveBrandAsset()}
           />
         </div>
       )
