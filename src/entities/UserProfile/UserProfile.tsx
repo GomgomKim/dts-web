@@ -17,6 +17,7 @@ import {
 } from '@/shared/ui/dropdown-menu'
 
 import CreditIcon from '/public/icons/database.svg'
+import UserIcon from '/public/icons/user.svg'
 
 import { useQueryClient } from '@tanstack/react-query'
 
@@ -68,12 +69,14 @@ export const UserProfile = () => {
               height={40}
             />
           ) : (
-            <div>user image</div>
+            <div className="bg-neutral-2 w-full h-full relative">
+              <UserIcon className="absolute-center" />
+            </div>
           )}
         </div>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="w-[320px]">
+      <DropdownMenuContent className="w-[320px] mt-3">
         <DropdownMenuLabel>ACCOUNT</DropdownMenuLabel>
         <div className="flex items-center gap-3 py-3 px-5">
           <div className="w-10 h-10 rounded-full overflow-hidden">
@@ -85,10 +88,12 @@ export const UserProfile = () => {
                 height={40}
               />
             ) : (
-              <div>user image</div>
+              <div className="bg-neutral-2 w-full h-full relative">
+                <UserIcon className="absolute-center" />
+              </div>
             )}
           </div>
-          {user ? <span>{user.email}</span> : <span>user email</span>}
+          <span className="text-neutral-7">{user ? user.email : 'email'}</span>
         </div>
 
         <DropdownMenuSeparator />
@@ -106,7 +111,7 @@ export const UserProfile = () => {
                 'text-[#FF8480]': isZeroRestriction
               })}
             >
-              {remainRestriction === null ? 'loading' : remainRestriction}
+              {remainRestriction === null ? '000' : remainRestriction}
             </span>
           </div>
           {description}
