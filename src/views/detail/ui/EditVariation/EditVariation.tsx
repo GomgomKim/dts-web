@@ -22,6 +22,7 @@ const ASPECT_RATIO_OPTIONS = Object.values(ASPECT_RATIO_MAP)
 const FACE_ANGLE_OPTIONS = Object.values(FACE_ANGLE_MAP)
 
 interface EditVariationProps {
+  isLoading: boolean
   selectedVariation: Variation | null
 }
 
@@ -83,15 +84,20 @@ export const EditVariation = (props: EditVariationProps) => {
 
   return (
     <section className="flex flex-col gap-5">
-      <h2 className="text-[1.5rem] font-semibold">Edit</h2>
+      <h2 className="text-[1.25rem] min-[1512px]:text-[1.5rem] min-[3840px]:text-[2rem] font-semibold">
+        Edit
+      </h2>
 
       {/* options - Aspect Ratio */}
       <article>
-        <h3 className="mb-5 text-[0.875rem] text-neutral-7">Aspect Ratio</h3>
+        <h3 className="mb-5 text-[0.875rem] min-[3840px]:text-[1.25rem] text-neutral-7">
+          Aspect Ratio
+        </h3>
         <RadioGroup
           id="aspectRatio"
           value={aspectRatio}
           onChangeValue={(value: string) => setAspectRatio(value)}
+          disabled={props.isLoading}
         >
           {ASPECT_RATIO_OPTIONS.map((option) => (
             <RadioGroupItem key={option} value={option} label={option} />
@@ -102,7 +108,7 @@ export const EditVariation = (props: EditVariationProps) => {
       {/* options - Face Angle */}
       <article>
         <div className="mb-5 flex items-center">
-          <h3 className="text-neutral-7 text-[0.875rem] opacity-50">
+          <h3 className="text-neutral-7 text-[0.875rem] min-[3840px]:text-[1.25rem] opacity-50">
             Face Angle
           </h3>
           <Badge className="ml-[8px]">Upcoming</Badge>
@@ -117,7 +123,7 @@ export const EditVariation = (props: EditVariationProps) => {
       {/* options - Skin Texture */}
       <article>
         <div className="mb-5 flex items-center">
-          <h3 className="text-neutral-7 text-[0.875rem] opacity-50">
+          <h3 className="text-neutral-7 text-[0.875rem] min-[3840px]:text-[1.25rem] opacity-50">
             Skin Texture
           </h3>
           <Badge className="ml-[8px]">Upcoming</Badge>
@@ -132,8 +138,8 @@ export const EditVariation = (props: EditVariationProps) => {
       <Button
         stretch
         onClick={handleClickApplyEditOptions}
-        className="font-semibold"
-        disabled={isSamePresentOption()}
+        className="font-semibold min-[3840px]:text-[1.5rem] min-[3840px]:h-[80px]"
+        disabled={isSamePresentOption() || props.isLoading}
       >
         Apply Edit Options
       </Button>

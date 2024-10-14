@@ -3,7 +3,7 @@
 import * as React from 'react'
 
 import { Variation } from '@/shared/api/types'
-import { cn } from '@/shared/lib/utils'
+import { LoadingSpinner } from '@/shared/ui/LoadingSpinner'
 
 import { useGetNewStyleContainerWrapper } from './lib/useGetNewStyleContainerWrapper'
 import { Box } from './types'
@@ -12,6 +12,7 @@ import { ImageView } from './ui/ImageView/ImageView'
 import { ResizableAndDraggableBoxes } from './ui/ResizableAndDraggableBoxes'
 
 interface ImageEditingBoxProps {
+  isLoading: boolean
   containerRef: React.RefObject<HTMLDivElement>
   boxes: Box[]
   setBoxes: React.Dispatch<React.SetStateAction<Box[]>>
@@ -47,13 +48,18 @@ export const ImageEditingBox = (props: ImageEditingBoxProps) => {
     }
   }, [handleResize])
 
+  if (props.isLoading || !selectedVariation)
+    return (
+      <div className="h-full bg-neutral-1 bg-opacity-50 rounded-[0.5rem] overflow-hidden relative flex justify-center">
+        <LoadingSpinner width="40" height="40" />
+      </div>
+    )
+
   return (
     <div
       id="board"
       ref={boardRef}
-      className={cn(
-        'h-full bg-neutral-1 bg-opacity-50 rounded-[0.5rem] overflow-hidden relative flex justify-center'
-      )}
+      className="h-full bg-neutral-1 bg-opacity-50 rounded-[0.5rem] overflow-hidden relative flex justify-center"
     >
       <div
         id="history-controller"

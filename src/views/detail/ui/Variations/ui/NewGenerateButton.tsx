@@ -3,17 +3,22 @@ import { useHandleClickNewGenerate } from '@/features/generate-variation/useHand
 import DashedSvg from '/public/icons/dashed.svg'
 import PlusIcon from '/public/icons/plus.svg'
 
-export const NewGenerateButton = () => {
+interface NewGenerateButtonProps {
+  disabled?: boolean
+}
+
+export const NewGenerateButton = (props: NewGenerateButtonProps) => {
   const { debounceHandleClickNewGenerate } = useHandleClickNewGenerate()
 
   return (
     <button
       key="new-generate"
       onClick={debounceHandleClickNewGenerate}
-      className="relative rounded-[0.5rem] aspect-[206/219] w-full bg-neutral-1 bg-opacity-50 overflow-hidden group hover:bg-opacity-100"
+      className="relative border border-[rgba(0,0,0,0)] rounded-[0.5rem] aspect-[206/219] w-full bg-neutral-1 bg-opacity-50 overflow-hidden group enabled:hover:bg-opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      disabled={props.disabled || false}
     >
-      <DashedSvg />
-      <PlusIcon className="absolute inset-0 m-auto w-10 h-10 stroke-neutral-7 group-hover:stroke-white group-active:stroke-white" />
+      <DashedSvg className="absolute inset-0 w-full h-full" />
+      <PlusIcon className="absolute inset-0 m-auto w-10 h-10 stroke-neutral-7 enabled:group-hover:stroke-white enabled:group-active:stroke-white" />
       <span className="a11y-hidden">New Generate</span>
     </button>
   )

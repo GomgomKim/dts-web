@@ -8,9 +8,11 @@ import { Variation } from '@/shared/api/types'
 
 import { NewGenerateButton } from './ui/NewGenerateButton'
 import { Pagination } from './ui/Pagination'
-import { VariationList } from './ui/VariationList'
+import { VariationListSection } from './ui/VariationListSection'
 
 interface VariationsProps {
+  isLoading: boolean
+  onDataLoaded: () => void
   onChangeSelectedVariation: (variation: Variation) => void
 }
 
@@ -25,12 +27,16 @@ export const Variations = (props: VariationsProps) => {
   )
 
   return (
-    <>
+    <div>
       <div className="flex justify-between items-center mb-5">
         <div className="flex items-center gap-2">
-          <h3 className="text-neutral-7 text-[0.875rem]">Variations</h3>
-          {isAiImageGenerating ? (
-            <span className="text-primary text-[0.875rem]">Generating ...</span>
+          <h3 className="text-neutral-7 text-[0.875rem] min-[3840px]:text-[1.25rem]">
+            Variations
+          </h3>
+          {isAiImageGenerating || props.isLoading ? (
+            <span className="text-primary text-[0.875rem] min-[3840px]:text-[1.25rem]">
+              Generating...
+            </span>
           ) : null}
         </div>
         <Pagination
@@ -41,18 +47,17 @@ export const Variations = (props: VariationsProps) => {
       </div>
 
       <div className="flex gap-4 min-h-[120px]">
-        <React.Suspense fallback="loading...">
-          <VariationList
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-            totalPage={totalPage}
-            setTotalPage={setTotalPage}
-            onChangeSelectedVariation={props.onChangeSelectedVariation}
-          />
-          {/* new generate button */}
-          <NewGenerateButton />
-        </React.Suspense>
+        <VariationListSection
+          onDataLoaded={props.onDataLoaded}
+          onChangeSelectedVariation={props.onChangeSelectedVariation}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          totalPage={totalPage}
+          setTotalPage={setTotalPage}
+        />
+        {/* new generate button */}
+        <NewGenerateButton disabled={props.isLoading} />
       </div>
-    </>
+    </div>
   )
 }
