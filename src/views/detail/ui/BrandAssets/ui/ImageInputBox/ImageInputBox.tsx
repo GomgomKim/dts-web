@@ -44,13 +44,12 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
   const renderContent = () => {
     if (imagePreviewUrls.has(props.boxId)) {
       return (
-        <div className="h-full">
+        <div className="h-full flex justify-center items-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={imagePreviewUrls.get(props.boxId)}
             alt={props.boxId}
-            // TODO: 80%??
-            className="object-contain w-full h-full"
+            className="object-contain w-full h-full max-h-[70%] max-w-[70%]"
           />
           <RemoveButton
             onClickRemoveButton={() => props.onChangeBrandAsset()}

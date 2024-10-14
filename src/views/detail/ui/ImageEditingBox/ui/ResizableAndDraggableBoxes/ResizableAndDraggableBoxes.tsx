@@ -11,12 +11,14 @@ interface ResizableAndDraggableBoxesProps {
   boxes: Box[]
   setBoxes: React.Dispatch<React.SetStateAction<Box[]>>
   boxRefs: React.MutableRefObject<Map<string, HTMLDivElement | null>>
+  onKeydownRemoveBrandAsset: (boxId: string) => void
 }
 
 export const ResizableAndDraggableBoxes = ({
   containerRef,
   boxes,
-  boxRefs
+  boxRefs,
+  onKeydownRemoveBrandAsset
 }: ResizableAndDraggableBoxesProps) => {
   const [activeBoxId, setActiveBoxId] = useState<string | null>(
     () => boxes[0]?.id || null
@@ -144,6 +146,11 @@ export const ResizableAndDraggableBoxes = ({
     }
   }
 
+  const handleKeyDown = (eKey: string, boxId: string) => {
+    if (eKey === 'Escape' || eKey === 'Delete') {
+      onKeydownRemoveBrandAsset(boxId)
+    }
+  }
   useEffect(() => {
     const container = containerRef.current
     if (!container) return
@@ -167,6 +174,12 @@ export const ResizableAndDraggableBoxes = ({
     else setActiveBoxId('logo')
   }, [boxes])
 
+  useEffect(() => {
+    if (activeBoxId && boxRefs.current.has(activeBoxId)) {
+      boxRefs.current.get(activeBoxId)?.focus()
+    }
+  }, [activeBoxId])
+
   return (
     <>
       {boxes.map((box) => {
@@ -178,7 +191,14 @@ export const ResizableAndDraggableBoxes = ({
                 boxRefs.current.set(box.id, el)
               }
             }}
+            tabIndex={0}
+            onFocus={() => setActiveBoxId(box.id)}
+            onBlur={() => setActiveBoxId(null)}
             onMouseDown={(e) => handleMouseDown(e, box.id)}
+            onKeyDown={(e) => {
+              if (box.id !== activeBoxId) return
+              handleKeyDown(e.key, box.id)
+            }}
             style={{
               position: 'absolute',
               bottom: `${box.bottom}px`,
