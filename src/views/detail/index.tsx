@@ -87,6 +87,7 @@ export default function Detail() {
                       setBoxes={setBoxes}
                       boxRefs={boxRefs}
                       selectedVariation={selectedVariation}
+                      onKeydownRemoveBrandAsset={handleChangeBrandAsset}
                     />
                   </div>
 

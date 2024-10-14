@@ -18,6 +18,7 @@ interface ImageEditingBoxProps {
   setBoxes: React.Dispatch<React.SetStateAction<Box[]>>
   selectedVariation: Variation | null
   boxRefs: React.MutableRefObject<Map<string, HTMLDivElement | null>>
+  onKeydownRemoveBrandAsset: (boxId: string) => void
 }
 
 export const ImageEditingBox = (props: ImageEditingBoxProps) => {
@@ -82,6 +83,7 @@ export const ImageEditingBox = (props: ImageEditingBoxProps) => {
             boxes={boxes}
             setBoxes={setBoxes}
             boxRefs={props.boxRefs}
+            onKeydownRemoveBrandAsset={props.onKeydownRemoveBrandAsset}
           />
         </div>
       </div>
