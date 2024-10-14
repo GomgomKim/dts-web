@@ -18,7 +18,10 @@ export const ResizableAndDraggableBoxes = ({
   boxes,
   boxRefs
 }: ResizableAndDraggableBoxesProps) => {
-  const [activeBoxId, setActiveBoxId] = useState<string | null>(null)
+  console.log(boxes)
+  const [activeBoxId, setActiveBoxId] = useState<string | null>(
+    () => boxes[0]?.id || null
+  )
   const [isDragging, setIsDragging] = useState(false)
   const [isResizing, setIsResizing] = useState(false)
   const [resizeDirection, setResizeDirection] = useState('')
@@ -158,6 +161,12 @@ export const ResizableAndDraggableBoxes = ({
       window.addEventListener('mousedown', handleClickOutside)
     }
   }, [containerRef, handleMouseMove, handleMouseUp, handleClickOutside])
+
+  useEffect(() => {
+    if (boxes.length === 0) return
+    if (boxes.some((box) => box.id === 'product')) setActiveBoxId('product')
+    else setActiveBoxId('logo')
+  }, [boxes])
 
   return (
     <>
