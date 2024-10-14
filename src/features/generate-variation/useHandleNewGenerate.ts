@@ -71,5 +71,5 @@ export const useHandleClickNewGenerate = () => {
 function isValidRestriction(restriction: Restriction | null) {
   if (restriction == null) return false
   if (restriction.current == null || restriction.max == null) return false
-  return restriction.current < restriction.max
+  if (restriction.current >= restriction.max) return false
 }
