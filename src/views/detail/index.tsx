@@ -64,7 +64,7 @@ export default function Detail() {
       <div className="h-full ml-[380px] min-[1512px]:ml-[460px] min-[2560px]:ml-[500px] min-[3840px]:ml-[790px] grow">
         <div className="h-full overflow-x-auto flex gap-10">
           {/* generate section - left */}
-          <section className="overflow-y-auto overflow-x-hidden basis-[513px] shrink-0 grow">
+          <section className="overflow-y-auto overflow-x-hidden basis-[440px] shrink-0 grow">
             <div className="flex flex-col relative h-full">
               <div>
                 <h2 className="text-[1.25rem] min-[1512px]:text-[1.5rem] min-[3840px]:text-[2rem] inline-block font-semibold">

@@ -41,7 +41,7 @@ export const BrandAssets = (props: BrandAssetsProps) => {
       <h2 className="text-[1.25rem] min-[1512px]:text-[1.5rem] min-[3840px]:text-[2rem] font-semibold">
         Brand Assets
       </h2>
-      <div className="grow-[1] max-h-[calc(50%-(60px-40px-29px)/2)] min-[3840px]:max-h-[calc(50%-(60px-40px-38px)/2)]">
+      <div className="grow-[1] h-[calc(50%-(60px+40px+29px)/2)] min-[3840px]:h-[calc(50%-(60px+40px+38px)/2)]">
         <h3 className="mb-3 text-neutral-7 text-[0.875rem] min-[3840px]:text-[1.25rem] leading-[17px] min-[3840px]:leading-[24px]">
           Product
         </h3>
@@ -52,7 +52,7 @@ export const BrandAssets = (props: BrandAssetsProps) => {
           toggleAddBrandAssetButton={toggleButtonState}
         />
       </div>
-      <div className="grow-[1] max-h-[calc(50%-(60px+40px+29px)/2)]  min-[3840px]:max-h-[calc(50%-(60px+80px+38px)/2)]">
+      <div className="grow-[1] h-[calc(50%-(60px+40px+29px)/2)]  min-[3840px]:h-[calc(50%-(60px+80px+38px)/2)]">
         <h3 className="mb-3 text-neutral-7 text-[0.875rem] min-[3840px]:text-[1.25rem] leading-[17px] min-[3840px]:leading-[24px]">
           Brand Logo
         </h3>
