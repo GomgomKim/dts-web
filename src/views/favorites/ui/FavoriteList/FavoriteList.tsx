@@ -4,6 +4,7 @@ import { Fragment, useEffect } from 'react'
 import { useInView } from 'react-intersection-observer'
 
 import { Card } from '@/shared/ui/card'
+import { CardSkeleton } from '@/shared/ui/card/CardSkeleton'
 
 import { v4 } from 'uuid'
 
@@ -51,11 +52,14 @@ export const FavoriteList = () => {
             ))}
           </Fragment>
         ))}
+        {isFetching && isFetchingNextPage && (
+          <>
+            {Array.from({ length: 10 }).map((_value, idx) => (
+              <CardSkeleton key={idx} isLoading />
+            ))}
+          </>
+        )}
       </div>
-      {/* TODO: 로딩 및 스켈레톤 */}
-      {isFetching && isFetchingNextPage && (
-        <div style={{ height: 100 }}>loading more items ...</div>
-      )}
       <div ref={ref} style={{ height: 100 }} />
     </>
   )
