@@ -62,7 +62,7 @@ const NotLoggedInNav = () => {
 const UserInfo = () => {
   const restriction = useAuthStore((state) => state.restriction)
 
-  const isZeroRestriction = restriction?.current === 100
+  const isZeroRestriction = restriction?.current === 20
 
   return (
     <div className="flex gap-3 items-center ml-3">

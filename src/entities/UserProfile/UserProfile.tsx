@@ -52,7 +52,7 @@ export const UserProfile = () => {
     </div>
   ) : (
     <span className="font-medium text-[0.875rem] text-neutral-4">
-      100 credits per day
+      20 credits per day
     </span>
   )
 
