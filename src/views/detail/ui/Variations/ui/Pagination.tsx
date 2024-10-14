@@ -16,7 +16,7 @@ export const Pagination = (props: PaginationProps) => {
       <Button
         variant="sub2"
         size="icon"
-        className="w-5 h-5 rounded-[0.25rem]"
+        className="w-8 h-8 rounded-[0.25rem]"
         disabled={props.currentPage === INITIAL_PAGE}
         onClick={() =>
           props.setCurrentPage((prev) => Math.max(prev - 1, INITIAL_PAGE))
@@ -24,15 +24,17 @@ export const Pagination = (props: PaginationProps) => {
       >
         <AngleBracketIcon />
       </Button>
-      <div className="flex items-center text-center text-neutral-5">
-        <span className="block w-[25px]">{props.currentPage}</span>
+      <div className="flex items-center text-center text-neutral-5 gap-[2px]">
+        <span className="block w-[25px] text-neutral-8">
+          {props.currentPage}
+        </span>
         <span> / </span>
         <span className="block w-[25px]">{props.totalPage}</span>
       </div>
       <Button
         variant="sub2"
         size="icon"
-        className="w-5 h-5 rounded-[0.25rem]"
+        className="w-8 h-8 rounded-[0.25rem]"
         disabled={props.currentPage >= props.totalPage}
         onClick={() =>
           props.setCurrentPage((prev) => Math.min(prev + 1, props.totalPage))
