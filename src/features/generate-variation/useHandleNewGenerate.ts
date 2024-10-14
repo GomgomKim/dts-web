@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation'
 import { useAuthStore } from '@/entities/UserProfile/store'
 import { useAiImageGeneratingStore } from '@/entities/detail/store'
 
+import { Restriction } from '@/shared/api/types'
 import { debounce } from '@/shared/lib/utils'
 
 import { usePostAiImageGenerate } from './model/adapter'
@@ -17,6 +18,7 @@ export const useHandleClickNewGenerate = () => {
     (state) => state.addAiImageGeneratingList
   )
 
+  const restriction = useAuthStore((state) => state.restriction)
   const setRestriction = useAuthStore((state) => state.setRestriction)
   const setIsAiImageGenerating = useAiImageGeneratingStore(
     (state) => state.setIsAiImageGenerating
@@ -27,6 +29,11 @@ export const useHandleClickNewGenerate = () => {
   const postAiImageMutation = usePostAiImageGenerate()
 
   const handleClickNewGenerate = () => {
+    if (!isValidRestriction(restriction)) {
+      alert('You have reached the limit of generating variations')
+      return
+    }
+
     setIsAiImageGenerating(true)
 
     const mainImageId = searchParams.get('id')
@@ -59,4 +66,10 @@ export const useHandleClickNewGenerate = () => {
   )
 
   return { debounceHandleClickNewGenerate }
+}
+
+function isValidRestriction(restriction: Restriction | null) {
+  if (restriction == null) return false
+  if (restriction.current == null || restriction.max == null) return false
+  return restriction.current < restriction.max
 }
