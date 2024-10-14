@@ -39,7 +39,8 @@ export const useAuthStore = create(
         set({ isAuth })
       },
       setRestriction: (restriction) => {
-        set({ restriction })
+        const { current } = restriction
+        set({ restriction: { current, max: 20 } })
       },
       logIn: (tokens) => {
         set({ tokens, isAuth: true })
