@@ -18,7 +18,6 @@ export const ResizableAndDraggableBoxes = ({
   boxes,
   boxRefs
 }: ResizableAndDraggableBoxesProps) => {
-  console.log(boxes)
   const [activeBoxId, setActiveBoxId] = useState<string | null>(
     () => boxes[0]?.id || null
   )
