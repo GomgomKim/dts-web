@@ -20,6 +20,7 @@ interface ImageInputBoxProps {
   disabled: boolean
   boxId: string
   onChangeBrandAsset: () => void
+  toggleAddBrandAssetButton: (able: boolean) => void
 }
 
 export const ImageInputBox = (props: ImageInputBoxProps) => {
@@ -28,9 +29,15 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
   const { handleChangeDNDInput, handleChangeInput, isPending } =
     useImageInputBox({
       boxId: props.boxId,
-      onChangeBrandAsset: props.onChangeBrandAsset,
-      setErrorMessage
+      handleChangeBrandAsset: () => {
+        props.toggleAddBrandAssetButton(true)
+        props.onChangeBrandAsset
+      },
+      handleSuccess: () => props.toggleAddBrandAssetButton(true),
+      handleErrorMessage: (msg: string | null) => setErrorMessage(msg)
     })
+
+  if (isPending) props.toggleAddBrandAssetButton(false)
 
   const { imagePreviewUrls } = useImagePreviewUrlStore()
 
@@ -53,19 +60,13 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
     } else {
       return (
         <>
-          {isPending ? (
-            <LoadingInstruction />
-          ) : (
-            <>
-              <DashedSvg className="absolute inset-0 w-full h-full" />
-              <div className="relative">
-                <UploadButton boxId={props.boxId} />
-                {errorMessage !== null ? (
-                  <ErrorInstruction>{errorMessage}</ErrorInstruction>
-                ) : null}
-              </div>
-            </>
-          )}
+          <DashedSvg className="absolute inset-0 w-full h-full" />
+          <div className="relative">
+            <UploadButton boxId={props.boxId} />
+            {errorMessage !== null ? (
+              <ErrorInstruction>{errorMessage}</ErrorInstruction>
+            ) : null}
+          </div>
         </>
       )
     }
@@ -88,7 +89,7 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
         onChange={handleChangeInput}
         disabled={props.disabled}
       />
-      {renderContent()}
+      {isPending ? <LoadingInstruction /> : renderContent()}
     </DndBox>
   )
 }

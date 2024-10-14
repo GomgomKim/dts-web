@@ -50,7 +50,7 @@ export const Card = (props: CardProps) => {
           <Button
             asChild
             variant="sub1"
-            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white border-opacity-50 hover:border-opacity-100"
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white border-[rgba(97,98,104,0.5)] hover:border-border"
           >
             <div>
               Start with This Model

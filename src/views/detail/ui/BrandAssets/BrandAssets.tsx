@@ -18,12 +18,23 @@ interface BrandAssetsProps {
 }
 
 export const BrandAssets = (props: BrandAssetsProps) => {
+  const btnRef = React.useRef<HTMLButtonElement | null>(null)
   const { imagePreviewUrls } = useImagePreviewUrlStore()
+
+  const toggleButtonState = (able: boolean) => {
+    if (btnRef.current === null) return
+    btnRef.current.disabled = !able
+  }
 
   const debounceHandleClickAddBrandAssets = React.useCallback(
     debounce(props.onClickAddBrandAssets, DELAY_ADD_BRAND_ASSETS),
     []
   )
+
+  const handleClickAddBrandAssets = () => {
+    toggleButtonState(false)
+    debounceHandleClickAddBrandAssets()
+  }
 
   return (
     <section className="sticky flex flex-col gap-5 h-full">
@@ -38,6 +49,7 @@ export const BrandAssets = (props: BrandAssetsProps) => {
           disabled={props.isLoading}
           boxId="product"
           onChangeBrandAsset={() => props.onChangeBrandAsset('product')}
+          toggleAddBrandAssetButton={toggleButtonState}
         />
       </div>
       <div className="grow-[1] max-h-[calc(50%-(60px+40px+29px)/2)]  min-[3840px]:max-h-[calc(50%-(60px+80px+38px)/2)]">
@@ -48,10 +60,12 @@ export const BrandAssets = (props: BrandAssetsProps) => {
           disabled={props.isLoading}
           boxId="logo"
           onChangeBrandAsset={() => props.onChangeBrandAsset('logo')}
+          toggleAddBrandAssetButton={toggleButtonState}
         />
       </div>
       <Button
-        onClick={debounceHandleClickAddBrandAssets}
+        ref={btnRef}
+        onClick={handleClickAddBrandAssets}
         disabled={imagePreviewUrls.size < 1}
         className="disabled:bg-neutral-2 disabled:text-neutral-4 disabled:opacity-1 min-[3840px]:text-[1.5rem] min-[3840px]:h-[80px]"
       >
