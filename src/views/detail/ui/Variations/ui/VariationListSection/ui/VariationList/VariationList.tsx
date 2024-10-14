@@ -69,8 +69,6 @@ export const VariationList = (props: VariationListProps) => {
 
     props.setTotalPage(totalPage)
     if (totalPage < props.currentPage) props.setCurrentPage(totalPage)
-
-    console.log(totalPage, props.currentPage, props.totalPage)
   }, [variations, props.amountPerPage])
 
   React.useEffect(() => {
