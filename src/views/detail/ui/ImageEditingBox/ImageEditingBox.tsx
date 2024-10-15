@@ -2,11 +2,14 @@
 
 import * as React from 'react'
 
+import { useAuthStore } from '@/entities/UserProfile/store'
+
 import { Variation } from '@/shared/api/types'
 import { LoadingSpinner } from '@/shared/ui/LoadingSpinner'
 
 import { useGetNewStyleContainerWrapper } from './lib/useGetNewStyleContainerWrapper'
 import { Box } from './types'
+import { CreditToast } from './ui/CreditToast/CreditToast'
 import { HistoryControl } from './ui/HistoryControl/HistoryControl'
 import { ImageView } from './ui/ImageView/ImageView'
 import { ResizableAndDraggableBoxes } from './ui/ResizableAndDraggableBoxes'
@@ -23,6 +26,10 @@ interface ImageEditingBoxProps {
 
 export const ImageEditingBox = (props: ImageEditingBoxProps) => {
   const { containerRef, selectedVariation, boxes, setBoxes } = props
+  const restriction = useAuthStore((state) => state.restriction)
+  const [openToast, setOpenToast] = React.useState(() =>
+    restriction ? restriction.current >= restriction.max : false
+  )
   const boardRef = React.useRef<HTMLDivElement>(null)
 
   const [styleContainerWrapper, setStyleContainerWrapper] =
@@ -48,6 +55,11 @@ export const ImageEditingBox = (props: ImageEditingBoxProps) => {
       window.removeEventListener('resize', handleResize)
     }
   }, [handleResize])
+
+  React.useEffect(() => {
+    if (restriction === null) return
+    if (restriction?.current >= restriction?.max) setOpenToast(true)
+  }, [restriction])
 
   if (props.isLoading || !selectedVariation)
     return (
@@ -87,6 +99,9 @@ export const ImageEditingBox = (props: ImageEditingBoxProps) => {
           />
         </div>
       </div>
+      {openToast ? (
+        <CreditToast onClickGotIt={() => setOpenToast(false)} />
+      ) : null}
     </div>
   )
 }

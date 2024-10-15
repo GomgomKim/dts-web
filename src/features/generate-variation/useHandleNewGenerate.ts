@@ -28,6 +28,10 @@ export const useHandleClickNewGenerate = () => {
   )
   const postAiImageMutation = usePostAiImageGenerate()
 
+  const isRemainCredit = restriction
+    ? restriction.max - restriction?.current > 0
+    : false
+
   const handleClickNewGenerate = () => {
     if (!isValidRestriction(restriction)) {
       alert('You have reached the limit of generating variations')
@@ -65,7 +69,7 @@ export const useHandleClickNewGenerate = () => {
     []
   )
 
-  return { debounceHandleClickNewGenerate }
+  return { debounceHandleClickNewGenerate, isRemainCredit }
 }
 
 function isValidRestriction(restriction: Restriction | null) {

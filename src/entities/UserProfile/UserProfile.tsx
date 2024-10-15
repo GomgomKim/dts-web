@@ -47,7 +47,7 @@ export const UserProfile = () => {
   const isZeroRestriction = remainRestriction === 0
 
   const description = isZeroRestriction ? (
-    <div className="font-medium text-[0.875rem] text-neutral-4">
+    <div className="font-medium text-[0.875rem] text-neutral-4 flex items-center">
       Credits reset at midnight
       <span className="ml-[8px]">🌙</span>
     </div>

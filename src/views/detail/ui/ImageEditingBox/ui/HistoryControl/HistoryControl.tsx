@@ -54,7 +54,7 @@ export const HistoryControl = () => {
         onClick={handleUndo}
         disabled={!hasPast}
       >
-        <UndoIcon className="stroke-current group-hover:stroke-white" />
+        <UndoIcon className="stroke-current group-hover:stroke-white group-disabled:stroke-neutral-3" />
       </Button>
       <Button
         variant="ghost"
@@ -63,7 +63,7 @@ export const HistoryControl = () => {
         onClick={handleRedo}
         disabled={!hasFuture}
       >
-        <UndoIcon className="-scale-x-100 stroke-current group-hover:stroke-white" />
+        <UndoIcon className="-scale-x-100 stroke-current group-hover:stroke-white group-disabled:stroke-neutral-3" />
       </Button>
       <Button
         variant="ghost"
@@ -72,7 +72,7 @@ export const HistoryControl = () => {
         onClick={handleRestore}
         disabled={!editedVariationList.has(variationId)}
       >
-        <RestoreIcon className="stroke-current group-hover:stroke-white" />
+        <RestoreIcon className="stroke-current group-hover:stroke-white group-disabled:stroke-neutral-3" />
       </Button>
     </div>
   )
