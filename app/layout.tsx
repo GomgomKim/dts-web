@@ -35,13 +35,13 @@ export const metadata: Metadata = {
       'AI 기술을 활용해 우리 브랜드에 맞는 모델을 빠르고 쉽게 생성하고, 원하는 스타일로 커스터마이징할 수 있습니다. 브랜드 마케팅과 캠페인에 최적화된 AI 모델 솔루션을 경험하세요.',
     // url: 'https://example.com',
     siteName: 'Do Things Studio',
-    // images: [
-    //   {
-    //     url: 'https://example.com/og.png',
-    //     width: 800,
-    //     height: 600
-    //   }
-    // ],
+    images: [
+      {
+        url: 'https://api.dtsdevs.com/logo.png',
+        width: 800,
+        height: 600
+      }
+    ],
     locale: 'ko_KR',
     type: 'website'
   },
