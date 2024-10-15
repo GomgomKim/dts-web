@@ -147,7 +147,8 @@ export const ResizableAndDraggableBoxes = ({
   }
 
   const handleKeyDown = (eKey: string, boxId: string) => {
-    if (eKey === 'Escape' || eKey === 'Delete') {
+    console.log(eKey)
+    if (eKey === 'Escape' || eKey === 'Delete' || eKey === 'Backspace') {
       onKeydownRemoveBrandAsset(boxId)
     }
   }
