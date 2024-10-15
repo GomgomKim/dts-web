@@ -27,8 +27,8 @@ interface ImageEditingBoxProps {
 export const ImageEditingBox = (props: ImageEditingBoxProps) => {
   const { containerRef, selectedVariation, boxes, setBoxes } = props
   const restriction = useAuthStore((state) => state.restriction)
-  const [openToast, setOpenToast] = React.useState(
-    () => (restriction && restriction.current >= restriction.max) || false
+  const [openToast, setOpenToast] = React.useState(() =>
+    restriction ? restriction.current >= restriction.max : false
   )
   const boardRef = React.useRef<HTMLDivElement>(null)
 
@@ -55,6 +55,11 @@ export const ImageEditingBox = (props: ImageEditingBoxProps) => {
       window.removeEventListener('resize', handleResize)
     }
   }, [handleResize])
+
+  React.useEffect(() => {
+    if (restriction === null) return
+    if (restriction?.current >= restriction?.max) setOpenToast(true)
+  }, [restriction])
 
   if (props.isLoading || !selectedVariation)
     return (
