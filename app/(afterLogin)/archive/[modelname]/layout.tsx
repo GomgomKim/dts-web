@@ -1,8 +1,12 @@
-'use client'
-
 import { Suspense } from 'react'
 
+import { Metadata } from 'next'
+
 import { Header } from '@/widgets/Header'
+
+export const metadata: Metadata = {
+  title: 'archive'
+}
 
 export default function DetailPageLayout({
   children

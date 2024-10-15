@@ -1,10 +1,14 @@
-'use client'
-
 import { Suspense } from 'react'
+
+import type { Metadata } from 'next'
 
 import { Header } from '@/widgets/Header'
 
 import { Sidebar } from '@/widgets'
+
+export const metadata: Metadata = {
+  title: 'favorites'
+}
 
 export default function FavoritePageLayout({
   children
