@@ -8,7 +8,7 @@ interface CreditToastProps {
 
 export const CreditToast = (props: CreditToastProps) => {
   return (
-    <div className="absolute bottom-6 p-2 flex items-center gap-5 bg-neutral-0 bg-opacity-90 rounded-[0.5rem]">
+    <div className="absolute bottom-6 p-2 flex items-center gap-5 bg-neutral-0 bg-opacity-90 rounded-[0.5rem] z-[50]">
       <div className="flex items-center">
         <div className="ml-[0.5rem] mr-[1rem]">
           <AlertCircle />
