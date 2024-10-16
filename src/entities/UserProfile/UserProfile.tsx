@@ -17,6 +17,7 @@ import {
 } from '@/shared/ui/dropdown-menu'
 
 import CreditIcon from '/public/icons/database.svg'
+import Spinner from '/public/icons/loading-spinner.svg'
 import UserIcon from '/public/icons/user.svg'
 
 import { useQueryClient } from '@tanstack/react-query'
@@ -44,9 +45,9 @@ export const UserProfile = () => {
     ? restriction?.max - restriction?.current
     : null
 
-  const isZeroRestriction = remainRestriction === 0
+  const isOutOfCredit = remainRestriction === 0
 
-  const description = isZeroRestriction ? (
+  const description = isOutOfCredit ? (
     <div className="font-medium text-[0.875rem] text-neutral-4 flex items-center">
       Credits reset at midnight
       <span className="ml-[8px]">🌙</span>
@@ -93,7 +94,9 @@ export const UserProfile = () => {
               </div>
             )}
           </div>
-          <span className="text-neutral-7">{user ? user.email : 'email'}</span>
+          <span className="text-neutral-7">
+            {user ? user.email : '@example.com'}
+          </span>
         </div>
 
         <DropdownMenuSeparator />
@@ -103,15 +106,21 @@ export const UserProfile = () => {
           <div className="flex gap-2 items-center">
             <CreditIcon
               className={cn('stroke-white', {
-                'stroke-[#FF8480]': isZeroRestriction
+                'stroke-[#FF8480]': isOutOfCredit
               })}
             />
             <span
               className={cn('text-[14px]', {
-                'text-[#FF8480]': isZeroRestriction
+                'text-[#FF8480]': isOutOfCredit
               })}
             >
-              {remainRestriction === null ? '000' : remainRestriction}
+              {remainRestriction !== null ? (
+                remainRestriction
+              ) : (
+                <div className="w-4 h-4">
+                  <Spinner className="animate-spin" width={16} height={16} />
+                </div>
+              )}
             </span>
           </div>
           {description}
