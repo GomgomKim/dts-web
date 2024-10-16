@@ -3,6 +3,7 @@ import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 
+import { NetworkError } from '@/app/providers/NetworkError'
 import { PathStorage } from '@/app/providers/PathStorage'
 import { AxiosInterceptorWrapper } from '@/app/providers/axios-interceptor-wrapper'
 import { MSWComponent } from '@/app/providers/msw-component'
@@ -68,10 +69,12 @@ export default function RootLayout({
         <ReactQueryProviders>
           <AxiosInterceptorWrapper>
             <PathStorage />
-            <Suspense fallback={<Loading />}>
-              {children}
-              {modal}
-            </Suspense>
+            <NetworkError>
+              <Suspense fallback={<Loading />}>
+                {children}
+                {modal}
+              </Suspense>
+            </NetworkError>
           </AxiosInterceptorWrapper>
         </ReactQueryProviders>
       </body>
