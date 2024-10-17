@@ -20,14 +20,13 @@ interface ImageEditingBoxProps {
   isLoading: boolean
   containerRef: React.RefObject<HTMLDivElement>
   boxes: Box[]
-  setBoxes: React.Dispatch<React.SetStateAction<Box[]>>
   selectedVariation: Variation | null
   boxRefs: React.MutableRefObject<Map<string, HTMLDivElement | null>>
   onKeydownRemoveBrandAsset: (boxId: string) => void
 }
 
 export const ImageEditingBox = (props: ImageEditingBoxProps) => {
-  const { containerRef, selectedVariation, boxes, setBoxes } = props
+  const { containerRef, selectedVariation, boxes } = props
   const boardRef = React.useRef<HTMLDivElement>(null)
 
   const editedVariationList = useEditorStore((state) => state.items)
@@ -106,15 +105,12 @@ export const ImageEditingBox = (props: ImageEditingBoxProps) => {
       >
         <div id="container" className="w-full h-full" ref={containerRef}>
           <ImageView selectedVariation={selectedVariation} />
-          <div className="absolute inset-0">
-            <ResizableAndDraggableBoxes
-              containerRef={containerRef}
-              boxes={boxes}
-              setBoxes={setBoxes}
-              boxRefs={props.boxRefs}
-              onKeydownRemoveBrandAsset={props.onKeydownRemoveBrandAsset}
-            />
-          </div>
+          <ResizableAndDraggableBoxes
+            containerRef={boardRef}
+            boxes={boxes}
+            boxRefs={props.boxRefs}
+            onKeydownRemoveBrandAsset={props.onKeydownRemoveBrandAsset}
+          />
         </div>
       </div>
       {openToast ? (
