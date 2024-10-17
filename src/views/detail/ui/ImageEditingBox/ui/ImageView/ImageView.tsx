@@ -10,23 +10,10 @@ import { Variation } from '@/shared/api/types'
 
 interface ImageViewProps {
   selectedVariation: Variation | null
-  onChangeImage: () => void
 }
 
 export const ImageView = (props: ImageViewProps) => {
   const editedVariationList = useEditorStore((state) => state.items)
-
-  const variationCurrent =
-    (props.selectedVariation &&
-      editedVariationList.get(props.selectedVariation.variationId.toString())
-        ?.present) ||
-    null
-
-  React.useEffect(() => {
-    if (props.selectedVariation) {
-      props.onChangeImage()
-    }
-  }, [props.selectedVariation, variationCurrent])
 
   if (!props.selectedVariation) return null
 

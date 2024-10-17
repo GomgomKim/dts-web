@@ -3,10 +3,12 @@
 import * as React from 'react'
 
 import { useAuthStore } from '@/entities/UserProfile/store'
+import { ASPECT_RATIO_MAP } from '@/entities/detail/constant'
 
 import { Variation } from '@/shared/api/types'
 import { LoadingSpinner } from '@/shared/ui/LoadingSpinner'
 
+import { useEditorStore } from '../../model/useEditorHistoryStore'
 import { useGetNewStyleContainerWrapper } from './lib/useGetNewStyleContainerWrapper'
 import { Box } from './types'
 import { CreditToast } from './ui/CreditToast/CreditToast'
@@ -26,35 +28,52 @@ interface ImageEditingBoxProps {
 
 export const ImageEditingBox = (props: ImageEditingBoxProps) => {
   const { containerRef, selectedVariation, boxes, setBoxes } = props
+  const boardRef = React.useRef<HTMLDivElement>(null)
+
+  const editedVariationList = useEditorStore((state) => state.items)
   const restriction = useAuthStore((state) => state.restriction)
   const [openToast, setOpenToast] = React.useState(() =>
     restriction ? restriction.current >= restriction.max : false
   )
-  const boardRef = React.useRef<HTMLDivElement>(null)
 
   const [styleContainerWrapper, setStyleContainerWrapper] =
     React.useState<React.CSSProperties>({})
+  const getNewStyleContainerWrapper = useGetNewStyleContainerWrapper(boardRef)
 
-  // TODO: memo) 훅 내에서 searchParams의 variationId를 사용하는게 아니라 selectedVariation을 넘겨줘야 히스토리 스토어 present 옵션이랑 싱크됨
-  const getNewStyleContainerWrapper = useGetNewStyleContainerWrapper(
-    boardRef,
-    selectedVariation
-  )
+  const variationId =
+    selectedVariation && selectedVariation.variationId.toString()
 
-  const handleResize = () => {
+  const variationCurrent =
+    (variationId &&
+      editedVariationList.has(variationId) &&
+      editedVariationList.get(variationId)?.present) ||
+    null
+
+  const handleImageStyleSize = React.useCallback(() => {
+    let aspectRatio = '9:16'
+
+    if (variationCurrent !== null) {
+      const { ratio } = variationCurrent
+      aspectRatio = ASPECT_RATIO_MAP[ratio]
+    }
+
+    const updatedStyle = getNewStyleContainerWrapper(aspectRatio)
+    if (updatedStyle !== null) setStyleContainerWrapper(updatedStyle)
+  }, [selectedVariation, variationCurrent])
+
+  // 1. 화면 리사이징할 때
+  // 2. selected Variation이 바뀔 때
+  // 3. 이미지 option이 변경될 때
+  React.useEffect(() => {
     if (!selectedVariation) return
 
-    const updatedStyle = getNewStyleContainerWrapper()
+    handleImageStyleSize()
 
-    if (updatedStyle !== null) setStyleContainerWrapper(updatedStyle)
-  }
-
-  React.useEffect(() => {
-    window.addEventListener('resize', handleResize)
+    window.addEventListener('resize', handleImageStyleSize)
     return () => {
-      window.removeEventListener('resize', handleResize)
+      window.removeEventListener('resize', handleImageStyleSize)
     }
-  }, [handleResize])
+  }, [selectedVariation, variationCurrent])
 
   React.useEffect(() => {
     if (restriction === null) return
@@ -86,17 +105,16 @@ export const ImageEditingBox = (props: ImageEditingBoxProps) => {
         style={{ ...styleContainerWrapper }}
       >
         <div id="container" className="w-full h-full" ref={containerRef}>
-          <ImageView
-            selectedVariation={selectedVariation}
-            onChangeImage={handleResize}
-          />
-          <ResizableAndDraggableBoxes
-            containerRef={containerRef}
-            boxes={boxes}
-            setBoxes={setBoxes}
-            boxRefs={props.boxRefs}
-            onKeydownRemoveBrandAsset={props.onKeydownRemoveBrandAsset}
-          />
+          <ImageView selectedVariation={selectedVariation} />
+          <div className="absolute inset-0">
+            <ResizableAndDraggableBoxes
+              containerRef={containerRef}
+              boxes={boxes}
+              setBoxes={setBoxes}
+              boxRefs={props.boxRefs}
+              onKeydownRemoveBrandAsset={props.onKeydownRemoveBrandAsset}
+            />
+          </div>
         </div>
       </div>
       {openToast ? (

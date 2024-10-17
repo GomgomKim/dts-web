@@ -1,44 +1,48 @@
 import * as React from 'react'
 
-import { useEditorStore } from '@/views/detail/model/useEditorHistoryStore'
-
 import {
-  ASPECT_RATIO_MAP,
   ASPECT_RATIO_MAP_NUMBER,
   ASPECT_RATIO_REVERT_MAP
 } from '@/entities/detail/constant'
 
-import { Variation } from '@/shared/api/types'
-
 export const useGetNewStyleContainerWrapper = (
-  boardRef: React.RefObject<HTMLDivElement>,
-  selectedVariation: Variation | null
+  boardRef: React.RefObject<HTMLDivElement>
 ) => {
-  const variationId = selectedVariation?.variationId.toString()
+  const getFitDirection = React.useCallback(
+    (ratio: number) => {
+      if (!boardRef.current?.clientHeight || !boardRef.current?.clientWidth)
+        return 'height'
 
-  const editedVariationList = useEditorStore((state) => state.items)
+      const boardRefHeight = boardRef.current?.clientHeight
+      const boardRefWidth = boardRef.current?.clientWidth
 
-  const getType = React.useCallback(() => {
-    const boardRefHeight = boardRef.current?.clientHeight || 0
-    const boardRefWidth = boardRef.current?.clientWidth || 0
+      const containerRatio = boardRefWidth / boardRefHeight
 
-    return boardRefHeight < boardRefWidth ? 'height' : 'width'
-  }, [boardRef])
+      // 컨테이너가 가로로 긴 경우
+      if (containerRatio >= 1) return 'height'
 
-  const getNewStyleContainerWrapper = () => {
-    if (!variationId) return null
+      // 컨테이너가 세로로 긴 경우
+      if (containerRatio < ratio) {
+        return 'width'
+      } else {
+        return 'height'
+      }
+    },
+    [boardRef]
+  )
 
-    let aspectRatio = '9:16'
-    if (editedVariationList.has(variationId)) {
-      const { ratio } = editedVariationList.get(variationId)!.present
-      aspectRatio = ASPECT_RATIO_MAP[ratio]
-    }
-    const type = aspectRatio === '1:1' ? getType() : 'height'
+  const getNewStyleContainerWrapper = (aspectRatio: string) => {
+    const fitDirection =
+      aspectRatio === '1:1' ? getFitDirection(1) : getFitDirection(9 / 16)
+
+    const otherFitDirection = fitDirection === 'height' ? 'width' : 'height'
 
     const newStyle: React.CSSProperties = {
       aspectRatio:
         ASPECT_RATIO_MAP_NUMBER[ASPECT_RATIO_REVERT_MAP[aspectRatio]],
-      [type]: '100%'
+      [fitDirection]: '100%',
+      [otherFitDirection]: 'fit-content',
+      margin: 'auto'
     }
 
     return newStyle
