@@ -9,7 +9,6 @@ import { Box } from '../../types'
 interface ResizableAndDraggableBoxesProps {
   containerRef: React.RefObject<HTMLElement>
   boxes: Box[]
-  setBoxes: React.Dispatch<React.SetStateAction<Box[]>>
   boxRefs: React.MutableRefObject<Map<string, HTMLDivElement | null>>
   onKeydownRemoveBrandAsset: (boxId: string) => void
 }
@@ -34,22 +33,31 @@ export const ResizableAndDraggableBoxes = ({
     if (!boxRef) return
 
     const boxRect = boxRef.getBoundingClientRect()
-    offsetRef.current.x = e.clientX - boxRect.left
-    offsetRef.current.y = e.clientY - boxRect.top
+
+    // 박스의 중심 좌표 계산
+    const boxCenterX = boxRect.left + boxRect.width / 2
+    const boxCenterY = boxRect.top + boxRect.height / 2
+
+    // 마우스 위치와 박스 중심 간의 오프셋 계산
+    offsetRef.current.x = e.clientX - boxCenterX
+    offsetRef.current.y = e.clientY - boxCenterY
 
     const edgeThreshold = 10
+    const relativeX = e.clientX - boxRect.left
+    const relativeY = e.clientY - boxRect.top
+
     if (
-      offsetRef.current.x < edgeThreshold ||
-      offsetRef.current.y < edgeThreshold ||
-      offsetRef.current.x > boxRect.width - edgeThreshold ||
-      offsetRef.current.y > boxRect.height - edgeThreshold
+      relativeX < edgeThreshold ||
+      relativeY < edgeThreshold ||
+      relativeX > boxRect.width - edgeThreshold ||
+      relativeY > boxRect.height - edgeThreshold
     ) {
       setIsResizing(true)
       setResizeDirection(
-        (offsetRef.current.y < edgeThreshold ? 'n' : '') +
-          (offsetRef.current.y > boxRect.height - edgeThreshold ? 's' : '') +
-          (offsetRef.current.x < edgeThreshold ? 'w' : '') +
-          (offsetRef.current.x > boxRect.width - edgeThreshold ? 'e' : '')
+        (relativeY < edgeThreshold ? 'n' : '') +
+          (relativeY > boxRect.height - edgeThreshold ? 's' : '') +
+          (relativeX < edgeThreshold ? 'w' : '') +
+          (relativeX > boxRect.width - edgeThreshold ? 'e' : '')
       )
     } else {
       setIsDragging(true)
@@ -67,24 +75,28 @@ export const ResizableAndDraggableBoxes = ({
       if (!boxRef) return
 
       const containerRect = containerRef.current.getBoundingClientRect()
+      const containerCenterX = containerRect.width / 2
+      const containerCenterY = containerRect.height / 2
 
       if (isDragging) {
-        let newLeft = e.clientX - containerRect.left - offsetRef.current.x
-        let newTop = e.clientY - containerRect.top - offsetRef.current.y
+        const newCenterX = e.clientX - containerRect.left - offsetRef.current.x
+        const newCenterY = e.clientY - containerRect.top - offsetRef.current.y
 
         // 컨테이너 경계 내에서 이동할 수 있도록 제한
-        newLeft = Math.max(
-          0,
-          Math.min(newLeft, containerRect.width - boxRef.offsetWidth)
+        const limitedCenterX = Math.max(
+          boxRef.offsetWidth / 2,
+          Math.min(newCenterX, containerRect.width - boxRef.offsetWidth / 2)
         )
-        newTop = Math.max(
-          0,
-          Math.min(newTop, containerRect.height - boxRef.offsetHeight)
+        const limitedCenterY = Math.max(
+          boxRef.offsetHeight / 2,
+          Math.min(newCenterY, containerRect.height - boxRef.offsetHeight / 2)
         )
 
-        // 박스 위치 업데이트
-        boxRef.style.left = `${newLeft}px`
-        boxRef.style.top = `${newTop}px`
+        // 박스 위치 업데이트 (중심 기준)
+        const relativeX = limitedCenterX - containerCenterX
+        const relativeY = limitedCenterY - containerCenterY
+        boxRef.style.left = `calc(50% + ${relativeX - boxRef.offsetWidth / 2}px)`
+        boxRef.style.top = `calc(50% + ${relativeY - boxRef.offsetHeight / 2}px)`
       } else if (isResizing) {
         const boxStyle = boxRef.style
         let newLeft = boxRef.offsetLeft
@@ -92,36 +104,36 @@ export const ResizableAndDraggableBoxes = ({
         let newWidth = boxRef.offsetWidth
         let newHeight = boxRef.offsetHeight
 
+        const boxRect = boxRef.getBoundingClientRect()
+
         if (resizeDirection.includes('e')) {
-          newWidth = e.clientX - containerRect.left - newLeft
+          newWidth = e.clientX - boxRect.left
         }
         if (resizeDirection.includes('s')) {
-          newHeight = e.clientY - containerRect.top - newTop
+          newHeight = e.clientY - boxRect.top
         }
         if (resizeDirection.includes('w')) {
-          const widthAdjustment = newLeft - (e.clientX - containerRect.left)
-          newLeft = e.clientX - containerRect.left
-          newWidth += widthAdjustment
+          const widthChange = boxRect.left - e.clientX
+          newLeft -= widthChange
+          newWidth += widthChange
         }
         if (resizeDirection.includes('n')) {
-          const heightAdjustment = newTop - (e.clientY - containerRect.top)
-          newTop = e.clientY - containerRect.top
-          newHeight += heightAdjustment
+          const heightChange = boxRect.top - e.clientY
+          newTop -= heightChange
+          newHeight += heightChange
         }
 
-        // 컨테이너 경계 내에서 리사이징할 수 있도록 제한
-        newLeft = Math.max(0, Math.min(newLeft, containerRect.width - newWidth))
-        newTop = Math.max(0, Math.min(newTop, containerRect.height - newHeight))
-        newWidth = Math.max(
-          50,
-          Math.min(newWidth, containerRect.width - newLeft)
-        )
-        newHeight = Math.max(
-          50,
-          Math.min(newHeight, containerRect.height - newTop)
-        )
+        // 최소 크기 제한
+        newWidth = Math.max(50, newWidth)
+        newHeight = Math.max(50, newHeight)
 
-        // 박스 스타일 업데이트
+        // 컨테이너 경계 내에서 리사이징할 수 있도록 제한
+        newTop = Math.max(0, newTop)
+        // newLeft = Math.max(0, newLeft)
+        newWidth = Math.min(newWidth, containerRect.width - newLeft)
+        newHeight = Math.min(newHeight, containerRect.height - boxRef.offsetTop)
+
+        // 박스 크기와 위치 업데이트
         boxStyle.left = `${newLeft}px`
         boxStyle.top = `${newTop}px`
         boxStyle.width = `${newWidth}px`
@@ -147,7 +159,6 @@ export const ResizableAndDraggableBoxes = ({
   }
 
   const handleKeyDown = (eKey: string, boxId: string) => {
-    console.log(eKey)
     if (eKey === 'Escape' || eKey === 'Delete' || eKey === 'Backspace') {
       onKeydownRemoveBrandAsset(boxId)
     }
@@ -202,11 +213,8 @@ export const ResizableAndDraggableBoxes = ({
             }}
             style={{
               position: 'absolute',
-              bottom: `${box.bottom}px`,
-              left:
-                box.left === undefined
-                  ? `calc(50% - ${box.width / 2}px)` // 상위 컨테이너 가운데에 위치
-                  : `${box.left}px`,
+              left: `calc(50% + ${box.centerX - box.width / 2}px)`,
+              bottom: box.centerY, // initial bottom distance
               width: `${box.width}px`,
               height: `${box.height}px`,
               zIndex: activeBoxId === box.id ? 2 : 1,
@@ -228,17 +236,17 @@ export const ResizableAndDraggableBoxes = ({
             </div>
             <span
               className={cn('absolute top-0 w-full', {
-                ["before:content-[''] before:absolute before:top-[-4px] before:left-[-4px] before:w-2 before:h-2 before:rounded-full before:bg-primary"]:
+                ["before:content-[''] before:absolute before:top-[-6px] before:left-[-6px] before:w-3 before:h-3 before:rounded-full before:bg-primary"]:
                   activeBoxId === box.id,
-                ["after:content-[''] after:absolute after:top-[-4px] after:right-[-4px] after:w-2 after:h-2 after:rounded-full after:bg-primary"]:
+                ["after:content-[''] after:absolute after:top-[-6px] after:right-[-6px] after:w-3 after:h-3 after:rounded-full after:bg-primary"]:
                   activeBoxId === box.id
               })}
             ></span>
             <span
               className={cn('absolute bottom-0 w-full', {
-                ["before:content-[''] before:absolute before:bottom-[-4px] before:left-[-4px] before:w-2 before:h-2 before:rounded-full before:bg-primary"]:
+                ["before:content-[''] before:absolute before:bottom-[-6px] before:left-[-6px] before:w-3 before:h-3 before:rounded-full before:bg-primary"]:
                   activeBoxId === box.id,
-                ["after:content-[''] after:absolute after:bottom-[-4px] after:right-[-4px] after:w-2 after:h-2 after:rounded-full after:bg-primary"]:
+                ["after:content-[''] after:absolute after:bottom-[-6px] after:right-[-6px] after:w-3 after:h-3 after:rounded-full after:bg-primary"]:
                   activeBoxId === box.id
               })}
             ></span>
