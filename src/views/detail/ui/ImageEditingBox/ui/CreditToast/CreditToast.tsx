@@ -11,7 +11,7 @@ export const CreditToast = (props: CreditToastProps) => {
     <div className="absolute bottom-6 p-2 flex items-center gap-5 bg-neutral-0 bg-opacity-90 rounded-[0.5rem] z-[50]">
       <div className="flex items-center">
         <div className="ml-[0.5rem] mr-[1rem]">
-          <AlertCircle />
+          <AlertCircle stroke="#FF8480" />
         </div>
         <div>
           <p className="text-[0.875rem] leading-[20px] font-bold">
