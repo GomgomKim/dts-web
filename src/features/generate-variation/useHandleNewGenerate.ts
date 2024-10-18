@@ -3,7 +3,7 @@ import * as React from 'react'
 import { useSearchParams } from 'next/navigation'
 
 import { useAuthStore } from '@/entities/UserProfile/store'
-import { useAiImageGeneratingStore } from '@/entities/detail/store'
+import { useAiImageGeneratingStore } from '@/entities/generate/store'
 
 import { Restriction } from '@/shared/api/types'
 import { debounce } from '@/shared/lib/utils'

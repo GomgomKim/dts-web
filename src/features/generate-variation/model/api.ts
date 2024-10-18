@@ -1,4 +1,4 @@
-import { URL_AI_IMAGE_GENERATE } from '@/entities/detail/constant'
+import { URL_AI_IMAGE_GENERATE } from '@/entities/generate/constant'
 
 import { dtsAxios } from '@/shared/api'
 

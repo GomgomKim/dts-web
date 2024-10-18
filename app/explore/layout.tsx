@@ -7,7 +7,7 @@ import { Header } from '@/widgets/Header'
 import { Sidebar } from '@/widgets'
 
 export const metadata: Metadata = {
-  title: 'explore'
+  title: 'Explore'
 }
 
 export default function ExploreLayout({

@@ -44,7 +44,7 @@ export const Card = (props: CardProps) => {
       />
       {isHovering && (
         <Link
-          href={`/archive/${modelname}?id=${id}`}
+          href={`/generate/${modelname}?id=${id}`}
           className="absolute inset-0 z-10 bg-custom-gradient"
         >
           <Button
