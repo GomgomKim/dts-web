@@ -5,7 +5,7 @@ import { Metadata } from 'next'
 import { Header } from '@/widgets/Header'
 
 export const metadata: Metadata = {
-  title: 'archive'
+  title: 'Generate'
 }
 
 export default function DetailPageLayout({

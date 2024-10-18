@@ -7,7 +7,7 @@ import { Header } from '@/widgets/Header'
 import { Sidebar } from '@/widgets'
 
 export const metadata: Metadata = {
-  title: 'favorites'
+  title: 'Favorites'
 }
 
 export default function FavoritePageLayout({
