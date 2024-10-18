@@ -8,7 +8,12 @@ interface LoadingSpinnerProps {
 export const LoadingSpinner = ({ width, height }: LoadingSpinnerProps) => {
   return (
     <div className={`w-[${width}]} h-[${height}] absolute-center`}>
-      <Spinner className="animate-spin" width={width} height={height} />
+      <Spinner
+        className="animate-spin"
+        width={width}
+        height={height}
+        fill="#AEAFB5"
+      />
     </div>
   )
 }

@@ -84,7 +84,6 @@ export default function Detail() {
                       isLoading={isLoading}
                       containerRef={containerRef}
                       boxes={boxes}
-                      setBoxes={setBoxes}
                       boxRefs={boxRefs}
                       selectedVariation={selectedVariation}
                       onKeydownRemoveBrandAsset={handleChangeBrandAsset}

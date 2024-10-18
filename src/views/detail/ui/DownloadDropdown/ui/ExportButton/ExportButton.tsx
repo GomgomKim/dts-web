@@ -3,6 +3,9 @@ import { useCallback, useState } from 'react'
 import { cn, debounce } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui/button'
 
+import AlertIcon from '/public/icons/alert-circle.svg'
+import SpinnerIcon from '/public/icons/loading-spinner.svg'
+
 import { v4 } from 'uuid'
 
 import { EXPORT_IMAGE_FORMAT } from '../../type'
@@ -22,7 +25,7 @@ interface ExportButtonProps extends React.ComponentProps<typeof Button> {
   imageSize: { width: number; height: number }
 }
 
-const DELAY_DOWNLOAD_IMAGE = 1000
+const DELAY_DOWNLOAD_IMAGE = 300
 
 export const ExportButton = (props: ExportButtonProps) => {
   const { containerRef, imageName, imageSize, imageType } = props
@@ -66,20 +69,29 @@ export const ExportButton = (props: ExportButtonProps) => {
     [containerRef, imageName, imageSize, imageType, isLoading, isError]
   )
 
+  const isDownloading = !isError && isLoading
+  const isReadyToDownload = !isError && !isLoading
+
   return (
     <Button
       disabled={!isError && isLoading}
       onClick={debounceHandleButtonClick}
       className={cn(
-        'leading-[14px] rounded-[8px] text-[0.75rem] font-semibold',
+        'rounded-[0.5rem] flex items-center justify-center gap-[0.5rem]',
         {
-          'bg-[#FF8480]': isError
+          'bg-[#FF8480] hover:bg-destructive-hover': isError,
+          'py-[11px]': isDownloading || isError
         }
       )}
       stretch
     >
-      {!isError && (isLoading ? 'Downloading ...' : 'Continue')}
-      {isError && 'Try Again'}
+      {isReadyToDownload ? (
+        <span className="leading-[14px] text-[0.75rem] font-semibold">
+          Continue
+        </span>
+      ) : null}
+      {isDownloading ? <DownloadingInstruction /> : null}
+      {isError ? <ErrorInstruction /> : null}
     </Button>
   )
 }
@@ -91,4 +103,31 @@ function getToday() {
   const day = today.getDate().toString().padStart(2, '0')
 
   return `${year}${month}${day}`
+}
+
+const DownloadingInstruction = () => {
+  return (
+    <>
+      <SpinnerIcon
+        className="animate-spin"
+        width={16}
+        height={16}
+        fill="#0F1011"
+      />
+      <span className="leading-[14px] text-[0.75rem] font-semibold">
+        Downloading...
+      </span>
+    </>
+  )
+}
+
+const ErrorInstruction = () => {
+  return (
+    <>
+      <AlertIcon width={16} height={16} stroke="#0F1011" />
+      <span className="leading-[14px] text-[0.75rem] font-semibold">
+        Try again
+      </span>
+    </>
+  )
 }
