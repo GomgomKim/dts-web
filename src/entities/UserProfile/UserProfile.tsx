@@ -118,7 +118,12 @@ export const UserProfile = () => {
                 remainRestriction
               ) : (
                 <div className="w-4 h-4">
-                  <Spinner className="animate-spin" width={16} height={16} />
+                  <Spinner
+                    className="animate-spin"
+                    width={16}
+                    height={16}
+                    fill="#AEAFB5"
+                  />
                 </div>
               )}
             </span>
