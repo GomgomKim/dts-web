@@ -5,7 +5,7 @@ import {
   URL_AI_IMAGE_GENERATE,
   URL_AI_IMAGE_GENERATE_PROGRESS,
   URL_VARIATION_LIST
-} from '@/entities/detail/constant'
+} from '@/entities/generate/constant'
 
 import {
   AspectRatio,

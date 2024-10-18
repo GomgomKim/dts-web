@@ -16,7 +16,7 @@ export const Header = () => {
   const pathname = usePathname()
   const isAuth = useAuthStore((state) => state.isAuth)
 
-  const isDetailPage = pathname.startsWith('/archive/')
+  const isGeneratePage = pathname.startsWith('/generate/')
   const isMainPage =
     pathname.startsWith('/explore') || pathname.startsWith('/favorites')
 
@@ -27,7 +27,7 @@ export const Header = () => {
           <DTSLogo />
         </Link>
 
-        {isDetailPage ? <ExploreBackButton /> : null}
+        {isGeneratePage ? <ExploreBackButton /> : null}
         <div className="flex items-center ml-auto">
           <nav className=" text-[14px] text-secondary-foreground flex items-center">
             <ul className="flex items-center">
