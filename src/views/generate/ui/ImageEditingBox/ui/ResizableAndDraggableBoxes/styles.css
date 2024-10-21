@@ -1,0 +1,11 @@
+.resizable-div::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(100% + 45px);
+  height: calc(100% + 45px);
+  margin: -22px;
+  /* cursor: se-resize; */
+  z-index: 1;
+}
