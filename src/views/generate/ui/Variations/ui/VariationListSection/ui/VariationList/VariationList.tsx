@@ -52,7 +52,9 @@ export const VariationList = (props: VariationListProps) => {
 
   const {
     data: { variations },
-    isFetching
+    isFetching,
+    isError,
+    error
     // isSuccess
   } = useGetVariationList(mainImageId)
   const queries = useGetAiImageProgress(mainImageId)
@@ -140,6 +142,8 @@ export const VariationList = (props: VariationListProps) => {
     (props.currentPage - 1) * props.amountPerPage,
     (props.currentPage - 1) * props.amountPerPage + props.amountPerPage
   )
+
+  if (isError) return <div>{error?.message}</div>
 
   return (
     <>

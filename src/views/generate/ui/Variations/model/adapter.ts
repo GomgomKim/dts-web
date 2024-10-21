@@ -16,24 +16,15 @@ import {
 } from './types'
 
 export const useGetVariationList = (mainImageId: string) => {
-  const { data, status, error, isFetching } = useSuspenseQuery<
-    GetVariationListResData,
-    Error,
-    VariationListContent
-  >({
-    queryKey: ['generate', mainImageId, 'variations'],
-    queryFn: () => getVariationList({ mainImageId }),
-    select: (data) => data.content
-    // staleTime: 60 * 1000,
-    // gcTime: 300 * 1000
-  })
-
-  return {
-    data,
-    status,
-    error,
-    isFetching
-  }
+  return useSuspenseQuery<GetVariationListResData, Error, VariationListContent>(
+    {
+      queryKey: ['generate', mainImageId, 'variations'],
+      queryFn: () => getVariationList({ mainImageId }),
+      select: (data) => data.content
+      // staleTime: 60 * 1000,
+      // gcTime: 300 * 1000
+    }
+  )
 }
 
 export const useGetAiImageProgress = (mainImageId: string) => {

@@ -8,8 +8,6 @@ import { InternalAxiosRequestConfig } from 'axios'
 import { useAuthStore } from '../store'
 
 export const useAxiosAuthInterceptor = () => {
-  // const queryClient = useQueryClient()
-
   React.useEffect(() => {
     const requestHandler = (config: InternalAxiosRequestConfig) => {
       const { tokens } = useAuthStore.getState()
@@ -23,17 +21,18 @@ export const useAxiosAuthInterceptor = () => {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const responseHandler = (response: any) => {
+      const { logIn } = useAuthStore.getState()
+
       if (
         response.headers['authorization'] &&
         response.headers['refresh-token']
       ) {
-        const { logIn } = useAuthStore.getState()
-
         const accessToken = response.headers['authorization']
         const refreshToken = response.headers['refresh-token']
 
         logIn({ accessToken: accessToken, refreshToken: refreshToken })
       }
+
       return response
     }
 

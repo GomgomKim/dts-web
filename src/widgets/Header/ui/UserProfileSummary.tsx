@@ -7,6 +7,7 @@ import { useGetAuthProfile } from '@/entities/UserProfile/model/adapter'
 import { useAuthStore } from '@/entities/UserProfile/store'
 
 import { cn } from '@/shared/lib/utils'
+import { AuthErrorModal } from '@/shared/ui/Modal/AuthErrorModal'
 
 import CreditIcon from '/public/icons/database.svg'
 import Spinner from '/public/icons/loading-spinner.svg'
@@ -26,7 +27,7 @@ export const UserProfileSummary = () => {
   //   queryClient.invalidateQueries({ queryKey: ['authProfile'] })
   // }, [])
 
-  const { data } = useGetAuthProfile()
+  const { data, isError } = useGetAuthProfile()
 
   useEffect(() => {
     if (!data) return
@@ -34,6 +35,8 @@ export const UserProfileSummary = () => {
     if (user === null) setUser({ email, profileImageUrl })
     setRestriction(restriction)
   }, [data])
+
+  if (isError) return <AuthErrorModal />
 
   return (
     <div className="flex gap-3 items-center ml-3">
