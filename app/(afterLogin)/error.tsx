@@ -43,10 +43,11 @@ export default function Error({
                 onClick={() => {
                   //   logOut(queryClient)
                   reset()
+                  // TODO: 페이지 리셋만 됨, api 다시 요청해야함
                 }}
               >
                 <div className="flex items-center gap-[0.5rem]">
-                  <AlertIcon className="stroke-black -rotate-[135deg]" />
+                  <AlertIcon className="stroke-black" />
                   <span className="text-[0.875rem] font-semibold">
                     Try Again
                   </span>
