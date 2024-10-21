@@ -23,7 +23,7 @@ export function ReactQueryProviders({ children }: React.PropsWithChildren) {
             refetchOnWindowFocus: false,
             refetchOnMount: true,
             refetchOnReconnect: false,
-            retry: 1,
+            retry: 0,
             networkMode: 'always'
           },
           mutations: {
