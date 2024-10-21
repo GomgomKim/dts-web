@@ -19,7 +19,7 @@ export interface AuthState {
 
 export interface AuthActions {
   logIn: (tokens: Tokens) => void
-  logOut: (queryClient: QueryClient) => void
+  logOut: (queryClient: QueryClient | null) => void
   setIsAuth: (isAuth: boolean) => void
   setUser: (user: AuthUser) => void
   setRestriction: (restriction: Restriction) => void
@@ -46,7 +46,7 @@ export const useAuthStore = create(
         set({ tokens, isAuth: true })
       },
       logOut: (queryClient) => {
-        queryClient.clear()
+        queryClient !== null && queryClient.clear()
         set({
           tokens: null,
           user: null,
