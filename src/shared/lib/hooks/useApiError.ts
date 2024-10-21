@@ -46,16 +46,31 @@ const useApiError = () => {
   }, [])
 
   const statusHandlers: StatusHandlers = {
-    400: () => console.log('400'),
+    400: () => {
+      console.log('400')
+
+      // if (errorCode === 5007) {
+      //   alert('ai 이미지 생성 횟수 초과입니다.')
+      //   return
+      // }
+
+      // if (errorCode === 5004) {
+      //   alert('배경 제거에 이슈가 발생했습니다. 다시 시도해주세요.')
+      //   return
+      // }
+    },
     401: () => {
+      // if (errorCode === 3005) {
+      //   logOut(null)
+      //   console.log('로그인 세션이 만료가 되었습니다. 다시 로그인 해주세요.')
+      //   return
+      // }
+
       // if (errorCode === 9003) {
       //   // logOut(null)
       //   console.log('로그인에 문제가 생겼습니다. 다시 로그인 해주세요.')
-      // } else if (errorCode === 3005) {
-      //   // TODO:null 말고 queryClient
-      //   logOut(null)
-      //   console.log('로그인 세션이 만료가 되었습니다. 다시 로그인 해주세요.')
-      // } else {
+      // return
+
       if (confirm('로그인에 문제가 생겼습니다. 다시 로그인 해주세요.')) {
         logOut(null)
       }
