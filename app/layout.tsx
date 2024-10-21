@@ -74,6 +74,7 @@ export default function RootLayout({
                 {children}
                 {modal}
               </Suspense>
+              <div id="modal-root" />
             </NetworkError>
           </AxiosInterceptorWrapper>
         </ReactQueryProviders>
