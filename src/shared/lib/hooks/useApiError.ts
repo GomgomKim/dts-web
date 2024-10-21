@@ -36,7 +36,7 @@ const useApiError = () => {
 
         return
       } else {
-        console.log('서버 연결이 원활하지 않습니다.')
+        console.log('no response! 서버 연결이 원활하지 않습니다.')
         return
       }
     } else {
