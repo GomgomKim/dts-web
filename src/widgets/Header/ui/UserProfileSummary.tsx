@@ -26,7 +26,7 @@ export const UserProfileSummary = () => {
   //   queryClient.invalidateQueries({ queryKey: ['authProfile'] })
   // }, [])
 
-  const { data } = useGetAuthProfile()
+  const { data, isError, error } = useGetAuthProfile()
 
   useEffect(() => {
     if (!data) return
@@ -34,6 +34,8 @@ export const UserProfileSummary = () => {
     if (user === null) setUser({ email, profileImageUrl })
     setRestriction(restriction)
   }, [data])
+
+  if (isError) return <div>{error.message}</div>
 
   return (
     <div className="flex gap-3 items-center ml-3">
