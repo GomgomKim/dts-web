@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { cn } from '@/shared/lib/utils'
 
 import { Box } from '../../types'
+import './styles.css'
 
 interface ResizableAndDraggableBoxesProps {
   containerRef: React.RefObject<HTMLElement>
@@ -42,7 +43,7 @@ export const ResizableAndDraggableBoxes = ({
     offsetRef.current.x = e.clientX - boxCenterX
     offsetRef.current.y = e.clientY - boxCenterY
 
-    const edgeThreshold = 10
+    const edgeThreshold = 15
     const relativeX = e.clientX - boxRect.left
     const relativeY = e.clientY - boxRect.top
 
@@ -211,6 +212,7 @@ export const ResizableAndDraggableBoxes = ({
               if (box.id !== activeBoxId) return
               handleKeyDown(e.key, box.id)
             }}
+            className="resizable-div"
             style={{
               position: 'absolute',
               left: `calc(50% + ${box.centerX - box.width / 2}px)`,
@@ -236,17 +238,17 @@ export const ResizableAndDraggableBoxes = ({
             </div>
             <span
               className={cn('absolute top-0 w-full', {
-                ["before:content-[''] before:absolute before:top-[-6px] before:left-[-6px] before:w-3 before:h-3 before:rounded-full before:bg-primary"]:
+                ["before:content-[''] before:absolute before:top-[-10px] before:left-[-10px] before:w-5 before:h-5 before:rounded-full before:bg-primary"]:
                   activeBoxId === box.id,
-                ["after:content-[''] after:absolute after:top-[-6px] after:right-[-6px] after:w-3 after:h-3 after:rounded-full after:bg-primary"]:
+                ["after:content-[''] after:absolute after:top-[-10px] after:right-[-10px] after:w-5 after:h-5 after:rounded-full after:bg-primary"]:
                   activeBoxId === box.id
               })}
             ></span>
             <span
               className={cn('absolute bottom-0 w-full', {
-                ["before:content-[''] before:absolute before:bottom-[-6px] before:left-[-6px] before:w-3 before:h-3 before:rounded-full before:bg-primary"]:
+                ["before:content-[''] before:absolute before:bottom-[-10px] before:left-[-10px] before:w-5 before:h-5 before:rounded-full before:bg-primary"]:
                   activeBoxId === box.id,
-                ["after:content-[''] after:absolute after:bottom-[-6px] after:right-[-6px] after:w-3 after:h-3 after:rounded-full after:bg-primary"]:
+                ["after:content-[''] after:absolute after:bottom-[-10px] after:right-[-10px] after:w-5 after:h-5 after:rounded-full after:bg-primary"]:
                   activeBoxId === box.id
               })}
             ></span>
