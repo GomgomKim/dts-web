@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react'
 
 import { cn, debounce } from '@/shared/lib/utils'
+import sendToMixpanel from '@/shared/lib/utils/sendToMixpanel'
 import { Button } from '@/shared/ui/button'
 
 import AlertIcon from '/public/icons/alert-circle.svg'
@@ -8,7 +9,7 @@ import SpinnerIcon from '/public/icons/loading-spinner.svg'
 
 import { v4 } from 'uuid'
 
-import { EXPORT_IMAGE_FORMAT } from '../../type'
+import { EXPORT_IMAGE_FORMAT, EXPORT_IMAGE_QUALITY } from '../../type'
 import { nodeToDataUrl } from './lib'
 
 const defaultOption = {
@@ -21,19 +22,28 @@ const defaultOption = {
 interface ExportButtonProps extends React.ComponentProps<typeof Button> {
   containerRef: React.RefObject<HTMLElement>
   imageName: string
-  imageType: EXPORT_IMAGE_FORMAT
   imageSize: { width: number; height: number }
+  imageRatio: string
+  imageFormat: EXPORT_IMAGE_FORMAT
+  imageQuality: EXPORT_IMAGE_QUALITY
 }
 
 const DELAY_DOWNLOAD_IMAGE = 300
 
 export const ExportButton = (props: ExportButtonProps) => {
-  const { containerRef, imageName, imageSize, imageType } = props
+  const {
+    containerRef,
+    imageName,
+    imageSize,
+    imageRatio,
+    imageFormat,
+    imageQuality
+  } = props
 
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState(false)
 
-  const HandleButtonClick = async () => {
+  const handleClickButton = async () => {
     if (containerRef.current === null) return
 
     setIsLoading(true)
@@ -42,32 +52,30 @@ export const ExportButton = (props: ExportButtonProps) => {
     const { width, height } = imageSize
 
     const randomString10 = v4().slice(0, 10)
-    const downloadName = `${getToday()}_${imageName}_${randomString10}.${imageType}`
-
-    // TODO: webp is not supported in Safari
+    const downloadName = `${getToday()}_${imageName}_${randomString10}.${imageFormat}`
 
     try {
       const isSafari = /^((?!chrome|android).)*safari/i.test(
         navigator.userAgent
       )
       if (isSafari) {
-        await nodeToDataUrl(imageType, containerRef.current, {
+        await nodeToDataUrl(imageFormat, containerRef.current, {
           ...defaultOption,
           canvasWidth: width,
           canvasHeight: height
         })
-        await nodeToDataUrl(imageType, containerRef.current, {
+        await nodeToDataUrl(imageFormat, containerRef.current, {
           ...defaultOption,
           canvasWidth: width,
           canvasHeight: height
         })
-        await nodeToDataUrl(imageType, containerRef.current, {
+        await nodeToDataUrl(imageFormat, containerRef.current, {
           ...defaultOption,
           canvasWidth: width,
           canvasHeight: height
         })
       }
-      const dataUrl = await nodeToDataUrl(imageType, containerRef.current, {
+      const dataUrl = await nodeToDataUrl(imageFormat, containerRef.current, {
         ...defaultOption,
         canvasWidth: width,
         canvasHeight: height
@@ -86,8 +94,16 @@ export const ExportButton = (props: ExportButtonProps) => {
   }
 
   const debounceHandleButtonClick = useCallback(
-    debounce(HandleButtonClick, DELAY_DOWNLOAD_IMAGE),
-    [containerRef, imageName, imageSize, imageType, isLoading, isError]
+    debounce(() => {
+      handleClickButton()
+      sendToMixpanel('download_image', {
+        image_format: imageFormat,
+        image_quality: imageQuality,
+        image_ratio: imageRatio
+        // image_size: `${imageSize.width}x${imageSize.height}`
+      })
+    }, DELAY_DOWNLOAD_IMAGE),
+    [containerRef, imageName, imageSize, imageFormat, isLoading, isError]
   )
 
   const isDownloading = !isError && isLoading
