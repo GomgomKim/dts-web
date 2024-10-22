@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation'
 import { useAuthStore } from '@/entities/UserProfile/store'
 
 import { MainItem } from '@/shared/api/types'
+import sendToMixpanel from '@/shared/lib/utils/sendToMixpanel'
 import { Button } from '@/shared/ui/button'
 
 import LinkIcon from '/public/icons/arrow-thin.svg'
@@ -37,13 +38,17 @@ export const Card = (props: CardProps) => {
   const isMember = isAuth === true
   const CardWrapper = isMember ? Link : 'div'
 
-  const handleClickCard = (info: string) => {
+  const handleClickCard = (modelName: string, id: number) => {
+    sendToMixpanel('select_model', {
+      model_name: modelName,
+      model_tag: ''
+    })
     if (!isMember) {
       router.push('/signup', { scroll: false })
       return
     }
     // TODO: 로그인 창으로 이동할 때 modelId를 같이 보내줘야함
-    console.log('click card', info)
+    console.log('click card', `/${modelName}?id=${id}`)
   }
 
   return (
@@ -64,7 +69,7 @@ export const Card = (props: CardProps) => {
       {isHovering && (
         <CardWrapper
           href={isMember ? `/generate/${modelname}?id=${id}` : ''}
-          onClick={() => handleClickCard(`/${modelname}?id=${id}`)}
+          onClick={() => handleClickCard(modelname, id)}
           className="absolute inset-0 z-10 bg-custom-gradient hover:cursor-pointer"
         >
           <Button
