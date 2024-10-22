@@ -1,9 +1,10 @@
 import Link from 'next/link'
 
 import { Button } from '@/shared/ui'
-import { LoginButton } from '@/shared/ui/LoginButton/LoginButton'
 
 import DTSLogo from '/public/icons/dts-logo.svg'
+
+import { SignupButton } from './SignupButton'
 
 interface SignupProps {
   modalRef?: React.RefObject<HTMLDivElement>
@@ -34,7 +35,7 @@ export const Signup = ({ modalRef }: SignupProps) => {
                 </Link>
               </div>
             </div>
-            <LoginButton>Sign up with google</LoginButton>
+            <SignupButton />
           </div>
         </div>
         <div>
