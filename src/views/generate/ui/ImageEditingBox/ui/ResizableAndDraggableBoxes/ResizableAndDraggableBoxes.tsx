@@ -28,7 +28,10 @@ export const ResizableAndDraggableBoxes = ({
   const [resizeDirection, setResizeDirection] = useState('')
   const offsetRef = useRef({ x: 0, y: 0 })
 
-  const handleMouseDown = (e: React.MouseEvent, boxId: string) => {
+  const handleMouseDown = (
+    e: React.MouseEvent | React.TouchEvent,
+    boxId: string
+  ) => {
     e.preventDefault()
     const boxRef = boxRefs.current.get(boxId)
     if (!boxRef) return
@@ -39,13 +42,30 @@ export const ResizableAndDraggableBoxes = ({
     const boxCenterX = boxRect.left + boxRect.width / 2
     const boxCenterY = boxRect.top + boxRect.height / 2
 
+    let clientX: number
+    let clientY: number
+
+    if ('touches' in e) {
+      // Touch event
+      if (e.touches.length > 0) {
+        clientX = e.touches[0].clientX
+        clientY = e.touches[0].clientY
+      } else {
+        return // 유효하지 않은 터치 이벤트
+      }
+    } else {
+      // Mouse event
+      clientX = e.clientX
+      clientY = e.clientY
+    }
+
     // 마우스 위치와 박스 중심 간의 오프셋 계산
-    offsetRef.current.x = e.clientX - boxCenterX
-    offsetRef.current.y = e.clientY - boxCenterY
+    offsetRef.current.x = clientX - boxCenterX
+    offsetRef.current.y = clientY - boxCenterY
 
     const edgeThreshold = 15
-    const relativeX = e.clientX - boxRect.left
-    const relativeY = e.clientY - boxRect.top
+    const relativeX = clientX - boxRect.left
+    const relativeY = clientY - boxRect.top
 
     if (
       relativeX < edgeThreshold ||
@@ -67,8 +87,11 @@ export const ResizableAndDraggableBoxes = ({
   }
 
   const handleMouseMove = useCallback(
-    (e: MouseEvent) => {
+    (e: MouseEvent | TouchEvent) => {
+      // if (!('touches' in e)) {
       e.preventDefault()
+      // }
+
       if (!activeBoxId || (!isDragging && !isResizing)) return
       if (!containerRef.current) return
 
@@ -79,9 +102,24 @@ export const ResizableAndDraggableBoxes = ({
       const containerCenterX = containerRect.width / 2
       const containerCenterY = containerRect.height / 2
 
+      let clientX: number
+      let clientY: number
+
+      if ('touches' in e) {
+        if (e.touches.length > 0) {
+          clientX = e.touches[0].clientX
+          clientY = e.touches[0].clientY
+        } else {
+          return // 유효하지 않은 터치 이벤트
+        }
+      } else {
+        clientX = e.clientX
+        clientY = e.clientY
+      }
+
       if (isDragging) {
-        const newCenterX = e.clientX - containerRect.left - offsetRef.current.x
-        const newCenterY = e.clientY - containerRect.top - offsetRef.current.y
+        const newCenterX = clientX - containerRect.left - offsetRef.current.x
+        const newCenterY = clientY - containerRect.top - offsetRef.current.y
 
         // 컨테이너 경계 내에서 이동할 수 있도록 제한
         const limitedCenterX = Math.max(
@@ -108,18 +146,18 @@ export const ResizableAndDraggableBoxes = ({
         const boxRect = boxRef.getBoundingClientRect()
 
         if (resizeDirection.includes('e')) {
-          newWidth = e.clientX - boxRect.left
+          newWidth = clientX - boxRect.left
         }
         if (resizeDirection.includes('s')) {
-          newHeight = e.clientY - boxRect.top
+          newHeight = clientY - boxRect.top
         }
         if (resizeDirection.includes('w')) {
-          const widthChange = boxRect.left - e.clientX
+          const widthChange = boxRect.left - clientX
           newLeft -= widthChange
           newWidth += widthChange
         }
         if (resizeDirection.includes('n')) {
-          const heightChange = boxRect.top - e.clientY
+          const heightChange = boxRect.top - clientY
           newTop -= heightChange
           newHeight += heightChange
         }
@@ -164,6 +202,7 @@ export const ResizableAndDraggableBoxes = ({
       onKeydownRemoveBrandAsset(boxId)
     }
   }
+
   useEffect(() => {
     const container = containerRef.current
     if (!container) return
@@ -171,13 +210,23 @@ export const ResizableAndDraggableBoxes = ({
     container.addEventListener('mousemove', handleMouseMove)
     container.addEventListener('mouseup', handleMouseUp)
     container.addEventListener('mouseleave', handleMouseUp)
+    //
     window.addEventListener('mousedown', handleClickOutside)
+    //
+    container.addEventListener('touchmove', handleMouseMove)
+    container.addEventListener('touchend', handleMouseUp)
+    container.addEventListener('touchcancel', handleMouseUp)
 
     return () => {
       container.removeEventListener('mousemove', handleMouseMove)
       container.removeEventListener('mouseup', handleMouseUp)
       container.removeEventListener('mouseleave', handleMouseUp)
-      window.addEventListener('mousedown', handleClickOutside)
+      //
+      window.removeEventListener('mousedown', handleClickOutside)
+      //
+      container.removeEventListener('touchmove', handleMouseMove)
+      container.removeEventListener('touchend', handleMouseUp)
+      container.removeEventListener('touchcancel', handleMouseUp)
     }
   }, [containerRef, handleMouseMove, handleMouseUp, handleClickOutside])
 
@@ -208,6 +257,7 @@ export const ResizableAndDraggableBoxes = ({
             onFocus={() => setActiveBoxId(box.id)}
             onBlur={() => setActiveBoxId(null)}
             onMouseDown={(e) => handleMouseDown(e, box.id)}
+            onTouchStart={(e) => handleMouseDown(e, box.id)}
             onKeyDown={(e) => {
               if (box.id !== activeBoxId) return
               handleKeyDown(e.key, box.id)
@@ -236,25 +286,33 @@ export const ResizableAndDraggableBoxes = ({
                 style={{ objectFit: 'contain' }}
               />
             </div>
-            <span
-              className={cn('absolute top-0 w-full', {
-                ["before:content-[''] before:absolute before:top-[-10px] before:left-[-10px] before:w-5 before:h-5 before:rounded-full before:bg-primary"]:
-                  activeBoxId === box.id,
-                ["after:content-[''] after:absolute after:top-[-10px] after:right-[-10px] after:w-5 after:h-5 after:rounded-full after:bg-primary"]:
-                  activeBoxId === box.id
-              })}
-            ></span>
-            <span
-              className={cn('absolute bottom-0 w-full', {
-                ["before:content-[''] before:absolute before:bottom-[-10px] before:left-[-10px] before:w-5 before:h-5 before:rounded-full before:bg-primary"]:
-                  activeBoxId === box.id,
-                ["after:content-[''] after:absolute after:bottom-[-10px] after:right-[-10px] after:w-5 after:h-5 after:rounded-full after:bg-primary"]:
-                  activeBoxId === box.id
-              })}
-            ></span>
+            <ActiveBorder isActive={activeBoxId === box.id} />
           </div>
         )
       })}
+    </>
+  )
+}
+
+const ActiveBorder = ({ isActive }: { isActive: boolean }) => {
+  return (
+    <>
+      <span
+        className={cn('absolute top-0 w-full', {
+          ["before:content-[''] before:absolute before:top-[-10px] before:left-[-10px] before:w-5 before:h-5 before:rounded-full before:bg-primary"]:
+            isActive,
+          ["after:content-[''] after:absolute after:top-[-10px] after:right-[-10px] after:w-5 after:h-5 after:rounded-full after:bg-primary"]:
+            isActive
+        })}
+      ></span>
+      <span
+        className={cn('absolute bottom-0 w-full', {
+          ["before:content-[''] before:absolute before:bottom-[-10px] before:left-[-10px] before:w-5 before:h-5 before:rounded-full before:bg-primary"]:
+            isActive,
+          ["after:content-[''] after:absolute after:bottom-[-10px] after:right-[-10px] after:w-5 after:h-5 after:rounded-full after:bg-primary"]:
+            isActive
+        })}
+      ></span>
     </>
   )
 }
