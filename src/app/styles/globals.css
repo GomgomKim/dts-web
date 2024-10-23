@@ -4,6 +4,7 @@
 
 @layer base {
   :root {
+    --vh: 100%;
     --background: #0f1011;
     --foreground: 0 0% 98%;
 
@@ -47,6 +48,9 @@
   }
   body {
     @apply bg-background text-foreground;
+
+    height: 100vh;
+    height: var(--vh);
     overflow-y: scroll;
   }
 }

@@ -16,7 +16,9 @@ export default function GeneratePageLayout({
   return (
     <Suspense>
       <Header />
-      <main className="pt-16 pr-5 pb-5 h-screen">{children}</main>
+      <main className="pt-16 pr-5 pb-5 h-[calc(var(--vh,1vh)*100)]">
+        {children}
+      </main>
     </Suspense>
   )
 }
