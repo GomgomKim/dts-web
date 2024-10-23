@@ -11,7 +11,7 @@ export const LoadingInstruction = () => {
           fill="#AEAFB5"
         />
       </div>
-      <p className="text-neutral-7 text-nowrap text-[0.875rem] min-[3840px]:text-[1.25rem]">
+      <p className="text-neutral-7 text-nowrap text-[0.875rem] 2xl:text-[1.25rem]">
         Tweaking the background...
       </p>
     </div>

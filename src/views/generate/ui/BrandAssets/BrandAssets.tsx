@@ -38,11 +38,11 @@ export const BrandAssets = (props: BrandAssetsProps) => {
 
   return (
     <section className="sticky flex flex-col gap-5 h-full">
-      <h2 className="text-[1.25rem] min-[1512px]:text-[1.5rem] min-[3840px]:text-[2rem] font-semibold">
+      <h2 className="text-[1.25rem] lg:text-[1.5rem] 2xl:text-[2rem] font-semibold">
         Brand Assets
       </h2>
-      <div className="grow-[1] h-[calc(50%-(60px+40px+29px)/2)] min-[3840px]:h-[calc(50%-(60px+40px+38px)/2)]">
-        <h3 className="mb-3 text-neutral-7 text-[0.875rem] min-[3840px]:text-[1.25rem] leading-[17px] min-[3840px]:leading-[24px]">
+      <div className="grow-[1] h-[calc(50%-(60px+40px+29px)/2)] 2xl:h-[calc(50%-(60px+40px+38px)/2)]">
+        <h3 className="mb-3 text-neutral-7 text-[0.875rem] 2xl:text-[1.25rem] leading-[17px] 2xl:leading-[24px]">
           Product
         </h3>
         <ImageInputBox
@@ -52,8 +52,8 @@ export const BrandAssets = (props: BrandAssetsProps) => {
           toggleAddBrandAssetButton={toggleButtonState}
         />
       </div>
-      <div className="grow-[1] h-[calc(50%-(60px+40px+29px)/2)]  min-[3840px]:h-[calc(50%-(60px+80px+38px)/2)]">
-        <h3 className="mb-3 text-neutral-7 text-[0.875rem] min-[3840px]:text-[1.25rem] leading-[17px] min-[3840px]:leading-[24px]">
+      <div className="grow-[1] h-[calc(50%-(60px+40px+29px)/2)]  2xl:h-[calc(50%-(60px+80px+38px)/2)]">
+        <h3 className="mb-3 text-neutral-7 text-[0.875rem] 2xl:text-[1.25rem] leading-[17px] 2xl:leading-[24px]">
           Brand Logo
         </h3>
         <ImageInputBox
@@ -67,7 +67,7 @@ export const BrandAssets = (props: BrandAssetsProps) => {
         ref={btnRef}
         onClick={handleClickAddBrandAssets}
         disabled={imagePreviewUrls.size < 1}
-        className="disabled:bg-neutral-2 disabled:text-neutral-4 disabled:opacity-1 min-[3840px]:text-[1.5rem] min-[3840px]:h-[80px]"
+        className="disabled:bg-neutral-2 disabled:text-neutral-4 disabled:opacity-1 2xl:text-[1.5rem] 2xl:h-[80px]"
       >
         Add Brand Assets
       </Button>
