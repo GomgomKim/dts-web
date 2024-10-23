@@ -1,7 +1,6 @@
 import { useCallback } from 'react'
 
-import { useAuthStore } from '@/entities/UserProfile/store'
-
+// import { useAuthStore } from '@/entities/UserProfile/store'
 import axios from 'axios'
 
 interface ErrorResponse {
@@ -16,7 +15,7 @@ interface StatusHandlers {
 }
 
 const useApiError = () => {
-  const logOut = useAuthStore((state) => state.logOut)
+  // const logOut = useAuthStore((state) => state.logOut)
 
   const handleError = useCallback((error: unknown) => {
     if (axios.isAxiosError(error)) {
@@ -71,9 +70,10 @@ const useApiError = () => {
       //   console.log('로그인에 문제가 생겼습니다. 다시 로그인 해주세요.')
       // return
 
-      if (confirm('로그인에 문제가 생겼습니다. 다시 로그인 해주세요.')) {
-        logOut(null)
-      }
+      console.log('401 로그인에 문제가 생겼습니다. 다시 로그인 해주세요.')
+      // if (confirm('로그인에 문제가 생겼습니다. 다시 로그인 해주세요.')) {
+      //   logOut(null)
+      // }
       // }
     },
     500: () => console.log('서버 오류가 발생했습니다.'),

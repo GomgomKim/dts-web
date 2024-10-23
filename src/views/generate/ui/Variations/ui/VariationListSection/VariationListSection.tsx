@@ -15,6 +15,7 @@ interface VariationListSectionProps {
 
 export const VariationListSection = (props: VariationListSectionProps) => {
   const [amountPerPage, setAmountPerPage] = React.useState<number>(() => {
+    if (typeof window === 'undefined') return 3
     if (window.innerWidth < 2560) return 3
     return 5
   })

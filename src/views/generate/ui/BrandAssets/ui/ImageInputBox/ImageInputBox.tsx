@@ -83,7 +83,7 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
       <input
         type="file"
         id={props.boxId}
-        accept=".png,.jpg"
+        accept=".png,.jpg,.jpeg"
         className="a11y-hidden peer"
         onChange={handleChangeInput}
         disabled={props.disabled}
