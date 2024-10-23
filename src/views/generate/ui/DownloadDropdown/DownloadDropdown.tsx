@@ -63,7 +63,7 @@ export const DownloadDropdown = (props: DownloadDropdownProps) => {
       <DropdownMenuTrigger asChild>
         <Button
           variant="sub1"
-          className="bg-neutral-1 bg-opacity-50 min-[3840px]:text-[1.5rem] min-[3840px]:h-[80px]"
+          className="bg-neutral-1 bg-opacity-50 2xl:text-[1.5rem] 2xl:h-[80px]"
           disabled={!variationId || !props.containerRef || props.isLoading}
         >
           Free Download

@@ -30,11 +30,11 @@ export const Variations = (props: VariationsProps) => {
     <div>
       <div className="flex justify-between items-center mb-5">
         <div className="flex items-center gap-2">
-          <h3 className="text-neutral-7 text-[0.875rem] min-[3840px]:text-[1.25rem]">
+          <h3 className="text-neutral-7 text-[0.875rem] 2xl:text-[1.25rem]">
             Variations
           </h3>
           {isAiImageGenerating || props.isLoading ? (
-            <span className="text-primary text-[0.875rem] min-[3840px]:text-[1.25rem]">
+            <span className="text-primary text-[0.875rem] 2xl:text-[1.25rem]">
               Generating...
             </span>
           ) : null}
