@@ -27,7 +27,7 @@ export const NewGenerateButton = (props: NewGenerateButtonProps) => {
           { 'stroke-neutral-3': props.disabled || !isRemainCredit }
         )}
       />
-      <span className="text-[0.875rem]">New Generate</span>
+      <span className="text-[0.875rem] leading-[1rem]">New Generate</span>
     </Button>
   )
 }
