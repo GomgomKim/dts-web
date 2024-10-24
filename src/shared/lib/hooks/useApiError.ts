@@ -11,7 +11,7 @@ interface ErrorResponse {
 
 interface StatusHandlers {
   [key: number]: (msg?: string, errorCode?: number) => void
-  default: (msg?: string) => void
+  default: () => void
 }
 
 const useApiError = () => {
@@ -71,11 +71,8 @@ const useApiError = () => {
       // return
 
       console.log('401 로그인에 문제가 생겼습니다. 다시 로그인 해주세요.')
-      // if (confirm('로그인에 문제가 생겼습니다. 다시 로그인 해주세요.')) {
-      //   logOut(null)
-      // }
-      // }
     },
+    404: () => console.log('404 요청하신 페이지를 찾을 수 없습니다.'),
     500: () => console.log('서버 오류가 발생했습니다.'),
     default: () => console.log('서버에서 알 수 없는 오류가 발생했습니다.')
   }
