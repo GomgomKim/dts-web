@@ -13,7 +13,14 @@ import DTSLogo from '/public/icons/dts-logo.svg'
 import { useQueryClient } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
 
-export const ErrorModal = ({ error, resetErrorBoundary }) => {
+export const ErrorModal = ({
+  error,
+  resetErrorBoundary
+}: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  error: any
+  resetErrorBoundary: () => void
+}) => {
   const queryClient = useQueryClient()
   const logOut = useAuthStore((state) => state.logOut)
 
@@ -44,7 +51,6 @@ export const ErrorModal = ({ error, resetErrorBoundary }) => {
                 className="py-[1rem]"
                 stretch
                 onClick={() => {
-                  //   logOut(queryClient)
                   resetErrorBoundary()
                 }}
               >
