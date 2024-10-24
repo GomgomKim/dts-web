@@ -5,12 +5,15 @@ import { usePathname } from 'next/navigation'
 
 import { useAuthStore } from '@/entities/UserProfile/store'
 
+import { ErrorBoundary } from '@/shared/ui/ErrorBoundary'
+import { ErrorModal } from '@/shared/ui/Modal/ErrorModal'
+
 import DTSLogo from '/public/icons/dts-logo.svg'
 
 import { ExploreBackButton } from './ui/ExploreBackButton'
 import { ExternalLinks } from './ui/ExternalLinks'
 import { LoginSignupButtons } from './ui/LoginSignupButtons'
-import { UserProfileSummary } from './ui/UserProfileSummary'
+import { UserProfileSummary } from './ui/UserProfileSummary/UserProfileSummary'
 
 export const Header = () => {
   const pathname = usePathname()
@@ -35,7 +38,11 @@ export const Header = () => {
               {isAuth !== true ? <LoginSignupButtons /> : null}
             </ul>
           </nav>
-          {isAuth === true ? <UserProfileSummary /> : null}
+          {isAuth === true ? (
+            <ErrorBoundary FallbackComponent={ErrorModal}>
+              <UserProfileSummary />
+            </ErrorBoundary>
+          ) : null}
         </div>
       </div>
     </header>
