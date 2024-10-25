@@ -52,6 +52,7 @@ export const ErrorModal = ({
                 stretch
                 onClick={() => {
                   resetErrorBoundary()
+                  window.location.reload()
                 }}
               >
                 <div className="flex items-center gap-[0.5rem]">

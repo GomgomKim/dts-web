@@ -6,6 +6,7 @@ import { Filter } from '@/features/Filter'
 
 import { useGetAuthToken } from '@/shared/lib/hooks/useGetAuthToken'
 import { useMoveScroll } from '@/shared/lib/hooks/useMoveScroll'
+import { ErrorBoundary } from '@/shared/ui/ErrorBoundary'
 
 import { CallToActionButtons } from './ui/CallToActionButtons/CallToActionButtons'
 import { ExploreList } from './ui/ExploreList'
@@ -22,7 +23,9 @@ export default function Explore() {
         <div className="mb-5 scroll-mt-[56px]" ref={element}>
           <Filter id="explore-filter" filterList={FILTER_TYPES} />
         </div>
-        <ExploreList />
+        <ErrorBoundary FallbackComponent={({ error }) => <>{error?.message}</>}>
+          <ExploreList />
+        </ErrorBoundary>
       </div>
     </>
   )
