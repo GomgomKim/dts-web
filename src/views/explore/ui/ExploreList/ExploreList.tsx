@@ -13,15 +13,8 @@ const NUM_OF_DATA_PER_REQUEST = 25
 const MAX_NULL_BOX_LENGTH = 50
 
 export const ExploreList = () => {
-  const {
-    data,
-    status,
-    error,
-    isFetching,
-    isFetchingNextPage,
-    hasNextPage,
-    fetchNextPage
-  } = useGetExploreList()
+  const { data, isFetching, isFetchingNextPage, hasNextPage, fetchNextPage } =
+    useGetExploreList()
 
   const { ref, inView } = useInView({
     threshold: 0.5
@@ -41,7 +34,7 @@ export const ExploreList = () => {
     [data]
   )
 
-  if (status === 'error') return <p>{error?.message}</p>
+  // if (status === 'error') return <p>{error?.message}</p>
   if (isFetching && !isFetchingNextPage)
     return (
       <div className="grid grid-cols-auto-fill-small 2xl:grid-cols-auto-fill-large gap-5">

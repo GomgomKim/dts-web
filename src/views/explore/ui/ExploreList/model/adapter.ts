@@ -40,7 +40,8 @@ export const useGetExploreList = () => {
     initialPageParam: null,
     getNextPageParam: (lastPage) => lastPage.content.scrollKey,
     staleTime: 60 * 1000,
-    gcTime: 300 * 1000
+    gcTime: 300 * 1000,
+    throwOnError: true
   })
 
   return {
