@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "start-dev": "cp .env.newdev .env.development && next dev",
-    "start-stg": "cp .env.stg .env.development && next dev",
+    "start-prod": "cp .env.prod .env.development && next dev",
     "build:newdev": "cp .env.newdev .env.production && next build",
-    "build:stg": "cp .env.stg .env.production && next build",
+    "build:production": "cp .env.prod .env.production && next build",
     "start": "next start",
     "lint": "next lint",
     "prepare": "husky",
