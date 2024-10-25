@@ -2,12 +2,11 @@
 
 import * as React from 'react'
 
-import { useImagePreviewUrlStore } from '@/entities/generate/store'
-
 import { Variation } from '@/shared/api/types'
 import { useSetQueryString } from '@/shared/lib/hooks/useSetQueryString'
 
 import { convertImageToBoxData } from './lib'
+import { useBrandAssets } from './model/useBrandAssets'
 import { BrandAssets } from './ui/BrandAssets'
 import { DownloadDropdown } from './ui/DownloadDropdown'
 import { EditVariation } from './ui/EditVariation'
@@ -22,7 +21,7 @@ export default function Generate() {
   // related brand assets
   const containerRef = React.useRef<HTMLDivElement>(null)
   const { imagePreviewUrls, addImagePreviewUrl, removeImagePreviewUrl } =
-    useImagePreviewUrlStore()
+    useBrandAssets()
   const [boxes, setBoxes] = React.useState<Box[]>([])
   const boxRefs = React.useRef<Map<string, HTMLDivElement | null>>(new Map())
 
