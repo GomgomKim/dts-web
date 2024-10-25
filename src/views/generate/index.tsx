@@ -21,11 +21,13 @@ export default function Generate() {
 
   // related brand assets
   const containerRef = React.useRef<HTMLDivElement>(null)
-  const { removeImagePreviewUrl } = useImagePreviewUrlStore()
+  const { imagePreviewUrls, addImagePreviewUrl, removeImagePreviewUrl } =
+    useImagePreviewUrlStore()
   const [boxes, setBoxes] = React.useState<Box[]>([])
   const boxRefs = React.useRef<Map<string, HTMLDivElement | null>>(new Map())
 
   const handleChangeBrandAssets = (id: string, previewImgSrc: string) => {
+    addImagePreviewUrl(id, previewImgSrc)
     const boxData = convertImageToBoxData(id, previewImgSrc)
     setBoxes((prev) => [...prev, boxData])
     boxRefs.current.clear()
@@ -54,6 +56,7 @@ export default function Generate() {
       <div className="px-5 w-[320px] md:w-[360px] lg:w-[440px] xl:w-[480px] 2xl:w-[770px] fixed bg-background z-20 h-[calc(100%-64px-20px)]">
         <BrandAssets
           isLoading={isLoading}
+          imagePreviewUrls={imagePreviewUrls}
           onRemoveBrandAsset={removeBrandAsset}
           onChangeBrandAssets={handleChangeBrandAssets}
         />

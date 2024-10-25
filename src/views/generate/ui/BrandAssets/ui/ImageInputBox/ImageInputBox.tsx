@@ -2,8 +2,6 @@
 
 import * as React from 'react'
 
-import { useImagePreviewUrlStore } from '@/entities/generate/store'
-
 import { DndBox } from '@/shared/lib/hocs/DndBox'
 
 import DashedSvg from '/public/icons/dashed.svg'
@@ -19,6 +17,7 @@ import {
 interface ImageInputBoxProps {
   disabled: boolean
   boxId: string
+  imagePreviewUrl: string | undefined
   onRemoveBrandAsset: () => void
   onChangeBrandAssets: (previewImgSrc: string) => void
 }
@@ -28,22 +27,18 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
 
   const { handleChangeDNDInput, handleChangeInput, isPending } =
     useImageInputBox({
-      boxId: props.boxId,
-      handleRemoveBrandAsset: () => props.onRemoveBrandAsset(),
-      handleSuccess: (previewImgSrc) =>
-        props.onChangeBrandAssets(previewImgSrc),
+      handleRemoveBrandAsset: props.onRemoveBrandAsset,
+      handleSuccess: props.onChangeBrandAssets,
       handleErrorMessage: (msg: string | null) => setErrorMessage(msg)
     })
 
-  const { imagePreviewUrls } = useImagePreviewUrlStore()
-
   const renderContent = () => {
-    if (imagePreviewUrls.has(props.boxId)) {
+    if (props.imagePreviewUrl) {
       return (
         <div className="h-full flex justify-center items-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={imagePreviewUrls.get(props.boxId)}
+            src={props.imagePreviewUrl}
             alt={props.boxId}
             className="object-contain w-full h-full max-h-[70%] max-w-[70%]"
           />

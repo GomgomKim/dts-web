@@ -6,6 +6,7 @@ import { ImageInputBox } from './ui/ImageInputBox'
 
 interface BrandAssetsProps {
   isLoading: boolean
+  imagePreviewUrls: Map<string, string>
   onRemoveBrandAsset: (boxId: string) => void
   onChangeBrandAssets: (boxId: string, previewImgSrc: string) => void
 }
@@ -23,6 +24,7 @@ export const BrandAssets = (props: BrandAssetsProps) => {
         <ImageInputBox
           disabled={props.isLoading}
           boxId="product"
+          imagePreviewUrl={props.imagePreviewUrls.get('product')}
           onRemoveBrandAsset={() => props.onRemoveBrandAsset('product')}
           onChangeBrandAssets={(previewImgSrc) =>
             props.onChangeBrandAssets('product', previewImgSrc)
@@ -36,6 +38,7 @@ export const BrandAssets = (props: BrandAssetsProps) => {
         <ImageInputBox
           disabled={props.isLoading}
           boxId="logo"
+          imagePreviewUrl={props.imagePreviewUrls.get('logo')}
           onRemoveBrandAsset={() => props.onRemoveBrandAsset('logo')}
           onChangeBrandAssets={(previewImgSrc) =>
             props.onChangeBrandAssets('logo', previewImgSrc)
