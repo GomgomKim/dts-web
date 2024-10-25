@@ -7,7 +7,7 @@ import { useImagePreviewUrlStore } from '@/entities/generate/store'
 import { Variation } from '@/shared/api/types'
 import { useSetQueryString } from '@/shared/lib/hooks/useSetQueryString'
 
-import { convertImagesToBoxData } from './lib'
+import { convertImageToBoxData } from './lib'
 import { BrandAssets } from './ui/BrandAssets'
 import { DownloadDropdown } from './ui/DownloadDropdown'
 import { EditVariation } from './ui/EditVariation'
@@ -21,18 +21,17 @@ export default function Generate() {
 
   // related brand assets
   const containerRef = React.useRef<HTMLDivElement>(null)
-  const { imagePreviewUrls: assetImages, removeImagePreviewUrl } =
-    useImagePreviewUrlStore()
+  const { removeImagePreviewUrl } = useImagePreviewUrlStore()
   const [boxes, setBoxes] = React.useState<Box[]>([])
   const boxRefs = React.useRef<Map<string, HTMLDivElement | null>>(new Map())
 
-  const handleClickAddBrandAssets = () => {
-    const boxesData = convertImagesToBoxData(assetImages)
-    setBoxes(boxesData)
+  const handleChangeBrandAssets = (id: string, previewImgSrc: string) => {
+    const boxData = convertImageToBoxData(id, previewImgSrc)
+    setBoxes((prev) => [...prev, boxData])
     boxRefs.current.clear()
   }
 
-  const handleChangeBrandAsset = (id: string) => {
+  const removeBrandAsset = (id: string) => {
     removeImagePreviewUrl(id)
     const newBoxes = boxes.filter((box) => box.id !== id)
     setBoxes(newBoxes)
@@ -55,8 +54,8 @@ export default function Generate() {
       <div className="px-5 w-[320px] md:w-[360px] lg:w-[440px] xl:w-[480px] 2xl:w-[770px] fixed bg-background z-20 h-[calc(100%-64px-20px)]">
         <BrandAssets
           isLoading={isLoading}
-          onClickAddBrandAssets={handleClickAddBrandAssets}
-          onChangeBrandAsset={handleChangeBrandAsset}
+          onRemoveBrandAsset={removeBrandAsset}
+          onChangeBrandAssets={handleChangeBrandAssets}
         />
       </div>
 
@@ -86,7 +85,7 @@ export default function Generate() {
                       boxes={boxes}
                       boxRefs={boxRefs}
                       selectedVariation={selectedVariation}
-                      onKeydownRemoveBrandAsset={handleChangeBrandAsset}
+                      onKeydownRemoveBrandAsset={removeBrandAsset}
                     />
                   </div>
 

@@ -7,13 +7,13 @@ import { usePostRemoveBackground } from './adapter'
 
 interface ImageInputBoxParams {
   boxId: string
-  handleChangeBrandAsset: () => void
-  handleSuccess: () => void
+  handleRemoveBrandAsset: () => void
+  handleSuccess: (previewImgSrc: string) => void
   handleErrorMessage: (msg: string | null) => void
 }
 
 export const useImageInputBox = (params: ImageInputBoxParams) => {
-  const { boxId, handleChangeBrandAsset, handleSuccess, handleErrorMessage } =
+  const { boxId, handleRemoveBrandAsset, handleSuccess, handleErrorMessage } =
     params
 
   const removeBackgroundMutation = usePostRemoveBackground()
@@ -35,8 +35,13 @@ export const useImageInputBox = (params: ImageInputBoxParams) => {
       {
         onSuccess: (data) => {
           const blob = new Blob([data], { type: 'image/png' })
-          addImagePreviewUrl(boxId, blob)
-          handleSuccess()
+          const reader = new FileReader()
+          reader.onload = (event) => {
+            const previewImgSrc = event.target?.result as string
+            addImagePreviewUrl(boxId, previewImgSrc)
+            handleSuccess(previewImgSrc)
+          }
+          reader.readAsDataURL(blob)
         },
         onError: () => {
           handleErrorMessage('Oops! Try again.')
@@ -68,7 +73,7 @@ export const useImageInputBox = (params: ImageInputBoxParams) => {
     handleChangeImageFile(files[0])
     e.target.value = ''
 
-    handleChangeBrandAsset()
+    handleRemoveBrandAsset()
   }
 
   const handleChangeDNDInput = (file: File) => {
@@ -80,7 +85,7 @@ export const useImageInputBox = (params: ImageInputBoxParams) => {
     }
 
     handleChangeImageFile(file)
-    handleChangeBrandAsset()
+    handleRemoveBrandAsset()
   }
 
   return {

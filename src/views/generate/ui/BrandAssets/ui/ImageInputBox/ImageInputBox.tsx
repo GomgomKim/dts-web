@@ -19,8 +19,8 @@ import {
 interface ImageInputBoxProps {
   disabled: boolean
   boxId: string
-  onChangeBrandAsset: () => void
-  toggleAddBrandAssetButton: (able: boolean) => void
+  onRemoveBrandAsset: () => void
+  onChangeBrandAssets: (previewImgSrc: string) => void
 }
 
 export const ImageInputBox = (props: ImageInputBoxProps) => {
@@ -29,15 +29,11 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
   const { handleChangeDNDInput, handleChangeInput, isPending } =
     useImageInputBox({
       boxId: props.boxId,
-      handleChangeBrandAsset: () => {
-        props.toggleAddBrandAssetButton(true)
-        props.onChangeBrandAsset
-      },
-      handleSuccess: () => props.toggleAddBrandAssetButton(true),
+      handleRemoveBrandAsset: () => props.onRemoveBrandAsset(),
+      handleSuccess: (previewImgSrc) =>
+        props.onChangeBrandAssets(previewImgSrc),
       handleErrorMessage: (msg: string | null) => setErrorMessage(msg)
     })
-
-  if (isPending) props.toggleAddBrandAssetButton(false)
 
   const { imagePreviewUrls } = useImagePreviewUrlStore()
 
@@ -52,7 +48,7 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
             className="object-contain w-full h-full max-h-[70%] max-w-[70%]"
           />
           <RemoveButton
-            onClickRemoveButton={() => props.onChangeBrandAsset()}
+            onClickRemoveButton={() => props.onRemoveBrandAsset()}
           />
         </div>
       )
