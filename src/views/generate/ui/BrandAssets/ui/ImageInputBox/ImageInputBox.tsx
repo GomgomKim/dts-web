@@ -2,8 +2,6 @@
 
 import * as React from 'react'
 
-import { useImagePreviewUrlStore } from '@/entities/generate/store'
-
 import { DndBox } from '@/shared/lib/hocs/DndBox'
 
 import DashedSvg from '/public/icons/dashed.svg'
@@ -19,8 +17,9 @@ import {
 interface ImageInputBoxProps {
   disabled: boolean
   boxId: string
-  onChangeBrandAsset: () => void
-  toggleAddBrandAssetButton: (able: boolean) => void
+  imagePreviewUrl: string | undefined
+  onRemoveBrandAsset: () => void
+  onChangeBrandAssets: (previewImgSrc: string) => void
 }
 
 export const ImageInputBox = (props: ImageInputBoxProps) => {
@@ -28,31 +27,23 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
 
   const { handleChangeDNDInput, handleChangeInput, isPending } =
     useImageInputBox({
-      boxId: props.boxId,
-      handleChangeBrandAsset: () => {
-        props.toggleAddBrandAssetButton(true)
-        props.onChangeBrandAsset
-      },
-      handleSuccess: () => props.toggleAddBrandAssetButton(true),
+      handleRemoveBrandAsset: props.onRemoveBrandAsset,
+      handleSuccess: props.onChangeBrandAssets,
       handleErrorMessage: (msg: string | null) => setErrorMessage(msg)
     })
 
-  if (isPending) props.toggleAddBrandAssetButton(false)
-
-  const { imagePreviewUrls } = useImagePreviewUrlStore()
-
   const renderContent = () => {
-    if (imagePreviewUrls.has(props.boxId)) {
+    if (props.imagePreviewUrl) {
       return (
         <div className="h-full flex justify-center items-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={imagePreviewUrls.get(props.boxId)}
+            src={props.imagePreviewUrl}
             alt={props.boxId}
             className="object-contain w-full h-full max-h-[70%] max-w-[70%]"
           />
           <RemoveButton
-            onClickRemoveButton={() => props.onChangeBrandAsset()}
+            onClickRemoveButton={() => props.onRemoveBrandAsset()}
           />
         </div>
       )

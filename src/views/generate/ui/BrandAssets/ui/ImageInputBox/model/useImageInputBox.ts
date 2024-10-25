@@ -1,31 +1,18 @@
 import React from 'react'
 
-import { useImagePreviewUrlStore } from '@/entities/generate/store'
-
 import { convertFileToFormData, isValidImageSize } from '../lib'
 import { usePostRemoveBackground } from './adapter'
 
 interface ImageInputBoxParams {
-  boxId: string
-  handleChangeBrandAsset: () => void
-  handleSuccess: () => void
+  handleRemoveBrandAsset: () => void
+  handleSuccess: (previewImgSrc: string) => void
   handleErrorMessage: (msg: string | null) => void
 }
 
 export const useImageInputBox = (params: ImageInputBoxParams) => {
-  const { boxId, handleChangeBrandAsset, handleSuccess, handleErrorMessage } =
-    params
+  const { handleRemoveBrandAsset, handleSuccess, handleErrorMessage } = params
 
   const removeBackgroundMutation = usePostRemoveBackground()
-
-  const { addImagePreviewUrl, resetImagePreviewUrls } =
-    useImagePreviewUrlStore()
-
-  React.useEffect(() => {
-    return () => {
-      resetImagePreviewUrls()
-    }
-  }, [resetImagePreviewUrls])
 
   const handleSubmit = ({ formData }: { formData: FormData }) => {
     handleErrorMessage(null)
@@ -35,8 +22,12 @@ export const useImageInputBox = (params: ImageInputBoxParams) => {
       {
         onSuccess: (data) => {
           const blob = new Blob([data], { type: 'image/png' })
-          addImagePreviewUrl(boxId, blob)
-          handleSuccess()
+          const reader = new FileReader()
+          reader.onload = (event) => {
+            const previewImgSrc = event.target?.result as string
+            handleSuccess(previewImgSrc)
+          }
+          reader.readAsDataURL(blob)
         },
         onError: () => {
           handleErrorMessage('Oops! Try again.')
@@ -48,9 +39,6 @@ export const useImageInputBox = (params: ImageInputBoxParams) => {
   const handleChangeImageFile = (file: File) => {
     const formData = convertFileToFormData(file)
     handleSubmit({ formData })
-    // TODO: remove this code after the API is ready
-    // const blob = new Blob([file], { type: 'image/png' })
-    // addImagePreviewUrl(boxId, blob)
   }
 
   const handleChangeInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,7 +56,7 @@ export const useImageInputBox = (params: ImageInputBoxParams) => {
     handleChangeImageFile(files[0])
     e.target.value = ''
 
-    handleChangeBrandAsset()
+    handleRemoveBrandAsset()
   }
 
   const handleChangeDNDInput = (file: File) => {
@@ -80,7 +68,7 @@ export const useImageInputBox = (params: ImageInputBoxParams) => {
     }
 
     handleChangeImageFile(file)
-    handleChangeBrandAsset()
+    handleRemoveBrandAsset()
   }
 
   return {
