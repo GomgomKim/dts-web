@@ -22,10 +22,12 @@ export const NewGenerateButton = (props: NewGenerateButtonProps) => {
     >
       <DashedSvg className="absolute inset-0 w-full h-full" />
       <PlusIcon
-        className={cn(
-          'absolute inset-0 m-auto w-10 h-10 stroke-neutral-7 enabled:group-hover:stroke-white enabled:group-active:stroke-white',
-          { 'stroke-neutral-3': props.disabled || !isRemainCredit }
-        )}
+        width="40px"
+        height="40px"
+        className={cn('absolute inset-0 m-auto stroke-neutral-5', {
+          'group-hover:stroke-white group-active:stroke-white':
+            !props.disabled || isRemainCredit
+        })}
       />
       <span className="a11y-hidden">New Generate</span>
     </button>

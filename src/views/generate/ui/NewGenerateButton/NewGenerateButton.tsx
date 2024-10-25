@@ -15,19 +15,20 @@ export const NewGenerateButton = (props: NewGenerateButtonProps) => {
 
   return (
     <Button
-      variant="sub2"
       onClick={debounceHandleClickNewGenerate}
       disabled={props.disabled || !isRemainCredit}
+      className="py-2 pl-3 pr-4 rounded-[6px] flex items-center"
     >
       <PlusIcon
         width="1rem"
         height="1rem"
-        className={cn(
-          'stroke-neutral-5 group-hover:stroke-white group-active:stroke-white mr-2',
-          { 'stroke-neutral-3': props.disabled || !isRemainCredit }
-        )}
+        className={cn('mr-2 stroke-neutral-0 stroke-[1.33]', {
+          'stroke-neutral-4': props.disabled || !isRemainCredit
+        })}
       />
-      <span className="text-[0.875rem] leading-[1rem]">New Generate</span>
+      <span className="text-[0.875rem] leading-[17px] font-semibold">
+        New Generate
+      </span>
     </Button>
   )
 }
