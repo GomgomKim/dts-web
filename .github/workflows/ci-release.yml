@@ -3,13 +3,12 @@ name: Build and Push Image to dev ECR
 on:
   push:
     branches:
-      - '**'
-      - '!rel'
-      - '!main'
+      - 'release-*'
+      - 'hotfix-*'
 
 env:
   AWS_REGION: ap-northeast-2
-  ECR_REPOSITORY: dev-dts-front-ecr
+  ECR_REPOSITORY: prod-dts-fe-ecr
 
 jobs:
   build-and-push-image:
@@ -59,13 +58,13 @@ jobs:
         run: pnpm install
 
       - name: Build with Create React App
-        run: pnpm build:newdev
+        run: pnpm build:production
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.DEV_AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.DEV_AWS_SECRET_ACCESS_KEY }}
+          aws-access-key-id: ${{ secrets.PROD_AWS_ACCESS_KEY}}
+          aws-secret-access-key: ${{ secrets.PROD_AWS_SECRET_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
@@ -88,3 +87,12 @@ jobs:
           tags: ${{env.ECR_REGISTRY}}/${{env.ECR_REPOSITORY}}:${{env.IMAGE_TAG}}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Trigger Lambda deployment
+        run: |
+          aws lambda invoke \
+            --function-name prod-dts-fe-deploy \
+            --region ${{ env.AWS_REGION }} \
+            --payload '{"imageTag":"${{ github.sha }}"}' \
+            --cli-binary-format raw-in-base64-out \
+            response.json
