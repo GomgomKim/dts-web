@@ -9,7 +9,7 @@ import SpinnerIcon from '/public/icons/loading-spinner.svg'
 import { v4 } from 'uuid'
 
 import { EXPORT_IMAGE_FORMAT } from '../../type'
-import { nodeToImage } from './lib'
+import { nodeToDataUrl } from './lib'
 
 const defaultOption = {
   includeQueryParams: true,
@@ -33,7 +33,7 @@ export const ExportButton = (props: ExportButtonProps) => {
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState(false)
 
-  const HandleButtonClick = () => {
+  const HandleButtonClick = async () => {
     if (containerRef.current === null) return
 
     setIsLoading(true)
@@ -42,26 +42,47 @@ export const ExportButton = (props: ExportButtonProps) => {
     const { width, height } = imageSize
 
     const randomString10 = v4().slice(0, 10)
-    const downloadName = `${getToday()}_${imageName}_${randomString10}`
+    const downloadName = `${getToday()}_${imageName}_${randomString10}.${imageType}`
 
-    nodeToImage(imageType, containerRef.current, {
-      ...defaultOption,
-      canvasWidth: width,
-      canvasHeight: height
-    })
-      .then((dataUrl) => {
-        const link = document.createElement('a')
-        link.download = downloadName
-        link.href = dataUrl
-        link.click()
-        setIsLoading(false)
-        // setIsError(false)
+    // TODO: webp is not supported in Safari
+
+    try {
+      const isSafari = /^((?!chrome|android).)*safari/i.test(
+        navigator.userAgent
+      )
+      if (isSafari) {
+        await nodeToDataUrl(imageType, containerRef.current, {
+          ...defaultOption,
+          canvasWidth: width,
+          canvasHeight: height
+        })
+        await nodeToDataUrl(imageType, containerRef.current, {
+          ...defaultOption,
+          canvasWidth: width,
+          canvasHeight: height
+        })
+        await nodeToDataUrl(imageType, containerRef.current, {
+          ...defaultOption,
+          canvasWidth: width,
+          canvasHeight: height
+        })
+      }
+      const dataUrl = await nodeToDataUrl(imageType, containerRef.current, {
+        ...defaultOption,
+        canvasWidth: width,
+        canvasHeight: height
       })
-      .catch((err) => {
-        console.log(err)
-        setIsLoading(false)
-        setIsError(true)
-      })
+
+      const link = document.createElement('a')
+      link.download = downloadName
+      link.href = dataUrl
+      link.click()
+      setIsLoading(false)
+    } catch (err) {
+      console.log(err)
+      setIsLoading(false)
+      setIsError(true)
+    }
   }
 
   const debounceHandleButtonClick = useCallback(
