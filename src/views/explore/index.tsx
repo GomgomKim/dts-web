@@ -8,7 +8,7 @@ import { useGetAuthToken } from '@/shared/lib/hooks/useGetAuthToken'
 import { useMoveScroll } from '@/shared/lib/hooks/useMoveScroll'
 import { ErrorBoundary } from '@/shared/ui/ErrorBoundary'
 
-import { CallToActionButtons } from './ui/CallToActionButtons/CallToActionButtons'
+import { CallToActionButtons } from './ui/CallToActionButtons'
 import { ExploreList } from './ui/ExploreList'
 import { FILTER_TYPES } from './ui/ExploreList/constant'
 

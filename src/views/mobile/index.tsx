@@ -8,6 +8,8 @@ import Yewon from '/public/images/yewon-1_1-FRONT-watermark.webp'
 import Yuna from '/public/images/yuna-1_1-FRONT-watermark.webp'
 import Yuri from '/public/images/yuri-1_1-FRONT-watermark.webp'
 
+import { CallToActionButtons } from '../explore/ui/CallToActionButtons'
+
 export default function Mobile() {
   const images = [
     { src: Yuna, alt: 'Yuna' },
@@ -19,10 +21,11 @@ export default function Mobile() {
 
   return (
     <div className="relative h-full overflow-y-auto overflow-x-hidden">
-      <div className="m-6">
+      <div className="m-6 mb-12">
         <Banner />
+        <CallToActionButtons />
       </div>
-      <ul className="flex gap-[0.5rem] mt-12 absolute left-1/2 -translate-x-1/2 pb-5">
+      <ul className="flex gap-[0.5rem] absolute left-1/2 -translate-x-1/2 pb-5">
         {images.map((image) => (
           <li key={image.alt}>
             <Card src={image.src} alt={image.alt} />

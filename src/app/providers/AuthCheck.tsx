@@ -30,7 +30,7 @@ export default function AuthCheck({ children, routePath }: AuthCheckProps) {
       setLoading(true)
     } else {
       if (!isAuth) {
-        router.replace(routePath ? routePath : '/login')
+        router.replace(routePath ? routePath : '/signup')
       }
 
       setLoading(false)

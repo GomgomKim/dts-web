@@ -20,7 +20,7 @@ export const Credit = () => {
     <CreditResetIndicator />
   ) : (
     <span className="font-medium text-[0.875rem] text-neutral-4">
-      20 credits per day
+      {restriction.max} credits per day
     </span>
   )
 
