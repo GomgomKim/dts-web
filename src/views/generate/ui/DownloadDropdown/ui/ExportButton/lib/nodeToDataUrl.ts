@@ -1,7 +1,7 @@
 import { toCanvas } from 'html-to-image'
 import { Options } from 'html-to-image/lib/types'
 
-export async function nodeToImage<T extends HTMLElement>(
+export async function nodeToDataUrl<T extends HTMLElement>(
   type: string,
   node: T,
   options: Options = {}

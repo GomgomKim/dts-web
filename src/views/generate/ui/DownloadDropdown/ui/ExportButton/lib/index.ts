@@ -1,1 +1,1 @@
-export * from './nodeToImage'
+export * from './nodeToDataUrl'
