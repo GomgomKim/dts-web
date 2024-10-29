@@ -26,7 +26,7 @@ export const NewGenerateButton = (props: NewGenerateButtonProps) => {
         height="40px"
         className={cn('absolute inset-0 m-auto stroke-neutral-5', {
           'group-hover:stroke-white group-active:stroke-white':
-            !props.disabled || !isOutOfCredit
+            !props.disabled && !isOutOfCredit
         })}
       />
       <span className="a11y-hidden">New Generate</span>
