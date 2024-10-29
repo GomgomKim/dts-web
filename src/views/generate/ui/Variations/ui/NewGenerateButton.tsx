@@ -7,11 +7,12 @@ import PlusIcon from '/public/icons/plus.svg'
 
 interface NewGenerateButtonProps {
   disabled?: boolean
+  onErrorGenerate: () => void
 }
 
 export const NewGenerateButton = (props: NewGenerateButtonProps) => {
   const { debounceHandleClickNewGenerate, isOutOfCredit } =
-    useHandleClickNewGenerate()
+    useHandleClickNewGenerate({ onErrorGenerate: props.onErrorGenerate })
 
   return (
     <button

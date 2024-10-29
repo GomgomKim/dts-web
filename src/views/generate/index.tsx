@@ -2,12 +2,15 @@
 
 import * as React from 'react'
 
+import { useAuthStore } from '@/entities/UserProfile/store'
+
 import { Variation } from '@/shared/api/types'
 import { useSetQueryString } from '@/shared/lib/hooks/useSetQueryString'
 
 import { convertImageToBoxData } from './lib'
 import { useBrandAssets } from './model/useBrandAssets'
 import { BrandAssets } from './ui/BrandAssets'
+import { CreditToast } from './ui/CreditToast'
 import { DownloadDropdown } from './ui/DownloadDropdown'
 import { EditVariation } from './ui/EditVariation'
 import { ImageEditingBox } from './ui/ImageEditingBox'
@@ -49,6 +52,17 @@ export default function Generate() {
     handleQueryString([{ variationId: variation.variationId.toString() }])
   }
 
+  // related credit
+  const restriction = useAuthStore((state) => state.restriction)
+  const [openToast, setOpenToast] = React.useState(() =>
+    restriction !== null ? restriction.current <= 0 : false
+  )
+
+  React.useEffect(() => {
+    if (restriction === null) return
+    if (restriction.current <= 0) setOpenToast(true)
+  }, [restriction])
+
   return (
     <div className="flex w-full h-full">
       {/* brand assets section */}
@@ -73,7 +87,10 @@ export default function Generate() {
                 </h2>
 
                 <span className="absolute top-0 right-0">
-                  <NewGenerateButton disabled={isLoading} />
+                  <NewGenerateButton
+                    disabled={isLoading}
+                    onErrorGenerate={() => setOpenToast(true)}
+                  />
                 </span>
               </div>
 
@@ -88,7 +105,11 @@ export default function Generate() {
                       boxRefs={boxRefs}
                       selectedVariation={selectedVariation}
                       onKeydownRemoveBrandAsset={removeBrandAsset}
-                    />
+                    >
+                      {openToast ? (
+                        <CreditToast onClickGotIt={() => setOpenToast(false)} />
+                      ) : null}
+                    </ImageEditingBox>
                   </div>
 
                   {/* variations section */}
@@ -96,6 +117,7 @@ export default function Generate() {
                     isLoading={isLoading}
                     onDataLoaded={() => setIsLoading(false)}
                     onChangeSelectedVariation={handleSelectedVariation}
+                    onErrorGenerate={() => setOpenToast(true)}
                   />
                 </div>
               </div>

@@ -2,7 +2,6 @@
 
 import * as React from 'react'
 
-import { useAuthStore } from '@/entities/UserProfile/store'
 import { ASPECT_RATIO_MAP } from '@/entities/generate/constant'
 
 import { Variation } from '@/shared/api/types'
@@ -11,7 +10,6 @@ import { LoadingSpinner } from '@/shared/ui/LoadingSpinner'
 import { useEditorStore } from '../../model/useEditorHistoryStore'
 import { useGetNewStyleContainerWrapper } from './lib/useGetNewStyleContainerWrapper'
 import { Box } from './types'
-import { CreditToast } from './ui/CreditToast/CreditToast'
 import { HistoryControl } from './ui/HistoryControl/HistoryControl'
 import { ImageView } from './ui/ImageView/ImageView'
 import { ResizableAndDraggableBoxes } from './ui/ResizableAndDraggableBoxes'
@@ -23,6 +21,7 @@ interface ImageEditingBoxProps {
   selectedVariation: Variation | null
   boxRefs: React.MutableRefObject<Map<string, HTMLDivElement | null>>
   onKeydownRemoveBrandAsset: (boxId: string) => void
+  children: React.ReactNode
 }
 
 export const ImageEditingBox = (props: ImageEditingBoxProps) => {
@@ -30,10 +29,6 @@ export const ImageEditingBox = (props: ImageEditingBoxProps) => {
   const boardRef = React.useRef<HTMLDivElement>(null)
 
   const editedVariationList = useEditorStore((state) => state.items)
-  const restriction = useAuthStore((state) => state.restriction)
-  const [openToast, setOpenToast] = React.useState(() =>
-    restriction !== null ? restriction.current <= 0 : false
-  )
 
   const [styleContainerWrapper, setStyleContainerWrapper] =
     React.useState<React.CSSProperties>({})
@@ -74,11 +69,6 @@ export const ImageEditingBox = (props: ImageEditingBoxProps) => {
     }
   }, [selectedVariation, variationCurrent])
 
-  React.useEffect(() => {
-    if (restriction === null) return
-    if (restriction.current <= 0) setOpenToast(true)
-  }, [restriction])
-
   if (props.isLoading || !selectedVariation)
     return (
       <div className="h-full bg-neutral-1 bg-opacity-50 rounded-[0.5rem] overflow-hidden relative flex justify-center">
@@ -113,9 +103,8 @@ export const ImageEditingBox = (props: ImageEditingBoxProps) => {
           />
         </div>
       </div>
-      {openToast ? (
-        <CreditToast onClickGotIt={() => setOpenToast(false)} />
-      ) : null}
+      {/* out of credit toast */}
+      {props.children}
     </div>
   )
 }

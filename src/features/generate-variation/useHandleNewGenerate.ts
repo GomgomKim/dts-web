@@ -12,7 +12,11 @@ import { usePostAiImageGenerate } from './model/adapter'
 
 const DELAY_NEW_GENERATE = 500
 
-export const useHandleClickNewGenerate = () => {
+export const useHandleClickNewGenerate = ({
+  onErrorGenerate
+}: {
+  onErrorGenerate: () => void
+}) => {
   const searchParams = useSearchParams()
   const addAiImageGeneratingList = useAiImageGeneratingStore(
     (state) => state.addAiImageGeneratingList
@@ -32,11 +36,10 @@ export const useHandleClickNewGenerate = () => {
 
   const handleClickNewGenerate = () => {
     if (!isValidRestriction(restriction)) {
-      alert('You have reached the limit of generating variations')
+      onErrorGenerate()
       return
     }
 
-    // TODO: 409 에러처리
     setIsAiImageGenerating(true)
 
     const mainImageId = searchParams.get('id')
@@ -57,9 +60,9 @@ export const useHandleClickNewGenerate = () => {
           addAiImageItem(variation)
 
           setRestriction(restriction)
-        }
+        },
+        onError: () => onErrorGenerate()
       }
-      // onError
     )
   }
 
