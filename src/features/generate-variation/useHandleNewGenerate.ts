@@ -36,6 +36,7 @@ export const useHandleClickNewGenerate = () => {
       return
     }
 
+    // TODO: 409 에러처리
     setIsAiImageGenerating(true)
 
     const mainImageId = searchParams.get('id')
