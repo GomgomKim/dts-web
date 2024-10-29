@@ -58,6 +58,7 @@ export const DownloadDropdown = (props: DownloadDropdownProps) => {
         : EXPORT_QUALITY_OPTIONS_9_16
   }
 
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
@@ -74,24 +75,31 @@ export const DownloadDropdown = (props: DownloadDropdownProps) => {
         {/* menu 1 */}
         <DropdownMenuLabel>FORMAT</DropdownMenuLabel>
         <DropdownMenuRadioGroup
-          className="flex px-5 py-3 w-[252px] justify-between"
+          className={cn('flex px-5 py-3 gap-10', {
+            'gap-5': isSafari
+          })}
           value={selectedFormat}
           onValueChange={(value) =>
             setSelectedFormat(value as EXPORT_IMAGE_FORMAT)
           }
         >
-          {FORMAT_OPTIONS.map((option) => (
-            <DropdownMenuRadioItem
-              key={option.value}
-              value={option.value}
-              className={cn({
-                'text-white': option.value === selectedFormat
-              })}
-              onSelect={(e) => e.preventDefault()}
-            >
-              {option.label}
-            </DropdownMenuRadioItem>
-          ))}
+          {FORMAT_OPTIONS.map((option) => {
+            const isWebp = option.value == 'webp'
+            return (
+              <DropdownMenuRadioItem
+                key={option.value}
+                value={option.value}
+                className={cn('text-nowrap', {
+                  'text-white': option.value === selectedFormat
+                })}
+                onSelect={(e) => e.preventDefault()}
+                disabled={isSafari && isWebp}
+              >
+                {option.label}
+                {isSafari && isWebp ? ' - Unavailable on Safari' : ''}
+              </DropdownMenuRadioItem>
+            )
+          })}
         </DropdownMenuRadioGroup>
 
         {/* menu 2 */}
