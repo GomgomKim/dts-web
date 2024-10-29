@@ -26,7 +26,6 @@ const useApiError = () => {
 
         const httpStatus = error.response?.status
 
-        // 에러 핸들러를 실행하기 전에 httpStatus가 유효한지 확인
         const handle = httpStatus
           ? statusHandlers[httpStatus]
           : statusHandlers.default
@@ -46,35 +45,39 @@ const useApiError = () => {
 
   const statusHandlers: StatusHandlers = {
     400: () => {
-      console.log('400')
-
-      // if (errorCode === 5007) {
-      //   alert('ai 이미지 생성 횟수 초과입니다.')
-      //   return
-      // }
-
-      // if (errorCode === 5004) {
-      //   alert('배경 제거에 이슈가 발생했습니다. 다시 시도해주세요.')
-      //   return
-      // }
+      console.error('400')
     },
-    401: () => {
-      // if (errorCode === 3005) {
-      //   logOut(null)
-      //   console.log('로그인 세션이 만료가 되었습니다. 다시 로그인 해주세요.')
-      //   return
-      // }
+    401: (msg, errorCode) => {
+      if (errorCode === 3005) {
+        // logOut(null)
+        console.error('로그인 세션이 만료가 되었습니다. 다시 로그인 해주세요.')
+        return
+      }
 
-      // if (errorCode === 9003) {
-      //   // logOut(null)
-      //   console.log('로그인에 문제가 생겼습니다. 다시 로그인 해주세요.')
-      // return
+      if (errorCode === 9003) {
+        // logOut(null)
+        console.error('로그인에 문제가 생겼습니다. 다시 로그인 해주세요.')
+        return
+      }
 
-      console.log('401 로그인에 문제가 생겼습니다. 다시 로그인 해주세요.')
+      console.error('로그인에 문제가 생겼습니다. 다시 로그인 해주세요.')
     },
-    404: () => console.log('404 요청하신 페이지를 찾을 수 없습니다.'),
-    500: () => console.log('서버 오류가 발생했습니다.'),
-    default: () => console.log('서버에서 알 수 없는 오류가 발생했습니다.')
+    404: () => console.error('404 요청하신 페이지를 찾을 수 없습니다.'),
+    409: (msg, errorCode) => {
+      if (errorCode === 5007) {
+        console.error(msg) // 이미지 생성 제한을 초과했습니다
+        return
+      }
+
+      if (errorCode === 5004) {
+        console.error(msg) // 배경 제거에 이슈가 발생했습니다. 다시 시도해주세요.
+        return
+      }
+
+      console.error(msg)
+    },
+    500: () => console.error('서버 오류가 발생했습니다.'),
+    default: () => console.error('서버에서 알 수 없는 오류가 발생했습니다.')
   }
 
   return { handleError }
