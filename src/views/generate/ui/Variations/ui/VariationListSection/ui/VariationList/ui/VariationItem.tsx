@@ -47,7 +47,7 @@ export const VariationItem = (props: VariationItemProps) => {
   return (
     <button
       className={cn(
-        'rounded-[0.5rem] overflow-hidden relative aspect-[206/219] w-full border border-border hover:opacity-100 cursor-pointer focus-visible:ring-2 focus-visible:ring-ring',
+        'rounded-[0.5rem] overflow-hidden relative aspect-[206/219] w-full border border-border hover:opacity-100 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ring',
         {
           'opacity-50': !isSelectedVariation
         }
