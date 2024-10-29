@@ -32,7 +32,7 @@ export const ImageEditingBox = (props: ImageEditingBoxProps) => {
   const editedVariationList = useEditorStore((state) => state.items)
   const restriction = useAuthStore((state) => state.restriction)
   const [openToast, setOpenToast] = React.useState(() =>
-    restriction ? restriction.current >= restriction.max : false
+    restriction !== null ? restriction.current <= 0 : false
   )
 
   const [styleContainerWrapper, setStyleContainerWrapper] =
@@ -76,7 +76,7 @@ export const ImageEditingBox = (props: ImageEditingBoxProps) => {
 
   React.useEffect(() => {
     if (restriction === null) return
-    if (restriction?.current >= restriction?.max) setOpenToast(true)
+    if (restriction.current <= 0) setOpenToast(true)
   }, [restriction])
 
   if (props.isLoading || !selectedVariation)
