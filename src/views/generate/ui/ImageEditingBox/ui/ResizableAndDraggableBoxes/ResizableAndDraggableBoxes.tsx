@@ -188,7 +188,6 @@ export const ResizableAndDraggableBoxes = ({
   }, [])
 
   const handleClickOutside = (e: MouseEvent) => {
-    e.preventDefault()
     const clickedInsideBox = Array.from(boxRefs.current.values()).some(
       (ref) => ref && ref.contains(e.target as Node)
     )
