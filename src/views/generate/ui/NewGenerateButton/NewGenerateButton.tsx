@@ -10,20 +10,20 @@ interface NewGenerateButtonProps {
 }
 
 export const NewGenerateButton = (props: NewGenerateButtonProps) => {
-  const { debounceHandleClickNewGenerate, isRemainCredit } =
+  const { debounceHandleClickNewGenerate, isOutOfCredit } =
     useHandleClickNewGenerate()
 
   return (
     <Button
       onClick={debounceHandleClickNewGenerate}
-      disabled={props.disabled || !isRemainCredit}
+      disabled={props.disabled || isOutOfCredit}
       className="py-2 pl-3 pr-4 rounded-[6px] flex items-center"
     >
       <PlusIcon
         width="1rem"
         height="1rem"
         className={cn('mr-2 stroke-neutral-0 stroke-[1.33]', {
-          'stroke-neutral-4': props.disabled || !isRemainCredit
+          'stroke-neutral-4': props.disabled || isOutOfCredit
         })}
       />
       <span className="text-[0.875rem] leading-[17px] font-semibold">

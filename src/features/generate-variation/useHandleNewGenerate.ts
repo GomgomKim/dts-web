@@ -28,9 +28,7 @@ export const useHandleClickNewGenerate = () => {
   )
   const postAiImageMutation = usePostAiImageGenerate()
 
-  const isRemainCredit = restriction
-    ? restriction.max - restriction?.current > 0
-    : false
+  const isOutOfCredit = restriction !== null ? restriction.current <= 0 : false
 
   const handleClickNewGenerate = () => {
     if (!isValidRestriction(restriction)) {
@@ -69,11 +67,11 @@ export const useHandleClickNewGenerate = () => {
     []
   )
 
-  return { debounceHandleClickNewGenerate, isRemainCredit }
+  return { debounceHandleClickNewGenerate, isOutOfCredit }
 }
 
 function isValidRestriction(restriction: Restriction | null) {
   if (restriction === null) return false
-  if (restriction.current >= restriction.max) return false
+  if (restriction.current <= 0) return false
   return true
 }
