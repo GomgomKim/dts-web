@@ -16,7 +16,7 @@ export const CreditAmount = ({ credit, isOutOfCredit }: CreditAmountProps) => {
         })}
       />
       <span
-        className={cn('text-[14px] w-4 text-center', {
+        className={cn('text-[14px] min-w-4 text-center', {
           'text-[#FF8480]': isOutOfCredit
         })}
       >

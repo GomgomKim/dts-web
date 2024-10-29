@@ -12,7 +12,11 @@ import { usePostAiImageGenerate } from './model/adapter'
 
 const DELAY_NEW_GENERATE = 500
 
-export const useHandleClickNewGenerate = () => {
+export const useHandleClickNewGenerate = ({
+  onErrorGenerate
+}: {
+  onErrorGenerate: () => void
+}) => {
   const searchParams = useSearchParams()
   const addAiImageGeneratingList = useAiImageGeneratingStore(
     (state) => state.addAiImageGeneratingList
@@ -28,13 +32,11 @@ export const useHandleClickNewGenerate = () => {
   )
   const postAiImageMutation = usePostAiImageGenerate()
 
-  const isRemainCredit = restriction
-    ? restriction.max - restriction?.current > 0
-    : false
+  const isOutOfCredit = restriction !== null ? restriction.current <= 0 : false
 
   const handleClickNewGenerate = () => {
     if (!isValidRestriction(restriction)) {
-      alert('You have reached the limit of generating variations')
+      onErrorGenerate()
       return
     }
 
@@ -58,9 +60,9 @@ export const useHandleClickNewGenerate = () => {
           addAiImageItem(variation)
 
           setRestriction(restriction)
-        }
+        },
+        onError: () => onErrorGenerate()
       }
-      // onError
     )
   }
 
@@ -69,11 +71,11 @@ export const useHandleClickNewGenerate = () => {
     []
   )
 
-  return { debounceHandleClickNewGenerate, isRemainCredit }
+  return { debounceHandleClickNewGenerate, isOutOfCredit }
 }
 
 function isValidRestriction(restriction: Restriction | null) {
   if (restriction === null) return false
-  if (restriction.current >= restriction.max) return false
+  if (restriction.current <= 0) return false
   return true
 }

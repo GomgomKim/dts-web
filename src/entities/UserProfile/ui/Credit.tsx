@@ -13,8 +13,8 @@ export const Credit = () => {
 
   if (!restriction) return <CreditAmountSkeleton />
 
-  const credit = restriction.max - restriction.current
-  const isOutOfCredit = restriction?.current >= restriction.max
+  const credit = restriction.current
+  const isOutOfCredit = credit <= 0
 
   const creditDescription = isOutOfCredit ? (
     <CreditResetIndicator />
