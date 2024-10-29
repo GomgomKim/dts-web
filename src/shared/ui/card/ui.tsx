@@ -4,6 +4,7 @@ import { ComponentProps, useState } from 'react'
 
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 import { MainItem } from '@/shared/api/types'
 import { Button } from '@/shared/ui/button'
@@ -15,12 +16,13 @@ const URL_BASE_IMAGE_FILE = '/image-file/download?encryptedImageUrl='
 interface CardProps extends ComponentProps<'div'> {
   item: MainItem
   actionSlot?: React.ReactNode
-  inViewRef?: React.Ref<HTMLDivElement>
+  inViewRef?: React.Ref<HTMLButtonElement>
 }
 
 export const Card = (props: CardProps) => {
   const { id, name: modelname, description, encryptedThumbnailUrl } = props.item
   const [isHovering, setIsHovering] = useState(false)
+  const router = useRouter()
 
   const imgUrl =
     process.env.NEXT_PUBLIC_API_MOCKING === 'enabled'
@@ -30,10 +32,13 @@ export const Card = (props: CardProps) => {
         encryptedThumbnailUrl
 
   return (
-    <div
+    <button
       onMouseOver={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
-      className="relative aspect-[9/16] rounded-[8px] overflow-hidden cursor-auto bg-neutral-1"
+      onFocus={() => setIsHovering(true)}
+      onBlur={() => setIsHovering(false)}
+      onClick={() => router.push(`/generate/${modelname}?id=${id}`)}
+      className="relative aspect-[9/16] rounded-[8px] overflow-hidden cursor-auto bg-neutral-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       ref={props.inViewRef}
     >
       <Image
@@ -62,6 +67,6 @@ export const Card = (props: CardProps) => {
       {isHovering && props.actionSlot && (
         <div className="absolute top-2 right-2 z-10">{props.actionSlot}</div>
       )}
-    </div>
+    </button>
   )
 }
