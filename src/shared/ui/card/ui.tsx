@@ -38,7 +38,7 @@ export const Card = (props: CardProps) => {
       onFocus={() => setIsHovering(true)}
       onBlur={() => setIsHovering(false)}
       onClick={() => router.push(`/generate/${modelname}?id=${id}`)}
-      className="relative aspect-[9/16] rounded-[8px] overflow-hidden cursor-auto bg-neutral-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+      className="relative aspect-[9/16] rounded-[8px] overflow-hidden cursor-auto bg-neutral-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       ref={props.inViewRef}
     >
       <Image

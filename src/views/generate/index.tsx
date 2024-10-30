@@ -79,7 +79,7 @@ export default function Generate() {
       <div className="h-full ml-[320px] md:ml-[360px] lg:ml-[460px] xl:ml-[500px] 2xl:ml-[790px] grow">
         <div className="h-full overflow-x-auto flex gap-5 lg:gap-10">
           {/* generate section - left */}
-          <section className="overflow-y-auto overflow-x-hidden basis-[440px] shrink-0 grow">
+          <section className="overflow-y-auto overflow-x-hidden basis-[400px] shrink-0 grow">
             <div className="flex flex-col relative h-full">
               <div>
                 <h2 className="text-[1.25rem] lg:text-[1.5rem] 2xl:text-[2rem] inline-block font-semibold">
