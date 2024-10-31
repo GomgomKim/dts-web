@@ -13,7 +13,7 @@ import DTSLogo from '/public/icons/dts-logo.svg'
 import { useQueryClient } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
 
-export const ErrorModal = ({
+export const ErrorModals = ({
   error,
   resetErrorBoundary
 }: {

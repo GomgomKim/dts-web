@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import { useAuthStore } from '@/entities/UserProfile/store'
 
 import { ErrorBoundary } from '@/shared/ui/ErrorBoundary'
-import { ErrorModal } from '@/shared/ui/Modal/ErrorModal'
+import { ErrorModals } from '@/shared/ui/Modal/ErrorModals'
 
 import DTSLogo from '/public/icons/dts-logo.svg'
 
@@ -39,7 +39,7 @@ export const Header = () => {
             </ul>
           </nav>
           {isAuth === true ? (
-            <ErrorBoundary FallbackComponent={ErrorModal}>
+            <ErrorBoundary FallbackComponent={ErrorModals}>
               <UserProfileSummary />
             </ErrorBoundary>
           ) : null}
