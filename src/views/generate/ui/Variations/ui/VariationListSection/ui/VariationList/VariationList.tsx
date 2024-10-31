@@ -8,10 +8,8 @@ import { useAiImageGeneratingStore } from '@/entities/generate/store'
 
 import { Variation } from '@/shared/api/types'
 
-import {
-  useGetAiImageProgress,
-  useGetVariationList
-} from '../../../../model/adapter'
+import { useGetVariationList } from '../../../../model/adapter'
+import { useGenerateVariation } from './lib/useGenerateVariation'
 import { VariationItem } from './ui'
 import { VariationEmpty } from './ui/VariationEmpty'
 
@@ -29,6 +27,8 @@ export const VariationList = (props: VariationListProps) => {
   const searchParams = useSearchParams()
   const mainImageId = searchParams.get('id') || ''
 
+  useGenerateVariation(mainImageId)
+
   const setIsAiImageGenerating = useAiImageGeneratingStore(
     (state) => state.setIsAiImageGenerating
   )
@@ -36,18 +36,13 @@ export const VariationList = (props: VariationListProps) => {
   const setAiImageList = useAiImageGeneratingStore(
     (state) => state.setAiImageList
   )
-  const updateAiImageItem = useAiImageGeneratingStore(
-    (state) => state.updateAiImageItem
-  )
   const aiImageGeneratingList = useAiImageGeneratingStore(
     (state) => state.aiImageGeneratingList
   )
   const addAiImageGeneratingList = useAiImageGeneratingStore(
     (state) => state.addAiImageGeneratingList
   )
-  const removeAiImageGeneratingList = useAiImageGeneratingStore(
-    (state) => state.removeAiImageGeneratingList
-  )
+
   const { resetAiImageGeneratingList } = useAiImageGeneratingStore.getState()
 
   const {
@@ -57,7 +52,6 @@ export const VariationList = (props: VariationListProps) => {
     error
     // isSuccess
   } = useGetVariationList(mainImageId)
-  const queries = useGetAiImageProgress(mainImageId)
 
   const [initialData, setInitialData] = React.useState<Variation[]>([])
 
@@ -101,26 +95,6 @@ export const VariationList = (props: VariationListProps) => {
       setAiImageList(newGeneratingList)
     }
   }, [variations, isFetching])
-
-  for (let i = 0; i < queries.length; i++) {
-    const query = queries[i]
-
-    if (query.isLoading) {
-      console.log('로딩중')
-      continue
-    }
-
-    if (query.isError) {
-      console.log('에러 발생')
-      continue
-    }
-
-    if (query.data?.content.variation.progress === 100) {
-      const { variationId } = query.data.content.variation
-      removeAiImageGeneratingList(variationId)
-      updateAiImageItem(query.data?.content.variation)
-    }
-  }
 
   if (aiImageGeneratingList.length === 0) setIsAiImageGenerating(false)
   else setIsAiImageGenerating(true)
