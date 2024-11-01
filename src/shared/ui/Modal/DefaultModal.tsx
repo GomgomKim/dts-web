@@ -32,6 +32,19 @@ export const DefaultModal = (props: DefaultModalProps) => {
   usePreventScroll()
   useOutsideClick(modalRef, handleClose)
 
+  const handleKeydown = (e: KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      handleClose()
+    }
+  }
+
+  React.useEffect(() => {
+    document.addEventListener('keydown', handleKeydown)
+    return () => {
+      document.removeEventListener('keydown', handleKeydown)
+    }
+  }, [])
+
   return (
     <div className="flex justify-center fixed bg-neutral-0-90 inset-0 z-50">
       <div
