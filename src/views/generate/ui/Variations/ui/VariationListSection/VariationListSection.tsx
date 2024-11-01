@@ -1,6 +1,7 @@
 import * as React from 'react'
 
 import { Variation } from '@/shared/api/types'
+import { ErrorBoundary } from '@/shared/ui/ErrorBoundary'
 
 import { VariationList, VariationListSkeleton } from './ui/VariationList'
 
@@ -31,10 +32,12 @@ export const VariationListSection = (props: VariationListSectionProps) => {
   })
 
   return (
-    <React.Suspense
-      fallback={<VariationListSkeleton amountPerPage={amountPerPage} />}
-    >
-      <VariationList {...props} amountPerPage={amountPerPage} />
-    </React.Suspense>
+    <ErrorBoundary FallbackComponent={({ error }) => <>{error?.message}</>}>
+      <React.Suspense
+        fallback={<VariationListSkeleton amountPerPage={amountPerPage} />}
+      >
+        <VariationList {...props} amountPerPage={amountPerPage} />
+      </React.Suspense>
+    </ErrorBoundary>
   )
 }
