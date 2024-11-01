@@ -35,7 +35,8 @@ export const FavoriteList = () => {
   if (status === 'error') return <p>{error?.message}</p>
   if (isFetching && !isFetchingNextPage) return <FavoriteListSkeleton />
 
-  const isEmpty = data?.pages[0].content.images.length === 0
+  const isEmpty =
+    data === undefined || data?.pages[0].content.images.length === 0
   if (isEmpty) return <EmptyList />
 
   return (
