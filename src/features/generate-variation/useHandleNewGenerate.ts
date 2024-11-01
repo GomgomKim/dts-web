@@ -16,7 +16,7 @@ import { isAxiosError } from 'axios'
 
 import { usePostAiImageGenerate } from './model/adapter'
 
-const DELAY_NEW_GENERATE = 500
+const DELAY_NEW_GENERATE = 100
 
 export const useHandleClickNewGenerate = ({
   onErrorGenerate
