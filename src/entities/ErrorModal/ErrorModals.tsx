@@ -3,7 +3,6 @@ import { useAuthStore } from '@/entities/UserProfile/store'
 import { useQueryClient } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
 
-import { Modal } from './Modal'
 import { ServiceUnavailable } from './ui/ServiceUnavailable'
 import { Unauthorized } from './ui/Unauthorized'
 
@@ -18,26 +17,28 @@ export const ErrorModals = ({
   const queryClient = useQueryClient()
   const logOut = useAuthStore((state) => state.logOut)
 
-  if (isAxiosError(error) || error.response?.status !== 401) {
+  if (!isAxiosError(error)) {
+    console.error(error)
+  }
+
+  if (error.response?.status === 401) {
     return (
-      <Modal>
-        <ServiceUnavailable
-          onClick={() => {
-            resetErrorBoundary()
-            window.location.reload()
-          }}
-        />
-      </Modal>
+      <Unauthorized
+        onClick={() => {
+          logOut(queryClient)
+          window.location.reload()
+          // resetErrorBoundary()
+        }}
+      />
     )
   }
 
   return (
-    <Modal>
-      <Unauthorized
-        onClick={() => {
-          logOut(queryClient)
-        }}
-      />
-    </Modal>
+    <ServiceUnavailable
+      onClick={() => {
+        resetErrorBoundary()
+        window.location.reload()
+      }}
+    />
   )
 }
