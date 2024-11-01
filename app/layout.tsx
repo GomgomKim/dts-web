@@ -3,6 +3,7 @@ import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 
+import { ModalsProvider } from '@/app/providers/ModalsProvider'
 import { NetworkError } from '@/app/providers/NetworkError'
 import { PathStorage } from '@/app/providers/PathStorage'
 import { AxiosInterceptorWrapper } from '@/app/providers/axios-interceptor-wrapper'
@@ -71,8 +72,10 @@ export default function RootLayout({
             <PathStorage />
             <NetworkError>
               <Suspense fallback={<Loading />}>
-                {children}
-                {modal}
+                <ModalsProvider>
+                  {children}
+                  {modal}
+                </ModalsProvider>
               </Suspense>
               <div id="modal-root" />
             </NetworkError>
