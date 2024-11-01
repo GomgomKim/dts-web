@@ -2,11 +2,17 @@ import * as React from 'react'
 
 import { useSearchParams } from 'next/navigation'
 
+import { GenerationLimit } from '@/views/generate/ui/ErrorModal/ui/GenerationLimit'
+import { RequestTimeLimit } from '@/views/generate/ui/ErrorModal/ui/RequestTimeLimit'
+
 import { useAuthStore } from '@/entities/UserProfile/store'
 import { useAiImageGeneratingStore } from '@/entities/generate/store'
 
 import { Restriction } from '@/shared/api/types'
 import { debounce } from '@/shared/lib/utils'
+import useModals from '@/shared/ui/Modal/model/useModals'
+
+import { isAxiosError } from 'axios'
 
 import { usePostAiImageGenerate } from './model/adapter'
 
@@ -17,6 +23,8 @@ export const useHandleClickNewGenerate = ({
 }: {
   onErrorGenerate: () => void
 }) => {
+  const { openModal } = useModals()
+
   const searchParams = useSearchParams()
   const addAiImageGeneratingList = useAiImageGeneratingStore(
     (state) => state.addAiImageGeneratingList
@@ -61,7 +69,31 @@ export const useHandleClickNewGenerate = ({
 
           setRestriction(restriction)
         },
-        onError: () => onErrorGenerate()
+        onError: (error) => {
+          if (!isAxiosError(error)) {
+            console.log(error)
+            return
+          }
+
+          if (error.response?.status === 409) {
+            switch (error.response?.data.code) {
+              case 5007:
+                onErrorGenerate()
+                break
+              case 5009:
+                openModal(GenerationLimit)
+                break
+              case 5010:
+                openModal(RequestTimeLimit)
+                break
+            }
+          } else {
+            console.log(error)
+            // setTimeout(() => {
+            //   throw error
+            // })
+          }
+        }
       }
     )
   }
