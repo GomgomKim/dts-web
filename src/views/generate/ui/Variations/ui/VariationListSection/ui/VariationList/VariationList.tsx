@@ -29,21 +29,16 @@ export const VariationList = (props: VariationListProps) => {
 
   useGenerateVariation(mainImageId)
 
-  const setIsAiImageGenerating = useAiImageGeneratingStore(
-    (state) => state.setIsAiImageGenerating
-  )
+  const {
+    setIsAiImageGenerating,
+    setAiImageList,
+    addAiImageGeneratingList,
+    resetAiImageGeneratingList
+  } = useAiImageGeneratingStore.getState()
   const aiImageList = useAiImageGeneratingStore((state) => state.aiImageList)
-  const setAiImageList = useAiImageGeneratingStore(
-    (state) => state.setAiImageList
-  )
   const aiImageGeneratingList = useAiImageGeneratingStore(
     (state) => state.aiImageGeneratingList
   )
-  const addAiImageGeneratingList = useAiImageGeneratingStore(
-    (state) => state.addAiImageGeneratingList
-  )
-
-  const { resetAiImageGeneratingList } = useAiImageGeneratingStore.getState()
 
   const {
     data: { variations },

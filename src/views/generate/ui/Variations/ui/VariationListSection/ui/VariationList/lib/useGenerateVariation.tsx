@@ -5,12 +5,8 @@ import { useAiImageGeneratingStore } from '@/entities/generate/store'
 export const useGenerateVariation = (mainImageId: string) => {
   const queries = useGetAiImageProgress(mainImageId)
 
-  const removeAiImageGeneratingList = useAiImageGeneratingStore(
-    (state) => state.removeAiImageGeneratingList
-  )
-  const updateAiImageItem = useAiImageGeneratingStore(
-    (state) => state.updateAiImageItem
-  )
+  const { removeAiImageGeneratingList, updateAiImageItem } =
+    useAiImageGeneratingStore.getState()
 
   for (let i = 0; i < queries.length; i++) {
     const query = queries[i]
