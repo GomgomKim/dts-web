@@ -7,10 +7,15 @@ import { ModalComponentProps } from '@/shared/ui/Modal/model/types'
 interface RequestTimeLimitProps extends ModalComponentProps {}
 
 export const RequestTimeLimit = (props: RequestTimeLimitProps) => {
-  const { onCloseModal } = props
+  const { onCloseModal, onClose } = props
+
+  const handleCloseModal = () => {
+    onClose?.()
+    onCloseModal()
+  }
 
   return (
-    <DefaultModal closable={{ isClosable: true, onClose: onCloseModal }}>
+    <DefaultModal closable={{ isClosable: false, onClose: onCloseModal }}>
       <div>
         <div className="mb-[2rem]">
           <div className="text-[24px] mb-3">Take a Coffee Break!☕️</div>
@@ -23,7 +28,7 @@ export const RequestTimeLimit = (props: RequestTimeLimitProps) => {
         <Button
           className="py-[1rem] bg-white hover:bg-white"
           stretch
-          onClick={() => onCloseModal()}
+          onClick={handleCloseModal}
         >
           Try Again Soon
         </Button>

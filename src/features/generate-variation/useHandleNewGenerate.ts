@@ -80,8 +80,7 @@ export const useHandleClickNewGenerate = ({
                 openModal(GenerationLimit)
                 break
               case 5010: {
-                onHoldingGenerate()
-                openModal(RequestTimeLimit)
+                openModal(RequestTimeLimit, { onClose: onHoldingGenerate })
                 break
               }
             }
