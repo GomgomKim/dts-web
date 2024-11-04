@@ -5,17 +5,22 @@ import { useRouter } from 'next/navigation'
 
 import { Button } from '@/shared/ui'
 import { DefaultModal } from '@/shared/ui/Modal/DefaultModal'
-import { ModalInfo } from '@/shared/ui/Modal/model/types'
+import { ModalComponentProps } from '@/shared/ui/Modal/model/types'
 
 import ArrowLeft from '/public/icons/arrow-thin.svg'
 
-interface GenerationLimitProps extends Omit<ModalInfo, 'Component'> {}
+interface GenerationLimitProps extends ModalComponentProps {}
 
 export const GenerationLimit = (props: GenerationLimitProps) => {
   const router = useRouter()
 
+  const handleCloseModal = () => {
+    props.onCloseModal()
+    router.push('/explore')
+  }
+
   return (
-    <DefaultModal onClose={props.onClose} isClosable={true}>
+    <DefaultModal closable={{ isClosable: true, onClose: handleCloseModal }}>
       <div>
         <div className="mb-[2rem]">
           <div className="text-[24px] mb-3">
@@ -31,10 +36,7 @@ export const GenerationLimit = (props: GenerationLimitProps) => {
           variant="destructive"
           className="py-[1rem]"
           stretch
-          onClick={() => {
-            props.onClose?.()
-            router.push('/explore')
-          }}
+          onClick={handleCloseModal}
         >
           <div className="flex items-center gap-[0.5rem]">
             <ArrowLeft className="stroke-black -rotate-[135deg]" />
