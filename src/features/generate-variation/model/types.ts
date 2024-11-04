@@ -7,6 +7,6 @@ export interface PostAiImageReqData {
 export interface PostAiImageResData extends ResData<PostAiImageContent> {}
 
 interface PostAiImageContent {
-  variation: Variation
+  variations: Variation[]
   restriction: Restriction
 }

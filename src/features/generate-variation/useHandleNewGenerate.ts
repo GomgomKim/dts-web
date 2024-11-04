@@ -63,9 +63,9 @@ export const useHandleClickNewGenerate = ({
       },
       {
         onSuccess: (data) => {
-          const { variation, restriction } = data.content
-          addAiImageGeneratingList([variation])
-          addAiImageItem(variation)
+          const { variations, restriction } = data.content
+          addAiImageGeneratingList(variations)
+          addAiImageItem(variations)
 
           setRestriction(restriction)
         },
