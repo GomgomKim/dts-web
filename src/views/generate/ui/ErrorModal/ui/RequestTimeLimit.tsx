@@ -2,13 +2,15 @@ import Link from 'next/link'
 
 import { Button } from '@/shared/ui'
 import { DefaultModal } from '@/shared/ui/Modal/DefaultModal'
-import { ModalInfo } from '@/shared/ui/Modal/model/types'
+import { ModalComponentProps } from '@/shared/ui/Modal/model/types'
 
-interface RequestTimeLimitProps extends Omit<ModalInfo, 'Component'> {}
+interface RequestTimeLimitProps extends ModalComponentProps {}
 
 export const RequestTimeLimit = (props: RequestTimeLimitProps) => {
+  const { onCloseModal } = props
+
   return (
-    <DefaultModal isClosable={true} onClose={props.onClose}>
+    <DefaultModal closable={{ isClosable: true, onClose: onCloseModal }}>
       <div>
         <div className="mb-[2rem]">
           <div className="text-[24px] mb-3">Take a Coffee Break!☕️</div>
@@ -21,7 +23,7 @@ export const RequestTimeLimit = (props: RequestTimeLimitProps) => {
         <Button
           className="py-[1rem] bg-white hover:bg-white"
           stretch
-          onClick={props.onClose}
+          onClick={() => onCloseModal()}
         >
           Try Again Soon
         </Button>
