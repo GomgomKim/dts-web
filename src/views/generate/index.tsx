@@ -20,6 +20,14 @@ import { Variations } from './ui/Variations'
 
 export default function Generate() {
   const [isLoading, setIsLoading] = React.useState(true)
+  const [isHoldingGenerate, setIsHoldingGenerate] = React.useState(false)
+
+  const onHoldingGenerate = React.useCallback(() => {
+    setIsHoldingGenerate(true)
+    setTimeout(() => {
+      setIsHoldingGenerate(false)
+    }, 3000)
+  }, [])
 
   // related brand assets
   const containerRef = React.useRef<HTMLDivElement>(null)
@@ -90,6 +98,8 @@ export default function Generate() {
                   <NewGenerateButton
                     disabled={isLoading}
                     onErrorGenerate={() => setOpenToast(true)}
+                    isHoldingGenerate={isHoldingGenerate}
+                    onHoldingGenerate={onHoldingGenerate}
                   />
                 </span>
               </div>
@@ -118,6 +128,7 @@ export default function Generate() {
                     onDataLoaded={() => setIsLoading(false)}
                     onChangeSelectedVariation={handleSelectedVariation}
                     onErrorGenerate={() => setOpenToast(true)}
+                    onHoldingGenerate={onHoldingGenerate}
                   />
                 </div>
               </div>

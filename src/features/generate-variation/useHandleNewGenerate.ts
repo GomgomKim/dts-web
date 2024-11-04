@@ -19,9 +19,11 @@ import { usePostAiImageGenerate } from './model/adapter'
 const DELAY_NEW_GENERATE = 100
 
 export const useHandleClickNewGenerate = ({
-  onErrorGenerate
+  onErrorGenerate,
+  onHoldingGenerate
 }: {
   onErrorGenerate: () => void
+  onHoldingGenerate: () => void
 }) => {
   const { openModal } = useModals()
 
@@ -77,9 +79,11 @@ export const useHandleClickNewGenerate = ({
               case 5009:
                 openModal(GenerationLimit)
                 break
-              case 5010:
+              case 5010: {
+                onHoldingGenerate()
                 openModal(RequestTimeLimit)
                 break
+              }
             }
           } else {
             console.log(error)

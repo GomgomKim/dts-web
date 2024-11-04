@@ -15,6 +15,7 @@ interface VariationsProps {
   onDataLoaded: () => void
   onChangeSelectedVariation: (variation: Variation) => void
   onErrorGenerate: () => void
+  onHoldingGenerate: () => void
 }
 
 const INITIAL_PAGE = 1
@@ -60,6 +61,7 @@ export const Variations = (props: VariationsProps) => {
         <NewGenerateButton
           disabled={props.isLoading}
           onErrorGenerate={props.onErrorGenerate}
+          onHoldingGenerate={props.onHoldingGenerate}
         />
       </div>
     </div>
