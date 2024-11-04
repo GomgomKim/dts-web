@@ -3,14 +3,14 @@ import { Variation } from '@/shared/api/types'
 import { create } from 'zustand'
 
 type AiImageState = {
-  isAiImageFailed: boolean | null
+  // isAiImageFailed: boolean | null
   isAiImageGenerating: boolean | null
   aiImageGeneratingList: Variation[]
   aiImageList: Variation[]
 }
 
 type AiImageAction = {
-  setIsAiImageFailed: (isAiImageFailed: boolean) => void
+  // setIsAiImageFailed: (isAiImageFailed: boolean) => void
   setIsAiImageGenerating: (isAiImageGenerating: boolean) => void
   addAiImageGeneratingList: (items: Variation[]) => void
   removeAiImageGeneratingList: (variationId: number) => void
@@ -22,11 +22,11 @@ type AiImageAction = {
 
 export const useAiImageGeneratingStore = create<AiImageState & AiImageAction>(
   (set) => ({
-    isAiImageFailed: null,
+    // isAiImageFailed: null,
     isAiImageGenerating: null,
     aiImageGeneratingList: [],
     aiImageList: [],
-    setIsAiImageFailed: (isAiImageFailed: boolean) => set({ isAiImageFailed }),
+    // setIsAiImageFailed: (isAiImageFailed: boolean) => set({ isAiImageFailed }),
     setIsAiImageGenerating: (isAiImageGenerating: boolean) =>
       set({ isAiImageGenerating }),
     addAiImageGeneratingList: (newItems: Variation[]) =>

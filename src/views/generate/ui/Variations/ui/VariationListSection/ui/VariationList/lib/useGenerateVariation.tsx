@@ -18,6 +18,7 @@ export const useGenerateVariation = (mainImageId: string) => {
 
     if (query.isError) {
       console.error(query.error)
+      // setIsAiImageFailed(true)
       continue
     }
 
