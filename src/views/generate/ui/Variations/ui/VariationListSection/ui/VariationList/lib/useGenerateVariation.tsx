@@ -16,12 +16,12 @@ export const useGenerateVariation = (mainImageId: string) => {
     const query = queries[i]
 
     if (query.isLoading) {
-      console.log('로딩중')
+      // console.log('로딩중')
       continue
     }
 
     if (query.isError) {
-      console.log('에러 발생')
+      console.error(query.error)
       continue
     }
 
