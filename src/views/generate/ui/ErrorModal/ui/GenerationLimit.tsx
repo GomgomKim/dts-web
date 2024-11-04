@@ -14,13 +14,15 @@ interface GenerationLimitProps extends ModalComponentProps {}
 export const GenerationLimit = (props: GenerationLimitProps) => {
   const router = useRouter()
 
+  const { onCloseModal } = props
+
   const handleCloseModal = () => {
-    props.onCloseModal()
+    onCloseModal()
     router.push('/explore')
   }
 
   return (
-    <DefaultModal closable={{ isClosable: true, onClose: handleCloseModal }}>
+    <DefaultModal closable={{ isClosable: true, onClose: onCloseModal }}>
       <div>
         <div className="mb-[2rem]">
           <div className="text-[24px] mb-3">
