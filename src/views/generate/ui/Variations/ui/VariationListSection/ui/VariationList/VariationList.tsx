@@ -116,9 +116,9 @@ export const VariationList = (props: VariationListProps) => {
 
   return (
     <>
-      {renderData.map((item) => (
+      {renderData.map((item, idx) => (
         <VariationItem
-          key={item.variationId}
+          key={item.variationId + idx}
           item={item}
           onClickVariation={() => props.onChangeSelectedVariation(item)}
         />
