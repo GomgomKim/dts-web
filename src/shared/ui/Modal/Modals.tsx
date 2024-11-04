@@ -19,11 +19,11 @@ const Modals = () => {
       {openedModals.map((modalInfo, index) => {
         const { Component, props } = modalInfo
 
-        const onClose = () => {
+        const onCloseModal = () => {
           close(Component)
         }
 
-        return <Component key={index} onClose={onClose} {...props} />
+        return <Component key={index} onCloseModal={onCloseModal} {...props} />
       })}
     </>,
     document.getElementById('modal-root') as HTMLElement
