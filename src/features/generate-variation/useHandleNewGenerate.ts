@@ -26,18 +26,12 @@ export const useHandleClickNewGenerate = ({
   const { openModal } = useModals()
 
   const searchParams = useSearchParams()
-  const addAiImageGeneratingList = useAiImageGeneratingStore(
-    (state) => state.addAiImageGeneratingList
-  )
+  const { setIsAiImageGenerating, addAiImageGeneratingList, addAiImageItems } =
+    useAiImageGeneratingStore.getState()
 
   const restriction = useAuthStore((state) => state.restriction)
   const setRestriction = useAuthStore((state) => state.setRestriction)
-  const setIsAiImageGenerating = useAiImageGeneratingStore(
-    (state) => state.setIsAiImageGenerating
-  )
-  const addAiImageItem = useAiImageGeneratingStore(
-    (state) => state.addAiImageItem
-  )
+
   const postAiImageMutation = usePostAiImageGenerate()
 
   const isOutOfCredit = restriction !== null ? restriction.current <= 0 : false
@@ -65,7 +59,7 @@ export const useHandleClickNewGenerate = ({
         onSuccess: (data) => {
           const { variations, restriction } = data.content
           addAiImageGeneratingList(variations)
-          addAiImageItem(variations)
+          addAiImageItems(variations)
 
           setRestriction(restriction)
         },

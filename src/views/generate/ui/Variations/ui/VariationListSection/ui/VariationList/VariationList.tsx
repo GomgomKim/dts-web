@@ -30,8 +30,8 @@ export const VariationList = (props: VariationListProps) => {
   useGenerateVariation(mainImageId)
 
   const {
+    addAiImageItems,
     setIsAiImageGenerating,
-    setAiImageList,
     addAiImageGeneratingList,
     resetAiImageGeneratingList
   } = useAiImageGeneratingStore.getState()
@@ -87,7 +87,7 @@ export const VariationList = (props: VariationListProps) => {
       props.setCurrentPage(props.totalPage)
 
       addAiImageGeneratingList(newGeneratingList)
-      setAiImageList(newGeneratingList)
+      addAiImageItems(newGeneratingList)
     }
   }, [variations, isFetching])
 
