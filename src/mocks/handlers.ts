@@ -173,23 +173,28 @@ export const handlers = [
   http.post(`${URL_AI_IMAGE_GENERATE}`, async ({ request }) => {
     const url = new URL(request.url)
     const mainImageId = url.searchParams.get('mainImageId')
+    const requestCount = url.searchParams.get('requestCount')
 
-    if (!mainImageId) {
-      return sendJsonResponse(0, 'Invalid request data', null, 400)
+    if (!mainImageId || !requestCount) {
+      return sendJsonResponse(0, 'Invalid request parameter', null, 409)
     }
 
-    const responseImages = {
-      variationId: Date.now(),
-      isAiGenerated: true,
-      images: [],
-      progress: 10
-    }
+    const responseImages = Array.from({ length: Number(requestCount) }).map(
+      (_, idx) => {
+        return {
+          variationId: Date.now() * 10 * (idx + 1),
+          isAiGenerated: true,
+          images: [],
+          progress: 10
+        }
+      }
+    )
 
     return sendJsonResponse(
       0,
       null,
       {
-        variation: responseImages,
+        variations: responseImages,
         restriction: { current: ++current, max: 100 }
       },
       200
