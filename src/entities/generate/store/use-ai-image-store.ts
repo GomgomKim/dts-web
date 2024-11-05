@@ -3,30 +3,30 @@ import { Variation } from '@/shared/api/types'
 import { create } from 'zustand'
 
 type AiImageState = {
-  isAiImageFailed: boolean | null
+  // isAiImageFailed: boolean | null
   isAiImageGenerating: boolean | null
-  aiImageGeneratingList: Variation[]
-  aiImageList: Variation[]
+  aiImageGeneratingList: Variation[] // 이미지 생성 중인 리스트
+  aiImageList: Variation[] // 클라이언트에서 처리(polling)하는 이미지 리스트 (= 이미지 생성 완료 + 이미지 생성 중)
 }
 
 type AiImageAction = {
-  setIsAiImageFailed: (isAiImageFailed: boolean) => void
+  // setIsAiImageFailed: (isAiImageFailed: boolean) => void
   setIsAiImageGenerating: (isAiImageGenerating: boolean) => void
   addAiImageGeneratingList: (items: Variation[]) => void
   removeAiImageGeneratingList: (variationId: number) => void
-  setAiImageList: (items: Variation[]) => void
-  addAiImageItem: (items: Variation[]) => void
-  updateAiImageItem: (updatedItem: Variation) => void
   resetAiImageGeneratingList: () => void
+  //
+  addAiImageItems: (items: Variation[]) => void
+  updateAiImageItem: (updatedItem: Variation) => void
 }
 
 export const useAiImageGeneratingStore = create<AiImageState & AiImageAction>(
   (set) => ({
-    isAiImageFailed: null,
+    // isAiImageFailed: null,
     isAiImageGenerating: null,
     aiImageGeneratingList: [],
     aiImageList: [],
-    setIsAiImageFailed: (isAiImageFailed: boolean) => set({ isAiImageFailed }),
+    // setIsAiImageFailed: (isAiImageFailed: boolean) => set({ isAiImageFailed }),
     setIsAiImageGenerating: (isAiImageGenerating: boolean) =>
       set({ isAiImageGenerating }),
     addAiImageGeneratingList: (newItems: Variation[]) =>
@@ -42,11 +42,12 @@ export const useAiImageGeneratingStore = create<AiImageState & AiImageAction>(
 
         return { ...state, aiImageGeneratingList: newList }
       }),
-    setAiImageList: (items: Variation[]) =>
+    resetAiImageGeneratingList: () =>
       set((state) => {
-        return { ...state, aiImageList: items }
+        return { ...state, aiImageGeneratingList: [], aiImageList: [] }
       }),
-    addAiImageItem: (items: Variation[]) =>
+    //
+    addAiImageItems: (items: Variation[]) =>
       set((state) => {
         const mergedList = state.aiImageList.concat(items)
         return { ...state, aiImageList: mergedList }
@@ -60,10 +61,6 @@ export const useAiImageGeneratingStore = create<AiImageState & AiImageAction>(
         })
 
         return { ...state, aiImageList: newList }
-      }),
-    resetAiImageGeneratingList: () =>
-      set((state) => {
-        return { ...state, aiImageGeneratingList: [], aiImageList: [] }
       })
   })
 )

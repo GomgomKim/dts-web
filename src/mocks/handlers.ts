@@ -175,14 +175,19 @@ export const handlers = [
     const mainImageId = url.searchParams.get('mainImageId')
     const requestCount = url.searchParams.get('requestCount')
 
+    if (imageProgressMap.size >= 3) {
+      return sendJsonResponse(5010, 'Too many requests', null, 409)
+    }
+
     if (!mainImageId || !requestCount) {
       return sendJsonResponse(0, 'Invalid request parameter', null, 409)
     }
 
     const responseImages = Array.from({ length: Number(requestCount) }).map(
-      (_, idx) => {
+      () => {
         return {
-          variationId: Date.now() * 10 * (idx + 1),
+          // 동일한 id 값 사용하는 점 주의
+          variationId: Date.now(),
           isAiGenerated: true,
           images: [],
           progress: 10

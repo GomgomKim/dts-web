@@ -2,7 +2,8 @@
 
 import { ReactNode, useMemo, useState } from 'react'
 
-import Modals from '../../shared/ui/Modal/Modals'
+import { Modals } from '@/shared/ui/Modal/Modals'
+
 import {
   ModalsDispatchContext,
   ModalsStateContext

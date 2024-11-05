@@ -8,26 +8,27 @@ import {
   useModalsStateContext
 } from './model/ModalsContext'
 
-const Modals = () => {
+export const Modals = () => {
   const openedModals = useModalsStateContext()
   const { close } = useModalsDispatchContext()
 
   if (typeof window === 'undefined') return <></>
+
+  const modalRoot = document.getElementById('modal-root')
+  if (!modalRoot) return null
 
   return ReactDom.createPortal(
     <>
       {openedModals.map((modalInfo, index) => {
         const { Component, props } = modalInfo
 
-        const onClose = () => {
+        const onCloseModal = () => {
           close(Component)
         }
 
-        return <Component key={index} onClose={onClose} {...props} />
+        return <Component key={index} onCloseModal={onCloseModal} {...props} />
       })}
     </>,
     document.getElementById('modal-root') as HTMLElement
   )
 }
-
-export default Modals
