@@ -12,7 +12,7 @@ import DTSLogo from '/public/icons/dts-logo.svg'
 
 interface DefaultModalProps {
   closeable?: {
-    isClosable: boolean
+    isCloseable: boolean
     onClose: () => void
   }
   title: React.ReactNode
@@ -25,7 +25,7 @@ export const DefaultModal = (props: DefaultModalProps) => {
   const router = useRouter()
 
   const handleClose = React.useCallback(() => {
-    props.closeable?.isClosable ? props.closeable.onClose() : null
+    props.closeable?.isCloseable ? props.closeable.onClose() : null
   }, [props.closeable])
 
   const handleClickLogo = () => {
