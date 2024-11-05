@@ -14,6 +14,7 @@ export const RequestTimeLimit = (props: RequestTimeLimitProps) => {
 
   return (
     <DefaultModal
+      closeable={{ isCloseable: false, onClose: onCloseModal }}
       title="Take a Coffee Break!☕️"
       description={
         <>

@@ -9,6 +9,7 @@ export const GenerationLimit = (props: GenerationLimitProps) => {
 
   return (
     <DefaultModal
+      closeable={{ isCloseable: false, onClose: onCloseModal }}
       title="Generation Limit Reached for This Model"
       description={
         <>
