@@ -11,7 +11,7 @@ import { usePreventScroll } from '@/shared/lib/hooks/usePreventScroll'
 import DTSLogo from '/public/icons/dts-logo.svg'
 
 interface DefaultModalProps {
-  closable?: {
+  closeable?: {
     isClosable: boolean
     onClose: () => void
   }
@@ -25,11 +25,11 @@ export const DefaultModal = (props: DefaultModalProps) => {
   const router = useRouter()
 
   const handleClose = React.useCallback(() => {
-    props.closable?.isClosable ? props.closable.onClose() : null
-  }, [props.closable])
+    props.closeable?.isClosable ? props.closeable.onClose() : null
+  }, [props.closeable])
 
   const handleClickLogo = () => {
-    props.closable?.onClose()
+    props.closeable?.onClose()
     router.push('/')
   }
 
