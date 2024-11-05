@@ -63,7 +63,7 @@ export const DefaultModal = (props: DefaultModalProps) => {
 
         <div>
           <div className="mb-[2rem]">
-            <div className="text-[24px] mb-3">{props.title}</div>
+            <div className="text-[24px] mb-3 font-semibold">{props.title}</div>
             <p className="text-neutral-7 text-[14px]">{props.description}</p>
           </div>
 
