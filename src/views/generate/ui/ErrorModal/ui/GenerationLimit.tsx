@@ -1,5 +1,3 @@
-'use client'
-
 import { Button } from '@/shared/ui'
 import { DefaultModal } from '@/shared/ui/Modal/DefaultModal'
 import { ModalComponentProps } from '@/shared/ui/Modal/model/types'
