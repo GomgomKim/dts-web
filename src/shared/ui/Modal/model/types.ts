@@ -1,11 +1,11 @@
 import { ComponentProps, ComponentType } from 'react'
 
 export interface ModalComponentProps extends ComponentProps<'div'> {
-  onCloseModal: () => void
-  onClose?: () => void
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any
 }
 
 export interface ModalInfo {
   Component: ComponentType<ModalComponentProps>
-  props?: Record<string, unknown>
+  props?: ModalComponentProps
 }
