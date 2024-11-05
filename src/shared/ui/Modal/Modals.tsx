@@ -8,11 +8,14 @@ import {
   useModalsStateContext
 } from './model/ModalsContext'
 
-const Modals = () => {
+export const Modals = () => {
   const openedModals = useModalsStateContext()
   const { close } = useModalsDispatchContext()
 
   if (typeof window === 'undefined') return <></>
+
+  const modalRoot = document.getElementById('modal-root')
+  if (!modalRoot) return null
 
   return ReactDom.createPortal(
     <>
@@ -29,5 +32,3 @@ const Modals = () => {
     document.getElementById('modal-root') as HTMLElement
   )
 }
-
-export default Modals
