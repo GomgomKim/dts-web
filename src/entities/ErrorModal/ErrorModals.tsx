@@ -28,7 +28,7 @@ export const ErrorModals = ({
   // if (isTokenError) {
   return (
     <Unauthorized
-      onClick={() => {
+      onClickButton={() => {
         logOut(queryClient)
         resetErrorBoundary()
         window.location.reload()
