@@ -16,6 +16,7 @@ export interface MainItem {
   description: string
   isFavorite: boolean
   encryptedThumbnailUrl: string
+  tags: string[] // TODO: 타입 구체화
 }
 
 export interface Variation {
