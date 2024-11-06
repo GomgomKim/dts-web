@@ -15,7 +15,7 @@ interface LikeButtonProps {
 }
 
 export const LikeButton = (props: LikeButtonProps) => {
-  const { id, isFavorite, name: modelname } = props.item
+  const { id, isFavorite, name: modelname, tags } = props.item
   const addFavoriteMutation = usePostFavorite()
   const deleteFavoriteMutation = useDeleteFavorite()
 
@@ -31,7 +31,10 @@ export const LikeButton = (props: LikeButtonProps) => {
     if (isFavorite) {
       deleteFavoriteMutation.mutate({ mainImageId: id.toString() })
     } else {
-      sendToMixpanel('favorite_model', { model_name: modelname, model_tag: '' })
+      sendToMixpanel('favorite_model', {
+        model_name: modelname,
+        model_tag: tags.join(',')
+      })
       addFavoriteMutation.mutate({ mainImageId: id.toString() })
     }
   }
