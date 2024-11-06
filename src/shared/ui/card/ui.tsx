@@ -23,7 +23,13 @@ interface CardProps extends ComponentProps<'div'> {
 }
 
 export const Card = (props: CardProps) => {
-  const { id, name: modelname, description, encryptedThumbnailUrl } = props.item
+  const {
+    id,
+    name: modelname,
+    description,
+    encryptedThumbnailUrl,
+    tags
+  } = props.item
   const [isHovering, setIsHovering] = useState(false)
   const router = useRouter()
   const isAuth = useAuthStore((state) => state.isAuth)
@@ -41,7 +47,7 @@ export const Card = (props: CardProps) => {
   const handleClickCard = (modelName: string, id: number) => {
     sendToMixpanel('select_model', {
       model_name: modelName,
-      model_tag: ''
+      model_tag: tags.join(',')
     })
     if (!isMember) {
       router.push('/signup', { scroll: false })
