@@ -23,7 +23,7 @@ export const LikeButton = (props: LikeButtonProps) => {
 
   const handleClick = () => {
     if (!isAuth) {
-      router.push('/signup')
+      router.push('/signup', { scroll: false })
       return
     }
 

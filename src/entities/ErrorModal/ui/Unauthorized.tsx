@@ -1,3 +1,5 @@
+import { useRouter } from 'next/navigation'
+
 import { Button } from '@/shared/ui'
 
 import ArrowLeft from '/public/icons/arrow-thin.svg'
@@ -11,6 +13,8 @@ interface UnauthorizedProps {
 export const Unauthorized = (props: UnauthorizedProps) => {
   const { onClickButton } = props
 
+  const router = useRouter()
+
   return (
     <DefaultModal
       title="Service Unavailable"
@@ -21,7 +25,10 @@ export const Unauthorized = (props: UnauthorizedProps) => {
           variant="destructive"
           className="py-[1rem]"
           stretch
-          onClick={onClickButton}
+          onClick={() => {
+            onClickButton()
+            router.replace('/')
+          }}
         >
           <div className="flex items-center gap-[0.5rem]">
             <ArrowLeft className="stroke-black -rotate-[135deg]" />
