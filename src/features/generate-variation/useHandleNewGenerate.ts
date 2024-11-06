@@ -33,6 +33,7 @@ export const useHandleClickNewGenerate = ({
 
   const pathName = usePathname()
   const modelName = pathName.split('/')[2]
+  const modelTag = searchParams.get('tagType')
 
   const restriction = useAuthStore((state) => state.restriction)
   const setRestriction = useAuthStore((state) => state.setRestriction)
@@ -101,9 +102,12 @@ export const useHandleClickNewGenerate = ({
   const debounceHandleClickNewGenerate = React.useCallback(
     debounce(() => {
       clickNewGenerate()
-      sendToMixpanel('generate_image', { model_name: modelName, model_tag: '' })
+      sendToMixpanel('generate_image', {
+        model_name: modelName,
+        model_tag: modelTag
+      })
     }, DELAY_NEW_GENERATE),
-    []
+    [restriction, modelName, modelTag]
   )
 
   return { debounceHandleClickNewGenerate, isOutOfCredit }

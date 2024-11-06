@@ -20,7 +20,7 @@ interface VariationListProps {
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>
   totalPage: number
   setTotalPage: React.Dispatch<React.SetStateAction<number>>
-  onChangeSelectedVariation: (variation: Variation) => void
+  onChangeSelectedVariation: (variation: Variation, tags: string[]) => void
 }
 
 export const VariationList = (props: VariationListProps) => {
@@ -41,7 +41,7 @@ export const VariationList = (props: VariationListProps) => {
   )
 
   const {
-    data: { variations },
+    data: { variations, tags },
     isFetching
   } = useGetVariationList(mainImageId)
 
@@ -62,7 +62,7 @@ export const VariationList = (props: VariationListProps) => {
   React.useEffect(() => {
     if (isFetching) return
 
-    props.onChangeSelectedVariation(variations[0])
+    props.onChangeSelectedVariation(variations[0], tags)
     props.onDataLoaded()
 
     // polling 할 목록 따로 추출
@@ -115,7 +115,7 @@ export const VariationList = (props: VariationListProps) => {
         <VariationItem
           key={item.variationId + idx}
           item={item}
-          onClickVariation={() => props.onChangeSelectedVariation(item)}
+          onClickVariation={() => props.onChangeSelectedVariation(item, tags)} // TODO:
         />
       ))}
       {/* null card */}

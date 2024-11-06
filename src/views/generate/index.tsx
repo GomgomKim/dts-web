@@ -54,10 +54,13 @@ export default function Generate() {
     React.useState<Variation | null>(null)
 
   const { handleQueryString } = useSetQueryString({ action: 'replace' })
-  const handleSelectedVariation = (variation: Variation) => {
+  const handleSelectedVariation = (
+    variation: Variation,
+    tags: string[] = []
+  ) => {
     setSelectedVariation(variation)
-    // handleResize()
-    handleQueryString([{ variationId: variation.variationId.toString() }])
+    const variationId = variation.variationId.toString()
+    handleQueryString([{ variationId, tagType: tags.join(',') }])
   }
 
   // related credit
