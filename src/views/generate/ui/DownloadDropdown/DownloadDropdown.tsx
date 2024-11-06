@@ -58,7 +58,9 @@ export const DownloadDropdown = (props: DownloadDropdownProps) => {
         : EXPORT_QUALITY_OPTIONS_9_16
   }
 
-  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
+  const isClient = typeof window !== 'undefined'
+  const isSafari =
+    isClient && /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
