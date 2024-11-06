@@ -31,7 +31,6 @@ export const ErrorModals = ({
       onClickButton={() => {
         logOut(queryClient)
         resetErrorBoundary()
-        window.location.reload()
       }}
     />
   )
