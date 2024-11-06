@@ -42,10 +42,7 @@ export const VariationList = (props: VariationListProps) => {
 
   const {
     data: { variations },
-    isFetching,
-    isError,
-    error
-    // isSuccess
+    isFetching
   } = useGetVariationList(mainImageId)
 
   const [initialData, setInitialData] = React.useState<Variation[]>([])
@@ -111,8 +108,6 @@ export const VariationList = (props: VariationListProps) => {
     (props.currentPage - 1) * props.amountPerPage,
     (props.currentPage - 1) * props.amountPerPage + props.amountPerPage
   )
-
-  if (isError) return <div>{error?.message}</div>
 
   return (
     <>
