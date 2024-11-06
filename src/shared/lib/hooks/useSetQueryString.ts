@@ -22,8 +22,6 @@ export const useSetQueryString = (props: useSetQueryStringParams) => {
         Object.entries(param).forEach(([key, value]) => {
           if (value) {
             params.set(key, value)
-          } else {
-            params.delete(key)
           }
         })
       })
