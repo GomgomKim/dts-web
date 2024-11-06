@@ -2,9 +2,11 @@
 
 import * as React from 'react'
 
+import { ErrorModals } from '@/entities/ErrorModal/ErrorModals'
 import { useAiImageGeneratingStore } from '@/entities/generate/store'
 
 import { Variation } from '@/shared/api/types'
+import { ErrorBoundary } from '@/shared/ui/ErrorBoundary'
 
 import { NewGenerateButton } from './ui/NewGenerateButton'
 import { Pagination } from './ui/Pagination'
@@ -49,14 +51,16 @@ export const Variations = (props: VariationsProps) => {
       </div>
 
       <div className="flex gap-4 min-h-[120px]">
-        <VariationListSection
-          onDataLoaded={props.onDataLoaded}
-          onChangeSelectedVariation={props.onChangeSelectedVariation}
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-          totalPage={totalPage}
-          setTotalPage={setTotalPage}
-        />
+        <ErrorBoundary FallbackComponent={ErrorModals}>
+          <VariationListSection
+            onDataLoaded={props.onDataLoaded}
+            onChangeSelectedVariation={props.onChangeSelectedVariation}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            totalPage={totalPage}
+            setTotalPage={setTotalPage}
+          />
+        </ErrorBoundary>
         {/* new generate button */}
         <NewGenerateButton
           disabled={props.isLoading}
