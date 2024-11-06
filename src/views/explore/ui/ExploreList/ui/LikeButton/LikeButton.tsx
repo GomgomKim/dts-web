@@ -6,6 +6,7 @@ import * as entities from '@/entities/LikeButton'
 import { useAuthStore } from '@/entities/UserProfile/store'
 
 import { MainItem } from '@/shared/api/types'
+import sendToMixpanel from '@/shared/lib/utils/sendToMixpanel'
 
 import { useDeleteFavorite, usePostFavorite } from './adapter'
 
@@ -14,7 +15,7 @@ interface LikeButtonProps {
 }
 
 export const LikeButton = (props: LikeButtonProps) => {
-  const { id, isFavorite } = props.item
+  const { id, isFavorite, name: modelname, tags } = props.item
   const addFavoriteMutation = usePostFavorite()
   const deleteFavoriteMutation = useDeleteFavorite()
 
@@ -30,6 +31,10 @@ export const LikeButton = (props: LikeButtonProps) => {
     if (isFavorite) {
       deleteFavoriteMutation.mutate({ mainImageId: id.toString() })
     } else {
+      sendToMixpanel('favorite_model', {
+        model_name: modelname,
+        model_tag: tags.join(',')
+      })
       addFavoriteMutation.mutate({ mainImageId: id.toString() })
     }
   }

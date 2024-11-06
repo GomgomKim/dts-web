@@ -4,7 +4,9 @@ import * as React from 'react'
 
 import { usePathname } from 'next/navigation'
 
-import { Variation } from '@/shared/api/types'
+import { ASPECT_RATIO_MAP } from '@/entities/generate/constant'
+
+import { AspectRatio, Variation } from '@/shared/api/types'
 import { cn } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui'
 import {
@@ -48,6 +50,7 @@ export const DownloadDropdown = (props: DownloadDropdownProps) => {
 
   const variationId = props.selectedVariation?.variationId.toString()
 
+  let imageRatio: AspectRatio = 'ASPECT_RATIO_9_16'
   let exportQualityOption = EXPORT_QUALITY_OPTIONS_9_16
 
   if (variationId !== undefined && editedVariationList.has(variationId)) {
@@ -56,6 +59,7 @@ export const DownloadDropdown = (props: DownloadDropdownProps) => {
       ratio === 'ASPECT_RATIO_1_1'
         ? EXPORT_QUALITY_OPTIONS_1_1
         : EXPORT_QUALITY_OPTIONS_9_16
+    imageRatio = ratio
   }
 
   const isClient = typeof window !== 'undefined'
@@ -166,7 +170,9 @@ export const DownloadDropdown = (props: DownloadDropdownProps) => {
         <div className="pt-3 px-5">
           <ExportButton
             imageName={modelName}
-            imageType={selectedFormat}
+            imageRatio={ASPECT_RATIO_MAP[imageRatio]}
+            imageFormat={selectedFormat}
+            imageQuality={selectedQuality}
             imageSize={
               exportQualityOption.find(
                 (option) => option.value === selectedQuality

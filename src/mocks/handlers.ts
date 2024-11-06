@@ -25,28 +25,32 @@ const ImageData = {
       name: 'jisoo',
       description: '지수의 메인 이미지',
       isFavorite: false,
-      encryptedThumbnailUrl: faker.image.urlLoremFlickr()
+      encryptedThumbnailUrl: faker.image.urlLoremFlickr(),
+      tags: ['tag1', 'tag2']
     },
     {
       id: 2,
       name: 'jisoo',
       description: '지수의 메인 이미지',
       isFavorite: false,
-      encryptedThumbnailUrl: faker.image.urlLoremFlickr()
+      encryptedThumbnailUrl: faker.image.urlLoremFlickr(),
+      tags: ['tag1', 'tag2']
     },
     {
       id: 3,
       name: 'jisoo',
       description: '지수의 메인 이미지',
       isFavorite: true,
-      encryptedThumbnailUrl: faker.image.urlLoremFlickr()
+      encryptedThumbnailUrl: faker.image.urlLoremFlickr(),
+      tags: ['tag1', 'tag2']
     },
     {
       id: 4,
       name: 'jisoo',
       description: '지수의 메인 이미지',
       isFavorite: false,
-      encryptedThumbnailUrl: faker.image.urlLoremFlickr()
+      encryptedThumbnailUrl: faker.image.urlLoremFlickr(),
+      tags: ['tag1', 'tag2']
     }
   ],
   SKINCARE: [
@@ -55,14 +59,16 @@ const ImageData = {
       name: 'jisoo',
       description: '지수의 메인 이미지',
       isFavorite: true,
-      encryptedThumbnailUrl: faker.image.urlLoremFlickr()
+      encryptedThumbnailUrl: faker.image.urlLoremFlickr(),
+      tags: ['tag1', 'tag2']
     },
     {
       id: 6,
       name: 'jisoo',
       description: '지수의 메인 이미지',
       isFavorite: true,
-      encryptedThumbnailUrl: faker.image.urlLoremFlickr()
+      encryptedThumbnailUrl: faker.image.urlLoremFlickr(),
+      tags: ['tag1', 'tag2']
     }
   ],
   HAIR: [
@@ -71,7 +77,8 @@ const ImageData = {
       name: 'jisoo',
       description: '지수의 메인 이미지',
       isFavorite: false,
-      encryptedThumbnailUrl: faker.image.urlLoremFlickr()
+      encryptedThumbnailUrl: faker.image.urlLoremFlickr(),
+      tags: ['tag1', 'tag2']
     }
   ]
 }

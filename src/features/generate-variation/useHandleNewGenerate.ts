@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { useSearchParams } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 
 import { GenerationLimit } from '@/views/generate/ui/ErrorModal/ui/GenerationLimit'
 import { RequestTimeLimit } from '@/views/generate/ui/ErrorModal/ui/RequestTimeLimit'
@@ -10,6 +10,7 @@ import { useAiImageGeneratingStore } from '@/entities/generate/store'
 
 import { Restriction } from '@/shared/api/types'
 import { debounce } from '@/shared/lib/utils'
+import sendToMixpanel from '@/shared/lib/utils/sendToMixpanel'
 import useModals from '@/shared/ui/Modal/model/useModals'
 
 import { isAxiosError } from 'axios'
@@ -25,11 +26,14 @@ export const useHandleClickNewGenerate = ({
   onErrorGenerate: () => void
   onHoldingGenerate: () => void
 }) => {
-  const { openModal } = useModals()
-
   const searchParams = useSearchParams()
+  const { openModal } = useModals()
   const { setIsAiImageGenerating, addAiImageGeneratingList, addAiImageItems } =
     useAiImageGeneratingStore.getState()
+
+  const pathName = usePathname()
+  const modelName = pathName.split('/')[2]
+  const modelTag = searchParams.get('tagType')
 
   const restriction = useAuthStore((state) => state.restriction)
   const setRestriction = useAuthStore((state) => state.setRestriction)
@@ -38,7 +42,7 @@ export const useHandleClickNewGenerate = ({
 
   const isOutOfCredit = restriction !== null ? restriction.current <= 0 : false
 
-  const handleClickNewGenerate = () => {
+  const clickNewGenerate = () => {
     if (!isValidRestriction(restriction)) {
       onErrorGenerate()
       return
@@ -96,8 +100,14 @@ export const useHandleClickNewGenerate = ({
   }
 
   const debounceHandleClickNewGenerate = React.useCallback(
-    debounce(handleClickNewGenerate, DELAY_NEW_GENERATE),
-    []
+    debounce(() => {
+      clickNewGenerate()
+      sendToMixpanel('generate_image', {
+        model_name: modelName,
+        model_tag: modelTag
+      })
+    }, DELAY_NEW_GENERATE),
+    [restriction, modelName, modelTag]
   )
 
   return { debounceHandleClickNewGenerate, isOutOfCredit }

@@ -10,6 +10,7 @@ export interface GetVariationListResData
 
 export interface VariationListContent {
   variations: Variation[]
+  tags: string[] // TODO: 타입 구체화
   restriction: Restriction
 }
 
