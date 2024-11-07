@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation'
 import { useAuthStore } from '@/entities/UserProfile/store'
 
 import { MainItem } from '@/shared/api/types'
-import sendToMixpanel from '@/shared/lib/utils/sendToMixpanel'
+import { track } from '@/shared/lib/utils/mixpanel'
 import { Button } from '@/shared/ui/button'
 
 import LinkIcon from '/public/icons/arrow-thin.svg'
@@ -45,7 +45,7 @@ export const Card = (props: CardProps) => {
   const CardWrapper = isMember ? Link : 'div'
 
   const handleClickCard = (modelName: string, id: number) => {
-    sendToMixpanel('select_model', {
+    track.sendToMixpanel('select_model', {
       model_name: modelName,
       model_tag: tags.join(',')
     })

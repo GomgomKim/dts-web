@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 
 import { cn, debounce } from '@/shared/lib/utils'
-import sendToMixpanel from '@/shared/lib/utils/sendToMixpanel'
+import { track } from '@/shared/lib/utils/mixpanel'
 import { Button } from '@/shared/ui/button'
 
 import AlertIcon from '/public/icons/alert-circle.svg'
@@ -96,7 +96,7 @@ export const ExportButton = (props: ExportButtonProps) => {
   const debounceHandleButtonClick = useCallback(
     debounce(() => {
       handleClickButton()
-      sendToMixpanel('download_image', {
+      track.sendToMixpanel('download_image', {
         image_format: imageFormat,
         image_quality: imageQuality,
         image_ratio: imageRatio
