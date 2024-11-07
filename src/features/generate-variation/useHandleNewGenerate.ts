@@ -10,7 +10,7 @@ import { useAiImageGeneratingStore } from '@/entities/generate/store'
 
 import { Restriction } from '@/shared/api/types'
 import { debounce } from '@/shared/lib/utils'
-import sendToMixpanel from '@/shared/lib/utils/sendToMixpanel'
+import { track } from '@/shared/lib/utils/mixpanel'
 import useModals from '@/shared/ui/Modal/model/useModals'
 
 import { isAxiosError } from 'axios'
@@ -102,7 +102,7 @@ export const useHandleClickNewGenerate = ({
   const debounceHandleClickNewGenerate = React.useCallback(
     debounce(() => {
       clickNewGenerate()
-      sendToMixpanel('generate_image', {
+      track.sendToMixpanel('generate_image', {
         model_name: modelName,
         model_tag: modelTag
       })

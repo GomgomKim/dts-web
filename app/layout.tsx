@@ -3,10 +3,10 @@ import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 
+import { MixpanelProvider } from '@/app/providers/MixpanelProvider'
 import { ModalsProvider } from '@/app/providers/ModalsProvider'
 import { NetworkError } from '@/app/providers/NetworkError'
 import { PathStorage } from '@/app/providers/PathStorage'
-import TrackProvider from '@/app/providers/TrackProvider/TrackProvider'
 import { AxiosInterceptorWrapper } from '@/app/providers/axios-interceptor-wrapper'
 import { MSWComponent } from '@/app/providers/msw-component'
 import { ReactQueryProviders } from '@/app/providers/query-client-provider'
@@ -71,7 +71,7 @@ export default function RootLayout({
         <ReactQueryProviders>
           <AxiosInterceptorWrapper>
             <PathStorage />
-            <TrackProvider>
+            <MixpanelProvider>
               <NetworkError>
                 <Suspense fallback={<Loading />}>
                   <ModalsProvider>
@@ -81,7 +81,7 @@ export default function RootLayout({
                 </Suspense>
                 <div id="modal-root" />
               </NetworkError>
-            </TrackProvider>
+            </MixpanelProvider>
           </AxiosInterceptorWrapper>
         </ReactQueryProviders>
       </body>
