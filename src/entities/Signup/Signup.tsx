@@ -3,11 +3,11 @@
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 
+import { track } from '@/shared/lib/utils/mixpanel'
 import { Button } from '@/shared/ui'
+import { GoogleButton } from '@/shared/ui/GoogleButton/GoogleButton'
 
 import DTSLogo from '/public/icons/dts-logo.svg'
-
-import { SignupButton } from './SignupButton'
 
 interface SignupProps {
   modalRef?: React.RefObject<HTMLDivElement>
@@ -50,7 +50,14 @@ export const Signup = (props: SignupProps) => {
                 </Link>
               </div>
             </div>
-            <SignupButton redirectPageInfo={redirectPageInfo} />
+            <GoogleButton
+              redirectPageInfo={redirectPageInfo}
+              onClick={() => {
+                track.sendToMixpanel('click_signup')
+              }}
+            >
+              Sign up with google
+            </GoogleButton>
           </div>
         </div>
         <div>
