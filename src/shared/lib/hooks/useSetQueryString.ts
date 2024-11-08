@@ -11,37 +11,40 @@ interface useSetQueryStringParams {
 }
 
 export const useSetQueryString = (props: useSetQueryStringParams) => {
-  const searchParams = useSearchParams()
+  const _searchParams = useSearchParams()
   const router = useRouter()
   const pathname = usePathname()
-  const params = new URLSearchParams(searchParams.toString())
+  const searchParams = new URLSearchParams(_searchParams.toString())
 
   const createQueryStrings = useCallback(
     (queryParams: QueryParams[]) => {
       queryParams.forEach((param) => {
         Object.entries(param).forEach(([key, value]) => {
           if (value) {
-            params.set(key, value)
+            searchParams.set(key, value)
           }
         })
       })
-      return params.toString()
+      return searchParams.toString()
     },
-    [searchParams]
+    [_searchParams]
   )
 
-  const handleQueryString = (queryParams: QueryParams[]) => {
-    const queryString = createQueryStrings(queryParams)
-    if (props.action === 'replace') {
-      router.replace(pathname + '?' + queryString, {
-        scroll: props.scroll || false
-      })
-    } else {
-      router.push(pathname + '?' + queryString, {
-        scroll: props.scroll || false
-      })
-    }
-  }
+  const handleQueryString = useCallback(
+    (queryParams: QueryParams[]) => {
+      const queryString = createQueryStrings(queryParams)
+      if (props.action === 'replace') {
+        router.replace(pathname + '?' + queryString, {
+          scroll: props.scroll || false
+        })
+      } else {
+        router.push(pathname + '?' + queryString, {
+          scroll: props.scroll || false
+        })
+      }
+    },
+    [pathname, _searchParams]
+  )
 
   return { handleQueryString }
 }
