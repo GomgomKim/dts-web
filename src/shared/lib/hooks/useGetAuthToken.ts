@@ -1,54 +1,96 @@
+'use client'
+
 import * as React from 'react'
 
 import { useRouter, useSearchParams } from 'next/navigation'
 
+// import { ErrorModals } from '@/entities/ErrorModal/ErrorModals'
 import { useAuthStore } from '@/entities/UserProfile/store'
 
 import { dtsAxios } from '@/shared/api'
 
-export const useGetAuthToken = ({ redirectPath }: { redirectPath: string }) => {
+import { useSetQueryString } from './useSetQueryString'
+
+type RedirectUri = 'explore' | 'generate'
+
+interface UseGetAuthTokenParams {
+  redirectPath?: string
+  redirectUri: RedirectUri
+  toggleIsGettingToken?: (value: boolean) => void
+}
+
+export const useGetAuthToken = (params: UseGetAuthTokenParams) => {
   const searchParams = useSearchParams()
   const router = useRouter()
 
   const logIn = useAuthStore((state) => state.logIn)
   const isAuth = useAuthStore((state) => state.isAuth)
 
+  const { removeSearchParams } = useSetQueryString({ action: 'replace' })
+
   React.useEffect(() => {
     if (isAuth === true) {
+      params.toggleIsGettingToken?.(false)
       return
     }
 
     // 로그인 직후
     if (searchParams.has('oAuthProviderType') && searchParams.has('code')) {
+      params.toggleIsGettingToken?.(true)
       const oAuthProviderType = searchParams.get('oAuthProviderType') as string
       const code = searchParams.get('code') as string
 
-      getTokens(oAuthProviderType, code).then((headers) => {
-        if (headers) {
-          const token = {
-            accessToken: headers['authorization'],
-            refreshToken: headers['refresh-token']
+      const redirectUri = getRedirectUri(params.redirectUri)
+
+      getTokens(oAuthProviderType, code, redirectUri)
+        .then((headers) => {
+          if (headers) {
+            const token = {
+              accessToken: headers['authorization'],
+              refreshToken: headers['refresh-token']
+            }
+
+            logIn(token)
+
+            if (params.redirectPath) {
+              router.replace(params.redirectPath)
+            } else {
+              removeSearchParams(['oAuthProviderType', 'code'])
+            }
+
+            params.toggleIsGettingToken?.(false)
           }
-
-          logIn(token)
-
-          router.replace(redirectPath)
-        }
-      })
+        })
+        .catch((error) => {
+          //TODO: api error handling
+          console.error('Error fetching tokens:', error)
+        })
+    } else {
+      params.toggleIsGettingToken?.(false)
     }
   }, [searchParams])
 }
 
-const getTokens = async (oAuthProviderType: string, code: string) => {
-  // try {
+const getTokens = async (
+  oAuthProviderType: string,
+  code: string,
+  redirectUri: string
+) => {
   const response = await dtsAxios.get('/auth/access-token', {
     params: {
       oAuthProviderType,
-      code
+      code,
+      redirectUri
     }
   })
   return response.headers
-  // } catch (error) {
-  //   console.error('Error fetching tokens:', error)
-  // }
+}
+
+const getRedirectUri = (uri: RedirectUri) => {
+  return (
+    process.env.NEXT_PUBLIC_REDIRECT_BASE_URL +
+    '/' +
+    uri +
+    '?oAuthProviderType=GOOGLE'
+  )
 }

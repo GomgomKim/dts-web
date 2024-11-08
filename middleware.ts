@@ -14,6 +14,21 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(newUrl)
   }
 
+  if (!isMobile && pathname === '/generate' && searchParams.has('state')) {
+    const generatePageInfo = searchParams.get('state')!
+    const modelInfo = generatePageInfo.split('-')
+    const modelName = modelInfo[1]
+    const modelId = modelInfo[3]
+
+    const newUrl = new URL(`/generate/${modelName}?id=${modelId}`, request.url)
+
+    searchParams.forEach((value, key) => {
+      newUrl.searchParams.append(key, value)
+    })
+
+    return NextResponse.redirect(newUrl)
+  }
+
   if (
     isMobile &&
     pathname.startsWith('/explore') &&
