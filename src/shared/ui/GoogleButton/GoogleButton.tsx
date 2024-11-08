@@ -8,21 +8,38 @@ import { Button } from '@/shared/ui'
 
 import GoogleIcon from '/public/icons/google-logo.svg'
 
-interface LoginButtonProps {
+interface GoogleButtonProps {
   children: React.ReactNode
   onClick?: () => void
+  redirectPageInfo?: string
 }
 
-export const LoginButton = (props: LoginButtonProps) => {
+export const GoogleButton = (props: GoogleButtonProps) => {
   const router = useRouter()
 
   const handleClick = () => {
     const loginUrl = process.env.NEXT_PUBLIC_GOOGLE_LOGIN_URL
+    const redirectBaseUrl = process.env.NEXT_PUBLIC_REDIRECT_BASE_URL
 
     props.onClick?.()
 
-    if (loginUrl) {
-      router.replace(loginUrl)
+    if (loginUrl && redirectBaseUrl) {
+      const redirectUri =
+        redirectBaseUrl +
+        (props.redirectPageInfo ? '/generate' : '/explore') +
+        '?oAuthProviderType=GOOGLE'
+
+      const redirectState = props.redirectPageInfo
+        ? getState(props.redirectPageInfo)
+        : ''
+
+      const replaceHref =
+        loginUrl +
+        '&redirect_uri=' +
+        redirectUri +
+        (redirectState ? '&state=' + redirectState : '')
+
+      router.replace(replaceHref)
     } else {
       console.error('Google login URL is not defined')
     }
@@ -36,4 +53,8 @@ export const LoginButton = (props: LoginButtonProps) => {
       {props.children}
     </Button>
   )
+}
+
+const getState = (redirectPageInfo: string) => {
+  return redirectPageInfo.replaceAll('=', '-').replace('&', '-')
 }

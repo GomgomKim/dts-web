@@ -1,16 +1,21 @@
 'use client'
 
 import { track } from '@/shared/lib/utils/mixpanel'
-import { LoginButton } from '@/shared/ui/LoginButton/LoginButton'
+import { GoogleButton } from '@/shared/ui/GoogleButton/GoogleButton'
 
-export const SignupButton = () => {
+interface SignupButtonProps {
+  redirectPageInfo?: string
+}
+
+export const SignupButton = (props: SignupButtonProps) => {
   return (
-    <LoginButton
+    <GoogleButton
+      redirectPageInfo={props.redirectPageInfo}
       onClick={() => {
         track.sendToMixpanel('click_signup')
       }}
     >
       Sign up with google
-    </LoginButton>
+    </GoogleButton>
   )
 }
