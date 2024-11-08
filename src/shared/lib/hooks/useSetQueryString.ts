@@ -46,5 +46,22 @@ export const useSetQueryString = (props: useSetQueryStringParams) => {
     [pathname, _searchParams]
   )
 
-  return { handleQueryString }
+  //  TODO: searchParams나 queryString 통일하기
+  const removeSearchParams = useCallback(
+    (keys: string | string[]) => {
+      if (typeof keys === 'string') {
+        searchParams.delete(keys)
+      } else if (Array.isArray(keys)) {
+        keys.forEach((key) => searchParams.delete(key))
+      }
+
+      const paramsToString = searchParams.toString()
+      const query = paramsToString ? `?${paramsToString}` : ''
+
+      router.replace(`${pathname}${query}`)
+    },
+    [pathname, _searchParams]
+  )
+
+  return { handleQueryString, removeSearchParams }
 }
