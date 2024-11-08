@@ -13,7 +13,10 @@ import { ExploreList } from './ui/ExploreList'
 import { FILTER_TYPES } from './ui/ExploreList/constant'
 
 export default function Explore() {
-  useGetAuthToken({ redirectPath: '/explore?filterType=ALL' })
+  useGetAuthToken({
+    redirectPath: '/explore?filterType=ALL',
+    redirectUri: 'explore'
+  })
 
   const { element, onMoveToElement } = useMoveScroll()
   return (

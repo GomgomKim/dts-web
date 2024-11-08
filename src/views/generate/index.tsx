@@ -18,7 +18,11 @@ import { Box } from './ui/ImageEditingBox/types'
 import { NewGenerateButton } from './ui/NewGenerateButton'
 import { Variations } from './ui/Variations'
 
-export default function Generate() {
+interface GenerateProps {
+  isGettingToken: boolean | null
+}
+
+export default function Generate(props: GenerateProps) {
   const [isLoading, setIsLoading] = React.useState(true)
   const [isHoldingGenerate, setIsHoldingGenerate] = React.useState(false)
 
@@ -126,13 +130,18 @@ export default function Generate() {
                   </div>
 
                   {/* variations section */}
-                  <Variations
-                    isLoading={isLoading}
-                    onDataLoaded={() => setIsLoading(false)}
-                    onChangeSelectedVariation={handleSelectedVariation}
-                    onErrorGenerate={() => setOpenToast(true)}
-                    onHoldingGenerate={onHoldingGenerate}
-                  />
+                  {props.isGettingToken ? (
+                    // TODO: add skeleton loader
+                    'getting token ...'
+                  ) : (
+                    <Variations
+                      isLoading={isLoading}
+                      onDataLoaded={() => setIsLoading(false)}
+                      onChangeSelectedVariation={handleSelectedVariation}
+                      onErrorGenerate={() => setOpenToast(true)}
+                      onHoldingGenerate={onHoldingGenerate}
+                    />
+                  )}
                 </div>
               </div>
             </div>

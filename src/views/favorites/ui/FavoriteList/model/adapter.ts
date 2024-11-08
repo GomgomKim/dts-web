@@ -11,6 +11,7 @@ import { GetFavoriteListResData } from './types'
 export const useGetFavoriteList = () => {
   const searchParams = useSearchParams()
   const isAuth = useAuthStore((state) => state.isAuth)
+  const token = useAuthStore((state) => state.tokens)
 
   const sortingType = searchParams.get('sortingType') || SORTING_TYPES[0]
 
@@ -32,7 +33,7 @@ export const useGetFavoriteList = () => {
     queryKey: ['favorites', sortingType],
     queryFn: ({ pageParam }) =>
       getFavoriteList({ sortingType, scrollKey: pageParam }),
-    enabled: isAuth === true && !!sortingType,
+    enabled: isAuth === true && token !== null && !!sortingType,
     initialPageParam: null,
     getNextPageParam: (lastPage) => lastPage.content.scrollKey
     // staleTime: 60 * 1000,

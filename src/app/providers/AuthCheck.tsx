@@ -11,9 +11,10 @@ import { LoadingSpinner } from '@/shared/ui/LoadingSpinner'
 interface AuthCheckProps {
   children: React.ReactNode
   routePath?: string
+  isGettingToken: boolean | null
 }
 
-export default function AuthCheck({ children, routePath }: AuthCheckProps) {
+export default function AuthCheck(props: AuthCheckProps) {
   const isAuth = useAuthStore((state) => state.isAuth)
   const setIsAuth = useAuthStore((state) => state.setIsAuth)
 
@@ -29,21 +30,22 @@ export default function AuthCheck({ children, routePath }: AuthCheckProps) {
 
       setLoading(true)
     } else {
-      if (!isAuth) {
-        router.replace(routePath ? routePath : '/signup')
+      if (!isAuth && props.isGettingToken === false) {
+        router.replace(props.routePath ? props.routePath : '/signup')
       }
-
-      setLoading(false)
+      if (props.isGettingToken !== null) {
+        setLoading(false)
+      }
     }
-  }, [isAuth, router])
+  }, [isAuth, router, props.isGettingToken])
 
-  if (loading) {
+  if (loading || props.isGettingToken === null) {
     return <LoadingSpinner width="40" height="40" />
   }
 
-  if (!isAuth) {
+  if (!isAuth && props.isGettingToken === false) {
     return null
   }
 
-  return <>{children}</>
+  return <>{props.children}</>
 }

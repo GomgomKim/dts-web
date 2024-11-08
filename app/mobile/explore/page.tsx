@@ -7,10 +7,10 @@ import { Instructions } from '@/entities/mobile/ui/Instructions'
 import { useGetAuthToken } from '@/shared/lib/hooks/useGetAuthToken'
 
 export default function Page() {
-  useGetAuthToken({ redirectPath: '/mobile/explore' })
+  useGetAuthToken({ redirectPath: '/mobile/explore', redirectUri: 'explore' })
 
   return (
-    <AuthCheck routePath="/mobile">
+    <AuthCheck routePath="/mobile" isGettingToken={false}>
       <div className="absolute-center">
         <Instructions />
       </div>

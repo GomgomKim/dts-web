@@ -1,20 +1,31 @@
-import Link from 'next/link'
+'use client'
 
+import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
+
+import { track } from '@/shared/lib/utils/mixpanel'
 import { Button } from '@/shared/ui'
+import { GoogleButton } from '@/shared/ui/GoogleButton/GoogleButton'
 
 import DTSLogo from '/public/icons/dts-logo.svg'
-
-import { SignupButton } from './SignupButton'
 
 interface SignupProps {
   modalRef?: React.RefObject<HTMLDivElement>
 }
 
-export const Signup = ({ modalRef }: SignupProps) => {
+export const Signup = (props: SignupProps) => {
+  const searchParams = useSearchParams()
+
+  const modelName = searchParams.get('name')
+  const modelId = searchParams.get('id')
+
+  const redirectPageInfo =
+    modelName && modelId ? `name=${modelName}&id=${modelId}` : ''
+
   return (
     <div className="flex justify-center fixed bg-neutral-0-90 inset-0 z-50">
       <div
-        ref={modalRef}
+        ref={props.modalRef}
         className="flex flex-col gap-10 border border-neutral-2 rounded-[12px] m-auto relative p-10 w-[400px] bg-background mx-2"
       >
         <div>
@@ -30,12 +41,23 @@ export const Signup = ({ modalRef }: SignupProps) => {
                 <p className="text-neutral-7 text-[14px]">
                   Already have an account?
                 </p>
-                <Link href="/login" className="text-primary text-[14px]">
+                <Link
+                  replace
+                  href={`/login?${redirectPageInfo}`}
+                  className="text-primary text-[14px]"
+                >
                   Log in
                 </Link>
               </div>
             </div>
-            <SignupButton />
+            <GoogleButton
+              redirectPageInfo={redirectPageInfo}
+              onClick={() => {
+                track.sendToMixpanel('click_signup')
+              }}
+            >
+              Sign up with google
+            </GoogleButton>
           </div>
         </div>
         <div>

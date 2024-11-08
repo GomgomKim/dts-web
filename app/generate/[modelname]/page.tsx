@@ -2,9 +2,36 @@
 
 import * as React from 'react'
 
+import { usePathname, useSearchParams } from 'next/navigation'
+
+import AuthCheck from '@/app/providers/AuthCheck'
+
 import Generate from '@/views/generate'
 
+import { useGetAuthToken } from '@/shared/lib/hooks/useGetAuthToken'
+
 export default function Page() {
+  const [isGettingToken, setIsGettingToken] = React.useState<boolean | null>(
+    null
+  )
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+
+  const modelName = pathname.split('/')[2]
+  const modelId = searchParams.get('id')
+
+  const currentPageInfo =
+    modelName && modelId ? `?name=${modelName}&id=${modelId}` : ''
+
+  const toggleIsGettingToken = React.useCallback((value: boolean) => {
+    setIsGettingToken(value)
+  }, [])
+
+  useGetAuthToken({
+    redirectUri: 'generate',
+    toggleIsGettingToken
+  })
+
   React.useLayoutEffect(() => {
     const setVh = () => {
       document.documentElement.style.setProperty(
@@ -18,5 +45,12 @@ export default function Page() {
     return () => window.removeEventListener('resize', setVh)
   }, [])
 
-  return <Generate />
+  return (
+    <AuthCheck
+      isGettingToken={isGettingToken}
+      routePath={`/signup${currentPageInfo}`}
+    >
+      <Generate isGettingToken={isGettingToken} />
+    </AuthCheck>
+  )
 }

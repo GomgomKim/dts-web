@@ -50,11 +50,9 @@ export const Card = (props: CardProps) => {
       model_tag: tags.join(',')
     })
     if (!isMember) {
-      router.push('/signup', { scroll: false })
+      router.push(`/signup?name=${modelName}&id=${id}`, { scroll: false })
       return
     }
-    // TODO: 로그인 창으로 이동할 때 modelId를 같이 보내줘야함
-    console.log('click card', `/${modelName}?id=${id}`)
   }
 
   return (
