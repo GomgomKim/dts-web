@@ -27,7 +27,7 @@ SidebarSeparator.displayName = 'SidebarSeparator'
 
 export const Sidebar = () => {
   return (
-    <div className="min-w-[280px] px-5 py-3 fixed h-screen">
+    <div className="min-w-[280px] px-5 py-3 fixed h-screen bg-background z-10">
       <Menubar />
       <SidebarSeparator />
       <Categorybar />
