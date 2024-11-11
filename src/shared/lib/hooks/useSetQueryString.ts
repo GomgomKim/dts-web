@@ -60,7 +60,7 @@ export const useSetQueryString = (props: useSetQueryStringParams) => {
 
       router.replace(`${pathname}${query}`)
     },
-    [pathname, _searchParams]
+    [pathname, _searchParams, router]
   )
 
   return { handleQueryString, removeSearchParams }

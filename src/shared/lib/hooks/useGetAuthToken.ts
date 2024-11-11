@@ -68,7 +68,7 @@ export const useGetAuthToken = (params: UseGetAuthTokenParams) => {
     } else {
       params.toggleIsGettingToken?.(false)
     }
-  }, [searchParams])
+  }, [searchParams, router])
 }
 
 const getTokens = async (
