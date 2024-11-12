@@ -13,6 +13,7 @@ env:
 jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
+    environment: Production
 
     steps:
       - name: Checkout
@@ -58,7 +59,18 @@ jobs:
         run: pnpm install
 
       - name: Build with Create React App
-        run: pnpm build:production
+        run: pnpm build
+        env:
+          NEXT_PUBLIC_API_GOOGLE_IMAGE_HOST_NAME: ${{ secrets.NEXT_PUBLIC_API_GOOGLE_IMAGE_HOST_NAME }}
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+          NEXT_PUBLIC_API_PROTOCOL: ${{ secrets.NEXT_PUBLIC_API_PROTOCOL }}
+          NEXT_PUBLIC_API_HOST_NAME: ${{ secrets.NEXT_PUBLIC_API_HOST_NAME }}
+          NEXT_PUBLIC_API_PORT: ''
+          NEXT_PUBLIC_API_PATH_NAME: ${{ secrets.NEXT_PUBLIC_API_PATH_NAME }}
+          NEXT_PUBLIC_GOOGLE_LOGIN_URL: ${{ secrets.NEXT_PUBLIC_GOOGLE_LOGIN_URL }}
+          NEXT_PUBLIC_REDIRECT_BASE_URL: ${{ secrets.NEXT_PUBLIC_REDIRECT_BASE_URL }}
+          NEXT_PUBLIC_MIXPANEL_LIVE_TOKEN: ${{ secrets.NEXT_PUBLIC_MIXPANEL_LIVE_TOKEN }}
+          NEXT_PUBLIC_SENTRY_DSN: ${{ secrets.NEXT_PUBLIC_SENTRY_DSN }}
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
