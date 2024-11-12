@@ -23,8 +23,8 @@
 *.pem
 
 # env
-
 .env*
+!.env.example
 
 # debug
 npm-debug.log*
