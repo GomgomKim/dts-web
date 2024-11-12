@@ -5,7 +5,7 @@
   "scripts": {
     "start-dev": "cp .env.newdev .env.development && next dev",
     "start-prod": "cp .env.prod .env.development && next dev",
-    "build:newdev": "cp .env.newdev .env.production && next build",
+    "build:newdev": "next build",
     "build:production": "cp .env.prod .env.production && next build",
     "start": "next start",
     "lint": "next lint",
