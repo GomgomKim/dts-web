@@ -59,7 +59,7 @@ jobs:
 
       - name: Build with Create React App
         run: pnpm build:newdev
-        env: |
+        env:
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
           NEXT_PUBLIC_API_PROTOCOL: ${{ secrets.NEXT_PUBLIC_API_PROTOCOL }}
           NEXT_PUBLIC_API_HOST_NAME: ${{ secrets.NEXT_PUBLIC_API_HOST_NAME }}
