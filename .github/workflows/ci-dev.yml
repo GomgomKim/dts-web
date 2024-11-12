@@ -53,35 +53,21 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-
 
-      - name: Debug
-        run: echo NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
-        env:
-          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
-
-      # Github Repository Secrets를 통해 환경 변수 파일을 생성합니다.
-      - name: Generate Environment Variables File for Production
-        run: echo "NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL" >> .env.production
-        env:
-          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
-
-      - name: Check .env.production file
-        run: |
-          if [ -f .env.production ]; then
-            echo ".env.production file exists"
-            if grep -q "NEXT_PUBLIC_API_URL=" .env.production; then
-              echo "NEXT_PUBLIC_API_URL is present in .env.production"
-            else
-              echo "NEXT_PUBLIC_API_URL is missing from .env.production"
-            fi
-          else
-            echo ".env.production file does not exist"
-          fi
-
       - name: Build with Create React App
         run: pnpm install
 
       - name: Build with Create React App
         run: pnpm build:newdev
+        env: |
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+          NEXT_PUBLIC_API_PROTOCOL: ${{ secrets.NEXT_PUBLIC_API_PROTOCOL }}
+          NEXT_PUBLIC_API_HOST_NAME: ${{ secrets.NEXT_PUBLIC_API_HOST_NAME }}
+          NEXT_PUBLIC_API_PORT: ${{ secrets.NEXT_PUBLIC_API_PORT }}
+          NEXT_PUBLIC_API_PATH_NAME: ${{ secrets.NEXT_PUBLIC_API_PATH_NAME }}
+          NEXT_PUBLIC_GOOGLE_LOGIN_URL: ${{ secrets.NEXT_PUBLIC_GOOGLE_LOGIN_URL }}
+          NEXT_PUBLIC_REDIRECT_BASE_URL: ${{ secrets.NEXT_PUBLIC_REDIRECT_BASE_URL }}
+          NEXT_PUBLIC_MIXPANEL_LIVE_TOKEN: ${{ secrets.NEXT_PUBLIC_MIXPANEL_LIVE_TOKEN }}
+          NEXT_PUBLIC_SENTRY_DSN: ${{ secrets.NEXT_PUBLIC_SENTRY_DSN }}
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
