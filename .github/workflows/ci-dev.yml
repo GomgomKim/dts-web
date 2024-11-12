@@ -58,12 +58,13 @@ jobs:
         run: pnpm install
 
       - name: Build with Create React App
-        run: pnpm build:newdev
+        run: pnpm build
         env:
+          NEXT_PUBLIC_API_GOOGLE_IMAGE_HOST_NAME: ${{ secrets.NEXT_PUBLIC_API_GOOGLE_IMAGE_HOST_NAME }}
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
           NEXT_PUBLIC_API_PROTOCOL: ${{ secrets.NEXT_PUBLIC_API_PROTOCOL }}
           NEXT_PUBLIC_API_HOST_NAME: ${{ secrets.NEXT_PUBLIC_API_HOST_NAME }}
-          NEXT_PUBLIC_API_PORT: ${{ secrets.NEXT_PUBLIC_API_PORT }}
+          NEXT_PUBLIC_API_PORT: ''
           NEXT_PUBLIC_API_PATH_NAME: ${{ secrets.NEXT_PUBLIC_API_PATH_NAME }}
           NEXT_PUBLIC_GOOGLE_LOGIN_URL: ${{ secrets.NEXT_PUBLIC_GOOGLE_LOGIN_URL }}
           NEXT_PUBLIC_REDIRECT_BASE_URL: ${{ secrets.NEXT_PUBLIC_REDIRECT_BASE_URL }}

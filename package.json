@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "dev": "next dev",
     "start-dev": "cp .env.newdev .env.development && next dev",
     "start-prod": "cp .env.prod .env.development && next dev",
-    "build:newdev": "next build",
+    "build": "next build",
+    "build:newdev": "cp .env.newdev .env.production && next build",
     "build:production": "cp .env.prod .env.production && next build",
     "start": "next start",
     "lint": "next lint",
