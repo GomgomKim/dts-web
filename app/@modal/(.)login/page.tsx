@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 
 import { Login } from '@/entities/Login/Login'
 
-import { useOutsideClick } from '@/shared/lib/hooks/useOutsideClick'
+import { useClickOutside } from '@/shared/lib/hooks/useClickOutside'
 import { usePreventScroll } from '@/shared/lib/hooks/usePreventScroll'
 import { usePathStore } from '@/shared/lib/stores/usePathStore'
 
@@ -21,7 +21,7 @@ export default function Page() {
     else router.replace('/')
   }
 
-  useOutsideClick(modalRef, handleOutsideClick)
+  useClickOutside(modalRef, handleOutsideClick)
   usePreventScroll()
 
   return <Login modalRef={modalRef} />

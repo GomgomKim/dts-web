@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-export const useOutsideClick = (
+export const useClickOutside = (
   ref: React.RefObject<HTMLElement>,
   callback: () => void
 ) => {

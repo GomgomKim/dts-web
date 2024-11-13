@@ -7,7 +7,7 @@ import Link from 'next/link'
 import { useAuthStore } from '@/entities/UserProfile/store'
 import { Instructions } from '@/entities/mobile/ui/Instructions'
 
-import { useOutsideClick } from '@/shared/lib/hooks/useOutsideClick'
+import { useClickOutside } from '@/shared/lib/hooks/useClickOutside'
 import { cn } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui'
 
@@ -25,7 +25,7 @@ export const HamburgerMenu = () => {
   const isAuth = useAuthStore((state) => state.isAuth)
   const logOut = useAuthStore((state) => state.logOut)
 
-  useOutsideClick(menubarRef, () => setIsOpen(false))
+  useClickOutside(menubarRef, () => setIsOpen(false))
 
   return (
     <div ref={menubarRef}>
