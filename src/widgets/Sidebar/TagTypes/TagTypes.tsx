@@ -20,10 +20,11 @@ const Square = ({ color }: { color: string }) => {
   )
 }
 
-interface CategoryItemProps {
+interface TagTypeItemProps {
   children: React.ReactNode
 }
-const CategoryItem = (props: CategoryItemProps) => {
+
+const TagTypeItem = (props: TagTypeItemProps) => {
   const searchParams = useSearchParams()
   const router = useRouter()
   const pathName = usePathname()
@@ -54,16 +55,16 @@ const CategoryItem = (props: CategoryItemProps) => {
   )
 }
 
-export const Categorybar = () => {
+export const TagTypes = () => {
   return (
     <div>
       <MenuGroup
         title="Beauty"
         prefix={<Square color={'rgba(97, 97, 242, 1)'} />}
       >
-        <CategoryItem>Makeup</CategoryItem>
-        <CategoryItem>Skincare</CategoryItem>
-        <CategoryItem>Hair</CategoryItem>
+        <TagTypeItem>Makeup</TagTypeItem>
+        <TagTypeItem>Skincare</TagTypeItem>
+        <TagTypeItem>Hair</TagTypeItem>
       </MenuGroup>
 
       <MenuGroup

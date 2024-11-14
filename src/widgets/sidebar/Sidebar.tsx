@@ -8,8 +8,8 @@ import { Button, MenuItem } from '@/shared/ui'
 
 import Smile from '/public/icons/smile.svg'
 
-import { Categorybar } from './Categorybar'
 import { Menubar } from './Menubar'
+import { TagTypes } from './TagTypes'
 
 interface SidebarSeparatorProps extends React.ComponentProps<'div'> {}
 const SidebarSeparator = forwardRef<HTMLDivElement, SidebarSeparatorProps>(
@@ -30,8 +30,10 @@ export const Sidebar = () => {
     <div className="min-w-[280px] px-5 py-3 fixed h-screen bg-background z-10">
       <Menubar />
       <SidebarSeparator />
-      <Categorybar />
+
+      <TagTypes />
       <SidebarSeparator />
+
       <li>
         <MenuItem
           item={{
