@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 
 import { cn, debounce } from '@/shared/lib/utils'
 import { track } from '@/shared/lib/utils/mixpanel'
-import { Button } from '@/shared/ui/button'
+import { Button } from '@/shared/ui/Button'
 
 import AlertIcon from '/public/icons/alert-circle.svg'
 import SpinnerIcon from '/public/icons/loading-spinner.svg'

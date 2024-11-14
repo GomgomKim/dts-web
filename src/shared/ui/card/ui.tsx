@@ -10,7 +10,7 @@ import { useAuthStore } from '@/entities/UserProfile/store'
 
 import { MainItem } from '@/shared/api/types'
 import { track } from '@/shared/lib/utils/mixpanel'
-import { Button } from '@/shared/ui/button'
+import { Button } from '@/shared/ui/Button'
 
 import LinkIcon from '/public/icons/arrow-thin.svg'
 

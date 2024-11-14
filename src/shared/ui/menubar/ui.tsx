@@ -7,7 +7,7 @@ import Link from 'next/link'
 import { usePathname, useSearchParams } from 'next/navigation'
 
 import { cn } from '@/shared/lib/utils'
-import { Button } from '@/shared/ui/button'
+import { Button } from '@/shared/ui/Button'
 
 interface MenuItemType {
   href: { pathname: string; query?: { [key: string]: string } }

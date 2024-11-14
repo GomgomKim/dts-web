@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 
 import { useAuthStore } from '@/entities/UserProfile/store'
 
-import { Button } from '@/shared/ui/button'
+import { Button } from '@/shared/ui/Button'
 
 interface CallToActionButtonsProps {
   onClickSeeExample?: () => void

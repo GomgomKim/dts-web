@@ -2,7 +2,7 @@ import { ModalsProvider } from '@/app/providers/ModalsProvider'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { Button } from '../button'
+import { Button } from '../Button'
 import { DefaultModal } from './DefaultModal'
 import { ModalComponentProps } from './model/types'
 import useModals from './model/useModals'
