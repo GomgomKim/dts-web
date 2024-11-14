@@ -6,9 +6,9 @@ import localFont from 'next/font/local'
 import { AxiosInterceptorWrapper } from '@/app/providers/AxiosInterceptorWrapper'
 import { MixpanelProvider } from '@/app/providers/MixpanelProvider'
 import { ModalsProvider } from '@/app/providers/ModalsProvider'
+import { MswComponent } from '@/app/providers/MswComponent'
 import { NetworkError } from '@/app/providers/NetworkError'
 import { PathStorage } from '@/app/providers/PathStorage'
-import { MSWComponent } from '@/app/providers/msw-component'
 import { ReactQueryProviders } from '@/app/providers/query-client-provider'
 import '@/app/styles/globals.css'
 
@@ -66,7 +66,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <MSWComponent />
+      <MswComponent />
       <body className={`${pretendard.variable} font-pretendard`}>
         <ReactQueryProviders>
           <AxiosInterceptorWrapper>
