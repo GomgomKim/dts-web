@@ -1,5 +1,5 @@
 export * from './Badge'
 export * from './Button'
-export * from './card'
+export * from './Card'
 export * from './menubar'
 export * from './radio-group'
