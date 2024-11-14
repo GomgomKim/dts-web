@@ -9,7 +9,7 @@ import { ModalsProvider } from '@/app/providers/ModalsProvider'
 import { MswComponent } from '@/app/providers/MswComponent'
 import { NetworkError } from '@/app/providers/NetworkError'
 import { PathStorage } from '@/app/providers/PathStorage'
-import { ReactQueryProviders } from '@/app/providers/query-client-provider'
+import { ReactQueryClientProvider } from '@/app/providers/ReactQueryClientProvider'
 import '@/app/styles/globals.css'
 
 import Loading from './loading'
@@ -68,7 +68,7 @@ export default function RootLayout({
     <html lang="en">
       <MswComponent />
       <body className={`${pretendard.variable} font-pretendard`}>
-        <ReactQueryProviders>
+        <ReactQueryClientProvider>
           <AxiosInterceptorProvider>
             <PathStorage />
             <MixpanelProvider>
@@ -83,7 +83,7 @@ export default function RootLayout({
               </NetworkError>
             </MixpanelProvider>
           </AxiosInterceptorProvider>
-        </ReactQueryProviders>
+        </ReactQueryClientProvider>
       </body>
     </html>
   )

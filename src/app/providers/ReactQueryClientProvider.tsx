@@ -11,7 +11,9 @@ import {
 } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
-export function ReactQueryProviders({ children }: React.PropsWithChildren) {
+export function ReactQueryClientProvider({
+  children
+}: React.PropsWithChildren) {
   const { handleError } = useApiError()
 
   const [queryClient] = useState(
