@@ -3,7 +3,7 @@ import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 
-import { AxiosInterceptorWrapper } from '@/app/providers/AxiosInterceptorWrapper'
+import { AxiosInterceptorProvider } from '@/app/providers/AxiosInterceptorProvider'
 import { MixpanelProvider } from '@/app/providers/MixpanelProvider'
 import { ModalsProvider } from '@/app/providers/ModalsProvider'
 import { MswComponent } from '@/app/providers/MswComponent'
@@ -69,7 +69,7 @@ export default function RootLayout({
       <MswComponent />
       <body className={`${pretendard.variable} font-pretendard`}>
         <ReactQueryProviders>
-          <AxiosInterceptorWrapper>
+          <AxiosInterceptorProvider>
             <PathStorage />
             <MixpanelProvider>
               <NetworkError>
@@ -82,7 +82,7 @@ export default function RootLayout({
                 <div id="modal-root" />
               </NetworkError>
             </MixpanelProvider>
-          </AxiosInterceptorWrapper>
+          </AxiosInterceptorProvider>
         </ReactQueryProviders>
       </body>
     </html>
