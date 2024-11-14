@@ -11,7 +11,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger
-} from '@/shared/ui/dropdown-menu'
+} from '@/shared/ui/DropdownMenu'
 
 import { useAuthStore } from './store'
 import { Credit, LogOut } from './ui'

@@ -17,7 +17,7 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger
-} from '@/shared/ui/dropdown-menu'
+} from '@/shared/ui/DropdownMenu'
 import { Switch } from '@/shared/ui/switch'
 
 import CheckIcon from '/public/icons/check.svg'

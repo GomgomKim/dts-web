@@ -13,7 +13,7 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger
-} from '@/shared/ui/dropdown-menu'
+} from '@/shared/ui/DropdownMenu'
 
 import ChevronIcon from '/public/icons/angle-bracket-open.svg'
 
