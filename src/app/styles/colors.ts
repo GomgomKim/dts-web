@@ -15,17 +15,8 @@ const neutral = {
   9: '#fff'
 }
 
-const neutralAlpha = {
-  1: 'hsla(236, 8%, 61%, 0.13)',
-  2: 'rgba(182, 183, 206, 0.18)',
-  3: 'rgba(198, 199, 221, 0.23)',
-  4: 'rgba(231, 232, 246, 0.38)',
-  5: 'rgba(239, 240, 252, 0.46)'
-}
-
 export const colorMap = {
-  neutral,
-  neutralAlpha
+  neutral
 }
 
 export type Color = keyof typeof colorMap
