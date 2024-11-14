@@ -4,8 +4,8 @@ import type { Meta, StoryObj } from '@storybook/react'
 
 import { Button } from '../Button'
 import { DefaultModal } from './DefaultModal'
+import useModals from './model/Modals.hooks'
 import { ModalComponentProps } from './model/types'
-import useModals from './model/useModals'
 
 const meta: Meta<typeof DefaultModal> = {
   component: DefaultModal,
