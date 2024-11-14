@@ -3,7 +3,7 @@ import { Menu, MenuItem } from '@/shared/ui'
 import ExploreIcon from '/public/icons/compass.svg'
 import FavoriteIcon from '/public/icons/heart.svg'
 
-export const Menubar = () => {
+export const Navs = () => {
   return (
     <Menu>
       <li>
