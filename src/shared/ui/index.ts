@@ -1,4 +1,4 @@
-export * from './badge'
+export * from './Badge'
 export * from './button'
 export * from './card'
 export * from './menubar'

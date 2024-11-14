@@ -4,7 +4,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 import { cn } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui'
-import { Badge } from '@/shared/ui/badge'
+import { Badge } from '@/shared/ui/Badge'
 import { MenuGroup } from '@/shared/ui/menubar'
 
 const Square = ({ color }: { color: string }) => {
