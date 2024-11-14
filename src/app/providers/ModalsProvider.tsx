@@ -7,7 +7,7 @@ import { Modals } from '@/shared/ui/Modal/Modals'
 import {
   ModalsDispatchContext,
   ModalsStateContext
-} from '../../shared/ui/Modal/model/ModalsContext'
+} from '../../shared/ui/Modal/model/Modals.context'
 import { ModalInfo } from '../../shared/ui/Modal/model/types'
 
 export const ModalsProvider = ({ children }: { children: ReactNode }) => {
