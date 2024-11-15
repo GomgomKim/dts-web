@@ -16,10 +16,19 @@
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "prettier",
-    "plugin:storybook/recommended"
+    "plugin:storybook/recommended",
+    "plugin:tailwindcss/recommended"
   ],
   "plugins": ["unicorn"],
   "rules": {
-    "react-hooks/exhaustive-deps": "off"
+    "react-hooks/exhaustive-deps": "off",
+    // NOTE: error로 설정해야 eslint --fix 명령어가 자동으로 수정
+    "tailwindcss/classnames-order": "error", // 클래스네임 정렬
+    "tailwindcss/enforces-shorthand": "error" // 클래스네임 최적화
+  },
+  "settings": {
+    "tailwindcss": {
+      "callees": ["cn"] // cn() 안에 있는 클래스명에도 적용
+    }
   }
 }
