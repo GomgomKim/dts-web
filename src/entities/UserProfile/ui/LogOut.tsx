@@ -1,6 +1,6 @@
 'use client'
 
-import { DropdownMenuItem } from '@/shared/ui/dropdown-menu'
+import { DropdownMenuItem } from '@/shared/ui/DropdownMenu'
 
 import { useQueryClient } from '@tanstack/react-query'
 
