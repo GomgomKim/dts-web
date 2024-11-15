@@ -11,7 +11,7 @@ import { useAiImageGeneratingStore } from '@/entities/generate/store'
 import { Restriction } from '@/shared/api/types'
 import { debounce } from '@/shared/lib/utils'
 import { track } from '@/shared/lib/utils/mixpanel'
-import useModals from '@/shared/ui/Modal/model/useModals'
+import useModals from '@/shared/ui/Modal/model/Modals.hooks'
 
 import { isAxiosError } from 'axios'
 
