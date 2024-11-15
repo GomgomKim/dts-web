@@ -6,7 +6,7 @@ import ReactDom from 'react-dom'
 import {
   useModalsDispatchContext,
   useModalsStateContext
-} from './model/ModalsContext'
+} from './model/Modals.context'
 
 export const Modals = () => {
   const openedModals = useModalsStateContext()

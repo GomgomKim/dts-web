@@ -1,4 +1,4 @@
-import { CardSkeleton } from '@/shared/ui/card/CardSkeleton'
+import { CardSkeleton } from '@/shared/ui/Card/CardSkeleton'
 
 export const FavoriteListSkeleton = () => {
   return (

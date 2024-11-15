@@ -5,7 +5,7 @@ import * as React from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
-import { useOutsideClick } from '@/shared/lib/hooks/useOutsideClick'
+import { useClickOutside } from '@/shared/lib/hooks/useClickOutside'
 import { usePreventScroll } from '@/shared/lib/hooks/usePreventScroll'
 
 import DTSLogo from '/public/icons/dts-logo.svg'
@@ -34,7 +34,7 @@ export const DefaultModal = (props: DefaultModalProps) => {
   }
 
   usePreventScroll()
-  useOutsideClick(modalRef, handleClose)
+  useClickOutside(modalRef, handleClose)
 
   const handleKeydown = (e: KeyboardEvent) => {
     if (e.key === 'Escape') {

@@ -8,7 +8,7 @@ import { useMoveScroll } from '@/shared/lib/hooks/useMoveScroll'
 import { useSetQueryString } from '@/shared/lib/hooks/useSetQueryString'
 import { useFilterTypeStore } from '@/shared/lib/stores/useFilterTypeStore'
 import { cn } from '@/shared/lib/utils'
-import { Button } from '@/shared/ui/button'
+import { Button } from '@/shared/ui/Button'
 
 interface FilterProps extends React.ComponentPropsWithRef<'div'> {
   filterList: string[]

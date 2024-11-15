@@ -2,7 +2,9 @@
 
 import { useAxiosAuthInterceptor } from '@/entities/UserProfile/lib/useAxiosAuthInterceptor'
 
-export function AxiosInterceptorWrapper({ children }: React.PropsWithChildren) {
+export function AxiosInterceptorProvider({
+  children
+}: React.PropsWithChildren) {
   useAxiosAuthInterceptor()
 
   return <>{children}</>

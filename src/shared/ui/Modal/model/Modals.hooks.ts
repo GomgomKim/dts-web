@@ -1,4 +1,4 @@
-import { useModalsDispatchContext } from './ModalsContext'
+import { useModalsDispatchContext } from './Modals.context'
 import { ModalInfo } from './types'
 
 export default function useModals() {

@@ -1,4 +1,4 @@
-import { Button } from '@/shared/ui/button'
+import { Button } from '@/shared/ui/Button'
 
 export const UploadButton = ({ boxId }: { boxId: string }) => {
   return (

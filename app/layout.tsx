@@ -3,13 +3,13 @@ import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 
+import { AxiosInterceptorProvider } from '@/app/providers/AxiosInterceptorProvider'
 import { MixpanelProvider } from '@/app/providers/MixpanelProvider'
 import { ModalsProvider } from '@/app/providers/ModalsProvider'
+import { MswComponent } from '@/app/providers/MswComponent'
 import { NetworkError } from '@/app/providers/NetworkError'
 import { PathStorage } from '@/app/providers/PathStorage'
-import { AxiosInterceptorWrapper } from '@/app/providers/axios-interceptor-wrapper'
-import { MSWComponent } from '@/app/providers/msw-component'
-import { ReactQueryProviders } from '@/app/providers/query-client-provider'
+import { ReactQueryClientProvider } from '@/app/providers/ReactQueryClientProvider'
 import '@/app/styles/globals.css'
 
 import Loading from './loading'
@@ -66,10 +66,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <MSWComponent />
+      <MswComponent />
       <body className={`${pretendard.variable} font-pretendard`}>
-        <ReactQueryProviders>
-          <AxiosInterceptorWrapper>
+        <ReactQueryClientProvider>
+          <AxiosInterceptorProvider>
             <PathStorage />
             <MixpanelProvider>
               <NetworkError>
@@ -82,8 +82,8 @@ export default function RootLayout({
                 <div id="modal-root" />
               </NetworkError>
             </MixpanelProvider>
-          </AxiosInterceptorWrapper>
-        </ReactQueryProviders>
+          </AxiosInterceptorProvider>
+        </ReactQueryClientProvider>
       </body>
     </html>
   )

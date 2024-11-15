@@ -3,8 +3,8 @@
 import { Fragment, useEffect } from 'react'
 import { useInView } from 'react-intersection-observer'
 
-import { Card } from '@/shared/ui/card'
-import { CardSkeleton } from '@/shared/ui/card/CardSkeleton'
+import { Card } from '@/shared/ui/Card'
+import { CardSkeleton } from '@/shared/ui/Card/CardSkeleton'
 
 import { v4 } from 'uuid'
 

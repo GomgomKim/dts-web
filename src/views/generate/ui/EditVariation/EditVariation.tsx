@@ -13,7 +13,7 @@ import {
 
 import { Variation } from '@/shared/api/types'
 import { Badge, Button } from '@/shared/ui'
-import { RadioGroup, RadioGroupItem } from '@/shared/ui/radio-group'
+import { RadioGroup, RadioGroupItem } from '@/shared/ui/RadioGroup'
 
 import { useEditorStore } from '../../model/useEditorHistoryStore'
 
