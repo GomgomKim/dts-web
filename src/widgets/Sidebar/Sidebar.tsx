@@ -34,16 +34,14 @@ export const Sidebar = () => {
       <TagTypes />
       <SidebarSeparator />
 
-      <li>
-        <MenuItem
-          item={{
-            href: { pathname: 'https://tally.so/r/314QEg' },
-            target: '_blank',
-            title: 'Feedback',
-            prefix: <Smile />
-          }}
-        />
-      </li>
+      <MenuItem
+        href={{ pathname: 'https://tally.so/r/314QEg' }}
+        target="_blank"
+        title="Feedback"
+        prefix={<Smile />}
+        isActive={false}
+      />
+
       <li>
         <div className="p-[12px]">
           <Button asChild variant="link" className="text-white p-0 text-[12px]">
