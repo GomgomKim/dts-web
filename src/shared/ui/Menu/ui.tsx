@@ -46,18 +46,18 @@ export const MenuItem = (props: MenuItemProps) => {
           replace={props.replace ?? false}
           scroll={props.scroll ?? true}
           aria-disabled={props.disabled}
-          className={cn('flex justify-between items-center !px-[12px]', {
+          className={cn('flex items-center justify-between !px-[12px]', {
             'pointer-events-none opacity-50': props.disabled
           })}
         >
-          <div className="flex justify-center items-center gap-5">
-            <span className="[&>svg]:stroke-current flex justify-center items-center w-4 h-4">
+          <div className="flex items-center justify-center gap-5">
+            <span className="flex size-4 items-center justify-center [&>svg]:stroke-current">
               {props.prefix}
             </span>
-            <span className="text-[0.875rem] h-4">{props.title}</span>
+            <span className="h-4 text-[0.875rem]">{props.title}</span>
           </div>
           {props.postfix ? (
-            <span className="flex justify-center items-center h-4">
+            <span className="flex h-4 items-center justify-center">
               {props.postfix}
             </span>
           ) : null}
@@ -97,19 +97,19 @@ export const MenuGroup = React.forwardRef<HTMLUListElement, MenuGroupProps>(
 
     return (
       <ul ref={ref} className="text-[14px]" {...props} role="group">
-        <div className="flex justify-between items-center p-3 rounded-lg text-[#aeafb5]">
+        <div className="flex items-center justify-between rounded-lg p-3 text-[#aeafb5]">
           <div
-            className={cn('flex justify-center items-center gap-5', {
+            className={cn('flex items-center justify-center gap-5', {
               'pointer-events-none opacity-50': disabled
             })}
           >
-            <span className="flex justify-center items-center gap-5 w-4 h-4">
+            <span className="flex size-4 items-center justify-center gap-5">
               {prefix}
             </span>
-            <span className="text-[0.875rem] h-4">{title}</span>
+            <span className="h-4 text-[0.875rem]">{title}</span>
           </div>
           {postfix ? (
-            <span className="flex justify-center items-center h-4 relative">
+            <span className="relative flex h-4 items-center justify-center">
               {postfix}
             </span>
           ) : null}

@@ -20,7 +20,7 @@ export const GenerationLimit = (props: GenerationLimitProps) => {
       slot={
         <Button
           variant="destructive"
-          className="py-[1rem]"
+          className="py-4"
           stretch
           onClick={onCloseModal}
         >

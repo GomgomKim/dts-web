@@ -70,7 +70,7 @@ export const DownloadDropdown = (props: DownloadDropdownProps) => {
       <DropdownMenuTrigger asChild>
         <Button
           variant="sub1"
-          className="bg-neutral-1 bg-opacity-50 2xl:text-[1.5rem] 2xl:h-[80px]"
+          className="bg-neutral-1 bg-opacity-50 2xl:h-[80px] 2xl:text-[1.5rem]"
           disabled={!variationId || !props.containerRef || props.isLoading}
         >
           Free Download
@@ -81,7 +81,7 @@ export const DownloadDropdown = (props: DownloadDropdownProps) => {
         {/* menu 1 */}
         <DropdownMenuLabel>FORMAT</DropdownMenuLabel>
         <DropdownMenuRadioGroup
-          className={cn('flex px-5 py-3 gap-10', {
+          className={cn('flex gap-10 px-5 py-3', {
             'gap-5': isSafari
           })}
           value={selectedFormat}
@@ -109,7 +109,7 @@ export const DownloadDropdown = (props: DownloadDropdownProps) => {
         </DropdownMenuRadioGroup>
 
         {/* menu 2 */}
-        <DropdownMenuLabel className="pt-5 pb-1 bl-5">
+        <DropdownMenuLabel className="bl-5 pb-1 pt-5">
           EXPORT QUALITY
         </DropdownMenuLabel>
         <div>
@@ -125,7 +125,7 @@ export const DownloadDropdown = (props: DownloadDropdownProps) => {
                 >
                   <div className="flex gap-x-2">
                     <span className="text-[0.875rem]">{option.label}</span>
-                    <span className="font-medium text-[0.875rem] text-neutral-4">
+                    <span className="text-[0.875rem] font-medium text-neutral-4">
                       {option.subText}
                     </span>
                   </div>
@@ -136,22 +136,22 @@ export const DownloadDropdown = (props: DownloadDropdownProps) => {
               return (
                 <div
                   key={option.label}
-                  className="flex justify-between cursor-not-allowed px-5 py-3 text-[0.875rem] text-[#AEAFB5] font-medium outline-none "
+                  className="flex cursor-not-allowed justify-between px-5 py-3 text-[0.875rem] font-medium text-[#AEAFB5] outline-none "
                 >
                   <div className="flex gap-x-2">
                     <span className="text-[0.875rem]">{option.label}</span>
-                    <span className="font-medium text-[0.875rem] text-neutral-4">
+                    <span className="text-[0.875rem] font-medium text-neutral-4">
                       {option.subText}
                     </span>
                   </div>
-                  <span className="text-white text-[0.875rem]">Pro Plan</span>
+                  <span className="text-[0.875rem] text-white">Pro Plan</span>
                 </div>
               )
           })}
         </div>
 
         {/* menu 3 */}
-        <DropdownMenuLabel className="px-5 pt-5 pb-1">
+        <DropdownMenuLabel className="px-5 pb-1 pt-5">
           WATERMARK
         </DropdownMenuLabel>
         <div className="flex justify-between px-5 py-3">
@@ -167,7 +167,7 @@ export const DownloadDropdown = (props: DownloadDropdownProps) => {
         </div>
 
         {/* export button */}
-        <div className="pt-3 px-5">
+        <div className="px-5 pt-3">
           <ExportButton
             imageName={modelName}
             imageRatio={ASPECT_RATIO_MAP[imageRatio]}

@@ -15,7 +15,7 @@ export const ExploreBackButton = () => {
       onClick={() => router.push('/explore?filterType=ALL')}
       className="group"
     >
-      <div className="flex gap-[4px] items-center">
+      <div className="flex items-center gap-[4px]">
         <Arrow className="rotate-[-135deg] stroke-secondary-foreground group-hover:stroke-white" />
         <span className="text-[0.875rem]">Back to Explore</span>
       </div>

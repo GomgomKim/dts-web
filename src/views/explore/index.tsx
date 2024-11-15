@@ -22,7 +22,7 @@ export default function Explore() {
   return (
     <>
       <CallToActionButtons onClickSeeExample={onMoveToElement} />
-      <div className="min-h-screen max-w-[1136px] min-[3200px]:max-w-[1646px] 2xl:max-w-[2184px] m-auto pb-[160px]">
+      <div className="m-auto min-h-screen max-w-[1136px] pb-[160px] min-[3200px]:max-w-[1646px] 2xl:max-w-[2184px]">
         <div className="mb-5 scroll-mt-[56px]" ref={element}>
           <Filter id="explore-filter" filterList={FILTER_TYPES} />
         </div>

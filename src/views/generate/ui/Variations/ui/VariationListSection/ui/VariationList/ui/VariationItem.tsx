@@ -47,7 +47,7 @@ export const VariationItem = (props: VariationItemProps) => {
   return (
     <button
       className={cn(
-        'rounded-[0.5rem] overflow-hidden relative aspect-[206/219] w-full border border-border hover:opacity-100 cursor-pointer focus:outline-none focus-visible:border-white focus-visible:border-1 focus-visible:ring-2 focus-visible:ring-ring',
+        'focus-visible:border-1 relative aspect-[206/219] w-full cursor-pointer overflow-hidden rounded-[0.5rem] border border-border hover:opacity-100 focus:outline-none focus-visible:border-white focus-visible:ring-2 focus-visible:ring-ring',
         {
           'opacity-50': !isSelectedVariation
         }
@@ -63,7 +63,7 @@ export const VariationItem = (props: VariationItemProps) => {
 
 const EditIndicator = () => {
   return (
-    <div className="p-[6px] absolute top-[6px] left-[6px] rounded-[4px] bg-neutral-0 bg-opacity-90 hover:opacity-100">
+    <div className="absolute left-[6px] top-[6px] rounded-[4px] bg-neutral-0 bg-opacity-90 p-[6px] hover:opacity-100">
       <EditIcon />
     </div>
   )

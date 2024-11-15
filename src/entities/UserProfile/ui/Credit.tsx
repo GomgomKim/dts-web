@@ -19,13 +19,13 @@ export const Credit = () => {
   const creditDescription = isOutOfCredit ? (
     <CreditResetIndicator />
   ) : (
-    <span className="font-medium text-[0.875rem] text-neutral-4">
+    <span className="text-[0.875rem] font-medium text-neutral-4">
       {restriction.max} credits per day
     </span>
   )
 
   return (
-    <div className="flex items-center justify-between py-3 px-5">
+    <div className="flex items-center justify-between px-5 py-3">
       <CreditAmount credit={credit} isOutOfCredit={isOutOfCredit} />
       {creditDescription}
     </div>

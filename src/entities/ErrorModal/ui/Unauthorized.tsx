@@ -25,15 +25,15 @@ export const Unauthorized = (props: UnauthorizedProps) => {
       slot={
         <Button
           variant="destructive"
-          className="py-[1rem]"
+          className="py-4"
           stretch
           onClick={() => {
             onClickButton()
             router.replace('/')
           }}
         >
-          <div className="flex items-center gap-[0.5rem]">
-            <ArrowLeft className="stroke-black -rotate-[135deg]" />
+          <div className="flex items-center gap-2">
+            <ArrowLeft className="-rotate-[135deg] stroke-black" />
             <span className="text-[0.75rem] font-semibold">
               Go Back Home to Log In
             </span>

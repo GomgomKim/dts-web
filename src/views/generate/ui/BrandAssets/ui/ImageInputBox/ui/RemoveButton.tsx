@@ -12,7 +12,7 @@ export const RemoveButton = ({
       variant="secondary"
       size="icon"
       onClick={onClickRemoveButton}
-      className="absolute top-[1rem] right-[1rem] group/btn"
+      className="group/btn absolute right-4 top-4"
     >
       <DeleteIcon className="stroke-current group-hover/btn:stroke-white" />
     </Button>

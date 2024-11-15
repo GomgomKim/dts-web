@@ -8,7 +8,7 @@ export const Badge = ({ children, className, ...props }: BadgeProps) => {
   return (
     <span
       className={cn(
-        'px-2 py-[3px] rounded text-[#D2D3D9] bg-[#393A40] text-[12px] leading-4 font-small text-center',
+        'font-small rounded bg-[#393A40] px-2 py-[3px] text-center text-[12px] leading-4 text-[#D2D3D9]',
         className
       )}
       {...props}

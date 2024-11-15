@@ -5,10 +5,10 @@ import { Button } from '@/shared/ui/Button'
 export const EmptyInstruction = () => {
   return (
     <div
-      className="absolute-center flex flex-col gap-[24px] items-center"
+      className="absolute-center flex flex-col items-center gap-[24px]"
       style={{ top: '178px' }}
     >
-      <p className="text-center text-neutral-5 text-[18px] font-medium leading-[1.2] text-nowrap">
+      <p className="text-nowrap text-center text-[18px] font-medium leading-[1.2] text-neutral-5">
         Go to the Explore page and click the heart icon
         <br />
         on models you like to add them to your favorites

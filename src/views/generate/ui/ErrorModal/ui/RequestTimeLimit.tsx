@@ -24,11 +24,11 @@ export const RequestTimeLimit = (props: RequestTimeLimitProps) => {
       }
       slot={
         <Button
-          className="py-[1rem] bg-white hover:bg-white"
+          className="bg-white py-4 hover:bg-white"
           stretch
           onClick={handleCloseModal}
         >
-          <span className="font-semibold text-[0.75rem]">Try Again Soon</span>
+          <span className="text-[0.75rem] font-semibold">Try Again Soon</span>
         </Button>
       }
     />

@@ -15,7 +15,7 @@ export const CallToActionButtons = (props: CallToActionButtonsProps) => {
   const router = useRouter()
 
   return (
-    <div className="flex gap-3 justify-center h-[43px] mt-6 mb-[0.5rem]">
+    <div className="mb-2 mt-6 flex h-[43px] justify-center gap-3">
       {isAuth !== true ? (
         <>
           <Button onClick={() => router.push('/signup')}>

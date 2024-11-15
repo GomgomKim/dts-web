@@ -18,9 +18,9 @@ export default function ExploreLayout({
   return (
     <Suspense>
       <Header />
-      <div className="flex pt-14 h-screen">
+      <div className="flex h-screen pt-14">
         <Sidebar />
-        <main className="px-12 py-14 ml-[280px] flex-1">{children}</main>
+        <main className="ml-[280px] flex-1 px-12 py-14">{children}</main>
       </div>
     </Suspense>
   )

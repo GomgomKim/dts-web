@@ -21,10 +21,10 @@ export const Login = (props: LoginProps) => {
     modelName && modelId ? `name=${modelName}&id=${modelId}` : ''
 
   return (
-    <div className="flex justify-center fixed bg-neutral-0-90 inset-0 z-50">
+    <div className="fixed inset-0 z-50 flex justify-center bg-neutral-0-90">
       <div
         ref={props.modalRef}
-        className="flex flex-col gap-10 border border-neutral-2 rounded-[12px] m-auto relative w-[400px] p-10 bg-background mx-2"
+        className="relative m-auto mx-2 flex w-[400px] flex-col gap-10 rounded-[12px] border border-neutral-2 bg-background p-10"
       >
         <div>
           <Link href="/">
@@ -34,14 +34,14 @@ export const Login = (props: LoginProps) => {
         <div className="flex flex-col gap-8">
           <div>
             <div className="text-[24px]">Welcome Back</div>
-            <div className="flex mt-3 gap-[0.5rem]">
-              <p className="text-neutral-7 text-[14px]">
+            <div className="mt-3 flex gap-2">
+              <p className="text-[14px] text-neutral-7">
                 Don’t have an account?
               </p>
               <Link
                 replace
                 href={`/signup?${redirectPageInfo}`}
-                className="text-primary text-[14px]"
+                className="text-[14px] text-primary"
               >
                 Sign up for free
               </Link>

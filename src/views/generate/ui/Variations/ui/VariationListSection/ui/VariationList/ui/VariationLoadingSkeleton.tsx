@@ -9,7 +9,7 @@ export const VariationLoadingSkeleton = (
     return (
       <div
         aria-disabled={true}
-        className="rounded-[0.5rem] overflow-hidden relative aspect-[206/219] w-full border border-border"
+        className="relative aspect-[206/219] w-full overflow-hidden rounded-[0.5rem] border border-border"
       >
         <div className="loading-skeleton h-full" />
       </div>
@@ -21,7 +21,7 @@ export const VariationLoadingSkeleton = (
         <div
           key={index}
           aria-disabled={true}
-          className="rounded-[0.5rem] overflow-hidden relative aspect-[206/219] w-full border border-border"
+          className="relative aspect-[206/219] w-full overflow-hidden rounded-[0.5rem] border border-border"
         >
           <div className="loading-skeleton h-full" />
         </div>

@@ -35,12 +35,12 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
   const renderContent = () => {
     if (props.imagePreviewUrl) {
       return (
-        <div className="h-full flex justify-center items-center">
+        <div className="flex h-full items-center justify-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={props.imagePreviewUrl}
             alt={props.boxId}
-            className="object-contain w-full h-full max-h-[70%] max-w-[70%]"
+            className="size-full max-h-[70%] max-w-[70%] object-contain"
           />
           <RemoveButton
             onClickRemoveButton={() => props.onRemoveBrandAsset()}
@@ -50,7 +50,7 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
     } else {
       return (
         <>
-          <DashedSvg className="absolute inset-0 w-full h-full" />
+          <DashedSvg className="absolute inset-0 size-full" />
           <div className="relative">
             <UploadButton boxId={props.boxId} />
             {errorMessage !== null ? (
@@ -69,7 +69,7 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
         if (props.disabled) return
         handleChangeDNDInput(e.dataTransfer.files[0])
       }}
-      className="group relative rounded-xl bg-neutral-1 bg-opacity-50 p-5 w-[280px] lg:w-[387px] h-[calc(100%-17px-12px)] 2xl:h-[calc(100%-24px-12px)]"
+      className="group relative h-[calc(100%-17px-12px)] w-[280px] rounded-xl bg-neutral-1 bg-opacity-50 p-5 lg:w-[387px] 2xl:h-[calc(100%-24px-12px)]"
     >
       <input
         type="file"

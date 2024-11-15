@@ -32,13 +32,13 @@ export const Variations = (props: VariationsProps) => {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-5">
+      <div className="mb-5 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <h3 className="text-neutral-7 text-[0.875rem] 2xl:text-[1.25rem]">
+          <h3 className="text-[0.875rem] text-neutral-7 2xl:text-[1.25rem]">
             Variations
           </h3>
           {isAiImageGenerating || props.isLoading ? (
-            <span className="text-primary text-[0.875rem] 2xl:text-[1.25rem]">
+            <span className="text-[0.875rem] text-primary 2xl:text-[1.25rem]">
               Generating...
             </span>
           ) : null}
@@ -50,7 +50,7 @@ export const Variations = (props: VariationsProps) => {
         />
       </div>
 
-      <div className="flex gap-4 min-h-[120px]">
+      <div className="flex min-h-[120px] gap-4">
         <ErrorBoundary FallbackComponent={ErrorModals}>
           <VariationListSection
             onDataLoaded={props.onDataLoaded}

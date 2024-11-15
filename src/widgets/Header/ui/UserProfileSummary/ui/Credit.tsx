@@ -19,7 +19,7 @@ export const Credit = () => {
   const creditDescription = isOutOfCredit ? <CreditResetIndicator /> : null
 
   return (
-    <div className="flex gap-2 items-center mx-3 my-auto">
+    <div className="mx-3 my-auto flex items-center gap-2">
       <CreditAmount credit={credit} isOutOfCredit={isOutOfCredit} />
       {creditDescription}
     </div>

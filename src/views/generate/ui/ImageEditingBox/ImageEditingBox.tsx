@@ -71,7 +71,7 @@ export const ImageEditingBox = (props: ImageEditingBoxProps) => {
 
   if (props.isLoading || !selectedVariation)
     return (
-      <div className="h-full bg-neutral-1 bg-opacity-50 rounded-[0.5rem] overflow-hidden relative flex justify-center">
+      <div className="relative flex h-full justify-center overflow-hidden rounded-[0.5rem] bg-neutral-1 bg-opacity-50">
         <LoadingSpinner width="40" height="40" />
       </div>
     )
@@ -80,11 +80,11 @@ export const ImageEditingBox = (props: ImageEditingBoxProps) => {
     <div
       id="board"
       ref={boardRef}
-      className="h-full bg-neutral-1 bg-opacity-50 rounded-[0.5rem] overflow-hidden relative flex justify-center"
+      className="relative flex h-full justify-center overflow-hidden rounded-[0.5rem] bg-neutral-1 bg-opacity-50"
     >
       <div
         id="history-controller"
-        className="absolute top-[0.5rem] left-[0.5rem] rounded-[0.25rem] bg-neutral-0 bg-opacity-90 z-[30]"
+        className="absolute left-2 top-2 z-30 rounded bg-neutral-0 bg-opacity-90"
       >
         <HistoryControl />
       </div>
@@ -93,7 +93,7 @@ export const ImageEditingBox = (props: ImageEditingBoxProps) => {
         className="relative"
         style={{ ...styleContainerWrapper }}
       >
-        <div id="container" className="w-full h-full" ref={containerRef}>
+        <div id="container" className="size-full" ref={containerRef}>
           <ImageView selectedVariation={selectedVariation} />
           <ResizableAndDraggableBoxes
             containerRef={boardRef}

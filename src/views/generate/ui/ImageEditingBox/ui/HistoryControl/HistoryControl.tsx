@@ -50,7 +50,7 @@ export const HistoryControl = () => {
       <Button
         variant="ghost"
         size="icon"
-        className="bg-inherit h-8 w-8 rounded-[0.25rem] group"
+        className="group size-8 rounded bg-inherit"
         onClick={handleUndo}
         disabled={!hasPast}
       >
@@ -59,7 +59,7 @@ export const HistoryControl = () => {
       <Button
         variant="ghost"
         size="icon"
-        className="bg-inherit h-8 w-8 rounded-[0.25rem] group"
+        className="group size-8 rounded bg-inherit"
         onClick={handleRedo}
         disabled={!hasFuture}
       >
@@ -68,7 +68,7 @@ export const HistoryControl = () => {
       <Button
         variant="ghost"
         size="icon"
-        className="bg-inherit h-8 w-8 rounded-[0.25rem] group"
+        className="group size-8 rounded bg-inherit"
         onClick={handleRestore}
         disabled={!editedVariationList.has(variationId)}
       >

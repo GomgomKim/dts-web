@@ -23,10 +23,10 @@ export const Signup = (props: SignupProps) => {
     modelName && modelId ? `name=${modelName}&id=${modelId}` : ''
 
   return (
-    <div className="flex justify-center fixed bg-neutral-0-90 inset-0 z-50">
+    <div className="fixed inset-0 z-50 flex justify-center bg-neutral-0-90">
       <div
         ref={props.modalRef}
-        className="flex flex-col gap-10 border border-neutral-2 rounded-[12px] m-auto relative p-10 w-[400px] bg-background mx-2"
+        className="relative m-auto mx-2 flex w-[400px] flex-col gap-10 rounded-[12px] border border-neutral-2 bg-background p-10"
       >
         <div>
           <Link href="/">
@@ -37,14 +37,14 @@ export const Signup = (props: SignupProps) => {
           <div className="flex flex-col gap-8">
             <div>
               <div className="text-[24px]">Create an account</div>
-              <div className="flex mt-3 gap-[0.5rem]">
-                <p className="text-neutral-7 text-[14px]">
+              <div className="mt-3 flex gap-2">
+                <p className="text-[14px] text-neutral-7">
                   Already have an account?
                 </p>
                 <Link
                   replace
                   href={`/login?${redirectPageInfo}`}
-                  className="text-primary text-[14px]"
+                  className="text-[14px] text-primary"
                 >
                   Log in
                 </Link>
@@ -61,13 +61,13 @@ export const Signup = (props: SignupProps) => {
           </div>
         </div>
         <div>
-          <div className="w-full border border-neutral-2 my-3"></div>
-          <div className="my-6 text-neutral-5 text-[12px] leading-[20px]">
+          <div className="my-3 w-full border border-neutral-2"></div>
+          <div className="my-6 text-[12px] leading-[20px] text-neutral-5">
             By clicking “Sign up with Google” you agree to our{' '}
             <Button
               asChild
               variant="link"
-              className="text-white p-0 text-[12px]"
+              className="p-0 text-[12px] text-white"
             >
               <Link
                 href="https://www.notion.so/ec82e5e0bba54f4b8a4ca2229eb16a22?pvs=4"
@@ -80,7 +80,7 @@ export const Signup = (props: SignupProps) => {
             <Button
               asChild
               variant="link"
-              className="text-white text-nowrap p-0 text-[12px]"
+              className="text-nowrap p-0 text-[12px] text-white"
             >
               <Link
                 href="https://www.notion.so/2b06e9bc71ab4d26bdcdd9cec7c8edae?pvs=4"
