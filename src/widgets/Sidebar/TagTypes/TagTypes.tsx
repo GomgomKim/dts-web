@@ -54,7 +54,6 @@ export const TagTypes = () => {
         <MenuGroup
           title="Beauty"
           prefix={<Square color={'rgba(97, 97, 242, 1)'} />}
-          disabled
         >
           <TagTypeItem>Makeup</TagTypeItem>
           <TagTypeItem>Skincare</TagTypeItem>
