@@ -38,7 +38,7 @@ export const HamburgerMenu = () => {
       </Button>
       <div
         className={cn(
-          'fixed inset-0 z-[30] top-14 h-[calc(100vh-64px)] bg-background transition-transform duration-300 ease-in-out',
+          'fixed inset-0 top-14 z-30 h-[calc(100vh-64px)] bg-background transition-transform duration-300 ease-in-out',
           isOpen ? 'translate-x-0' : 'translate-x-full'
         )}
       >

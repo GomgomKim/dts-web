@@ -37,7 +37,7 @@ export const ExploreList = () => {
   // if (status === 'error') return <p>{error?.message}</p>
   if (isFetching && !isFetchingNextPage)
     return (
-      <div className="grid grid-cols-auto-fill-small 2xl:grid-cols-auto-fill-large gap-5">
+      <div className="grid-cols-auto-fill-small 2xl:grid-cols-auto-fill-large grid gap-5">
         {Array.from({ length: NUM_OF_DATA_PER_REQUEST }).map((_value, idx) => (
           <CardSkeleton key={'loading' + idx} isLoading />
         ))}
@@ -65,7 +65,7 @@ export const ExploreList = () => {
 
   return (
     <>
-      <div className="grid grid-cols-auto-fill-small min-[3200px]:grid-cols-auto-fill-medium 2xl:grid-cols-auto-fill-large gap-5">
+      <div className="grid-cols-auto-fill-small min-[3200px]:grid-cols-auto-fill-medium 2xl:grid-cols-auto-fill-large grid gap-5">
         {data?.pages.map((page, i) => (
           <Fragment key={i}>
             {page.content.images.map((cardItem, cardIdx) => {

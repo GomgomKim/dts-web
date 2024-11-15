@@ -3,10 +3,10 @@ import Spinner from '/public/icons/loading-spinner.svg'
 
 export const CreditAmountSkeleton = () => {
   return (
-    <div className="flex gap-2 items-center mx-3 my-auto">
+    <div className="mx-3 my-auto flex items-center gap-2">
       <CreditIcon className="stroke-white" />
-      <span className="text-[14px] w-4 text-center">
-        <div className="w-4 h-4">
+      <span className="w-4 text-center text-[14px]">
+        <div className="size-4">
           <Spinner
             className="animate-spin"
             width={16}

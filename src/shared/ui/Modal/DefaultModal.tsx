@@ -50,10 +50,10 @@ export const DefaultModal = (props: DefaultModalProps) => {
   }, [])
 
   return (
-    <div className="flex justify-center fixed bg-neutral-0-90 inset-0 z-50">
+    <div className="fixed inset-0 z-50 flex justify-center bg-neutral-0-90">
       <div
         ref={modalRef}
-        className="flex flex-col gap-10 border border-neutral-2 rounded-[12px] m-auto relative w-[400px] p-10 bg-background mx-2"
+        className="relative m-auto mx-2 flex w-[400px] flex-col gap-10 rounded-[12px] border border-neutral-2 bg-background p-10"
       >
         <div className="mr-auto">
           <button onClick={handleClickLogo}>
@@ -62,9 +62,9 @@ export const DefaultModal = (props: DefaultModalProps) => {
         </div>
 
         <div>
-          <div className="mb-[2rem]">
-            <div className="text-[24px] mb-3 font-semibold">{props.title}</div>
-            <p className="text-neutral-7 text-[14px]">{props.description}</p>
+          <div className="mb-8">
+            <div className="mb-3 text-[24px] font-semibold">{props.title}</div>
+            <p className="text-[14px] text-neutral-7">{props.description}</p>
           </div>
 
           {props.slot}
@@ -73,7 +73,7 @@ export const DefaultModal = (props: DefaultModalProps) => {
             <Link
               href="https://tally.so/r/314QEg"
               target="_blank"
-              className="text-[14px] underline underline-offset-4 p-3 inline-block text-center"
+              className="inline-block p-3 text-center text-[14px] underline underline-offset-4"
             >
               Feedback
             </Link>

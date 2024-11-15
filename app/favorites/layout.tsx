@@ -18,9 +18,9 @@ export default function FavoritePageLayout({
   return (
     <Suspense>
       <Header />
-      <div className="flex pt-14 h-screen">
+      <div className="flex h-screen pt-14">
         <Sidebar />
-        <main className="pr-10 pt-5 ml-[280px] flex-1">{children}</main>
+        <main className="ml-[280px] flex-1 pr-10 pt-5">{children}</main>
       </div>
     </Suspense>
   )

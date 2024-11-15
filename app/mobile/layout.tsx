@@ -10,7 +10,7 @@ export default function MobileLayout({
   return (
     <>
       <MobileHeader />
-      <div className="pt-14 overflow-hidden h-screen">
+      <div className="h-screen overflow-hidden pt-14">
         <main className="h-full">
           <Suspense>{children}</Suspense>
         </main>

@@ -14,9 +14,9 @@ export const VariationEmpty = (props: VariationEmptyProps) => {
       }).map((_, index) => (
         <div
           key={index + v4()}
-          className="relative rounded-[0.5rem] aspect-[206/219] w-full bg-neutral-1 bg-opacity-50 overflow-hidden"
+          className="relative aspect-[206/219] w-full overflow-hidden rounded-[0.5rem] bg-neutral-1/50"
         >
-          <DashedSvg className="w-full h-full absolute inset-0" />
+          <DashedSvg className="absolute inset-0 size-full" />
         </div>
       ))}
     </>

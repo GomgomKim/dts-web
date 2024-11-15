@@ -8,23 +8,23 @@ interface CreditToastProps {
 
 export const CreditToast = (props: CreditToastProps) => {
   return (
-    <div className="absolute bottom-6 p-2 flex items-center gap-5 bg-neutral-0 bg-opacity-90 rounded-[0.5rem] z-[50]">
+    <div className="absolute bottom-6 z-50 flex items-center gap-5 rounded-[0.5rem] bg-neutral-0/90 p-2">
       <div className="flex items-center">
-        <div className="ml-[0.5rem] mr-[1rem]">
+        <div className="ml-2 mr-4">
           <AlertCircle stroke="#FF8480" />
         </div>
         <div>
-          <p className="text-[0.875rem] leading-[20px] font-bold">
+          <p className="text-[0.875rem] font-bold leading-[20px]">
             Out of credits!
           </p>
-          <p className="text-[0.75rem] text-neutral-7 text-nowrap leading-[20px]">
+          <p className="text-nowrap text-[0.75rem] leading-[20px] text-neutral-7">
             Try again tomorrow for a fresh start
           </p>
         </div>
       </div>
       <Button
         onClick={props.onClickGotIt}
-        className="bg-white hover:bg-white text-black rounded-[0.5rem] font-semibold px-[1rem]"
+        className="rounded-[0.5rem] bg-white px-4 font-semibold text-black hover:bg-white"
       >
         Got It!
       </Button>

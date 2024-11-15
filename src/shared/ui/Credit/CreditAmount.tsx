@@ -9,14 +9,14 @@ interface CreditAmountProps {
 
 export const CreditAmount = ({ credit, isOutOfCredit }: CreditAmountProps) => {
   return (
-    <div className="flex gap-2 items-center">
+    <div className="flex items-center gap-2">
       <CreditIcon
         className={cn('stroke-white', {
           'stroke-[#FF8480]': isOutOfCredit
         })}
       />
       <span
-        className={cn('text-[14px] min-w-4 text-center', {
+        className={cn('min-w-4 text-center text-[14px]', {
           'text-[#FF8480]': isOutOfCredit
         })}
       >

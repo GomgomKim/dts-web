@@ -113,17 +113,14 @@ export const ExportButton = (props: ExportButtonProps) => {
     <Button
       disabled={!isError && isLoading}
       onClick={debounceHandleButtonClick}
-      className={cn(
-        'rounded-[0.5rem] flex items-center justify-center gap-[0.5rem]',
-        {
-          'bg-[#FF8480] hover:bg-destructive-hover': isError,
-          'py-[11px]': isDownloading || isError
-        }
-      )}
+      className={cn('flex items-center justify-center gap-2 rounded-[0.5rem]', {
+        'bg-[#FF8480] hover:bg-destructive-hover': isError,
+        'py-[11px]': isDownloading || isError
+      })}
       stretch
     >
       {isReadyToDownload ? (
-        <span className="leading-[14px] text-[0.75rem] font-semibold">
+        <span className="text-[0.75rem] font-semibold leading-[14px]">
           Continue
         </span>
       ) : null}
@@ -151,7 +148,7 @@ const DownloadingInstruction = () => {
         height={16}
         fill="#0F1011"
       />
-      <span className="leading-[14px] text-[0.75rem] font-semibold">
+      <span className="text-[0.75rem] font-semibold leading-[14px]">
         Downloading...
       </span>
     </>
@@ -162,7 +159,7 @@ const ErrorInstruction = () => {
   return (
     <>
       <AlertIcon width={16} height={16} stroke="#0F1011" />
-      <span className="leading-[14px] text-[0.75rem] font-semibold">
+      <span className="text-[0.75rem] font-semibold leading-[14px]">
         Try again
       </span>
     </>

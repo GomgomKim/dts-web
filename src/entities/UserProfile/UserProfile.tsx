@@ -27,10 +27,10 @@ export const UserProfile = () => {
         <Avatar profileImageUrl={user.profileImageUrl} />
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="w-[320px] mt-3">
+      <DropdownMenuContent className="mt-3 w-[320px]">
         {/* menu 1 */}
         <DropdownMenuLabel>ACCOUNT</DropdownMenuLabel>
-        <div className="flex items-center gap-3 py-3 px-5">
+        <div className="flex items-center gap-3 px-5 py-3">
           <Avatar profileImageUrl={user.profileImageUrl} />
           <span className="text-neutral-7">{user.email}</span>
         </div>

@@ -14,7 +14,7 @@ export const UploadButton = ({ boxId }: { boxId: string }) => {
           </label>
         </Button>
       </div>
-      <p className="text-neutral-5 whitespace-nowrap text-[0.875rem] 2xl:text-[1.25rem]">
+      <p className="whitespace-nowrap text-[0.875rem] text-neutral-5 2xl:text-[1.25rem]">
         Supports JPG and PNG up to 10MB
       </p>
     </div>

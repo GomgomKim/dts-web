@@ -19,11 +19,11 @@ export const ServiceUnavailable = (props: ServiceUnavailableProps) => {
       slot={
         <Button
           variant="destructive"
-          className="py-[1rem]"
+          className="py-4"
           stretch
           onClick={onClickButton}
         >
-          <div className="flex items-center gap-[0.5rem]">
+          <div className="flex items-center gap-2">
             <AlertIcon className="stroke-black" />
             <span className="text-[0.875rem] font-semibold">Try Again</span>
           </div>

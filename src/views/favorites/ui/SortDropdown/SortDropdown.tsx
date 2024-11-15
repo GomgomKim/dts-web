@@ -54,7 +54,7 @@ export const SortDropdown = () => {
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="w-[140px] py-[0.75rem]">
+      <DropdownMenuContent className="w-[140px] py-3">
         <DropdownMenuLabel>ORDER</DropdownMenuLabel>
 
         <DropdownMenuRadioGroup value={sort} onValueChange={handleSortChange}>

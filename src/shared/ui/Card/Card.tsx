@@ -61,7 +61,7 @@ export const Card = (props: CardProps) => {
       onMouseLeave={() => setIsHovering(false)}
       onFocus={() => setIsHovering(true)}
       onBlur={() => setIsHovering(false)}
-      className="relative aspect-[9/16] rounded-[8px] overflow-hidden cursor-auto bg-neutral-1 focus:outline-none focus-visible:border-white focus-visible:border-1 focus-visible:ring-2 focus-visible:ring-ring"
+      className="relative aspect-[9/16] cursor-auto overflow-hidden rounded-[8px] bg-neutral-1 focus:outline-none focus-visible:border focus-visible:border-white focus-visible:ring-2 focus-visible:ring-ring"
       ref={props.inViewRef}
     >
       <Image
@@ -79,7 +79,7 @@ export const Card = (props: CardProps) => {
           <Button
             asChild
             variant="sub1"
-            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white border-[rgba(97,98,104,0.5)] hover:border-border"
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 border-[rgba(97,98,104,0.5)] text-white hover:border-border"
           >
             <div>
               Start with This Model
@@ -89,7 +89,7 @@ export const Card = (props: CardProps) => {
         </CardWrapper>
       )}
       {isHovering && props.actionSlot && (
-        <div className="absolute top-2 right-2 z-10">{props.actionSlot}</div>
+        <div className="absolute right-2 top-2 z-10">{props.actionSlot}</div>
       )}
     </button>
   )

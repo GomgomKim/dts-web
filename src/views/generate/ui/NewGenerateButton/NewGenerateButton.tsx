@@ -26,9 +26,9 @@ export const NewGenerateButton = (props: NewGenerateButtonProps) => {
     return (
       <Button
         disabled={true}
-        className="py-2 pl-3 pr-4 rounded-[6px] flex items-center disabled:cursor-not-allowed disabled:bg-primary disabled:text-neutral-0"
+        className="flex items-center rounded-[6px] py-2 pl-3 pr-4 disabled:cursor-not-allowed disabled:bg-primary disabled:text-neutral-0"
       >
-        <div className="w-4 h-4 mr-2">
+        <div className="mr-2 size-4">
           <Spinner
             className="animate-spin"
             width={16}
@@ -36,7 +36,7 @@ export const NewGenerateButton = (props: NewGenerateButtonProps) => {
             fill="neutral-0"
           />
         </div>
-        <span className="text-[0.875rem] leading-[17px] font-semibold">
+        <span className="text-[0.875rem] font-semibold leading-[17px]">
           Generating...
         </span>
       </Button>
@@ -47,7 +47,7 @@ export const NewGenerateButton = (props: NewGenerateButtonProps) => {
     <Button
       onClick={debounceHandleClickNewGenerate}
       disabled={props.disabled || isOutOfCredit}
-      className="py-2 pl-3 pr-4 rounded-[6px] flex items-center"
+      className="flex items-center rounded-[6px] py-2 pl-3 pr-4"
     >
       <PlusIcon
         width="1rem"
@@ -56,7 +56,7 @@ export const NewGenerateButton = (props: NewGenerateButtonProps) => {
           'stroke-neutral-4': props.disabled || isOutOfCredit
         })}
       />
-      <span className="text-[0.875rem] leading-[17px] font-semibold">
+      <span className="text-[0.875rem] font-semibold leading-[17px]">
         New Generate
       </span>
     </Button>

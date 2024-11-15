@@ -79,9 +79,9 @@ export default function Generate(props: GenerateProps) {
   }, [restriction])
 
   return (
-    <div className="flex w-full h-full">
+    <div className="flex size-full">
       {/* brand assets section */}
-      <div className="px-5 w-[320px] md:w-[360px] lg:w-[440px] xl:w-[480px] 2xl:w-[770px] fixed bg-background z-20 h-[calc(100%-64px-20px)]">
+      <div className="fixed z-20 h-[calc(100%-64px-20px)] w-[320px] bg-background px-5 md:w-[360px] lg:w-[440px] xl:w-[480px] 2xl:w-[770px]">
         <BrandAssets
           isLoading={isLoading}
           imagePreviewUrls={imagePreviewUrls}
@@ -91,17 +91,17 @@ export default function Generate(props: GenerateProps) {
       </div>
 
       {/* generate section */}
-      <div className="h-full ml-[320px] md:ml-[360px] lg:ml-[460px] xl:ml-[500px] 2xl:ml-[790px] grow">
-        <div className="h-full overflow-x-auto flex gap-5 lg:gap-10">
+      <div className="ml-[320px] h-full grow md:ml-[360px] lg:ml-[460px] xl:ml-[500px] 2xl:ml-[790px]">
+        <div className="flex h-full gap-5 overflow-x-auto lg:gap-10">
           {/* generate section - left */}
-          <section className="overflow-y-auto overflow-x-hidden basis-[400px] shrink-0 grow">
-            <div className="flex flex-col relative h-full">
+          <section className="shrink-0 grow basis-[400px] overflow-y-auto overflow-x-hidden">
+            <div className="relative flex h-full flex-col">
               <div>
-                <h2 className="text-[1.25rem] lg:text-[1.5rem] 2xl:text-[2rem] inline-block font-semibold">
+                <h2 className="inline-block text-[1.25rem] font-semibold lg:text-[1.5rem] 2xl:text-[2rem]">
                   Generate
                 </h2>
 
-                <span className="absolute top-0 right-0">
+                <span className="absolute right-0 top-0">
                   <NewGenerateButton
                     disabled={isLoading}
                     onErrorGenerate={() => setOpenToast(true)}
@@ -112,9 +112,9 @@ export default function Generate(props: GenerateProps) {
               </div>
 
               <div className="mt-5 grow">
-                <div className="flex flex-col gap-5 grow h-full">
+                <div className="flex h-full grow flex-col gap-5">
                   {/* image editing section */}
-                  <div className="grow relative min-h-[391px] xl:min-h-[640px]">
+                  <div className="relative min-h-[391px] grow xl:min-h-[640px]">
                     <ImageEditingBox
                       isLoading={isLoading}
                       containerRef={containerRef}
@@ -148,7 +148,7 @@ export default function Generate(props: GenerateProps) {
           </section>
 
           {/* generate section - right */}
-          <div className="overflow-y-auto overflow-x-hidden shrink-0 basis-[340px] md:basis-[360px] lg:basis-[440px] xl:basis-[480px] 2xl:basis-[770px]">
+          <div className="shrink-0 basis-[340px] overflow-y-auto overflow-x-hidden md:basis-[360px] lg:basis-[440px] xl:basis-[480px] 2xl:basis-[770px]">
             <div className="flex flex-col gap-3">
               {/* related variations options /////////////////////////////////////////////  */}
               <EditVariation

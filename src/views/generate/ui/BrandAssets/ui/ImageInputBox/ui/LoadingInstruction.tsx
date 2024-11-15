@@ -3,7 +3,7 @@ import SpinnerIcon from '/public/icons/loading-spinner.svg'
 export const LoadingInstruction = () => {
   return (
     <div>
-      <div className="w-4 h-4 m-auto mb-2">
+      <div className="m-auto mb-2 size-4">
         <SpinnerIcon
           className="animate-spin"
           width="16"
@@ -11,7 +11,7 @@ export const LoadingInstruction = () => {
           fill="#AEAFB5"
         />
       </div>
-      <p className="text-neutral-7 text-nowrap text-[0.875rem] 2xl:text-[1.25rem]">
+      <p className="text-nowrap text-[0.875rem] text-neutral-7 2xl:text-[1.25rem]">
         Tweaking the background...
       </p>
     </div>

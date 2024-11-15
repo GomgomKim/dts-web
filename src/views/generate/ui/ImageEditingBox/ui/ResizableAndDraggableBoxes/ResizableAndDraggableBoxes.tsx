@@ -277,7 +277,7 @@ export const ResizableAndDraggableBoxes = ({
                 activeBoxId === box.id ? '2px solid var(--primary)' : 'none'
             }}
           >
-            <div className="w-full h-full">
+            <div className="size-full">
               <Image
                 src={box.image}
                 alt=""

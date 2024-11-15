@@ -24,15 +24,15 @@ export const Header = () => {
     pathname.startsWith('/explore') || pathname.startsWith('/favorites')
 
   return (
-    <header className="fixed top-0 inset-0 z-40 h-14 py-[7.5px] px-5 bg-background">
-      <div className="flex items-center gap-[0.5rem]">
+    <header className="fixed inset-0 z-40 h-14 bg-background px-5 py-[7.5px]">
+      <div className="flex items-center gap-2">
         <Link href="/explore?filterType=ALL" className="mr-5">
           <DTSLogo />
         </Link>
 
         {isGeneratePage ? <ExploreBackButton /> : null}
-        <div className="flex items-center ml-auto">
-          <nav className=" text-[14px] text-secondary-foreground flex items-center">
+        <div className="ml-auto flex items-center">
+          <nav className=" flex items-center text-[14px] text-secondary-foreground">
             <ul className="flex items-center">
               {isMainPage ? <ExternalLinks /> : null}
               {isAuth !== true ? <LoginSignupButtons /> : null}
