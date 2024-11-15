@@ -1,5 +1,7 @@
 'use client'
 
+import { ComponentProps } from 'react'
+
 import { usePathname, useSearchParams } from 'next/navigation'
 
 import { Badge } from '@/shared/ui/Badge'
@@ -18,7 +20,8 @@ const Square = ({ color }: { color: string }) => {
   )
 }
 
-interface TagTypeItemProps {
+// TODO: partial보다 좋은 방법 찾기
+interface TagTypeItemProps extends Partial<ComponentProps<typeof MenuItem>> {
   children: string
 }
 
@@ -43,6 +46,7 @@ const TagTypeItem = (props: TagTypeItemProps) => {
       isActive={isActive}
       replace={true}
       scroll={false}
+      disabled={props.disabled ?? false}
     />
   )
 }
