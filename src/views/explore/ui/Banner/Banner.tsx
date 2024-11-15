@@ -5,7 +5,7 @@ export const Banner = () => {
         Create stunning virtual brand models effortlessly <br />
         with our advanced AI
       </div>
-      <div className="text-medium text-neutral-5">
+      <div className="font-medium text-neutral-5">
         Enhance your brands presence with lifelike, customizable models
         generated in seconds
       </div>

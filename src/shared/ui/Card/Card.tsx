@@ -61,7 +61,7 @@ export const Card = (props: CardProps) => {
       onMouseLeave={() => setIsHovering(false)}
       onFocus={() => setIsHovering(true)}
       onBlur={() => setIsHovering(false)}
-      className="focus-visible:border-1 relative aspect-[9/16] cursor-auto overflow-hidden rounded-[8px] bg-neutral-1 focus:outline-none focus-visible:border-white focus-visible:ring-2 focus-visible:ring-ring"
+      className="relative aspect-[9/16] cursor-auto overflow-hidden rounded-[8px] bg-neutral-1 focus:outline-none focus-visible:border focus-visible:border-white focus-visible:ring-2 focus-visible:ring-ring"
       ref={props.inViewRef}
     >
       <Image

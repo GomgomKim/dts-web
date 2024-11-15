@@ -70,7 +70,7 @@ export const DownloadDropdown = (props: DownloadDropdownProps) => {
       <DropdownMenuTrigger asChild>
         <Button
           variant="sub1"
-          className="bg-neutral-1 bg-opacity-50 2xl:h-[80px] 2xl:text-[1.5rem]"
+          className="bg-neutral-1/50 2xl:h-[80px] 2xl:text-[1.5rem]"
           disabled={!variationId || !props.containerRef || props.isLoading}
         >
           Free Download
@@ -109,9 +109,7 @@ export const DownloadDropdown = (props: DownloadDropdownProps) => {
         </DropdownMenuRadioGroup>
 
         {/* menu 2 */}
-        <DropdownMenuLabel className="bl-5 pb-1 pt-5">
-          EXPORT QUALITY
-        </DropdownMenuLabel>
+        <DropdownMenuLabel className="pt-5">EXPORT QUALITY</DropdownMenuLabel>
         <div>
           {exportQualityOption.map((option, i) => {
             if (i == 0)
@@ -151,9 +149,7 @@ export const DownloadDropdown = (props: DownloadDropdownProps) => {
         </div>
 
         {/* menu 3 */}
-        <DropdownMenuLabel className="px-5 pb-1 pt-5">
-          WATERMARK
-        </DropdownMenuLabel>
+        <DropdownMenuLabel className="pt-5">WATERMARK</DropdownMenuLabel>
         <div className="flex justify-between px-5 py-3">
           <div>
             <span className="text-[0.875rem] font-medium text-white">

@@ -71,7 +71,7 @@ export const ImageEditingBox = (props: ImageEditingBoxProps) => {
 
   if (props.isLoading || !selectedVariation)
     return (
-      <div className="relative flex h-full justify-center overflow-hidden rounded-[0.5rem] bg-neutral-1 bg-opacity-50">
+      <div className="relative flex h-full justify-center overflow-hidden rounded-[0.5rem] bg-neutral-1/50">
         <LoadingSpinner width="40" height="40" />
       </div>
     )
@@ -80,11 +80,11 @@ export const ImageEditingBox = (props: ImageEditingBoxProps) => {
     <div
       id="board"
       ref={boardRef}
-      className="relative flex h-full justify-center overflow-hidden rounded-[0.5rem] bg-neutral-1 bg-opacity-50"
+      className="relative flex h-full justify-center overflow-hidden rounded-[0.5rem] bg-neutral-1/50"
     >
       <div
         id="history-controller"
-        className="absolute left-2 top-2 z-30 rounded bg-neutral-0 bg-opacity-90"
+        className="absolute left-2 top-2 z-30 rounded bg-neutral-0/90"
       >
         <HistoryControl />
       </div>

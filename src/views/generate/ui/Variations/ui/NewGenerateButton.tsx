@@ -22,7 +22,7 @@ export const NewGenerateButton = (props: NewGenerateButtonProps) => {
     <button
       key="new-generate"
       onClick={debounceHandleClickNewGenerate}
-      className="focus-visible:border-1 group relative aspect-[206/219] w-full overflow-hidden rounded-[0.5rem] border border-[rgba(0,0,0,0)] bg-neutral-1 bg-opacity-50 focus:outline-none focus-visible:border-white focus-visible:ring-2 focus-visible:ring-ring enabled:hover:bg-opacity-100"
+      className="group relative aspect-[206/219] w-full overflow-hidden rounded-[0.5rem] border border-[rgba(0,0,0,0)] bg-neutral-1/50 focus:outline-none focus-visible:border focus-visible:border-white focus-visible:ring-2 focus-visible:ring-ring enabled:hover:bg-neutral-1"
       disabled={props.disabled || isOutOfCredit || false}
     >
       <DashedSvg className="absolute inset-0 size-full" />

@@ -33,7 +33,7 @@ export const Unauthorized = (props: UnauthorizedProps) => {
           }}
         >
           <div className="flex items-center gap-2">
-            <ArrowLeft className="-rotate-[135deg] stroke-black" />
+            <ArrowLeft className="rotate-[225deg] stroke-black" />
             <span className="text-[0.75rem] font-semibold">
               Go Back Home to Log In
             </span>

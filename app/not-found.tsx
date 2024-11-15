@@ -18,7 +18,7 @@ export default function NotFound() {
           className="mt-5 rounded-[0.5rem] bg-white hover:bg-white"
         >
           <Link href="/explore">
-            <ArrowLeft className="mr-[10px] -rotate-[135deg] stroke-black" />
+            <ArrowLeft className="mr-[10px] rotate-[225deg] stroke-black" />
             <p className="text-[0.75rem] font-semibold">Go back to home</p>
           </Link>
         </Button>

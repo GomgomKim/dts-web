@@ -69,7 +69,7 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
         if (props.disabled) return
         handleChangeDNDInput(e.dataTransfer.files[0])
       }}
-      className="group relative h-[calc(100%-17px-12px)] w-[280px] rounded-xl bg-neutral-1 bg-opacity-50 p-5 lg:w-[387px] 2xl:h-[calc(100%-24px-12px)]"
+      className="group relative h-[calc(100%-17px-12px)] w-[280px] rounded-xl bg-neutral-1/50 p-5 lg:w-[387px] 2xl:h-[calc(100%-24px-12px)]"
     >
       <input
         type="file"

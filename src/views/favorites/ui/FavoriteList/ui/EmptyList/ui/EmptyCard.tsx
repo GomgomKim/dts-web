@@ -1,6 +1,6 @@
 export const EmptyCard = () => {
   return (
-    <div className="grid-row-1 grid-empty 2xl:grid-empty-large m-auto grid auto-rows-[0] gap-5">
+    <div className="grid-empty 2xl:grid-empty-large m-auto grid auto-rows-[0] grid-rows-1 gap-5">
       {Array.from({ length: 8 }).map((_value, idx) => (
         <div
           key={idx}
