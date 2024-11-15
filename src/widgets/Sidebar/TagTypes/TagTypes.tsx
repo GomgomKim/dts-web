@@ -1,11 +1,9 @@
 'use client'
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 
-import { cn } from '@/shared/lib/utils'
-import { Button } from '@/shared/ui'
 import { Badge } from '@/shared/ui/Badge'
-import { MenuGroup } from '@/shared/ui/menubar'
+import { Menu, MenuGroup, MenuItem } from '@/shared/ui/Menu'
 
 const Square = ({ color }: { color: string }) => {
   return (
@@ -21,60 +19,58 @@ const Square = ({ color }: { color: string }) => {
 }
 
 interface TagTypeItemProps {
-  children: React.ReactNode
+  children: string
 }
 
 const TagTypeItem = (props: TagTypeItemProps) => {
-  const searchParams = useSearchParams()
-  const router = useRouter()
   const pathName = usePathname()
+  const searchParams = useSearchParams()
+
+  const tagType = props.children.toString()
 
   const isExplorePage = pathName.startsWith('/explore')
-
-  const isHere =
+  const isActive =
     isExplorePage &&
-    (searchParams.get('filterType') || 'ALL') ===
-      props.children!.toString().toUpperCase()
-
-  const handleClickFilter = () => {
-    router.replace(
-      `/explore?filterType=${props.children!.toString().toUpperCase()}`,
-      { scroll: false }
-    )
-  }
+    (searchParams.get('filterType') || 'ALL') === tagType.toUpperCase()
 
   return (
-    <Button
-      variant="ghost"
-      stretch
-      className={cn('block text-left pl-12', { active: isHere })}
-      onClick={handleClickFilter}
-    >
-      {props.children}
-    </Button>
+    <MenuItem
+      href={{
+        pathname: '/explore',
+        query: { filterType: tagType.toUpperCase() }
+      }}
+      title={tagType}
+      isActive={isActive}
+      replace={true}
+      scroll={false}
+    />
   )
 }
 
 export const TagTypes = () => {
   return (
-    <div>
-      <MenuGroup
-        title="Beauty"
-        prefix={<Square color={'rgba(97, 97, 242, 1)'} />}
-      >
-        <TagTypeItem>Makeup</TagTypeItem>
-        <TagTypeItem>Skincare</TagTypeItem>
-        <TagTypeItem>Hair</TagTypeItem>
-      </MenuGroup>
-
-      <MenuGroup
-        disabled
-        title="Fashion"
-        prefix={<Square color={'rgba(170, 74, 203, 1)'} />}
-        postfix={<Badge>Upcoming</Badge>}
-      >
-        {/* ... */}
-      </MenuGroup>
-    </div>
+    <Menu>
+      <li>
+        <MenuGroup
+          title="Beauty"
+          prefix={<Square color={'rgba(97, 97, 242, 1)'} />}
+          disabled
+        >
+          <TagTypeItem>Makeup</TagTypeItem>
+          <TagTypeItem>Skincare</TagTypeItem>
+          <TagTypeItem>Hair</TagTypeItem>
+        </MenuGroup>
+      </li>
+      <li>
+        <MenuGroup
+          disabled
+          title="Fashion"
+          prefix={<Square color={'rgba(170, 74, 203, 1)'} />}
+          postfix={<Badge>Upcoming</Badge>}
+        >
+          {/* ... */}
+        </MenuGroup>
+      </li>
+    </Menu>
   )
 }
