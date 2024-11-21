@@ -8,4 +8,4 @@
 
 ## 티켓
 
-- [AM-](https://growdle.atlassian.net/browse/)
+- [DTS-](https://linear.app/dothingsstudio/issue/DTS-)
