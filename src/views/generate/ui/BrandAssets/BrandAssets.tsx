@@ -1,7 +1,5 @@
 'use client'
 
-import * as React from 'react'
-
 import { ImageInputBox } from './ui/ImageInputBox'
 
 interface BrandAssetsProps {

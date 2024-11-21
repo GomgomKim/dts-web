@@ -1,6 +1,6 @@
 'use client'
 
-import * as React from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { useAuthStore } from '@/entities/UserProfile/store'
 
@@ -23,10 +23,10 @@ interface GenerateProps {
 }
 
 export default function Generate(props: GenerateProps) {
-  const [isLoading, setIsLoading] = React.useState(true)
-  const [isHoldingGenerate, setIsHoldingGenerate] = React.useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isHoldingGenerate, setIsHoldingGenerate] = useState(false)
 
-  const onHoldingGenerate = React.useCallback(() => {
+  const onHoldingGenerate = useCallback(() => {
     setIsHoldingGenerate(true)
     setTimeout(() => {
       setIsHoldingGenerate(false)
@@ -34,11 +34,11 @@ export default function Generate(props: GenerateProps) {
   }, [])
 
   // related brand assets
-  const containerRef = React.useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
   const { imagePreviewUrls, addImagePreviewUrl, removeImagePreviewUrl } =
     useBrandAssets()
-  const [boxes, setBoxes] = React.useState<Box[]>([])
-  const boxRefs = React.useRef<Map<string, HTMLDivElement | null>>(new Map())
+  const [boxes, setBoxes] = useState<Box[]>([])
+  const boxRefs = useRef<Map<string, HTMLDivElement | null>>(new Map())
 
   const handleChangeBrandAssets = (id: string, previewImgSrc: string) => {
     addImagePreviewUrl(id, previewImgSrc)
@@ -54,8 +54,9 @@ export default function Generate(props: GenerateProps) {
   }
 
   // related variations
-  const [selectedVariation, setSelectedVariation] =
-    React.useState<Variation | null>(null)
+  const [selectedVariation, setSelectedVariation] = useState<Variation | null>(
+    null
+  )
 
   const { handleQueryString } = useSetQueryString({ action: 'replace' })
   const handleSelectedVariation = (
@@ -69,11 +70,11 @@ export default function Generate(props: GenerateProps) {
 
   // related credit
   const restriction = useAuthStore((state) => state.restriction)
-  const [openToast, setOpenToast] = React.useState(() =>
+  const [openToast, setOpenToast] = useState(() =>
     restriction !== null ? restriction.current <= 0 : false
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (restriction === null) return
     if (restriction.current <= 0) setOpenToast(true)
   }, [restriction])

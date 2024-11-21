@@ -1,7 +1,5 @@
 'use client'
 
-import * as React from 'react'
-
 import { Filter } from '@/features/Filter'
 
 import { useGetAuthToken } from '@/shared/lib/hooks/useGetAuthToken'

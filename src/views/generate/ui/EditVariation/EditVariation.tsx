@@ -1,6 +1,6 @@
 'use client'
 
-import * as React from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import { useSearchParams } from 'next/navigation'
 
@@ -32,7 +32,7 @@ export const EditVariation = (props: EditVariationProps) => {
   const { setInitialProperty, applyEdit } = useEditorStore.getState()
   const editedVariationList = useEditorStore((state) => state.items)
 
-  const [aspectRatio, setAspectRatio] = React.useState<string>('') // 9:16
+  const [aspectRatio, setAspectRatio] = useState<string>('') // 9:16
 
   const variationId = searchParams.get('variationId')
   const handleClickApplyEditOptions = () => {
@@ -56,7 +56,7 @@ export const EditVariation = (props: EditVariationProps) => {
     })
   }
 
-  const isSamePresentOption = React.useCallback(() => {
+  const isSamePresentOption = useCallback(() => {
     if (!variationId) return true
     if (editedVariationList.has(variationId)) {
       const { ratio: presentAspectRatio } =
@@ -67,7 +67,7 @@ export const EditVariation = (props: EditVariationProps) => {
     return aspectRatio === '9:16'
   }, [variationId, aspectRatio, editedVariationList])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!variationId) return
     if (!props.selectedVariation) return
 

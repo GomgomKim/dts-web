@@ -1,6 +1,6 @@
 'use client'
 
-import * as React from 'react'
+import { useState } from 'react'
 
 import { useSearchParams } from 'next/navigation'
 
@@ -31,7 +31,7 @@ export const SortDropdown = () => {
   const sortingType = searchParams.get('sortingType') || SORTING_TYPES[0]
   const { handleQueryString } = useSetQueryString({ action: 'replace' })
 
-  const [sort, setSort] = React.useState(
+  const [sort, setSort] = useState(
     SORTING_TYPE_REVER_MAP[sortingType as SortingType]
   )
 

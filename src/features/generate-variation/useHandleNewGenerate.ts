@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useCallback } from 'react'
 
 import { usePathname, useSearchParams } from 'next/navigation'
 
@@ -99,7 +99,7 @@ export const useHandleClickNewGenerate = ({
     )
   }
 
-  const debounceHandleClickNewGenerate = React.useCallback(
+  const debounceHandleClickNewGenerate = useCallback(
     debounce(() => {
       clickNewGenerate()
       track.sendToMixpanel('generate_image', {

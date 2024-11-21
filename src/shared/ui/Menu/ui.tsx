@@ -1,5 +1,4 @@
-import { ComponentProps } from 'react'
-import * as React from 'react'
+import { Children, cloneElement, forwardRef, isValidElement } from 'react'
 
 import Link, { LinkProps } from 'next/link'
 
@@ -8,9 +7,9 @@ import { Button } from '@/shared/ui/Button'
 
 // menu
 
-interface MenuProps extends ComponentProps<'ul'> {}
+interface MenuProps extends React.ComponentProps<'ul'> {}
 
-export const Menu = React.forwardRef<HTMLUListElement, MenuProps>(
+export const Menu = forwardRef<HTMLUListElement, MenuProps>(
   ({ ...props }, ref: React.Ref<HTMLUListElement>) => {
     return <ul ref={ref} {...props}></ul>
   }
@@ -78,15 +77,15 @@ interface MenuGroupProps extends Omit<React.ComponentProps<'ul'>, 'prefix'> {
 }
 
 // TODO: SubMenuGroup
-export const MenuGroup = React.forwardRef<HTMLUListElement, MenuGroupProps>(
+export const MenuGroup = forwardRef<HTMLUListElement, MenuGroupProps>(
   (
     { title, prefix, postfix, children, disabled = false, ...props },
     ref: React.Ref<HTMLUListElement>
   ) => {
     const renderChildrenWithDisabled = () => {
-      return React.Children.map(children, (child) => {
-        if (React.isValidElement<Partial<{ disabled: boolean }>>(child)) {
-          return React.cloneElement(child, {
+      return Children.map(children, (child) => {
+        if (isValidElement<Partial<{ disabled: boolean }>>(child)) {
+          return cloneElement(child, {
             disabled
             // className: `disabled ? 'pointer-events-none opacity-50' : ''`
           })

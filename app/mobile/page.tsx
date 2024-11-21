@@ -1,6 +1,6 @@
 'use client'
 
-import * as React from 'react'
+import { useEffect } from 'react'
 
 import { useRouter } from 'next/navigation'
 
@@ -12,7 +12,7 @@ export default function Page() {
   const isAuth = useAuthStore((state) => state.isAuth)
   const router = useRouter()
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isAuth === true) {
       router.replace('/mobile/explore')
     }

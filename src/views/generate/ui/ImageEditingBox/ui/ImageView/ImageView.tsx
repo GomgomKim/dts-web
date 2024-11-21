@@ -1,5 +1,3 @@
-import * as React from 'react'
-
 import Image from 'next/image'
 
 import { useEditorStore } from '@/views/generate/model/useEditorHistoryStore'

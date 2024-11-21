@@ -1,6 +1,6 @@
 'use client'
 
-import * as React from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { ASPECT_RATIO_MAP } from '@/entities/generate/constant'
 
@@ -26,12 +26,12 @@ interface ImageEditingBoxProps {
 
 export const ImageEditingBox = (props: ImageEditingBoxProps) => {
   const { containerRef, selectedVariation, boxes } = props
-  const boardRef = React.useRef<HTMLDivElement>(null)
+  const boardRef = useRef<HTMLDivElement>(null)
 
   const editedVariationList = useEditorStore((state) => state.items)
 
   const [styleContainerWrapper, setStyleContainerWrapper] =
-    React.useState<React.CSSProperties>({})
+    useState<React.CSSProperties>({})
   const getNewStyleContainerWrapper = useGetNewStyleContainerWrapper(boardRef)
 
   const variationId =
@@ -43,7 +43,7 @@ export const ImageEditingBox = (props: ImageEditingBoxProps) => {
       editedVariationList.get(variationId)?.present) ||
     null
 
-  const handleImageStyleSize = React.useCallback(() => {
+  const handleImageStyleSize = useCallback(() => {
     let aspectRatio = '9:16'
 
     if (variationCurrent !== null) {
@@ -58,7 +58,7 @@ export const ImageEditingBox = (props: ImageEditingBoxProps) => {
   // 1. 화면 리사이징할 때
   // 2. selected Variation이 바뀔 때
   // 3. 이미지 option이 변경될 때
-  React.useEffect(() => {
+  useEffect(() => {
     if (!selectedVariation) return
 
     handleImageStyleSize()

@@ -1,6 +1,6 @@
 'use client'
 
-import * as React from 'react'
+import { useState } from 'react'
 
 import { DndBox } from '@/shared/lib/hocs/DndBox'
 
@@ -23,7 +23,7 @@ interface ImageInputBoxProps {
 }
 
 export const ImageInputBox = (props: ImageInputBoxProps) => {
-  const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const { handleChangeDNDInput, handleChangeInput, isPending } =
     useImageInputBox({

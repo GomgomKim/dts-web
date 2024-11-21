@@ -1,6 +1,6 @@
 'use client'
 
-import * as React from 'react'
+import { useEffect, useState } from 'react'
 
 import { useRouter } from 'next/navigation'
 
@@ -20,9 +20,9 @@ export default function AuthCheck(props: AuthCheckProps) {
 
   const router = useRouter()
 
-  const [loading, setLoading] = React.useState(true)
+  const [loading, setLoading] = useState(true)
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isAuth === null) {
       const history = localStorage.getItem('dts-auth-store')
 

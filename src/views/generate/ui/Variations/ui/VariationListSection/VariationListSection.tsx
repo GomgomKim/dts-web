@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { Suspense, useEffect, useState } from 'react'
 
 import { Variation } from '@/shared/api/types'
 
@@ -14,7 +14,7 @@ interface VariationListSectionProps {
 }
 
 export const VariationListSection = (props: VariationListSectionProps) => {
-  const [amountPerPage, setAmountPerPage] = React.useState<number>(() => {
+  const [amountPerPage, setAmountPerPage] = useState<number>(() => {
     if (typeof window === 'undefined') return 3
     if (window.innerWidth < 2560) return 3
     return 5
@@ -25,16 +25,16 @@ export const VariationListSection = (props: VariationListSectionProps) => {
     else setAmountPerPage(5)
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     window.addEventListener('resize', handleAmountPerPage)
     return () => window.removeEventListener('resize', handleAmountPerPage)
   })
 
   return (
-    <React.Suspense
+    <Suspense
       fallback={<VariationListSkeleton amountPerPage={amountPerPage} />}
     >
       <VariationList {...props} amountPerPage={amountPerPage} />
-    </React.Suspense>
+    </Suspense>
   )
 }

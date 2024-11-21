@@ -1,6 +1,6 @@
 'use client'
 
-import * as React from 'react'
+import { useEffect } from 'react'
 
 import { usePathname } from 'next/navigation'
 
@@ -10,7 +10,7 @@ export const PathStorage = () => {
   const pathname = usePathname() // 현재 경로 가져오기
   const { currentPath, updateCurrentPath } = usePathStore()
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (pathname !== currentPath) {
       updateCurrentPath(pathname) // Zustand 상태 업데이트
     }

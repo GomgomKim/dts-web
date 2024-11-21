@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useEffect } from 'react'
 
 import { dtsAxios } from '@/shared/api'
 
@@ -8,7 +8,7 @@ import { InternalAxiosRequestConfig } from 'axios'
 import { useAuthStore } from '../store'
 
 export const useAxiosAuthInterceptor = () => {
-  React.useEffect(() => {
+  useEffect(() => {
     const requestHandler = (config: InternalAxiosRequestConfig) => {
       const { tokens } = useAuthStore.getState()
       if (tokens) {

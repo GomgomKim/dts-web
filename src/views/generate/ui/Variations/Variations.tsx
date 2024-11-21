@@ -1,6 +1,6 @@
 'use client'
 
-import * as React from 'react'
+import { useState } from 'react'
 
 import { ErrorModals } from '@/entities/ErrorModal/ErrorModals'
 import { useAiImageGeneratingStore } from '@/entities/generate/store'
@@ -23,8 +23,8 @@ interface VariationsProps {
 const INITIAL_PAGE = 1
 
 export const Variations = (props: VariationsProps) => {
-  const [currentPage, setCurrentPage] = React.useState<number>(INITIAL_PAGE)
-  const [totalPage, setTotalPage] = React.useState<number>(INITIAL_PAGE)
+  const [currentPage, setCurrentPage] = useState<number>(INITIAL_PAGE)
+  const [totalPage, setTotalPage] = useState<number>(INITIAL_PAGE)
 
   const isAiImageGenerating = useAiImageGeneratingStore(
     (state) => state.isAiImageGenerating

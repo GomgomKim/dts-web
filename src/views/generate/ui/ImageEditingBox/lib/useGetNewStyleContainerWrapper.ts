@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useCallback } from 'react'
 
 import {
   ASPECT_RATIO_MAP_NUMBER,
@@ -8,7 +8,7 @@ import {
 export const useGetNewStyleContainerWrapper = (
   boardRef: React.RefObject<HTMLDivElement>
 ) => {
-  const getFitDirection = React.useCallback(
+  const getFitDirection = useCallback(
     (ratio: number) => {
       if (!boardRef.current?.clientHeight || !boardRef.current?.clientWidth)
         return 'height'

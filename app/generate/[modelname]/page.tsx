@@ -1,6 +1,6 @@
 'use client'
 
-import * as React from 'react'
+import { useCallback, useLayoutEffect, useState } from 'react'
 
 import { usePathname, useSearchParams } from 'next/navigation'
 
@@ -11,9 +11,7 @@ import Generate from '@/views/generate'
 import { useGetAuthToken } from '@/shared/lib/hooks/useGetAuthToken'
 
 export default function Page() {
-  const [isGettingToken, setIsGettingToken] = React.useState<boolean | null>(
-    null
-  )
+  const [isGettingToken, setIsGettingToken] = useState<boolean | null>(null)
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
@@ -23,7 +21,7 @@ export default function Page() {
   const currentPageInfo =
     modelName && modelId ? `?name=${modelName}&id=${modelId}` : ''
 
-  const toggleIsGettingToken = React.useCallback((value: boolean) => {
+  const toggleIsGettingToken = useCallback((value: boolean) => {
     setIsGettingToken(value)
   }, [])
 
@@ -32,7 +30,7 @@ export default function Page() {
     toggleIsGettingToken
   })
 
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     const setVh = () => {
       document.documentElement.style.setProperty(
         '--vh',

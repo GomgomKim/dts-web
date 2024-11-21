@@ -1,6 +1,6 @@
 'use client'
 
-import * as React from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -21,10 +21,10 @@ interface DefaultModalProps {
 }
 
 export const DefaultModal = (props: DefaultModalProps) => {
-  const modalRef = React.useRef(null)
+  const modalRef = useRef(null)
   const router = useRouter()
 
-  const handleClose = React.useCallback(() => {
+  const handleClose = useCallback(() => {
     props.closeable?.isCloseable ? props.closeable.onClose() : null
   }, [props.closeable])
 
@@ -42,7 +42,7 @@ export const DefaultModal = (props: DefaultModalProps) => {
     }
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     document.addEventListener('keydown', handleKeydown)
     return () => {
       document.removeEventListener('keydown', handleKeydown)

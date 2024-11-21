@@ -1,6 +1,6 @@
 'use client'
 
-import * as React from 'react'
+import { useState } from 'react'
 
 import { usePathname } from 'next/navigation'
 
@@ -43,8 +43,8 @@ export const DownloadDropdown = (props: DownloadDropdownProps) => {
   const modelName = pathname.split('/')[2]
 
   const [selectedFormat, setSelectedFormat] =
-    React.useState<EXPORT_IMAGE_FORMAT>('png')
-  const [selectedQuality] = React.useState<EXPORT_IMAGE_QUALITY>('small')
+    useState<EXPORT_IMAGE_FORMAT>('png')
+  const [selectedQuality] = useState<EXPORT_IMAGE_QUALITY>('small')
 
   const editedVariationList = useEditorStore((state) => state.items)
 

@@ -1,6 +1,6 @@
 'use client'
 
-import * as React from 'react'
+import { useEffect } from 'react'
 
 import { track } from '@/shared/lib/utils/mixpanel'
 
@@ -9,7 +9,7 @@ interface MixpanelProviderProps {
 }
 
 export function MixpanelProvider({ children }: MixpanelProviderProps) {
-  React.useEffect(() => {
+  useEffect(() => {
     track.initialize()
   }, [])
 

@@ -1,6 +1,6 @@
 'use client'
 
-import * as React from 'react'
+import { useEffect, useState } from 'react'
 
 import { useSearchParams } from 'next/navigation'
 
@@ -45,21 +45,21 @@ export const VariationList = (props: VariationListProps) => {
     isFetching
   } = useGetVariationList(mainImageId)
 
-  const [initialData, setInitialData] = React.useState<Variation[]>([])
+  const [initialData, setInitialData] = useState<Variation[]>([])
 
-  React.useEffect(() => {
+  useEffect(() => {
     return () => resetAiImageGeneratingList()
   }, [variations])
 
   // 페이지당 아이템 수 변경
-  React.useEffect(() => {
+  useEffect(() => {
     const totalPage = Math.ceil(variations.length / props.amountPerPage)
 
     props.setTotalPage(totalPage)
     if (totalPage < props.currentPage) props.setCurrentPage(totalPage)
   }, [variations, props.amountPerPage])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isFetching) return
 
     props.onChangeSelectedVariation(variations[0], tags)
@@ -93,7 +93,7 @@ export const VariationList = (props: VariationListProps) => {
 
   const variationsLength = initialData.length + aiImageList.length
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (variationsLength === 0 || variationsLength === variations.length) return
     const updatePage = Math.ceil(variationsLength / props.amountPerPage)
     props.setCurrentPage(updatePage)

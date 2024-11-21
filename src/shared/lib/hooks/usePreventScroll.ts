@@ -1,6 +1,6 @@
 'use client'
 
-import * as React from 'react'
+import { useEffect } from 'react'
 
 export const usePreventScroll = () => {
   const preventScroll = () => {
@@ -23,7 +23,7 @@ export const usePreventScroll = () => {
     window.scrollTo(0, prevScrollY)
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     const prevScrollY = preventScroll()
     return () => {
       allowScroll(prevScrollY)

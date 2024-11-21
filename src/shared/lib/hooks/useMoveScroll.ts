@@ -1,7 +1,7 @@
-import * as React from 'react'
+import { useRef } from 'react'
 
 export const useMoveScroll = () => {
-  const element = React.useRef<HTMLDivElement>(null)
+  const element = useRef<HTMLDivElement>(null)
   const onMoveToElement = () => {
     element.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }

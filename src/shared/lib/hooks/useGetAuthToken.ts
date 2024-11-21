@@ -1,6 +1,6 @@
 'use client'
 
-import * as React from 'react'
+import { useEffect } from 'react'
 
 import { useRouter, useSearchParams } from 'next/navigation'
 
@@ -28,7 +28,7 @@ export const useGetAuthToken = (params: UseGetAuthTokenParams) => {
 
   const { removeSearchParams } = useSetQueryString({ action: 'replace' })
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isAuth === true) {
       params.toggleIsGettingToken?.(false)
       return

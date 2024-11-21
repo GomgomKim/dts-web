@@ -1,6 +1,6 @@
 'use client'
 
-import * as React from 'react'
+import { useRef, useState } from 'react'
 
 import Link from 'next/link'
 
@@ -19,8 +19,8 @@ import { useQueryClient } from '@tanstack/react-query'
 export const HamburgerMenu = () => {
   const queryClient = useQueryClient()
 
-  const [isOpen, setIsOpen] = React.useState(false)
-  const menubarRef = React.useRef<HTMLDivElement>(null)
+  const [isOpen, setIsOpen] = useState(false)
+  const menubarRef = useRef<HTMLDivElement>(null)
 
   const isAuth = useAuthStore((state) => state.isAuth)
   const logOut = useAuthStore((state) => state.logOut)

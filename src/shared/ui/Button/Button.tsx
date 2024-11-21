@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { forwardRef } from 'react'
 
 import { cn } from '@/shared/lib/utils'
 
@@ -44,7 +44,7 @@ interface ButtonProps
   disabled?: boolean
 }
 
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
       className,

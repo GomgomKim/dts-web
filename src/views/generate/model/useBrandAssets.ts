@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useCallback, useState } from 'react'
 
 interface UseBrandAssetsReturnType {
   imagePreviewUrls: Map<string, string>
@@ -7,18 +7,18 @@ interface UseBrandAssetsReturnType {
 }
 
 export const useBrandAssets = (): UseBrandAssetsReturnType => {
-  const [imagePreviewUrls, setImagePreviewUrls] = React.useState(
+  const [imagePreviewUrls, setImagePreviewUrls] = useState(
     new Map<string, string>()
   )
 
-  const addImagePreviewUrl = React.useCallback(
+  const addImagePreviewUrl = useCallback(
     (id: string, previewImgSrc: string) => {
       setImagePreviewUrls((prev) => new Map(prev).set(id, previewImgSrc))
     },
     []
   )
 
-  const removeImagePreviewUrl = React.useCallback((id: string) => {
+  const removeImagePreviewUrl = useCallback((id: string) => {
     setImagePreviewUrls((prev) => {
       const updatedMap = new Map(prev)
       updatedMap.delete(id)
