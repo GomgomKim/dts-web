@@ -4,8 +4,8 @@ import React from 'react'
 
 import { usePathname, useSearchParams } from 'next/navigation'
 
+import { useClientSearchParams } from '@/shared/lib/hooks/useClientSearchParams'
 import { useMoveScroll } from '@/shared/lib/hooks/useMoveScroll'
-import { useSetQueryString } from '@/shared/lib/hooks/useSetQueryString'
 import { useFilterTypeStore } from '@/shared/lib/stores/useFilterTypeStore'
 import { cn } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui/Button'
@@ -25,7 +25,7 @@ export const Filter = (props: FilterProps) => {
   const previousFilterType = useFilterTypeStore((state) => state.filterType)
   const setFilterType = useFilterTypeStore((state) => state.setFilterType)
 
-  const { handleQueryString } = useSetQueryString({ action: 'replace' })
+  const { addSearchParams } = useClientSearchParams({ action: 'replace' })
 
   const currentFilterType =
     searchParams.get('filterType') ||
@@ -34,7 +34,7 @@ export const Filter = (props: FilterProps) => {
       : previousFilterType)
 
   const handleClickFilter = (type: string) => {
-    handleQueryString([{ filterType: type }])
+    addSearchParams({ filterType: type })
   }
 
   React.useEffect(() => {

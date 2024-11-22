@@ -5,7 +5,6 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useAuthStore } from '@/entities/UserProfile/store'
 
 import { Variation } from '@/shared/api/types'
-import { useSetQueryString } from '@/shared/lib/hooks/useSetQueryString'
 
 import { convertImageToBoxData } from './lib'
 import { useBrandAssets } from './model/useBrandAssets'
@@ -58,14 +57,8 @@ export default function Generate(props: GenerateProps) {
     null
   )
 
-  const { handleQueryString } = useSetQueryString({ action: 'replace' })
-  const handleSelectedVariation = (
-    variation: Variation,
-    tags: string[] = []
-  ) => {
+  const handleSelectedVariation = (variation: Variation) => {
     setSelectedVariation(variation)
-    const variationId = variation.variationId.toString()
-    handleQueryString([{ variationId, tagType: tags.join(',') }])
   }
 
   // related credit

@@ -4,7 +4,7 @@ import { useState } from 'react'
 
 import { useSearchParams } from 'next/navigation'
 
-import { useSetQueryString } from '@/shared/lib/hooks/useSetQueryString'
+import { useClientSearchParams } from '@/shared/lib/hooks/useClientSearchParams'
 import { Button } from '@/shared/ui'
 import {
   DropdownMenu,
@@ -29,7 +29,7 @@ import {
 export const SortDropdown = () => {
   const searchParams = useSearchParams()
   const sortingType = searchParams.get('sortingType') || SORTING_TYPES[0]
-  const { handleQueryString } = useSetQueryString({ action: 'replace' })
+  const { addSearchParams } = useClientSearchParams({ action: 'replace' })
 
   const [sort, setSort] = useState(
     SORTING_TYPE_REVER_MAP[sortingType as SortingType]
@@ -38,7 +38,7 @@ export const SortDropdown = () => {
   const handleSortChange = (value: string) => {
     setSort(value)
 
-    handleQueryString([{ sortingType: SORTING_TYPE_MAP[value] }])
+    addSearchParams({ sortingType: SORTING_TYPE_MAP[value] })
   }
 
   return (

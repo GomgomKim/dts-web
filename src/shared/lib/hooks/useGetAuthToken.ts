@@ -9,7 +9,7 @@ import { useAuthStore } from '@/entities/UserProfile/store'
 
 import { dtsAxios } from '@/shared/api'
 
-import { useSetQueryString } from './useSetQueryString'
+import { useClientSearchParams } from './useClientSearchParams'
 
 type RedirectUri = 'explore' | 'generate'
 
@@ -26,7 +26,7 @@ export const useGetAuthToken = (params: UseGetAuthTokenParams) => {
   const logIn = useAuthStore((state) => state.logIn)
   const isAuth = useAuthStore((state) => state.isAuth)
 
-  const { removeSearchParams } = useSetQueryString({ action: 'replace' })
+  const { removeSearchParams } = useClientSearchParams({ action: 'replace' })
 
   useEffect(() => {
     if (isAuth === true) {

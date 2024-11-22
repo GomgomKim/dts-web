@@ -7,6 +7,7 @@ import { useSearchParams } from 'next/navigation'
 import { useAiImageGeneratingStore } from '@/entities/generate/store'
 
 import { Variation } from '@/shared/api/types'
+import { useClientSearchParams } from '@/shared/lib/hooks/useClientSearchParams'
 
 import { useGetVariationList } from '../../../../model/adapter'
 import { useGenerateVariation } from './lib/useGenerateVariation'
@@ -20,12 +21,16 @@ interface VariationListProps {
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>
   totalPage: number
   setTotalPage: React.Dispatch<React.SetStateAction<number>>
-  onChangeSelectedVariation: (variation: Variation, tags: string[]) => void
+  onChangeSelectedVariation: (variation: Variation) => void
 }
 
 export const VariationList = (props: VariationListProps) => {
   const searchParams = useSearchParams()
   const mainImageId = searchParams.get('id') || ''
+
+  const { addSearchParams } = useClientSearchParams({
+    action: 'replace'
+  })
 
   useGenerateVariation(mainImageId)
 
@@ -62,7 +67,19 @@ export const VariationList = (props: VariationListProps) => {
   useEffect(() => {
     if (isFetching) return
 
-    props.onChangeSelectedVariation(variations[0], tags)
+    addSearchParams({ tagType: tags.join('') })
+  }, [tags, isFetching])
+
+  const handleSelectedVariation = (variation: Variation) => {
+    props.onChangeSelectedVariation(variation)
+    const variationId = variation.variationId.toString()
+    addSearchParams({ variationId })
+  }
+
+  useEffect(() => {
+    if (isFetching) return
+
+    handleSelectedVariation(variations[0])
     props.onDataLoaded()
 
     // polling 할 목록 따로 추출
@@ -115,7 +132,7 @@ export const VariationList = (props: VariationListProps) => {
         <VariationItem
           key={item.variationId + idx}
           item={item}
-          onClickVariation={() => props.onChangeSelectedVariation(item, tags)} // TODO:
+          onClickVariation={() => handleSelectedVariation(item)}
         />
       ))}
       {/* null card */}
