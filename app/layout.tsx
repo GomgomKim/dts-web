@@ -8,7 +8,6 @@ import { MixpanelProvider } from '@/app/providers/MixpanelProvider'
 import { ModalsProvider } from '@/app/providers/ModalsProvider'
 import { MswComponent } from '@/app/providers/MswComponent'
 import { NetworkError } from '@/app/providers/NetworkError'
-import { PathStorage } from '@/app/providers/PathStorage'
 import { ReactQueryClientProvider } from '@/app/providers/ReactQueryClientProvider'
 import '@/app/styles/globals.css'
 
@@ -70,7 +69,6 @@ export default function RootLayout({
       <body className={`${pretendard.variable} font-pretendard`}>
         <ReactQueryClientProvider>
           <AxiosInterceptorProvider>
-            <PathStorage />
             <MixpanelProvider>
               <NetworkError>
                 <Suspense fallback={<Loading />}>
