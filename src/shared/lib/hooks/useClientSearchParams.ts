@@ -42,7 +42,7 @@ export const useClientSearchParams = (props: useClientSearchParamsParams) => {
         })
       }
     },
-    [pathname, _searchParams]
+    [pathname, _searchParams, router, createQueryStrings]
   )
 
   const removeSearchParams = useCallback(

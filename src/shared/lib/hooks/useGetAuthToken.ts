@@ -29,12 +29,14 @@ export const useGetAuthToken = (params: UseGetAuthTokenParams) => {
   const { removeSearchParams } = useClientSearchParams({ action: 'replace' })
 
   useEffect(() => {
+    if (isAuth === null) return
+
     if (isAuth === true) {
       params.toggleIsGettingToken?.(false)
       return
     }
 
-    // 로그인 직후
+    // isAuth: false
     if (searchParams.has('oAuthProviderType') && searchParams.has('code')) {
       params.toggleIsGettingToken?.(true)
       const oAuthProviderType = searchParams.get('oAuthProviderType') as string
@@ -57,18 +59,21 @@ export const useGetAuthToken = (params: UseGetAuthTokenParams) => {
             } else {
               removeSearchParams(['oAuthProviderType', 'code'])
             }
-
-            params.toggleIsGettingToken?.(false)
           }
         })
         .catch((error) => {
-          //TODO: api error handling
           console.error('Error fetching tokens:', error)
+        })
+        .finally(() => {
+          // 현재 API 에러처리 로직이 없으므로
+          // 토큰에러 발생 여부와 상관없이 ui를 렌더링하여
+          // 다른 API 요청에서 올바르지 않은 토큰이면 애러바운더리를 통해 에러 처리
+          params.toggleIsGettingToken?.(false)
         })
     } else {
       params.toggleIsGettingToken?.(false)
     }
-  }, [searchParams, router])
+  }, [searchParams, router, isAuth])
 }
 
 const getTokens = async (
