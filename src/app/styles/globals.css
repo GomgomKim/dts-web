@@ -1,0 +1,160 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --vh: 100%;
+    --background: #0f1011;
+    --foreground: 0 0% 98%;
+
+    --card: 0 0% 3%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 3%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: #6effb6;
+    --primary-foreground: #0f1011;
+    --primary-hover: #a2ffd1;
+
+    --secondary: #2d2e33;
+    --secondary-foreground: #aeafb5;
+
+    --muted: 0 0% 9%;
+    --muted-foreground: 0 0% 49%;
+
+    --accent: #202124;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: #ff8480;
+    --destructive-foreground: #0f1011;
+    --destructive-hover: #ff9d99;
+
+    --border: #393a40;
+    --input: 0 0% 16%;
+    --ring: rgba(255, 255, 255, 0.5);
+    --radius: 16px;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    line-height: normal;
+    list-style: none;
+    box-sizing: border-box;
+    font-size: 16px;
+  }
+  body {
+    @apply bg-background text-foreground;
+
+    height: 100vh;
+    height: var(--vh);
+    overflow-y: scroll;
+  }
+}
+
+@layer utilities {
+  .grid-empty {
+    grid-template-columns: repeat(5, minmax(176px, 1fr));
+    max-width: calc(211px * 5 + 20px * 4);
+  }
+  .grid-empty-large {
+    grid-template-columns: repeat(8, 256px);
+    max-width: calc(256px * 8 + 20px * 7);
+  }
+  .grid-cols-auto-fill-small {
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  }
+  .grid-cols-auto-fill-medium {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+  .grid-cols-auto-fill-large {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+
+  .absolute-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  @keyframes react-loading-skeleton {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+  .loading-skeleton {
+    background-color: #202124;
+  }
+  .loading-skeleton::after {
+    content: ' ';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-image: linear-gradient(90deg, #202124, #38393d, #202124);
+    transform: translateX(-100%);
+    animation-name: react-loading-skeleton;
+    animation-direction: normal;
+    animation-duration: 1.5s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+  }
+}
+
+.a11y-hidden {
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+}
+
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.5;
+  word-break: break-all;
+}
+
+.ellipsis-multi {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.5;
+  word-break: break-all;
+}
+
+*::-webkit-scrollbar {
+  background-color: inherit;
+  width: 6px;
+  height: 6px;
+}
+*::-webkit-scrollbar-track {
+  background-color: inherit;
+}
+*::-webkit-scrollbar-track:hover {
+  background-color: inherit;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: var(--border);
+  border: 1px solid inherit;
+  border-radius: 16px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background-color: #616268;
+}
+
+img {
+  vertical-align: middle;
+}
