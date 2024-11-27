@@ -1,0 +1,1 @@
+export const FILTER_TYPES = ['ALL', 'FEATURED', 'MAKEUP', 'SKINCARE', 'HAIR']

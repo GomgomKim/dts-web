@@ -1,5 +1,5 @@
 import Explore from '@/views/explore'
-import { Banner } from '@/views/explore/ui/Banner'
+import { Banner } from '@/views/explore/ui/banner'
 
 export default function Page() {
   return (

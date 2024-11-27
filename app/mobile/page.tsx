@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 
 import Mobile from '@/views/mobile'
 
-import { useAuthStore } from '@/entities/UserProfile/store'
+import { useAuthStore } from '@/entities/user-profile/model/store'
 
 export default function Page() {
   const isAuth = useAuthStore((state) => state.isAuth)

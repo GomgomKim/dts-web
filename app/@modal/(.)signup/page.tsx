@@ -4,7 +4,7 @@ import { useRef } from 'react'
 
 import { useRouter } from 'next/navigation'
 
-import { Signup } from '@/entities/Signup'
+import { Signup } from '@/entities/signup'
 
 import { useClickOutside } from '@/shared/lib/hooks/useClickOutside'
 import { usePreventScroll } from '@/shared/lib/hooks/usePreventScroll'

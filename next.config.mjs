@@ -1,4 +1,4 @@
-import { withSentryConfig } from '@sentry/nextjs'
+// import { withSentryConfig } from '@sentry/nextjs'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -32,44 +32,46 @@ const nextConfig = {
   }
 }
 
-const buildEnv = process.env.NEXT_PUBLIC_ENVIRONMENT || 'development'
+// const buildEnv = process.env.NEXT_PUBLIC_ENVIRONMENT || 'development'
 
-let projectName
-switch (buildEnv) {
-  case 'development':
-    projectName = 'dts-web-dev'
-    break
-  case 'production':
-    projectName = 'dts-web-prod'
-    break
-  default:
-    projectName = 'dts-web-dev'
-}
+// let projectName
+// switch (buildEnv) {
+//   case 'development':
+//     projectName = 'dts-web-dev'
+//     break
+//   case 'production':
+//     projectName = 'dts-web-prod'
+//     break
+//   default:
+//     projectName = 'dts-web-dev'
+// }
 
-const sentryConfig = {
-  org: 'growdle-k2',
-  project: projectName,
-  silent: !process.env.CI,
-  widenClientFileUpload: true,
-  reactComponentAnnotation: {
-    enabled: true
-  },
-  tunnelRoute: '/monitoring',
-  hideSourceMaps: true,
-  disableLogger: true,
-  automaticVercelMonitors: true
-}
+// const sentryConfig = {
+//   org: 'growdle-k2',
+//   project: projectName,
+//   silent: !process.env.CI,
+//   widenClientFileUpload: true,
+//   reactComponentAnnotation: {
+//     enabled: true
+//   },
+//   tunnelRoute: '/monitoring',
+//   hideSourceMaps: true,
+//   disableLogger: true,
+//   automaticVercelMonitors: true
+// }
 
-const configs = () => {
-  const isProduction = process.env.NODE_ENV === 'production'
+// const configs = () => {
+//   const isProduction = process.env.NODE_ENV === 'production'
 
-  if (isProduction) {
-    // production 환경에서만 Sentry 설정을 적용
-    return withSentryConfig(nextConfig, sentryConfig)
-  } else {
-    // 개발 환경에서는 Sentry 설정을 적용하지 않음
-    return nextConfig
-  }
-}
+//   if (isProduction) {
+//     // production 환경에서만 Sentry 설정을 적용
+//     return withSentryConfig(nextConfig, sentryConfig)
+//   } else {
+//     // 개발 환경에서는 Sentry 설정을 적용하지 않음
+//     return nextConfig
+//   }
+// }
 
-export default configs
+// export default configs
+
+export default nextConfig

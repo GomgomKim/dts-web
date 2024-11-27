@@ -4,9 +4,9 @@ import { useEffect, useState } from 'react'
 
 import { useRouter } from 'next/navigation'
 
-import { useAuthStore } from '@/entities/UserProfile/store'
+import { useAuthStore } from '@/entities/user-profile/model/store'
 
-import { LoadingSpinner } from '@/shared/ui/LoadingSpinner'
+import { LoadingSpinner } from '@/shared/ui/loading-spinner'
 
 interface AuthCheckProps {
   children: React.ReactNode

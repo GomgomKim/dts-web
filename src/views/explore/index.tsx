@@ -1,14 +1,14 @@
 'use client'
 
-import { Filter } from '@/features/Filter'
+import { Filter } from '@/features/filter'
 
 import { useGetAuthToken } from '@/shared/lib/hooks/useGetAuthToken'
 import { useMoveScroll } from '@/shared/lib/hooks/useMoveScroll'
-import { ErrorBoundary } from '@/shared/ui/ErrorBoundary'
+import { ErrorBoundary } from '@/shared/ui/error-boundary'
 
-import { CallToActionButtons } from './ui/CallToActionButtons'
-import { ExploreList } from './ui/ExploreList'
-import { FILTER_TYPES } from './ui/ExploreList/constant'
+import { CallToActionButtons } from './ui/call-to-action-buttons'
+import { Gallery } from './ui/gallery'
+import { FILTER_TYPES } from './ui/gallery/constant'
 
 export default function Explore() {
   useGetAuthToken({
@@ -25,7 +25,7 @@ export default function Explore() {
           <Filter id="explore-filter" filterList={FILTER_TYPES} />
         </div>
         <ErrorBoundary FallbackComponent={({ error }) => <>{error?.message}</>}>
-          <ExploreList />
+          <Gallery />
         </ErrorBoundary>
       </div>
     </>

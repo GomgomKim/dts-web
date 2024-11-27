@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
 
-import { FavoriteList } from './ui/FavoriteList'
-import { SortDropdown } from './ui/SortDropdown'
+import { FavoriteItems } from './ui/favorite-items'
+import { SortDropdown } from './ui/sort-dropdown'
 
 export default function Favorites() {
   return (
@@ -9,7 +9,7 @@ export default function Favorites() {
       <h1 className="mb-8 text-[2rem] font-semibold">Favorites</h1>
       <SortDropdown />
       <Suspense fallback={<div>Loading...</div>}>
-        <FavoriteList />
+        <FavoriteItems />
       </Suspense>
     </>
   )

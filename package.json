@@ -38,7 +38,7 @@
     "shadcn-ui": "^0.8.0",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^10.0.0",
-    "zustand": "^4.5.4"
+    "zustand": "^5.0.1"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^1.6.1",

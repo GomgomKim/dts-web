@@ -1,5 +1,5 @@
-import { URL_EXPLORE_LIST } from '@/views/explore/ui/ExploreList/constant'
-import { URL_FAVORITE_LIST } from '@/views/favorites/ui/FavoriteList/constant'
+import { URL_EXPLORE_LIST } from '@/views/explore/ui/gallery/model/constant'
+import { URL_FAVORITE_LIST } from '@/views/favorites/ui/favorite-items/model/constant'
 
 import {
   URL_AI_IMAGE_GENERATE,

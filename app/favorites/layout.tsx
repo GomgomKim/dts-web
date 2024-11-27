@@ -2,9 +2,8 @@ import { Suspense } from 'react'
 
 import type { Metadata } from 'next'
 
-import { Header } from '@/widgets/Header'
-
-import { Sidebar } from '@/widgets'
+import { Header } from '@/widgets/header'
+import { Sidebar } from '@/widgets/sidebar'
 
 export const metadata: Metadata = {
   title: 'Favorites'

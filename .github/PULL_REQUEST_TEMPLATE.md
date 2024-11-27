@@ -8,4 +8,4 @@
 
 ## 티켓
 
-- [DTS-](https://linear.app/dothingsstudio/issue/DTS-)
+- [DEV-](https://linear.app/dothingsstudio/issue/DEV-)

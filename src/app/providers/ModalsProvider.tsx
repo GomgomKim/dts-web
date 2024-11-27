@@ -2,13 +2,13 @@
 
 import { ReactNode, useMemo, useState } from 'react'
 
-import { Modals } from '@/shared/ui/Modal/Modals'
+import { Modals } from '@/shared/ui/modal/Modals'
 
 import {
   ModalsDispatchContext,
   ModalsStateContext
-} from '../../shared/ui/Modal/model/Modals.context'
-import { ModalInfo } from '../../shared/ui/Modal/model/types'
+} from '../../shared/ui/modal/model/Modals.context'
+import { ModalInfo } from '../../shared/ui/modal/model/types'
 
 export const ModalsProvider = ({ children }: { children: ReactNode }) => {
   const [openedModals, setOpenedModals] = useState<ModalInfo[]>([])

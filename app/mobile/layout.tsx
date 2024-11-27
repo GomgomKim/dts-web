@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
 
-import { MobileHeader } from '@/widgets/MobileHeader'
+import { MobileHeader } from '@/widgets/mobile-header'
 
 export default function MobileLayout({
   children

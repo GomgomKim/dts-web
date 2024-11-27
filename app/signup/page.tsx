@@ -1,4 +1,4 @@
-import { Signup } from '@/entities/Signup/Signup'
+import { Signup } from '@/entities/signup'
 
 export default function Page() {
   return <Signup />

@@ -1,6 +1,6 @@
 import Image, { StaticImageData } from 'next/image'
 
-import { Banner } from '@/views/explore/ui/Banner'
+import { Banner } from '@/views/explore/ui/banner'
 
 import Dahye from '/public/images/dahye-1_1-FRONT-watermark.webp'
 import Dayoung from '/public/images/dayoung-1_1-FRONT-watermark.webp'
@@ -8,7 +8,7 @@ import Yewon from '/public/images/yewon-1_1-FRONT-watermark.webp'
 import Yuna from '/public/images/yuna-1_1-FRONT-watermark.webp'
 import Yuri from '/public/images/yuri-1_1-FRONT-watermark.webp'
 
-import { CallToActionButtons } from '../explore/ui/CallToActionButtons'
+import { CallToActionButtons } from '../explore/ui/call-to-action-buttons'
 
 export default function Mobile() {
   const images = [
