@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
 
-import { useEditorStore } from '@/views/generate/model/useEditorHistoryStore'
+import { useEditorStore } from '@/views/_generate/model/useEditorHistoryStore'
 
 import { URL_VARIATION_IMAGE } from '@/entities/generate/constant'
 

@@ -2,8 +2,8 @@ import { useCallback } from 'react'
 
 import { usePathname, useSearchParams } from 'next/navigation'
 
-import { GenerationLimit } from '@/views/generate/ui/ErrorModal/ui/GenerationLimit'
-import { RequestTimeLimit } from '@/views/generate/ui/ErrorModal/ui/RequestTimeLimit'
+import { GenerationLimit } from '@/views/_generate/ui/ErrorModal/ui/GenerationLimit'
+import { RequestTimeLimit } from '@/views/_generate/ui/ErrorModal/ui/RequestTimeLimit'
 
 import { useAiImageGeneratingStore } from '@/entities/generate/store'
 import { useAuthStore } from '@/entities/user-profile/model/store'

@@ -2,7 +2,7 @@
 
 import { useSearchParams } from 'next/navigation'
 
-import { useEditorStore } from '@/views/generate/model/useEditorHistoryStore'
+import { useEditorStore } from '@/views/_generate/model/useEditorHistoryStore'
 
 import { Button } from '@/shared/ui'
 

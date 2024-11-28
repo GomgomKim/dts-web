@@ -6,7 +6,7 @@ import { usePathname, useSearchParams } from 'next/navigation'
 
 import AuthCheck from '@/app/providers/AuthCheck'
 
-import Generate from '@/views/generate'
+import Generate from '@/views/_generate'
 
 import { useGetAuthToken } from '@/shared/lib/hooks/useGetAuthToken'
 

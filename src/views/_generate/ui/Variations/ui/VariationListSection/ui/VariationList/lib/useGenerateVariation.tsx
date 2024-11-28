@@ -1,4 +1,4 @@
-import { useGetAiImageProgress } from '@/views/generate/ui/Variations/model/adapter'
+import { useGetAiImageProgress } from '@/views/_generate/ui/Variations/model/adapter'
 
 import { useAiImageGeneratingStore } from '@/entities/generate/store'
 
