@@ -7,6 +7,7 @@ import { Card, CardSkeleton } from '@/shared/ui/card'
 
 import { useGetExploreList } from './model/adapter'
 import { LikeButton } from './ui/like-button'
+import { EmptyCardSkeletons, LoadingSkeletons } from './ui/skeletons'
 
 const NUM_OF_DATA_PER_REQUEST = 25
 const MAX_NULL_BOX_LENGTH = 50
@@ -63,41 +64,28 @@ export const Gallery = () => {
   )
 
   return (
-    <>
-      <div className="grid-cols-auto-fill-small min-[3200px]:grid-cols-auto-fill-medium 2xl:grid-cols-auto-fill-large grid gap-5">
-        {data?.pages.map((page, i) => (
-          <Fragment key={i}>
-            {page.content.images.map((cardItem, cardIdx) => {
-              const isLastItem =
-                i * NUM_OF_DATA_PER_REQUEST + (cardIdx + 1) === totalCardItems
-              return (
-                <Card
-                  key={cardItem.id}
-                  item={cardItem}
-                  actionSlot={<LikeButton item={cardItem} />}
-                  inViewRef={!isFetching && isLastItem ? ref : undefined}
-                />
-              )
-            })}
-          </Fragment>
-        ))}
-        {isFetching && isFetchingNextPage && (
-          <>
-            {Array.from({ length: NUM_OF_DATA_PER_REQUEST }).map(
-              (_value, idx) => (
-                <CardSkeleton key={idx} isLoading />
-              )
-            )}
-          </>
-        )}
-        {hasNextPage && (
-          <>
-            {Array.from({ length: nullBoxLength }).map((_value, idx) => (
-              <CardSkeleton key={idx} />
-            ))}
-          </>
-        )}
-      </div>
-    </>
+    <div className="grid-cols-auto-fill-small min-[3200px]:grid-cols-auto-fill-medium 2xl:grid-cols-auto-fill-large grid gap-5">
+      {data?.pages.map((page, i) => (
+        <Fragment key={i}>
+          {page.content.images.map((cardItem, cardIdx) => {
+            const isLastItem =
+              i * NUM_OF_DATA_PER_REQUEST + (cardIdx + 1) === totalCardItems
+            return (
+              <Card
+                key={cardItem.id}
+                item={cardItem}
+                actionSlot={<LikeButton item={cardItem} />}
+                inViewRef={!isFetching && isLastItem ? ref : undefined}
+              />
+            )
+          })}
+        </Fragment>
+      ))}
+      <LoadingSkeletons
+        isLoading={isFetching && isFetchingNextPage}
+        count={NUM_OF_DATA_PER_REQUEST}
+      />
+      <EmptyCardSkeletons isShow={hasNextPage} count={nullBoxLength} />
+    </div>
   )
 }

@@ -65,13 +65,13 @@
     max-width: calc(256px * 8 + 20px * 7);
   }
   .grid-cols-auto-fill-small {
-    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(176px, 1fr));
   }
   .grid-cols-auto-fill-medium {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
   }
   .grid-cols-auto-fill-large {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   }
 
   .absolute-center {

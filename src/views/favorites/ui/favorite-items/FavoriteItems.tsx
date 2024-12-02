@@ -40,7 +40,7 @@ export const FavoriteItems = () => {
 
   return (
     <>
-      <div className="grid-cols-auto-fill-small grid gap-5">
+      <div className="grid-cols-auto-fill-small md:grid-cols-auto-fill-medium grid gap-5">
         {data?.pages.map((page, i) => (
           <Fragment key={i}>
             {page.content.images.map((cardItem) => (

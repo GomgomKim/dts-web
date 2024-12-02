@@ -1,16 +1,9 @@
 import { Suspense } from 'react'
 
-import type { Metadata } from 'next'
-
-import { Footer } from '@/widgets/footer'
 import { Header } from '@/widgets/header'
 import { Sidebar } from '@/widgets/sidebar'
 
-export const metadata: Metadata = {
-  title: 'Explore'
-}
-
-export default function ExploreLayout({
+export default function CommonLayout({
   children
 }: Readonly<{
   children: React.ReactNode
@@ -20,10 +13,7 @@ export default function ExploreLayout({
       <Header />
       <div className="flex h-screen pt-14">
         <Sidebar />
-        <div className="ml-[280px] flex-1 px-12 pt-14">
-          <main>{children}</main>
-          <Footer />
-        </div>
+        <div className="ml-[240px] flex-1 md:ml-[280px]">{children}</div>
       </div>
     </Suspense>
   )

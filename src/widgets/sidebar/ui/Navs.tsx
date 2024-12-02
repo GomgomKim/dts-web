@@ -5,6 +5,7 @@ import { usePathname, useSearchParams } from 'next/navigation'
 import { Menu, MenuItem } from '@/shared/ui'
 
 import ExploreIcon from '/public/icons/compass.svg'
+import ArchiveIcon from '/public/icons/folder.svg'
 import FavoriteIcon from '/public/icons/heart.svg'
 
 export const Navs = () => {
@@ -34,6 +35,13 @@ export const Navs = () => {
         title="Favorites"
         prefix={<FavoriteIcon />}
         isActive={pathname === '/favorites'}
+      />
+
+      <MenuItem
+        href={{ pathname: '/archive' }}
+        title="Archive"
+        prefix={<ArchiveIcon />}
+        isActive={pathname === '/archive'}
       />
     </Menu>
   )
