@@ -2,7 +2,7 @@ import { Button } from '@/shared/ui/button'
 
 interface UploadButtonProps {
   disabled: boolean
-  boxId: string
+  inputId: string
 }
 
 export const UploadButton = (props: UploadButtonProps) => {
@@ -16,7 +16,7 @@ export const UploadButton = (props: UploadButtonProps) => {
           className="group-focus-within:border-white group-focus-within:ring-2 group-focus-within:ring-ring"
         >
           <label
-            htmlFor={props.boxId}
+            htmlFor={props.inputId}
             role="button"
             className="2xl:text-[1.25rem]"
           >

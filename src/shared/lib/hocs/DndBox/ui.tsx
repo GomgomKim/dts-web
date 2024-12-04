@@ -6,18 +6,10 @@ import { cn } from '@/shared/lib/utils'
 
 interface DndBoxProps extends React.ComponentProps<'div'> {
   children: React.ReactNode
-  width: string
-  height?: string
   onDropped: (e: React.DragEvent) => void
 }
 
-export const DndBox = ({
-  children,
-  width,
-  height,
-  onDropped,
-  ...props
-}: DndBoxProps) => {
+export const DndBox = ({ children, onDropped, ...props }: DndBoxProps) => {
   const { className, ...rest } = props
   const [isDragging, setIsDragging] = useState<boolean>(false)
 
@@ -57,7 +49,6 @@ export const DndBox = ({
           'border border-primary': isDragging
         }
       )}
-      style={{ width, height }}
       {...rest}
     >
       {children}

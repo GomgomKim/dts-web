@@ -52,7 +52,7 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
         <>
           <DashedSvg className="absolute inset-0 size-full" />
           <div className="relative">
-            <UploadButton boxId={props.boxId} />
+            <UploadButton disabled={props.disabled} boxId={props.boxId} />
             {errorMessage !== null ? (
               <ErrorInstruction>{errorMessage}</ErrorInstruction>
             ) : null}
@@ -64,7 +64,8 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
 
   return (
     <DndBox
-      width="100%"
+      // width="100%"
+      // height="160px"
       onDropped={(e) => {
         if (props.disabled) return
         handleChangeDNDInput(e.dataTransfer.files[0])
