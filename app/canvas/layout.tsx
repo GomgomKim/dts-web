@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 
+import { DefaultHeader } from '@/widgets/default-header'
+
 export const metadata: Metadata = {
   title: 'Canvas'
 }
@@ -11,8 +13,8 @@ export default function CanvasLayout({
 }>) {
   return (
     <>
-    {/* Canvas용 TODO 헤더 추가 예정 */}
-      <main className="pr-5 pt-3 md:px-12">{children}</main>
+      <DefaultHeader />
+      <main className="h-screen pt-14">{children}</main>
     </>
-)
+  )
 }

@@ -4,7 +4,7 @@ import Image from 'next/image'
 
 import { cn } from '@/shared/lib/utils'
 
-import { Box } from '../../types'
+import { Box } from '../types'
 import './styles.css'
 
 interface ResizableAndDraggableBoxesProps {
