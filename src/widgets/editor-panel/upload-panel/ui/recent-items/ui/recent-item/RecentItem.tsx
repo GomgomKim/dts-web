@@ -19,7 +19,7 @@ export const RecentItem = () => {
       {isHovering ? (
         <div className="absolute inset-0 flex items-end justify-center bg-custom-gradient p-4">
           {/* TODO: Button size 디자인시스템 속성으로 변경 */}
-          <Button variant="sub1" className="mb-5 px-3 py-2">
+          <Button variant="outline" className="mb-5 px-3 py-2">
             <div className="flex items-center gap-[6px] *:text-[0.875rem]">
               {/* TODO: hover시 svg stoke 변경 */}
               <DeleteIcon stroke="#aeafb5" />

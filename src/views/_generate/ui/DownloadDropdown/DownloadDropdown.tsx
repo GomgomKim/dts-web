@@ -69,7 +69,7 @@ export const DownloadDropdown = (props: DownloadDropdownProps) => {
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button
-          variant="sub1"
+          variant="outline"
           className="bg-neutral-1/50 2xl:h-[80px] 2xl:text-[1.5rem]"
           disabled={!variationId || !props.containerRef || props.isLoading}
         >

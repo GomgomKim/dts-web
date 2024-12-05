@@ -22,7 +22,7 @@ export const CallToActionButtons = (props: CallToActionButtonsProps) => {
             Get Started for Free
           </Button>
           {props.onClickSeeExample ? (
-            <Button variant="sub1" onClick={props.onClickSeeExample}>
+            <Button variant="outline" onClick={props.onClickSeeExample}>
               See Examples
             </Button>
           ) : null}

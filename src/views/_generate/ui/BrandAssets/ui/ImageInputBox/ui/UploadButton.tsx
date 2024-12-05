@@ -11,7 +11,7 @@ export const UploadButton = (props: UploadButtonProps) => {
       <div className="mb-3 text-center">
         <Button
           asChild
-          variant="sub1"
+          variant="outline"
           disabled={props.disabled}
           className="group-focus-within:border-white group-focus-within:ring-2 group-focus-within:ring-ring"
         >

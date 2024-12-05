@@ -14,7 +14,7 @@ export const Pagination = (props: PaginationProps) => {
   return (
     <div className="flex gap-1">
       <Button
-        variant="sub2"
+        variant="sub"
         size="icon"
         className="size-8 rounded"
         disabled={props.currentPage === INITIAL_PAGE}
@@ -32,7 +32,7 @@ export const Pagination = (props: PaginationProps) => {
         <span className="block w-[25px]">{props.totalPage}</span>
       </div>
       <Button
-        variant="sub2"
+        variant="sub"
         size="icon"
         className="size-8 rounded"
         disabled={props.currentPage >= props.totalPage}

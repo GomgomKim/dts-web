@@ -14,7 +14,7 @@ export const EmptyInstruction = () => {
         on models you like to add them to your favorites
       </p>
       <div>
-        <Button variant="sub1" asChild>
+        <Button variant="outline" asChild>
           <Link href="/explore">Go to Explore</Link>
         </Button>
       </div>

@@ -12,13 +12,18 @@ const meta: Meta<typeof Button> = {
     variant: {
       control: 'radio',
       options: [
-        'default',
+        'primary',
+        'outline',
+        'sub',
         'destructive',
-        'outlint',
         'secondary',
         'ghost',
         'link'
       ]
+    },
+    size: {
+      control: 'radio',
+      options: ['small', 'medium', 'large']
     },
     asChild: { control: 'boolean' },
     disabled: { control: 'boolean' },
@@ -29,9 +34,9 @@ export default meta
 
 type Story = StoryObj<typeof Button>
 
-export const Default: Story = {
-  render: ({ ...arg }) => {
-    return <Button {...arg}>default</Button>
+export const Primary: Story = {
+  render: ({ ...args }) => {
+    return <Button {...args}>primary</Button>
   }
 }
 
@@ -41,15 +46,27 @@ export const Destructive: Story = {
   }
 }
 
-export const Sub1: Story = {
+export const Outline: Story = {
   render: () => {
-    return <Button variant="sub1">Sub1</Button>
+    return <Button variant="outline">Outline</Button>
   }
 }
 
-export const Sub2: Story = {
+export const Sub: Story = {
   render: () => {
-    return <Button variant="sub2">Sub2</Button>
+    return <Button variant="sub">Sub</Button>
+  }
+}
+
+export const Sizes: Story = {
+  render: () => {
+    return (
+      <>
+        <Button size="small">Small</Button>
+        <Button size="medium">Medium</Button>
+        <Button size="large">Large</Button>
+      </>
+    )
   }
 }
 
@@ -78,7 +95,7 @@ export const LinkButton: Story = {
         <Button asChild>
           <Link href="#">Get Started for Free</Link>
         </Button>
-        <Button asChild variant="sub1">
+        <Button asChild variant="outline">
           <Link href="#">See Examples</Link>
         </Button>
       </>
@@ -138,10 +155,13 @@ export const Disabled: Story = {
     return (
       <>
         <Button disabled>button</Button>
-        <Button variant="sub1" disabled>
+        <Button variant="primary" disabled>
           button
         </Button>
-        <Button variant="sub2" disabled>
+        <Button variant="outline" disabled>
+          button
+        </Button>
+        <Button variant="sub" disabled>
           button
         </Button>
         <Button variant="secondary" disabled>
@@ -157,7 +177,7 @@ export const Stretch: Story = {
     return (
       <>
         <Button stretch>button</Button>
-        <Button variant="sub1" stretch>
+        <Button variant="outline" stretch>
           button
         </Button>
       </>
