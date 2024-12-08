@@ -60,6 +60,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const Comp = asChild ? Slot : 'button'
+
     return (
       <Comp
         className={cn(
