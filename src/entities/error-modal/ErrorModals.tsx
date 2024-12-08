@@ -1,4 +1,4 @@
-import { useAuthStore } from '@/entities/user-profile/model/store'
+import { useAuthStore } from '@/shared/lib/stores/useAuthStore'
 
 import { useQueryClient } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'

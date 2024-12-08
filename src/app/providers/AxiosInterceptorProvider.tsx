@@ -1,6 +1,6 @@
 'use client'
 
-import { useAxiosAuthInterceptor } from '@/entities/user-profile/lib/useAxiosAuthInterceptor'
+import { useAxiosAuthInterceptor } from '@/entities/profile/ui/profile-menu/lib/useAxiosAuthInterceptor'
 
 export function AxiosInterceptorProvider({
   children

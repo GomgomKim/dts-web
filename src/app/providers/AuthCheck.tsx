@@ -4,8 +4,7 @@ import { useEffect, useState } from 'react'
 
 import { useRouter } from 'next/navigation'
 
-import { useAuthStore } from '@/entities/user-profile/model/store'
-
+import { useAuthStore } from '@/shared/lib/stores/useAuthStore'
 import { LoadingSpinner } from '@/shared/ui/loading-spinner'
 
 interface AuthCheckProps {

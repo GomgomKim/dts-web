@@ -2,16 +2,15 @@
 
 import { useEffect } from 'react'
 
-import { UserProfile } from '@/entities/user-profile'
-import { useGetAuthProfile } from '@/entities/user-profile/model/adapter'
-import { useAuthStore } from '@/entities/user-profile/model/store'
+import { useGetAuthProfile } from '@/entities/profile/ui/profile-menu/model/adapter'
 
+import { useAuthStore } from '@/shared/lib/stores/useAuthStore'
 import { AvatarSkeleton } from '@/shared/ui/avatar'
 import { CreditAmountSkeleton } from '@/shared/ui/credit'
 
-import { Credit } from './ui/Credit'
+import { Credit, ProfileMenu } from './ui'
 
-export const UserProfileSummary = () => {
+export const Profile = () => {
   const restriction = useAuthStore((state) => state.restriction)
   const user = useAuthStore((state) => state.user)
   const setRestriction = useAuthStore((state) => state.setRestriction)
@@ -38,7 +37,7 @@ export const UserProfileSummary = () => {
   return (
     <div className="flex items-center gap-3">
       <Credit />
-      <UserProfile />
+      <ProfileMenu />
     </div>
   )
 }

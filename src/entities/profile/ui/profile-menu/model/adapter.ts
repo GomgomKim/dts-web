@@ -1,8 +1,10 @@
+import { AuthProfile } from '@/shared/api/types'
+import { useAuthStore } from '@/shared/lib/stores/useAuthStore'
+
 import { useQuery } from '@tanstack/react-query'
 
 import { getAuthProfile } from './api'
-import { useAuthStore } from './store'
-import { AuthProfile, GetAuthProfileResData } from './types'
+import { GetAuthProfileResData } from './types'
 
 export const useGetAuthProfile = () => {
   const tokens = useAuthStore((state) => state.tokens)

@@ -1,12 +1,11 @@
 'use client'
 
+import { useAuthStore } from '@/shared/lib/stores/useAuthStore'
 import {
   CreditAmount,
   CreditAmountSkeleton,
   CreditResetIndicator
 } from '@/shared/ui/credit'
-
-import { useAuthStore } from '../model/store'
 
 export const Credit = () => {
   const restriction = useAuthStore((state) => state.restriction)

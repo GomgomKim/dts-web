@@ -6,9 +6,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
-import { useAuthStore } from '@/entities/user-profile/model/store'
-
 import { MainItem } from '@/shared/api/types'
+import { useAuthStore } from '@/shared/lib/stores/useAuthStore'
 import { track } from '@/shared/lib/utils/mixpanel'
 import { Button } from '@/shared/ui/button'
 

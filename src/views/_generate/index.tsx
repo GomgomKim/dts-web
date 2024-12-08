@@ -2,9 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import { useAuthStore } from '@/entities/user-profile/model/store'
-
 import { Variation } from '@/shared/api/types'
+import { useAuthStore } from '@/shared/lib/stores/useAuthStore'
 
 import { convertImageToBoxData } from './lib'
 import { useBrandAssets } from './model/useBrandAssets'

@@ -5,10 +5,9 @@ import { useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 // import { ErrorModals } from '@/entities/ErrorModal/ErrorModals'
-import { useAuthStore } from '@/entities/user-profile/model/store'
-
 import { dtsAxios } from '@/shared/api'
 
+import { useAuthStore } from '../stores/useAuthStore'
 import { useClientSearchParams } from './useClientSearchParams'
 
 type RedirectUri = 'explore' | 'generate'

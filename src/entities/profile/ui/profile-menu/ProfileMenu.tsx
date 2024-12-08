@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 
+import { useAuthStore } from '@/shared/lib/stores/useAuthStore'
 import { Avatar, AvatarSkeleton } from '@/shared/ui/avatar'
 import {
   DropdownMenu,
@@ -13,10 +14,9 @@ import {
   DropdownMenuTrigger
 } from '@/shared/ui/dropdown-menu'
 
-import { useAuthStore } from './model/store'
 import { Credit, LogOut } from './ui'
 
-export const UserProfile = () => {
+export const ProfileMenu = () => {
   const user = useAuthStore((state) => state.user)
 
   if (!user) return <AvatarSkeleton />

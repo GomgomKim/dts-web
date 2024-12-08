@@ -5,9 +5,9 @@ import { useRef, useState } from 'react'
 import Link from 'next/link'
 
 import { Instructions } from '@/entities/mobile/ui/Instructions'
-import { useAuthStore } from '@/entities/user-profile/model/store'
 
 import { useClickOutside } from '@/shared/lib/hooks/useClickOutside'
+import { useAuthStore } from '@/shared/lib/stores/useAuthStore'
 import { cn } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui'
 

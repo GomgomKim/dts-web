@@ -3,9 +3,9 @@
 import { useRouter } from 'next/navigation'
 
 import * as entities from '@/entities/like-button'
-import { useAuthStore } from '@/entities/user-profile/model/store'
 
 import { MainItem } from '@/shared/api/types'
+import { useAuthStore } from '@/shared/lib/stores/useAuthStore'
 import { track } from '@/shared/lib/utils/mixpanel'
 
 import { useDeleteFavorite, usePostFavorite } from './model/adapter'

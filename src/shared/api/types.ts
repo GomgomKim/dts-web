@@ -47,3 +47,9 @@ export interface Tokens {
   accessToken: string
   refreshToken: string
 }
+
+export interface AuthProfile {
+  email: string
+  profileImageUrl: string
+  restriction: Restriction
+}

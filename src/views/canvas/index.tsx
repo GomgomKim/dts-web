@@ -4,7 +4,11 @@ import { CanvasSidebar } from '@/widgets/canvas-sidebar'
 
 // import Swatch from '/public/images/swatch.png'
 
-export default function Canvas() {
+export default function Canvas({
+  canvasRef
+}: {
+  canvasRef: React.RefObject<HTMLDivElement>
+}) {
   // Canvas 관련 상태들
 
   return (
@@ -15,7 +19,7 @@ export default function Canvas() {
       </div>
 
       {/* Canvas */}
-      <div className="ml-[96px] h-full"></div>
+      <div className="ml-[96px] h-full" ref={canvasRef}></div>
     </div>
   )
 }

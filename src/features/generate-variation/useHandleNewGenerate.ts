@@ -6,9 +6,9 @@ import { GenerationLimit } from '@/views/_generate/ui/ErrorModal/ui/GenerationLi
 import { RequestTimeLimit } from '@/views/_generate/ui/ErrorModal/ui/RequestTimeLimit'
 
 import { useAiImageGeneratingStore } from '@/entities/generate/store'
-import { useAuthStore } from '@/entities/user-profile/model/store'
 
 import { Restriction } from '@/shared/api/types'
+import { useAuthStore } from '@/shared/lib/stores/useAuthStore'
 import { debounce } from '@/shared/lib/utils'
 import { track } from '@/shared/lib/utils/mixpanel'
 import useModals from '@/shared/ui/modal/model/Modals.hooks'

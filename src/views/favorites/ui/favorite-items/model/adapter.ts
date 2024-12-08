@@ -1,6 +1,6 @@
 import { useSearchParams } from 'next/navigation'
 
-import { useAuthStore } from '@/entities/user-profile/model/store'
+import { useAuthStore } from '@/shared/lib/stores/useAuthStore'
 
 import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query'
 

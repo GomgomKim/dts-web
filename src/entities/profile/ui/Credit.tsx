@@ -1,7 +1,6 @@
 'use client'
 
-import { useAuthStore } from '@/entities/user-profile/model/store'
-
+import { useAuthStore } from '@/shared/lib/stores/useAuthStore'
 import {
   CreditAmount,
   CreditAmountSkeleton,

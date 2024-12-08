@@ -1,12 +1,13 @@
 'use client'
 
 import { ErrorModals } from '@/entities/error-modal'
-import { useAuthStore } from '@/entities/user-profile/model/store'
+import { Profile } from '@/entities/profile'
 
+import { useAuthStore } from '@/shared/lib/stores/useAuthStore'
 import { ErrorBoundary } from '@/shared/ui/error-boundary'
 import { HeaderLayout } from '@/shared/ui/header-layout'
 
-import { ExternalLinks, LoginSignupButtons, UserProfileSummary } from './ui'
+import { ExternalLinks, LoginSignupButtons } from './ui'
 
 export const DefaultHeader = () => {
   const isAuth = useAuthStore((state) => state.isAuth)
@@ -22,7 +23,7 @@ export const DefaultHeader = () => {
         </nav>
         {isAuth === true ? (
           <ErrorBoundary FallbackComponent={ErrorModals}>
-            <UserProfileSummary />
+            <Profile />
           </ErrorBoundary>
         ) : null}
       </div>

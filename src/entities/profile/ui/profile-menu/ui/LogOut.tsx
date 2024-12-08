@@ -1,10 +1,9 @@
 'use client'
 
+import { useAuthStore } from '@/shared/lib/stores/useAuthStore'
 import { DropdownMenuItem } from '@/shared/ui/dropdown-menu'
 
 import { useQueryClient } from '@tanstack/react-query'
-
-import { useAuthStore } from '../model/store'
 
 export const LogOut = () => {
   const queryClient = useQueryClient()
