@@ -1,7 +1,7 @@
 import { ResData, ScrollContent } from '@/shared/api/types'
 
 export interface GetExploreListReqData {
-  filterType?: string | null
+  tagType?: string | null
   size?: number | null
   scrollKey?: string | null
 }

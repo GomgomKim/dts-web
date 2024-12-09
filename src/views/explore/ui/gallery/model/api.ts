@@ -8,7 +8,7 @@ import { GetExploreListReqData, GetExploreListResData } from './types'
 const SEAERCH_SIZE = 25
 
 export async function getExploreList({
-  filterType,
+  tagType,
   size = SEAERCH_SIZE,
   scrollKey
 }: GetExploreListReqData): Promise<GetExploreListResData> {
@@ -16,7 +16,7 @@ export async function getExploreList({
     GetExploreListReqData,
     AxiosResponse<GetExploreListResData, AxiosError>
   >(
-    `${URL_EXPLORE_LIST}?filterType=${filterType}&size=${size}` +
+    `${URL_EXPLORE_LIST}?filterType=${tagType}&size=${size}` +
       (scrollKey ? `&scrollKey=${scrollKey}` : '')
   )
   return response.data

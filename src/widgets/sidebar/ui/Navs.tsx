@@ -5,7 +5,7 @@ import { usePathname, useSearchParams } from 'next/navigation'
 import { Menu, MenuItem } from '@/shared/ui'
 
 import ExploreIcon from '/public/icons/compass.svg'
-import ArchiveIcon from '/public/icons/folder.svg'
+import MyModelsIcon from '/public/icons/folder.svg'
 import FavoriteIcon from '/public/icons/heart.svg'
 
 export const Navs = () => {
@@ -13,35 +13,35 @@ export const Navs = () => {
   const searchParams = useSearchParams()
 
   const isExplorePage = pathname.startsWith('/explore')
-  const currentSearchParams = searchParams.get('filterType')
+  const currentSearchParams = searchParams.get('tagType')
   const isValidFilterType =
     currentSearchParams === 'ALL' || currentSearchParams === 'FEATURED'
 
   const isActiveExplore = isExplorePage
-    ? searchParams.get('filterType') === null || isValidFilterType
+    ? searchParams.get('tagType') === null || isValidFilterType
     : true
 
   return (
     <Menu>
       <MenuItem
-        href={{ pathname: '/explore', query: { filterType: 'ALL' } }}
+        href={{ pathname: '/explore', query: { tagType: 'ALL' } }}
         title="Explore"
         prefix={<ExploreIcon />}
         isActive={pathname === '/explore' && isActiveExplore}
       />
 
       <MenuItem
-        href={{ pathname: '/favorites', query: { sortingType: 'NEWEST' } }}
+        href={{ pathname: '/favorites', query: { order: 'NEWEST' } }}
         title="Favorites"
         prefix={<FavoriteIcon />}
         isActive={pathname === '/favorites'}
       />
 
       <MenuItem
-        href={{ pathname: '/archive' }}
-        title="Archive"
-        prefix={<ArchiveIcon />}
-        isActive={pathname === '/archive'}
+        href={{ pathname: '/my-models' }}
+        title="My Models"
+        prefix={<MyModelsIcon />}
+        isActive={pathname === '/my-models'}
       />
     </Menu>
   )

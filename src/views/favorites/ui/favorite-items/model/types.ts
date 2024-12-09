@@ -1,7 +1,7 @@
 import { ResData, ScrollContent } from '@/shared/api/types'
 
 export interface GetFavoriteListReqData {
-  sortingType?: string | null
+  order?: string | null
   size?: number | null
   scrollKey?: string | null
 }

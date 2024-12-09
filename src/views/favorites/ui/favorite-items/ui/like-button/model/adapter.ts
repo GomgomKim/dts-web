@@ -1,19 +1,21 @@
 import { useSearchParams } from 'next/navigation'
 
+import { ORDER_TYPES_MAP } from '@/views/favorites/ui/order-dropdown/constant'
+
 import { deleteFavorite } from '@/entities/like-button/model/api'
 import { DeleteFavoriteReqData } from '@/entities/like-button/model/types'
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import { SORTING_TYPES } from '../../../../sort-dropdown/constant'
 import { GetFavoriteListResData } from '../../../model/types'
 
 export const useDeleteFavorite = () => {
   const queryClient = useQueryClient()
 
   const searchParams = useSearchParams()
-  const sortingType = searchParams.get('sortingType') || SORTING_TYPES[0]
-  const queryKey = ['favorites', sortingType]
+  const orderType =
+    searchParams.get('order') || Object.values(ORDER_TYPES_MAP)[0]
+  const queryKey = ['favorites', orderType]
 
   return useMutation({
     mutationFn: ({ mainImageId }: DeleteFavoriteReqData) =>

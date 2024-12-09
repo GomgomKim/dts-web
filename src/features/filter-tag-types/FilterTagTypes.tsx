@@ -4,44 +4,45 @@ import React from 'react'
 
 import { usePathname, useSearchParams } from 'next/navigation'
 
+import { useTagTypeStore } from '@/features/filter-tag-types/model/useTagTypeStore'
+
 import { useClientSearchParams } from '@/shared/lib/hooks/useClientSearchParams'
 import { useMoveScroll } from '@/shared/lib/hooks/useMoveScroll'
-import { useFilterTypeStore } from '@/shared/lib/stores/useFilterTypeStore'
 import { cn } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui/button'
 
-interface FilterProps extends React.ComponentPropsWithRef<'div'> {
+interface FilterTagTypesProps extends React.ComponentPropsWithRef<'div'> {
   filterList: string[]
   id?: string
 }
 
-export const Filter = (props: FilterProps) => {
+export const FilterTagTypes = (props: FilterTagTypesProps) => {
   const { filterList, ...restProps } = props
   const isMounted = React.useRef(false)
   const { element, onMoveToElement } = useMoveScroll()
   const pathname = usePathname()
 
   const searchParams = useSearchParams()
-  const previousFilterType = useFilterTypeStore((state) => state.filterType)
-  const setFilterType = useFilterTypeStore((state) => state.setFilterType)
+  const previousTagType = useTagTypeStore((state) => state.tagType)
+  const setTagType = useTagTypeStore((state) => state.setTagType)
 
   const { addSearchParams } = useClientSearchParams({ action: 'replace' })
 
-  const currentFilterType =
-    searchParams.get('filterType') ||
+  const currentTagType =
+    searchParams.get('tagType') ||
     (pathname.startsWith('/explore')
       ? filterList[0].toUpperCase()
-      : previousFilterType)
+      : previousTagType)
 
   const handleClickFilter = (type: string) => {
-    addSearchParams({ filterType: type })
+    addSearchParams({ tagType: type })
   }
 
   React.useEffect(() => {
-    searchParams.get('filterType') !== null && setFilterType(currentFilterType)
+    searchParams.get('tagType') !== null && setTagType(currentTagType)
 
     if (isMounted.current) {
-      if (searchParams.get('filterType') !== null) {
+      if (searchParams.get('tagType') !== null) {
         onMoveToElement()
       }
     } else {
@@ -60,7 +61,7 @@ export const Filter = (props: FilterProps) => {
         <Button
           variant="ghost"
           key={type}
-          className={cn({ active: type === currentFilterType })}
+          className={cn({ active: type === currentTagType })}
           onClick={() => handleClickFilter(type)}
         >
           {capitalizeType(type)}

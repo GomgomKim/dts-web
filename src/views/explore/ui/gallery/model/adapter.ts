@@ -1,10 +1,10 @@
 import { usePathname, useSearchParams } from 'next/navigation'
 
-import { useFilterTypeStore } from '@/shared/lib/stores/useFilterTypeStore'
+import { useTagTypeStore } from '@/features/filter-tag-types/model/useTagTypeStore'
 
 import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query'
 
-import { FILTER_TYPES } from '../constant'
+import { TAG_TYPES } from '../constant'
 import { getExploreList } from './api'
 import { GetExploreListResData } from './types'
 
@@ -12,12 +12,12 @@ export const useGetExploreList = () => {
   const searchParams = useSearchParams()
   const pathname = usePathname()
 
-  const previousFilterType = useFilterTypeStore((state) => state.filterType)
+  const previousTagType = useTagTypeStore((state) => state.tagType)
 
-  const filterType =
+  const tagType =
     pathname !== '/explore'
-      ? previousFilterType
-      : searchParams.get('filterType') || FILTER_TYPES[0]
+      ? previousTagType
+      : searchParams.get('tagType') || TAG_TYPES[0]
 
   const {
     data,
@@ -34,9 +34,9 @@ export const useGetExploreList = () => {
     [_1: string, _2: string],
     string | null
   >({
-    queryKey: ['explore', filterType],
+    queryKey: ['explore', tagType],
     queryFn: ({ pageParam }) =>
-      getExploreList({ filterType, scrollKey: pageParam }),
+      getExploreList({ tagType, scrollKey: pageParam }),
     initialPageParam: null,
     getNextPageParam: (lastPage) => lastPage.content.scrollKey,
     staleTime: 60 * 1000,

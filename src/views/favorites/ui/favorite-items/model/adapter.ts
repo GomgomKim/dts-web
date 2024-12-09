@@ -4,7 +4,7 @@ import { useAuthStore } from '@/shared/lib/stores/useAuthStore'
 
 import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query'
 
-import { SORTING_TYPES } from '../../sort-dropdown/constant'
+import { ORDER_TYPES_MAP } from '../../order-dropdown/constant'
 import { getFavoriteList } from './api'
 import { GetFavoriteListResData } from './types'
 
@@ -13,7 +13,7 @@ export const useGetFavoriteList = () => {
   const isAuth = useAuthStore((state) => state.isAuth)
   const token = useAuthStore((state) => state.tokens)
 
-  const sortingType = searchParams.get('sortingType') || SORTING_TYPES[0]
+  const order = searchParams.get('order') || Object.values(ORDER_TYPES_MAP)[0]
 
   const {
     data,
@@ -30,10 +30,10 @@ export const useGetFavoriteList = () => {
     [_1: string, _2: string],
     string | null
   >({
-    queryKey: ['favorites', sortingType],
+    queryKey: ['favorites', order],
     queryFn: ({ pageParam }) =>
-      getFavoriteList({ sortingType, scrollKey: pageParam }),
-    enabled: isAuth === true && token !== null && !!sortingType,
+      getFavoriteList({ order, scrollKey: pageParam }),
+    enabled: isAuth === true && token !== null && !!order,
     initialPageParam: null,
     getNextPageParam: (lastPage) => lastPage.content.scrollKey
     // staleTime: 60 * 1000,

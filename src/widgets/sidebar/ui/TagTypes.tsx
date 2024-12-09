@@ -34,13 +34,13 @@ const TagTypeItem = (props: TagTypeItemProps) => {
   const isExplorePage = pathName.startsWith('/explore')
   const isActive =
     isExplorePage &&
-    (searchParams.get('filterType') || 'ALL') === tagType.toUpperCase()
+    (searchParams.get('tagType') || 'ALL') === tagType.toUpperCase()
 
   return (
     <MenuItem
       href={{
         pathname: '/explore',
-        query: { filterType: tagType.toUpperCase() }
+        query: { tagType: tagType.toUpperCase() }
       }}
       title={tagType}
       isActive={isActive}

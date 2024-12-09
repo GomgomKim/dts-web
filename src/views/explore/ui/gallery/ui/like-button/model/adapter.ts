@@ -8,7 +8,7 @@ import {
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import { FILTER_TYPES } from '../../../constant'
+import { TAG_TYPES } from '../../../constant'
 import { GetExploreListResData } from '../../../model/types'
 
 // TODO: invalidate 작동 후 스크롤 유지
@@ -17,8 +17,8 @@ export const usePostFavorite = () => {
   const queryClient = useQueryClient()
 
   const searchParams = useSearchParams()
-  const filterType = searchParams.get('filterType') || FILTER_TYPES[0]
-  const queryKey = ['explore', filterType]
+  const tagType = searchParams.get('tagType') || TAG_TYPES[0]
+  const queryKey = ['explore', tagType]
 
   return useMutation({
     mutationFn: ({ mainImageId }: PostFavoriteReqData) =>
@@ -74,8 +74,8 @@ export const useDeleteFavorite = () => {
   const queryClient = useQueryClient()
 
   const searchParams = useSearchParams()
-  const filterType = searchParams.get('filterType') || FILTER_TYPES[0]
-  const queryKey = ['explore', filterType]
+  const tagType = searchParams.get('tagType') || TAG_TYPES[0]
+  const queryKey = ['explore', tagType]
 
   return useMutation({
     mutationFn: ({ mainImageId }: DeleteFavoriteReqData) =>

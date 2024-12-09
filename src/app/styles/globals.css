@@ -74,6 +74,11 @@
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   }
 
+  /* TODO: 반응형 추가 */
+  .grid-edits-medium {
+    grid-template-columns: repeat(auto-fill, minmax(269px, 1fr));
+  }
+
   .absolute-center {
     position: absolute;
     top: 50%;

@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Archive'
+  title: 'My Models'
 }
 
-export default function ArchiveLayout({
+export default function MyModelsLayout({
   children
 }: Readonly<{
   children: React.ReactNode

@@ -10,7 +10,7 @@ export function middleware(request: NextRequest) {
   }
 
   if (!isMobile && pathname === '/') {
-    const newUrl = new URL('/explore?filterType=ALL', request.url)
+    const newUrl = new URL('/explore?tagType=ALL', request.url)
     return NextResponse.redirect(newUrl)
   }
 

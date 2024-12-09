@@ -94,21 +94,21 @@ const imageProgressMap = new Map<
 export const handlers = [
   http.get(`${URL_EXPLORE_LIST}`, ({ request }) => {
     const url = new URL(request.url)
-    const filterType = url.searchParams.get('filterType')
+    const tagType = url.searchParams.get('tagType')
     const cursor = parseInt(url.searchParams.get('scrollKey') as string) || 1
 
     let responseImages: MainItem[] = []
-    if (filterType === 'FEATURED' || filterType === 'ALL') {
+    if (tagType === 'FEATURED' || tagType === 'ALL') {
       responseImages = [
         ...ImageData.MAKEUP,
         ...ImageData.SKINCARE,
         ...ImageData.HAIR
       ]
-    } else if (filterType === 'MAKEUP') {
+    } else if (tagType === 'MAKEUP') {
       responseImages = ImageData.MAKEUP
-    } else if (filterType === 'SKINCARE') {
+    } else if (tagType === 'SKINCARE') {
       responseImages = ImageData.SKINCARE
-    } else if (filterType === 'HAIR') {
+    } else if (tagType === 'HAIR') {
       responseImages = ImageData.HAIR
     }
 
@@ -128,19 +128,19 @@ export const handlers = [
   }),
   http.get(`${URL_FAVORITE_LIST}`, ({ request }) => {
     const url = new URL(request.url)
-    const filterType = url.searchParams.get('filterType')
+    const tagType = url.searchParams.get('tagType')
     let responseImages: MainItem[] = []
-    if (filterType === 'FEATURED' || filterType === 'ALL') {
+    if (tagType === 'FEATURED' || tagType === 'ALL') {
       responseImages = [
         ...ImageData.MAKEUP.filter((i) => i.isFavorite),
         ...ImageData.SKINCARE.filter((i) => i.isFavorite),
         ...ImageData.HAIR.filter((i) => i.isFavorite)
       ]
-    } else if (filterType === 'MAKEUP') {
+    } else if (tagType === 'MAKEUP') {
       responseImages = ImageData.MAKEUP.filter((i) => i.isFavorite)
-    } else if (filterType === 'SKINCARE') {
+    } else if (tagType === 'SKINCARE') {
       responseImages = ImageData.SKINCARE.filter((i) => i.isFavorite)
-    } else if (filterType === 'HAIR') {
+    } else if (tagType === 'HAIR') {
       responseImages = ImageData.HAIR.filter((i) => i.isFavorite)
     }
     return HttpResponse.json(

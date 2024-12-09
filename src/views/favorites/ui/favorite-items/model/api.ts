@@ -9,14 +9,14 @@ const SEAERCH_SIZE = 10
 
 export async function getFavoriteList({
   size = SEAERCH_SIZE,
-  sortingType,
+  order,
   scrollKey
 }: GetFavoriteListReqData): Promise<GetFavoriteListResData> {
   const response = await dtsAxios.get<
     GetFavoriteListReqData,
     AxiosResponse<GetFavoriteListResData, AxiosError>
   >(
-    `${URL_FAVORITE_LIST}?size=${size}&sortingType=${sortingType}` +
+    `${URL_FAVORITE_LIST}?size=${size}&sortingType=${order}` +
       (scrollKey ? `&scrollKey=${scrollKey}` : '')
   )
   return response.data
