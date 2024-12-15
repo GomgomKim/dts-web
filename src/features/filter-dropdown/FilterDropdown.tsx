@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger
 } from '@/shared/ui/dropdown-menu'
 
-import ChevronIcon from '/public/icons/angle-bracket-open.svg'
+import ChevronIcon from '/public/icons/chevron-left.svg'
 
 interface FilterProps {
   title: string

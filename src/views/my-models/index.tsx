@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs/Tabs'
 
 import { EditsCardItems } from './ui/edits-card-items'
 import { Filters } from './ui/filters'
+import { Generatives } from './ui/generatives'
 
 const MY_MODELS_TABS = {
   generatives: 'generatives',
@@ -68,8 +69,8 @@ export default function MyModels() {
           </div>
         </div>
         {/* 탭 콘턴츠 */}
-        <TabsContent value={MY_MODELS_TABS.generatives}>
-          Generatives content
+        <TabsContent value={MY_MODELS_TABS.generatives} className="h-full">
+          <Generatives />
         </TabsContent>
         <TabsContent value={MY_MODELS_TABS.edits}>
           <EditsCardItems />

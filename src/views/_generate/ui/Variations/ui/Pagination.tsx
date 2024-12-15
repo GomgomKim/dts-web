@@ -1,6 +1,6 @@
 import { Button } from '@/shared/ui'
 
-import AngleBracketIcon from '/public/icons/angle-bracket-open.svg'
+import AngleBracketIcon from '/public/icons/chevron-left.svg'
 
 interface PaginationProps {
   currentPage: number

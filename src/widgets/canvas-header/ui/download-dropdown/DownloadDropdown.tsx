@@ -76,7 +76,7 @@ export const DownloadDropdown = (props: DownloadDropdownProps) => {
           // disabled={!variationId || !props.containerRef || props.isLoading}
         >
           <>
-            <DownloadIcon />
+            <DownloadIcon stroke="#0F1011" />
             <span className="ml-2 w-[65px] text-[0.875rem]">Download</span>
           </>
         </Button>
