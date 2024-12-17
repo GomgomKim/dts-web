@@ -10,7 +10,7 @@ export const EditorPanel = (props: EditorPanelProps) => {
   return (
     <article
       className={cn(
-        'flex max-h-screen w-[340px] flex-col gap-3 overflow-hidden rounded-[0.5rem] bg-neutral-1 p-5 lg:w-[400px]',
+        'flex max-h-[calc(100vh-56px-20px-48px-40px)] w-[340px] flex-col gap-3 overflow-hidden rounded-[0.5rem] bg-neutral-1 p-5 lg:w-[400px]',
         props.className
       )}
     >

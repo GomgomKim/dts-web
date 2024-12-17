@@ -25,5 +25,14 @@ export default meta
 type Story = StoryObj<typeof UploadPanel>
 
 export const Default: Story = {
-  render: () => <UploadPanel title="Cream Texture" panelId="cream-texture" />
+  render: () => (
+    <UploadPanel
+      title="Cream Texture"
+      panelId="cream-texture"
+      isRecentItemsShow={false}
+      toggleRecentItemsShow={() => {}}
+      recentItems={<></>}
+      transparency={<></>}
+    />
+  )
 }

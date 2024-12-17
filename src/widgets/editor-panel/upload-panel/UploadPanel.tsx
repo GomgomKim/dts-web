@@ -1,24 +1,23 @@
 'use client'
 
-import { useState } from 'react'
-
 import { ImageInputBox } from '@/features/remove-background'
 
-import { Slider } from '@/shared/ui/Slider'
 import { EditorPanel } from '@/shared/ui/editor-panel'
 import { Label } from '@/shared/ui/label'
 import { Switch } from '@/shared/ui/switch'
 
-import { RecentItems } from './ui/recent-items'
+import { UI_TEXT } from './model/constant'
 
 interface UploadPanelProps {
-  title: string
+  title: string // TODO: 타입 구체화
   panelId: string
+  isRecentItemsShow: boolean
+  toggleRecentItemsShow: () => void
+  recentItems: React.ReactNode
+  transparency: React.ReactNode
 }
 
 export const UploadPanel = (props: UploadPanelProps) => {
-  const [isRecentItemsShow, setIsRecentItemsShow] = useState(false)
-
   return (
     <EditorPanel title={props.title}>
       {/* image upload */}
@@ -28,28 +27,30 @@ export const UploadPanel = (props: UploadPanelProps) => {
 
       {/* Recent */}
       <div className="flex items-center justify-between *:text-neutral-7">
-        <h4 className="text-[1rem]">Recent</h4>
+        <h4 className="text-[1rem]">{UI_TEXT.RECENTS}</h4>
         <div className="flex items-center gap-2">
           <Label htmlFor="recent-show-mode" className="text-[0.875rem]">
-            {isRecentItemsShow ? 'Show' : 'Hide'}
+            {props.isRecentItemsShow ? 'Show' : 'Hide'}
           </Label>
           <Switch
             id="recent-show-mode"
-            checked={isRecentItemsShow}
-            onCheckedChange={() => setIsRecentItemsShow((prev) => !prev)}
+            checked={props.isRecentItemsShow}
+            onCheckedChange={props.toggleRecentItemsShow}
           />
         </div>
       </div>
-      {isRecentItemsShow ? (
+      {props.isRecentItemsShow ? (
         <div className="mr-[-10px] grow overflow-x-hidden overflow-y-scroll">
-          <RecentItems />
+          {props.recentItems}
         </div>
       ) : null}
 
       {/* Transparency */}
       <div className="mt-4">
-        <h4 className="mb-2 text-[1rem] text-neutral-7">Transparency</h4>
-        <Slider defaultValue={[50]} max={100} step={1} />
+        <h4 className="mb-2 text-[1rem] text-neutral-7">
+          {UI_TEXT.TRANSPARENCY}
+        </h4>
+        {props.transparency}
       </div>
     </EditorPanel>
   )

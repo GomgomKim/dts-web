@@ -13,11 +13,15 @@ import { CANVAS_NAV_ITEMS } from './model/CanvasNavData'
 import { AiToolId, CANVAS_NAV, CanvasNavId } from './model/types'
 import { CanvasNavIcon } from './ui'
 
-export const CanvasSidebar = () => {
+interface CanvasSidebarProps {
+  selectedAiTool: AiToolId | null
+  onClickAiTool: (id: AiToolId) => void
+}
+
+export const CanvasSidebar = (props: CanvasSidebarProps) => {
   // 메인 메뉴 활성화 상태 (AItools, Assets, Models)
   const [activeMenu, setActiveMenu] = useState<CanvasNavId | null>(null)
-  // AI tools 선택 상태
-  const [selectedAiTool, setSelectedAiTool] = useState<AiToolId | null>(null)
+
   // 서브메뉴 확장/축소 상태
   const [isSubOpen, setIsSubOpen] = useState<boolean>(true)
 
@@ -73,8 +77,8 @@ export const CanvasSidebar = () => {
             key={tool.id}
             variant="ghost"
             disabled={tool.disabled}
-            onClick={() => setSelectedAiTool(tool.id)}
-            isActive={selectedAiTool === tool.id}
+            onClick={() => props.onClickAiTool(tool.id)}
+            isActive={props.selectedAiTool === tool.id}
             className="flex h-[56px] w-full justify-start gap-3 rounded-[.5rem] px-4 py-5"
           >
             <CanvasNavIcon icon={tool.icon} />
