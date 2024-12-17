@@ -1,0 +1,16 @@
+.rcp-saturation {
+  border-radius: 0.417rem;
+}
+
+.rcp-hue,
+.rcp-alpha {
+  height: 20px;
+  border-radius: 0.25rem;
+  width: 100%;
+  position: relative;
+}
+
+.rcp-hue .rcp-hue-cursor,
+.rcp-alpha .rcp-alpha-cursor {
+  transform: translateY(0px) translateX(-10px);
+}

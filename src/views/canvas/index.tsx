@@ -7,14 +7,16 @@ import Image from 'next/image'
 import { CanvasSidebar } from '@/widgets/canvas-sidebar'
 import { AI_TOOL, AiToolId } from '@/widgets/canvas-sidebar/model/types'
 
+import { ControlEditor } from '@/features/control-editor/ControlEditor'
+
 import {
   useCreamTextureStore,
   useEyeContactsStore
 } from './model/useEditorPanelsStore'
+import { ColorBrush } from './ui/editor-panels/color-brush/ColorBrush'
 import { CreamTexture } from './ui/editor-panels/cream-texture'
 import { EyeContacts } from './ui/editor-panels/eye-contacts'
-
-// import Swatch from '/public/images/swatch.png'
+import { SkinGlow } from './ui/editor-panels/skin-glow/SkinGlow'
 
 export default function Canvas({
   canvasRef
@@ -71,6 +73,7 @@ export default function Canvas({
       {/* Editor Panel */}
       <div className="absolute right-3 top-[calc(56px+20px)]">
         {displayEditorPanel(selectedAiTool)}
+        {selectedAiTool ? <ControlEditor /> : null}
       </div>
     </div>
   )
@@ -82,6 +85,10 @@ const displayEditorPanel = (selectedAiTool: AiToolId | null) => {
       return <EyeContacts id={selectedAiTool} />
     case AI_TOOL.CREAM_TEXTURE:
       return <CreamTexture id={selectedAiTool} />
+    case AI_TOOL.COLOR_BRUSH:
+      return <ColorBrush id={selectedAiTool} />
+    case AI_TOOL.SKIN_GLOW:
+      return <SkinGlow id={selectedAiTool} />
     default:
       return null
   }

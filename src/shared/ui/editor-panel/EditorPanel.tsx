@@ -4,6 +4,7 @@ import { cn } from '@/shared/lib/utils'
 
 interface EditorPanelProps extends Omit<ComponentProps<'article'>, 'title'> {
   title: React.ReactNode
+  postfix?: React.ReactNode
 }
 
 export const EditorPanel = (props: EditorPanelProps) => {
@@ -14,7 +15,10 @@ export const EditorPanel = (props: EditorPanelProps) => {
         props.className
       )}
     >
-      <h3 className="text-[1.125rem] font-bold">{props.title}</h3>
+      <div className="flex items-center justify-between">
+        <h3 className="text-[1.125rem] font-bold">{props.title}</h3>
+        {props.postfix}
+      </div>
       {props.children}
     </article>
   )
