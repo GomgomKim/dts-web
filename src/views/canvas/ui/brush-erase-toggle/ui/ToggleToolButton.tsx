@@ -21,9 +21,10 @@ export const ToggleToolButton = ({
       variant="ghost"
       onClick={onClick}
       className={cn(
-        'flex h-10 flex-1 items-center justify-center gap-2 rounded px-3 py-1.5 pl-1',
+        'flex h-10 w-24 flex-1',
+        'gap-2 py-1.5 pl-1 pr-3',
         selected ? 'bg-white text-neutral-0' : 'bg-neutral-2 text-neutral-5',
-        'hover:bg-white hover:text-[#0F1011]'
+        'hover:bg-white hover:text-neutral-0'
       )}
     >
       <div className="flex size-4">{icon}</div>

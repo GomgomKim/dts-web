@@ -5,5 +5,6 @@ export const TOOL_IDS = {
 
 export const UI_TEXT = {
   BRUSH: 'Brush',
-  ERASE: 'Erase'
+  ERASE: 'Erase',
+  SIZE: 'Size'
 } as const
