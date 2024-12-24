@@ -79,7 +79,15 @@ export default function Generate(props: GenerateProps) {
           isLoading={isLoading}
           imagePreviewUrls={imagePreviewUrls}
           onRemoveBrandAsset={removeBrandAsset}
-          onChangeBrandAssets={handleChangeBrandAssets}
+          onChangeBrandAssets={(id: string, file: File) => {
+            const reader = new FileReader()
+            reader.onload = (e) => {
+              if (e.target?.result) {
+                handleChangeBrandAssets(id, e.target.result as string)
+              }
+            }
+            reader.readAsDataURL(file)
+          }}
         />
       </div>
 

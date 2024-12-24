@@ -17,7 +17,7 @@ import {
 interface ImageInputBoxProps {
   disabled: boolean
   boxId: string
-  imagePreviewUrl: string | undefined
+  imagePreviewUrl?: string | undefined
   onRemoveBrandAsset: () => void
   onChangeBrandAssets: (file: File) => void
 }
