@@ -5,12 +5,12 @@ import { usePostRemoveBackground } from './adapter'
 
 interface ImageInputBoxParams {
   handleRemoveBrandAsset: () => void
-  handleSuccess: (file: File) => void
+  handleSuccess: (previewImgSrc: string) => void
   handleErrorMessage: (msg: string | null) => void
 }
 
 export const useImageInputBox = (params: ImageInputBoxParams) => {
-  const { handleRemoveBrandAsset, handleErrorMessage } = params
+  const { handleRemoveBrandAsset, handleSuccess, handleErrorMessage } = params
 
   const removeBackgroundMutation = usePostRemoveBackground()
 
@@ -23,9 +23,9 @@ export const useImageInputBox = (params: ImageInputBoxParams) => {
         onSuccess: (data) => {
           const blob = new Blob([data], { type: 'image/png' })
           const reader = new FileReader()
-          reader.onload = () => {
-            // const previewImgSrc = event.target?.result as string
-            // handleSuccess(previewImgSrc)
+          reader.onload = (event) => {
+            const previewImgSrc = event.target?.result as string
+            handleSuccess(previewImgSrc)
           }
           reader.readAsDataURL(blob)
         },
