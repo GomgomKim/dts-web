@@ -19,7 +19,7 @@ interface ImageInputBoxProps {
   boxId: string
   imagePreviewUrl: string | undefined
   onRemoveBrandAsset: () => void
-  onChangeBrandAssets: (file: File) => void
+  onChangeBrandAssets: (previewImgSrc: string) => void
 }
 
 export const ImageInputBox = (props: ImageInputBoxProps) => {
@@ -28,7 +28,7 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
   const { handleChangeDNDInput, handleChangeInput, isPending } =
     useImageInputBox({
       handleRemoveBrandAsset: props.onRemoveBrandAsset,
-      handleSuccess: (file: File) => props.onChangeBrandAssets(file),
+      handleSuccess: props.onChangeBrandAssets,
       handleErrorMessage: (msg: string | null) => setErrorMessage(msg)
     })
 

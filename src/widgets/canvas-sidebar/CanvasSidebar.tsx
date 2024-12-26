@@ -2,8 +2,6 @@
 
 import { useState } from 'react'
 
-import { BrandAssets } from '@/views/_generate/ui/BrandAssets/BrandAssets'
-
 import { cn } from '@/shared/lib/utils'
 import { Badge, Button } from '@/shared/ui'
 
@@ -26,85 +24,6 @@ export const CanvasSidebar = (props: CanvasSidebarProps) => {
 
   // 서브메뉴 확장/축소 상태
   const [isSubOpen, setIsSubOpen] = useState<boolean>(true)
-
-  // BrandAssets에 필요한 상태 추가
-  const [imagePreviewUrls] = useState<Map<string, string>>(new Map())
-
-  // BrandAssets 핸들러
-  const handleRemoveBrandAsset = (boxId: string) => {
-    console.log('Remove brand asset:', boxId)
-  }
-
-  const handleChangeBrandAssets = (boxId: string, previewImgSrc: string) => {
-    console.log('Change brand assets:', boxId, previewImgSrc)
-  }
-
-  const renderSubMenuContent = () => {
-    switch (activeMenu) {
-      case CANVAS_NAV.AI_TOOLS:
-        return (
-          <>
-            <div className="flex items-center justify-between self-stretch py-2 pl-3">
-              <span className="text-[20px] font-semibold text-white">
-                AI Tools
-              </span>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsSubOpen(false)}
-                className="size-6 p-2"
-              >
-                <CanvasNavIcon icon={SidebarLeft} />
-              </Button>
-            </div>
-
-            {AI_TOOLS.map((tool) => (
-              <Button
-                key={tool.id}
-                variant="ghost"
-                disabled={tool.disabled}
-                onClick={() => props.onClickAiTool(tool.id)}
-                isActive={props.selectedAiTool === tool.id}
-                className="flex h-[56px] w-full justify-start gap-3 rounded-[.5rem] px-4 py-5"
-              >
-                <CanvasNavIcon icon={tool.icon} />
-                <span className="text-[14px] font-medium">{tool.title}</span>
-                {tool.disabled && <Badge>Upcoming</Badge>}
-              </Button>
-            ))}
-          </>
-        )
-
-      case CANVAS_NAV.ASSETS:
-        return (
-          <>
-            <div className="flex items-center justify-between self-stretch py-2 pl-3">
-              <span className="text-[20px] font-semibold text-white">
-                Assets
-              </span>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsSubOpen(false)}
-                className="size-6 p-2"
-              >
-                <CanvasNavIcon icon={SidebarLeft} />
-              </Button>
-            </div>
-
-            <BrandAssets
-              isLoading={false}
-              imagePreviewUrls={imagePreviewUrls}
-              onRemoveBrandAsset={handleRemoveBrandAsset}
-              onChangeBrandAssets={handleChangeBrandAssets}
-            />
-          </>
-        )
-
-      default:
-        return null
-    }
-  }
 
   return (
     <div className="fixed h-screen">
@@ -130,19 +49,46 @@ export const CanvasSidebar = (props: CanvasSidebarProps) => {
         </div>
       </div>
 
-      {/* 서브메뉴 패널 */}
+      {/* AI Tools 서브메뉴 패널 */}
       <div
         className={cn(
           'absolute left-0 top-0 z-10 h-full w-[284px] bg-background pr-2 transition-all duration-500',
-          activeMenu && isSubOpen
+          activeMenu === CANVAS_NAV.AI_TOOLS && isSubOpen
             ? 'pointer-events-auto translate-x-24 opacity-100'
             : 'pointer-events-none translate-x-10 opacity-0'
         )}
       >
-        {renderSubMenuContent()}
+        {/* 서브메뉴 헤더 */}
+        <div className="flex items-center justify-between self-stretch py-2 pl-3">
+          <span className="text-[20px] font-semibold text-white">AI Tools</span>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsSubOpen(false)}
+            className="size-6 p-2"
+          >
+            <CanvasNavIcon icon={SidebarLeft} />
+          </Button>
+        </div>
+
+        {/* AI Tools 하위 목록 */}
+        {AI_TOOLS.map((tool) => (
+          <Button
+            key={tool.id}
+            variant="ghost"
+            disabled={tool.disabled}
+            onClick={() => props.onClickAiTool(tool.id)}
+            isActive={props.selectedAiTool === tool.id}
+            className="flex h-[56px] w-full justify-start gap-3 rounded-[.5rem] px-4 py-5"
+          >
+            <CanvasNavIcon icon={tool.icon} />
+            <span className="text-[14px] font-medium">{tool.title}</span>
+            {tool.disabled && <Badge>Upcoming</Badge>}
+          </Button>
+        ))}
       </div>
 
-      {/* 서브메뉴 열기 버튼 */}
+      {/* 서브메뉴 열기 버튼 (축소 상태일 때만 표시) */}
       {!isSubOpen ? (
         <Button
           variant="ghost"

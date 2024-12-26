@@ -4,7 +4,7 @@ import type { AxiosRequestConfig } from 'axios'
 const DEFAULT_TIMEOUT = 1000 * 30
 
 const newConfig: AxiosRequestConfig = {
-  baseURL: 'http://dev.api.dtsdevs.com:8080',
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
   timeout: DEFAULT_TIMEOUT,
   withCredentials: true
 }
