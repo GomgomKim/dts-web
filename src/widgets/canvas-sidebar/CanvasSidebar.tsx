@@ -27,13 +27,16 @@ export const CanvasSidebar = (props: CanvasSidebarProps) => {
   // 서브메뉴 확장/축소 상태
   const [isSubOpen, setIsSubOpen] = useState<boolean>(true)
 
+  // BrandAssets에 필요한 상태 추가
+  const [imagePreviewUrls] = useState<Map<string, string>>(new Map())
+
   // BrandAssets 핸들러
   const handleRemoveBrandAsset = (boxId: string) => {
     console.log('Remove brand asset:', boxId)
   }
 
-  const handleChangeBrandAssets = (boxId: string, file: File) => {
-    console.log('Change brand assets:', boxId, file)
+  const handleChangeBrandAssets = (boxId: string, previewImgSrc: string) => {
+    console.log('Change brand assets:', boxId, previewImgSrc)
   }
 
   const renderSubMenuContent = () => {
@@ -91,6 +94,7 @@ export const CanvasSidebar = (props: CanvasSidebarProps) => {
 
             <BrandAssets
               isLoading={false}
+              imagePreviewUrls={imagePreviewUrls}
               onRemoveBrandAsset={handleRemoveBrandAsset}
               onChangeBrandAssets={handleChangeBrandAssets}
             />

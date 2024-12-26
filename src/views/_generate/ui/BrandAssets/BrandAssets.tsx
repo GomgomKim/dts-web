@@ -6,7 +6,7 @@ import { ImageInputBox } from './ui/ImageInputBox'
 
 interface BrandAssetsProps {
   isLoading: boolean
-  imagePreviewUrls?: Map<string, string>
+  imagePreviewUrls: Map<string, string>
   onRemoveBrandAsset: (boxId: string) => void
   onChangeBrandAssets: (boxId: string, file: File) => void
 }
@@ -41,6 +41,7 @@ export const BrandAssets = (props: BrandAssetsProps) => {
         <ImageInputBox
           disabled={props.isLoading || isLoadingAssets || isUploading}
           boxId="product"
+          imagePreviewUrl={props.imagePreviewUrls.get('product')}
           onRemoveBrandAsset={() => props.onRemoveBrandAsset('product')}
           onChangeBrandAssets={(file: File) =>
             handleFileChange('product', file)
@@ -54,6 +55,7 @@ export const BrandAssets = (props: BrandAssetsProps) => {
         <ImageInputBox
           disabled={props.isLoading || isLoadingAssets || isUploading}
           boxId="logo"
+          imagePreviewUrl={props.imagePreviewUrls.get('logo')}
           onRemoveBrandAsset={() => props.onRemoveBrandAsset('logo')}
           onChangeBrandAssets={(file: File) => handleFileChange('logo', file)}
         />
