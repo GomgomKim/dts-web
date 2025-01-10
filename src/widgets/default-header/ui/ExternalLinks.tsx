@@ -2,13 +2,15 @@ import Link from 'next/link'
 
 import { Button } from '@/shared/ui'
 
+import { UI_TEXT } from '../model/constants'
+
 export const ExternalLinks = () => {
   return (
     <>
       <li>
         <Button asChild variant="link">
           <Link href="https://medium.com/do-things-with-ai" target="_blank">
-            Medium
+            {UI_TEXT.MEDIUM}
           </Link>
         </Button>
       </li>
@@ -18,7 +20,7 @@ export const ExternalLinks = () => {
             href="https://www.instagram.com/dothings.studio/"
             target="_blank"
           >
-            Instagram
+            {UI_TEXT.INSTAGRAM}
           </Link>
         </Button>
       </li>

@@ -132,7 +132,9 @@ export const DownloadDropdown = (props: DownloadDropdownProps) => {
                       {option.subText}
                     </span>
                   </div>
-                  {selectedQuality === option.value && <CheckIcon />}
+                  {selectedQuality === option.value && (
+                    <CheckIcon width={16} height={16} stroke="white" />
+                  )}
                 </DropdownMenuItem>
               )
             else

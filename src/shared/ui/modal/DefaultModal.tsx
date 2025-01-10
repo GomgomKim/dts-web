@@ -21,7 +21,7 @@ interface DefaultModalProps {
 }
 
 export const DefaultModal = (props: DefaultModalProps) => {
-  const modalRef = useRef(null)
+  const modalRef = useRef<null | HTMLDivElement>(null)
   const router = useRouter()
 
   const handleClose = useCallback(() => {

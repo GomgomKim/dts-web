@@ -158,7 +158,9 @@ const DropdownMenuRadioItem = forwardRef<
         </span>
       ) : null}
       {children}
-      {isViewIndicator === false && isChecked === true ? <CheckIcon /> : null}
+      {isViewIndicator === false && isChecked === true ? (
+        <CheckIcon width={16} height={16} stroke="white" />
+      ) : null}
     </DropdownMenuPrimitive.RadioItem>
   )
 )
