@@ -1,6 +1,9 @@
 import { useCreamTextureStore } from '@/views/canvas/model/useEditorPanelsStore'
 
 import { RecentItems } from '@/entities/recent-items'
+import { DummyData } from '@/entities/recent-items/model/types'
+
+import { Asset } from '@/shared/api/types'
 
 import { DUMMY_DATA } from '../model/DATA'
 
@@ -13,8 +16,9 @@ export const CreamTextureRecentItems = () => {
   )
 
   return (
-    <RecentItems<(typeof DUMMY_DATA)[0]>
+    <RecentItems<DummyData | Asset>
       data={DUMMY_DATA}
+      assetType="CREAM"
       selectedItem={selectedCreamTextureItem}
       onClickCheckbox={(item) => setSelectedCreamTextureItem(item)}
     />

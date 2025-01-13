@@ -53,3 +53,13 @@ export interface AuthProfile {
   profileImageUrl: string
   restriction: Restriction
 }
+
+export type AssetType = 'BRAND' | 'CREAM' | 'CONTACT_LENS'
+
+export interface Asset {
+  id: number // TODO: change to string
+  assetType: AssetType
+  isPublic: boolean
+  encryptedAssetUrl: string
+  encryptedDepthMapUrl?: string
+}

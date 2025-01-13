@@ -1,7 +1,10 @@
+import { DummyData } from '@/entities/recent-items/model/types'
+
+import { Asset } from '@/shared/api/types'
+
 import { create } from 'zustand'
 
 import { Brush } from '../ui/editor-panels/color-brush/model/DummyData'
-import { DummyData } from '../ui/editor-panels/eye-contacts/model/DATA'
 import { SkinGlow } from '../ui/editor-panels/skin-glow/model'
 
 const DEFAULT_TRANSPARENCY = 50
@@ -12,21 +15,30 @@ interface UploadPanelState<T> {
   selectedItem: T | null
   transparency: number
   isShowRecentItems: boolean
-  setSelectedItem: (item: T) => void
+  setSelectedItem: (item: T | null) => void
   setTransparency: (value: number) => void
   setIsShowRecentItems: (value: boolean) => void
 }
 
-const createUploadPanelStore = <T extends { id: string }>() =>
+const createUploadPanelStore = <T extends { id: string | number }>() =>
   create<UploadPanelState<T>>((set) => ({
     selectedItem: null,
     transparency: DEFAULT_TRANSPARENCY,
     isShowRecentItems: true,
     setSelectedItem: (selectedItem) =>
-      set((state) => ({
-        selectedItem:
-          selectedItem.id === state.selectedItem?.id ? null : selectedItem
-      })),
+      set((state) => {
+        if (!selectedItem) {
+          return {
+            ...state,
+            selectedItem: null
+          }
+        }
+        return {
+          ...state,
+          selectedItem:
+            selectedItem.id === state.selectedItem?.id ? null : selectedItem
+        }
+      }),
     setTransparency: (value) =>
       set(() => ({
         transparency: value
@@ -37,10 +49,10 @@ const createUploadPanelStore = <T extends { id: string }>() =>
       }))
   }))
 
-type EyeContactsType = DummyData
+type EyeContactsType = DummyData | Asset
 export const useEyeContactsStore = createUploadPanelStore<EyeContactsType>()
 
-type CreamTextureType = DummyData
+type CreamTextureType = DummyData | Asset
 export const useCreamTextureStore = createUploadPanelStore<CreamTextureType>()
 
 interface ColorBrushState {

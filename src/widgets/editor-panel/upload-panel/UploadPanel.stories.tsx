@@ -29,6 +29,8 @@ export const Default: Story = {
     <UploadPanel
       title="Cream Texture"
       panelId="cream-texture"
+      assetType="CREAM"
+      onSuccess={() => {}}
       isRecentItemsShow={false}
       toggleRecentItemsShow={() => {}}
       recentItems={<></>}

@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 
+import { BrandAssets } from '@/views/canvas/ui/brand-assets'
+
 import { cn } from '@/shared/lib/utils'
 import { Badge, Button } from '@/shared/ui'
 
@@ -87,6 +89,26 @@ export const CanvasSidebar = (props: CanvasSidebarProps) => {
           </Button>
         ))}
       </div>
+
+      {activeMenu === CANVAS_NAV.ASSETS && (
+        <>
+          {/* Assets 메뉴 헤더 */}
+          <div className="flex items-center justify-between self-stretch py-2 pl-3">
+            <span className="text-[20px] font-semibold text-white">Assets</span>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsSubOpen(false)}
+              className="size-6 p-2"
+            >
+              <CanvasNavIcon icon={SidebarLeft} />
+            </Button>
+          </div>
+
+          {/* BrandAssets 컴포넌트 */}
+          <BrandAssets />
+        </>
+      )}
 
       {/* 서브메뉴 열기 버튼 (축소 상태일 때만 표시) */}
       {!isSubOpen ? (

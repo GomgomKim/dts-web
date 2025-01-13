@@ -1,14 +1,18 @@
 import { URL_EXPLORE_LIST } from '@/views/explore/ui/gallery/model/constant'
 import { URL_FAVORITE_LIST } from '@/views/favorites/ui/favorite-items/model/constant'
 
+import { URL_ASSET_UPLOAD } from '@/features/upload-asset/ImageInputBox/model/constants'
+
 import {
   URL_AI_IMAGE_GENERATE,
   URL_AI_IMAGE_GENERATE_PROGRESS,
   URL_VARIATION_LIST
 } from '@/entities/generate/constant'
+import { URL_ASSETS_SEARCH } from '@/entities/recent-items/model/constants'
 
 import {
   AspectRatio,
+  AssetType,
   FaceAngle,
   MainItem,
   Variation,
@@ -82,6 +86,72 @@ const ImageData = {
     }
   ]
 }
+
+let AssetData = [
+  {
+    id: 1,
+    assetType: 'BRAND',
+    isPublic: false,
+    encryptedAssetUrl: faker.image.urlLoremFlickr(),
+    encryptedDepthMapUrl: ''
+  },
+  {
+    id: 2,
+    assetType: 'BRAND',
+    isPublic: false,
+    encryptedAssetUrl: faker.image.urlLoremFlickr(),
+    encryptedDepthMapUrl: ''
+  },
+  {
+    id: 3,
+    assetType: 'BRAND',
+    isPublic: false,
+    encryptedAssetUrl: faker.image.urlLoremFlickr(),
+    encryptedDepthMapUrl: ''
+  },
+  {
+    id: 4,
+    assetType: 'CONTACT_LENS',
+    isPublic: false,
+    encryptedAssetUrl: faker.image.urlLoremFlickr(),
+    encryptedDepthMapUrl: ''
+  },
+  {
+    id: 5,
+    assetType: 'CONTACT_LENS',
+    isPublic: false,
+    encryptedAssetUrl: faker.image.urlLoremFlickr(),
+    encryptedDepthMapUrl: ''
+  },
+  {
+    id: 6,
+    assetType: 'CONTACT_LENS',
+    isPublic: false,
+    encryptedAssetUrl: faker.image.urlLoremFlickr(),
+    encryptedDepthMapUrl: ''
+  },
+  {
+    id: 7,
+    assetType: 'CREAM',
+    isPublic: false,
+    encryptedAssetUrl: faker.image.urlLoremFlickr(),
+    encryptedDepthMapUrl: ''
+  },
+  {
+    id: 8,
+    assetType: 'CREAM',
+    isPublic: false,
+    encryptedAssetUrl: faker.image.urlLoremFlickr(),
+    encryptedDepthMapUrl: ''
+  },
+  {
+    id: 9,
+    assetType: 'CREAM',
+    isPublic: false,
+    encryptedAssetUrl: faker.image.urlLoremFlickr(),
+    encryptedDepthMapUrl: ''
+  }
+]
 
 let current = 0
 
@@ -260,7 +330,53 @@ export const handlers = [
         'Cache-Control': 'no-store'
       })
     }
+  }),
+  // brand assets
+  http.get(URL_ASSETS_SEARCH, ({ request }) => {
+    const url = new URL(request.url)
+    const assetType = url.searchParams.get('assetType')
+
+    const data = AssetData.filter((asset) => asset.assetType === assetType)
+
+    return sendJsonResponse(0, null, { assets: data }, 200)
+  }),
+  http.post(URL_ASSET_UPLOAD, ({ request }) => {
+    const url = new URL(request.url)
+    const assetType = url.searchParams.get('assetType')
+
+    const currentAssetItems = AssetData.filter(
+      (asset) => asset.assetType === assetType
+    )
+
+    // 최대 6개까지만 노출, 최신순
+    if (currentAssetItems.length >= 6) {
+      const lowestIdAsset = currentAssetItems.reduce((prev, curr) =>
+        prev.id < curr.id ? prev : curr
+      )
+
+      AssetData = AssetData.filter((asset) => asset.id !== lowestIdAsset.id)
+    }
+
+    const maxId = AssetData.reduce((max, asset) => Math.max(max, asset.id), 0)
+    const newAsset = {
+      id: maxId + 1,
+      assetType: assetType as AssetType,
+      isPublic: false,
+      encryptedAssetUrl: faker.image.urlLoremFlickr(),
+      encryptedDepthMapUrl: ''
+    }
+    AssetData.push(newAsset)
+
+    return sendJsonResponse(0, null, { asset: newAsset }, 200)
   })
+  // http.delete(URL_BRAND_ASSET_DELETE, ({ request }) => {
+  //   const url = new URL(request.url)
+  //   const assetId = url.searchParams.get('assetId')!
+
+  //   AssetData = AssetData.filter((asset) => asset.id !== parseInt(assetId))
+
+  //   return sendJsonResponse(0, null, null, 200)
+  // })
 ]
 
 function createVariationImage(properties: { ratio: string; angle: string }) {

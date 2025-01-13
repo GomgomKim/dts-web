@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 
+import { Asset, AssetType } from '@/shared/api/types'
 import { DndBox } from '@/shared/lib/hocs/DndBox'
 
 import DashedSvg from '/public/icons/dashed.svg'
@@ -10,8 +11,9 @@ import { useImageInputBox } from './model/useImageInputBox'
 import { ErrorInstruction, LoadingInstruction, UploadButton } from './ui'
 
 interface ImageInputBoxProps {
-  disabled: boolean
-  panelId: string
+  disabled?: boolean
+  assetType: AssetType
+  onSuccess: (asset: Asset) => void
 }
 
 export const ImageInputBox = (props: ImageInputBoxProps) => {
@@ -19,8 +21,9 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
 
   const { handleChangeDNDInput, handleChangeInput, isPending } =
     useImageInputBox({
-      handleSuccess: () => {
-        // props.onSuccess(previewImgSrc)
+      assetType: props.assetType,
+      handleSuccess: (asset) => {
+        props.onSuccess(asset)
       },
       handleErrorMessage: (msg: string | null) => setErrorMessage(msg)
     })
@@ -35,7 +38,7 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
     >
       <input
         type="file"
-        id={props.panelId}
+        id={props.assetType}
         accept=".png,.jpg,.jpeg"
         className="a11y-hidden peer"
         onChange={handleChangeInput}
@@ -45,8 +48,11 @@ export const ImageInputBox = (props: ImageInputBoxProps) => {
         <LoadingInstruction />
       ) : (
         <>
-          <div className="relative">
-            <UploadButton disabled={props.disabled} inputId={props.panelId} />
+          <div className="relative z-10">
+            <UploadButton
+              disabled={props.disabled || false}
+              inputId={props.assetType}
+            />
             {errorMessage !== null ? (
               <ErrorInstruction>{errorMessage}</ErrorInstruction>
             ) : null}

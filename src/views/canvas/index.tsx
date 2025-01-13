@@ -11,7 +11,10 @@ import { AI_TOOL, AiToolId } from '@/widgets/canvas-sidebar/model/types'
 
 import { ControlEditor } from '@/features/control-editor/ControlEditor'
 
-import { Variation } from '@/shared/api/types'
+import { DummyData } from '@/entities/recent-items/model/types'
+
+import { URL_BASE_IMAGE_FILE } from '@/shared/api/constants'
+import { Asset, Variation } from '@/shared/api/types'
 import { cn } from '@/shared/lib/utils'
 
 import modelImage from '/public/images/canvas-sample.png'
@@ -21,6 +24,7 @@ import {
   useEyeContactsStore
 } from './model/useEditorPanelsStore'
 import { useToolModeStore } from './model/useToolModeStore'
+import { useBrandAssetsStore } from './ui/brand-assets/model/useBrandAssetsStore'
 import { ColorBrush } from './ui/editor-panels/color-brush/ColorBrush'
 import { CreamTexture } from './ui/editor-panels/cream-texture'
 import { EyeContacts } from './ui/editor-panels/eye-contacts'
@@ -65,6 +69,10 @@ export default function Canvas({
     (state) => state.selectedItem
   )
 
+  const selectedBrandAssetItems = useBrandAssetsStore(
+    (state) => state.selectedItems
+  )
+
   const selectedToolMode = useToolModeStore((state) => state.selectedTool)
   const setSelectedToolMode = useToolModeStore((state) => state.setSelectedTool)
 
@@ -106,21 +114,32 @@ export default function Canvas({
           {selectedEyeContactsItem ? (
             // TODO: blob으로 변경해서 투명도 조절 && index db 사용
             <Image
-              src={selectedEyeContactsItem.src}
-              alt={selectedEyeContactsItem.name}
-              width={300}
-              height={300}
+              src={getAssetUrl(selectedEyeContactsItem)}
+              alt={(selectedEyeContactsItem as DummyData).name || ''}
+              width={100}
+              height={100}
             />
           ) : null}
           {selectedCreamTextureItem ? (
             // TODO: blob으로 변경해서 투명도 조절 && index db 사용
             <Image
-              src={selectedCreamTextureItem.src}
-              alt={selectedCreamTextureItem.name}
-              width={300}
-              height={300}
+              src={getAssetUrl(selectedCreamTextureItem)}
+              alt={(selectedCreamTextureItem as DummyData).name || ''}
+              width={100}
+              height={100}
             />
           ) : null}
+          {selectedBrandAssetItems
+            ? selectedBrandAssetItems.map((item, index) => (
+                <Image
+                  key={index}
+                  src={getAssetUrl(item)}
+                  alt=""
+                  width={100}
+                  height={100}
+                />
+              ))
+            : null}
         </div>
       </div>
 
@@ -140,9 +159,9 @@ export default function Canvas({
 const displayEditorPanel = (selectedAiTool: AiToolId | null) => {
   switch (selectedAiTool) {
     case AI_TOOL.EYE_CONTACTS:
-      return <EyeContacts id={selectedAiTool} />
+      return <EyeContacts />
     case AI_TOOL.CREAM_TEXTURE:
-      return <CreamTexture id={selectedAiTool} />
+      return <CreamTexture />
     case AI_TOOL.COLOR_BRUSH:
       return <ColorBrush id={selectedAiTool} />
     case AI_TOOL.SKIN_GLOW:
@@ -150,4 +169,15 @@ const displayEditorPanel = (selectedAiTool: AiToolId | null) => {
     default:
       return null
   }
+}
+
+const getAssetUrl = (item: DummyData | Asset) => {
+  if ('src' in item) {
+    return item.src
+  }
+  return process.env.NEXT_PUBLIC_API_MOCKING === 'enabled'
+    ? item.encryptedAssetUrl
+    : process.env.NEXT_PUBLIC_API_URL +
+        URL_BASE_IMAGE_FILE +
+        encodeURIComponent(item.encryptedAssetUrl)
 }

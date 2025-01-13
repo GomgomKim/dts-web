@@ -1,58 +1,65 @@
-import { useState } from 'react'
+import { ComponentProps } from 'react'
 
-import Image, { StaticImageData } from 'next/image'
+import Image from 'next/image'
 
-import { Button } from '@/shared/ui'
+import { URL_BASE_IMAGE_FILE } from '@/shared/api/constants'
+import { Asset } from '@/shared/api/types'
+import { cn } from '@/shared/lib/utils'
 import { Checkbox } from '@/shared/ui/checkbox'
 
-import DeleteIcon from '/public/icons/delete.svg'
-
+import { DummyData } from '../../model/types'
 import { EyeContactsName } from './ui/EyeContactsName'
 
-interface RecentItemProps<T> {
+interface RecentItemProps<T> extends ComponentProps<'div'> {
   item: T
   isSelected: boolean
-  onClick: () => void
+  onClickCheckbox: () => void
 }
 
-export const RecentItem = <
-  T extends { id: string; name: string; src: string | StaticImageData }
->(
+export const RecentItem = <T extends DummyData | Asset>(
   props: RecentItemProps<T>
 ) => {
-  const [isHovering, setIsHovering] = useState(false)
+  const isDummyData = 'src' in props.item
+
+  let src = ''
+  if (!isDummyData) {
+    src =
+      process.env.NEXT_PUBLIC_API_MOCKING === 'enabled'
+        ? (props.item as Asset).encryptedAssetUrl
+        : process.env.NEXT_PUBLIC_API_URL +
+          URL_BASE_IMAGE_FILE +
+          encodeURIComponent((props.item as Asset).encryptedAssetUrl)
+  }
 
   return (
     <div
-      className="relative flex aspect-square items-center justify-center rounded-[0.5rem] bg-neutral-2/50 p-3 pb-0 pr-4"
-      onMouseOver={() => setIsHovering(true)}
-      onMouseLeave={() => setIsHovering(false)}
+      className={cn(
+        'relative flex aspect-square items-center justify-center rounded-[0.5rem] bg-neutral-2/50 p-3 pb-0 pr-4',
+        props.className
+      )}
     >
       <Checkbox
         className="absolute left-2 top-2 z-10"
         checked={props.isSelected}
-        onCheckedChange={props.onClick}
+        onCheckedChange={props.onClickCheckbox}
       />
       <div className="flex flex-col gap-3">
         <Image
-          src={props.item.src}
-          alt={props.item.name}
+          src={isDummyData ? (props.item as DummyData).src : src}
+          alt={
+            isDummyData && (props.item as DummyData).name
+              ? (props.item as DummyData).name!
+              : ''
+          }
           width={96}
           height={96}
+          className="aspect-square object-contain"
         />
-        {/* TODO: eye-contacts만 해당되는데 외부 주입으로 변경할 수 있을지 */}
-        <EyeContactsName name={props.item.name} isSelected={props.isSelected} />
+        {/* TODO: api 이름 속성 필요 */}
+        {(props.item as DummyData).name ? (
+          <EyeContactsName name={(props.item as DummyData).name!} />
+        ) : null}
       </div>
-      {isHovering ? (
-        <div className="absolute inset-0 flex items-end justify-center bg-custom-gradient p-4">
-          <Button variant="outline" className="mb-5 px-3 py-2">
-            <div className="flex items-center gap-[6px] *:text-[0.875rem]">
-              <DeleteIcon stroke="#aeafb5" />
-              <span>Delete</span>
-            </div>
-          </Button>
-        </div>
-      ) : null}
     </div>
   )
 }

@@ -21,6 +21,7 @@ export const DefaultHeader = () => {
       <div className="ml-auto flex items-center">
         <nav className=" flex items-center text-[14px] text-secondary-foreground">
           <ul className="flex items-center">
+            <Link href="/canvas">Canvas</Link>
             <li>
               <Button variant="link" asChild>
                 <Link href="pricing">{UI_TEXT.PRICING}</Link>

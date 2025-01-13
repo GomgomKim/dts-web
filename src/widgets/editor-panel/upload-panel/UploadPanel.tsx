@@ -1,7 +1,12 @@
 'use client'
 
-import { ImageInputBox } from '@/features/remove-background'
+import { Suspense } from 'react'
 
+import { ImageInputBox } from '@/features/upload-asset'
+
+import { RecentItemsSkeleton } from '@/entities/recent-items'
+
+import { Asset, AssetType } from '@/shared/api/types'
 import { EditorPanel } from '@/shared/ui/editor-panel'
 import { Label } from '@/shared/ui/label'
 import { Switch } from '@/shared/ui/switch'
@@ -11,6 +16,8 @@ import { UI_TEXT } from './model/constant'
 interface UploadPanelProps {
   title: string // TODO: 타입 구체화
   panelId: string
+  assetType: AssetType
+  onSuccess: (asset: Asset) => void
   isRecentItemsShow: boolean
   toggleRecentItemsShow: () => void
   recentItems: React.ReactNode
@@ -19,10 +26,14 @@ interface UploadPanelProps {
 
 export const UploadPanel = (props: UploadPanelProps) => {
   return (
-    <EditorPanel title={props.title}>
+    <EditorPanel title={props.title} id={props.panelId}>
       {/* image upload */}
       <div className="shrink-0 basis-[160px] lg:my-1">
-        <ImageInputBox disabled={true} panelId={props.panelId} />
+        <ImageInputBox
+          disabled={false}
+          assetType={props.assetType}
+          onSuccess={props.onSuccess}
+        />
       </div>
 
       {/* Recent */}
@@ -41,7 +52,9 @@ export const UploadPanel = (props: UploadPanelProps) => {
       </div>
       {props.isRecentItemsShow ? (
         <div className="mr-[-10px] grow overflow-x-hidden overflow-y-scroll">
-          {props.recentItems}
+          <Suspense fallback={<RecentItemsSkeleton />}>
+            {props.recentItems}
+          </Suspense>
         </div>
       ) : null}
 

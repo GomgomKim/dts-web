@@ -5,11 +5,7 @@ import { UploadPanel } from '@/widgets/editor-panel'
 import { UI_TEXT } from './model/constants'
 import { EyeContactsRecentItems, EyeContactsTransparency } from './ui'
 
-interface EyeContactsProps {
-  id: string
-}
-
-export const EyeContacts = (props: EyeContactsProps) => {
+export const EyeContacts = () => {
   const isRecentItemsShow = useEyeContactsStore(
     (state) => state.isShowRecentItems
   )
@@ -17,10 +13,16 @@ export const EyeContacts = (props: EyeContactsProps) => {
     (state) => state.setIsShowRecentItems
   )
 
+  const setSelectedEyeContactsItem = useEyeContactsStore(
+    (state) => state.setSelectedItem
+  )
+
   return (
     <UploadPanel
       title={UI_TEXT.EYE_CONTACTS}
-      panelId={props.id}
+      panelId="eye-contacts"
+      assetType="CONTACT_LENS"
+      onSuccess={(asset) => setSelectedEyeContactsItem(asset)}
       isRecentItemsShow={isRecentItemsShow}
       toggleRecentItemsShow={() => setIsRecentItemsShow(!isRecentItemsShow)}
       recentItems={<EyeContactsRecentItems />}
