@@ -17,11 +17,10 @@ import { URL_BASE_IMAGE_FILE } from '@/shared/api/constants'
 import { Asset, Variation } from '@/shared/api/types'
 import { cn } from '@/shared/lib/utils'
 
-import modelImage from '/public/images/canvas-sample.png'
+import modelImage from '/public/images/lens-back.png'
 
 import {
-  useCreamTextureStore,
-  useEyeContactsStore
+  useCreamTextureStore // useEyeContactsStore
 } from './model/useEditorPanelsStore'
 import { useToolModeStore } from './model/useToolModeStore'
 import { useBrandAssetsStore } from './ui/brand-assets/model/useBrandAssetsStore'
@@ -48,7 +47,7 @@ export default function Canvas({
       progress: 0,
       images: [
         {
-          ratio: 'ASPECT_RATIO_9_16',
+          ratio: 'ASPECT_RATIO_1_1',
           angle: 'LEFT',
           encryptedImageUrl: modelImage.src
         }
@@ -61,9 +60,9 @@ export default function Canvas({
   // AI tools 선택 상태
   const [selectedAiTool, setSelectedAiTool] = useState<AiToolId | null>(null)
 
-  const selectedEyeContactsItem = useEyeContactsStore(
-    (state) => state.selectedItem
-  )
+  // const selectedEyeContactsItem = useEyeContactsStore(
+  //   (state) => state.selectedItem
+  // )
 
   const selectedCreamTextureItem = useCreamTextureStore(
     (state) => state.selectedItem
@@ -89,13 +88,7 @@ export default function Canvas({
       <div className={cn('flex w-full', 'flex-col items-center')}>
         {/* ImageView */}
         {selectedVariation && (
-          <div
-            className={cn(
-              'relative flex',
-              'h-[45.75rem] w-[25.6626rem]',
-              'shrink-0'
-            )}
-          >
+          <div className={cn('relative flex', 'size-[45.75rem]', 'shrink-0')}>
             <ImageView selectedVariation={selectedVariation} />
           </div>
         )}
@@ -111,7 +104,7 @@ export default function Canvas({
       {/* Canvas */}
       <div className="ml-[96px] h-full" ref={canvasRef}>
         <div className="absolute-center">
-          {selectedEyeContactsItem ? (
+          {/* {selectedEyeContactsItem ? (
             // TODO: blob으로 변경해서 투명도 조절 && index db 사용
             <Image
               src={getAssetUrl(selectedEyeContactsItem)}
@@ -119,7 +112,7 @@ export default function Canvas({
               width={100}
               height={100}
             />
-          ) : null}
+          ) : null} */}
           {selectedCreamTextureItem ? (
             // TODO: blob으로 변경해서 투명도 조절 && index db 사용
             <Image
