@@ -4,12 +4,14 @@ import { ComponentProps, useState } from 'react'
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+
+// import { useRouter } from 'next/navigation'
+import { getContentByModel } from '@/views/explore/ui/gallery/model/api'
 
 import { URL_BASE_IMAGE_FILE } from '@/shared/api/constants'
 import { MainItem } from '@/shared/api/types'
 import { useAuthStore } from '@/shared/lib/stores/useAuthStore'
-import { track } from '@/shared/lib/utils/mixpanel'
+// import { track } from '@/shared/lib/utils/mixpanel'
 import { Button } from '@/shared/ui/button'
 
 import LinkIcon from '/public/icons/arrow-thin.svg'
@@ -25,32 +27,34 @@ export const Card = (props: CardProps) => {
     id,
     name: modelname,
     description,
-    encryptedThumbnailUrl,
-    tags
+    encryptedThumbnailPath
+    // tags
   } = props.item
   const [isHovering, setIsHovering] = useState(false)
-  const router = useRouter()
+  // const router = useRouter()
   const isAuth = useAuthStore((state) => state.isAuth)
 
   const imgUrl =
     process.env.NEXT_PUBLIC_API_MOCKING === 'enabled'
-      ? encryptedThumbnailUrl
+      ? encryptedThumbnailPath
       : process.env.NEXT_PUBLIC_API_URL +
         URL_BASE_IMAGE_FILE +
-        encryptedThumbnailUrl
+        encryptedThumbnailPath
 
   const isMember = isAuth === true
   const CardWrapper = isMember ? Link : 'div'
 
-  const handleClickCard = (modelName: string, id: number) => {
-    track.sendToMixpanel('select_model', {
-      model_name: modelName,
-      model_tag: tags.join(',')
-    })
-    if (!isMember) {
-      router.push(`/signup?name=${modelName}&id=${id}`, { scroll: false })
-      return
-    }
+  const handleClickCard = async (modelName: string, id: number) => {
+    // track.sendToMixpanel('select_model', {
+    //   model_name: modelName,
+    //   model_tag: tags.join(',')
+    // })
+    // if (!isMember) {
+    //   router.push(`/signup?name=${modelName}&id=${id}`, { scroll: false })
+    //   return
+    // }
+    const res = await getContentByModel({ modelId: id })
+    console.log('get content by model res', res)
   }
 
   return (

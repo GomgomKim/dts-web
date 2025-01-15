@@ -2,11 +2,11 @@ import { usePathname, useSearchParams } from 'next/navigation'
 
 import { useTagTypeStore } from '@/features/filter-tag-types/model/useTagTypeStore'
 
-import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query'
+import { InfiniteData, useInfiniteQuery, useQuery } from '@tanstack/react-query'
 
 import { TAG_TYPES } from '../constant'
-import { getExploreList } from './api'
-import { GetExploreListResData } from './types'
+import { getContentByModel, getExploreList } from './api'
+import { GetContentByModelResData, GetExploreListResData } from './types'
 
 export const useGetExploreList = () => {
   const searchParams = useSearchParams()
@@ -53,4 +53,13 @@ export const useGetExploreList = () => {
     isFetching,
     isFetchingNextPage
   }
+}
+
+export const useGetContentByModel = (modelId: number) => {
+  const { data, status, error } = useQuery<GetContentByModelResData, Error>({
+    queryKey: ['contentByModel'],
+    queryFn: () => getContentByModel({ modelId })
+  })
+
+  return { data, status, error }
 }

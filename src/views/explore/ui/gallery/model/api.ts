@@ -28,7 +28,7 @@ export async function getExploreList({
   return response.data
 }
 
-export async function getByModel({
+export async function getContentByModel({
   modelId
 }: GetContentByModelReqData): Promise<GetContentByModelResData> {
   const response = await dtsAxios.get<

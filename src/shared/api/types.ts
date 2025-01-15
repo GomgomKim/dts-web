@@ -15,7 +15,7 @@ export interface MainItem {
   name: string
   description: string
   isFavorite: boolean
-  encryptedThumbnailUrl: string
+  encryptedThumbnailPath: string
   tags: string[] // TODO: 타입 구체화
 }
 
