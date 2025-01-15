@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from '@/shared/ui'
-import { Modal } from '@/shared/ui/modal/Modal'
+import { DefaultModal } from '@/shared/ui/modal/DefaultModal'
 
 import { UI_TEXT } from '../constants'
 
@@ -16,34 +16,26 @@ interface PlanModalProps {
 
 export const PlanModal = (props: PlanModalProps) => {
   return (
-    <Modal onCloseModal={props.onCloseModal} className="max-w-[560px]">
-      <header className="mb-3 text-[1.5rem] font-semibold">
-        {props.title}
-      </header>
-      <p className="mb-8 text-neutral-7">{props.description}</p>
-
-      {/* Contents */}
-      {props.children}
-
-      {/* Actions */}
-      <Button
-        stretch
-        className="mb-3 mt-8 bg-white font-semibold hover:bg-white"
-        onClick={() => props.onClickActionButton()}
-      >
-        {props.actionButtonTitle ? props.actionButtonTitle : UI_TEXT.CONTINUE}
-      </Button>
-      {/* close modal */}
-      <div className="text-center">
+    <DefaultModal
+      className="w-full max-w-[560px]"
+      closeable={{
+        isCloseable: true,
+        onClose: props.onCloseModal,
+        withCancel: true
+      }}
+      title={props.title}
+      description={props.description}
+      footer={
         <Button
-          variant="link"
-          size="small"
-          className="text-white underline"
-          onClick={props.onCloseModal}
+          stretch
+          className="bg-white font-semibold hover:bg-white"
+          onClick={() => props.onClickActionButton()}
         >
-          {UI_TEXT.CANCEL}
+          {props.actionButtonTitle ? props.actionButtonTitle : UI_TEXT.CONTINUE}
         </Button>
-      </div>
-    </Modal>
+      }
+    >
+      {props.children}
+    </DefaultModal>
   )
 }

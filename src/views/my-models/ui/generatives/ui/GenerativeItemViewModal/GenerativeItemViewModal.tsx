@@ -17,18 +17,15 @@ import {
   PreviousButton
 } from './ui'
 
-interface GenerativeItemViewModalProps extends ModalComponentProps {
-  // TODO: Props 추가하면 타입 에러 발생함
-  // onClickOutside: () => void
-}
+interface GenerativeItemViewModalProps extends ModalComponentProps {}
 
 export const GenerativeItemViewModal = (
   props: GenerativeItemViewModalProps
 ) => {
-  const { onClose } = props
+  const { onCloseModal } = props
   const modalRef = useRef<HTMLDivElement>(null)
 
-  useClickOutside(modalRef, onClose)
+  useClickOutside(modalRef, onCloseModal)
 
   const itemIndex = useGenerativeItemStore((state) => state.index)
   const setItemIndex = useGenerativeItemStore((state) => state.setIndex)
@@ -59,7 +56,7 @@ export const GenerativeItemViewModal = (
           hasPrevious={hasPrevious}
           onClickPrevious={handleClickPrevious}
         />
-        <CloseButton onClickClose={onClose} />
+        <CloseButton onClickClose={onCloseModal} />
         {/* content */}
         <div className="h-full p-10">
           <div className="flex h-full gap-10">

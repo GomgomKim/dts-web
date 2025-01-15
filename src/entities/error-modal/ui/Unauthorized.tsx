@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
 import { Button } from '@/shared/ui'
@@ -19,26 +20,41 @@ export const Unauthorized = (props: UnauthorizedProps) => {
 
   return (
     <DefaultModal
+      withLogo
       title="Service Unavailable"
       description="An error occurred while processing your request. Return to the
             homepage to log in again."
-      slot={
-        <Button
-          variant="destructive"
-          className="py-4"
-          stretch
-          onClick={() => {
-            onClickButton()
-            router.replace('/')
-          }}
-        >
-          <div className="flex items-center gap-2">
-            <ArrowLeft className="rotate-[225deg] stroke-black" />
-            <span className="text-[0.75rem] font-semibold">
-              Go Back Home to Log In
-            </span>
+      footer={
+        <>
+          <Button
+            variant="destructive"
+            className="py-4"
+            stretch
+            onClick={() => {
+              onClickButton()
+              router.replace('/')
+            }}
+          >
+            <div className="flex items-center gap-2">
+              <ArrowLeft className="rotate-[225deg] stroke-black" />
+              <span className="text-[0.75rem] font-semibold">
+                Go Back Home to Log In
+              </span>
+            </div>
+          </Button>
+          <div className="text-center">
+            <Button
+              variant="link"
+              size="small"
+              className="mt-3 text-white underline underline-offset-[3px]"
+              asChild
+            >
+              <Link href="https://tally.so/r/314QEg" target="_blank">
+                Feedback
+              </Link>
+            </Button>
           </div>
-        </Button>
+        </>
       }
     />
   )

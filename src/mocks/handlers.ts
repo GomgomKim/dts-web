@@ -395,7 +395,8 @@ function createVariationImage(properties: { ratio: string; angle: string }) {
   return {
     ratio: properties.ratio as AspectRatio,
     angle: properties.angle as FaceAngle,
-    encryptedImageUrl: faker.image.urlLoremFlickr(size)
+    encryptedImageUrl: faker.image.urlLoremFlickr(size),
+    lensFore: faker.image.urlLoremFlickr({ width: 100, height: 100 })
   }
 }
 

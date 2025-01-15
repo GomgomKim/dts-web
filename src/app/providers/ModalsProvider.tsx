@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactNode, useMemo, useState } from 'react'
+import { ComponentType, ReactNode, useMemo, useState } from 'react'
 
 import { Modals } from '@/shared/ui/modal/Modals'
 
@@ -8,28 +8,32 @@ import {
   ModalsDispatchContext,
   ModalsStateContext
 } from '../../shared/ui/modal/model/Modals.context'
-import { ModalInfo } from '../../shared/ui/modal/model/types'
+import {
+  ModalComponentProps,
+  ModalInfo
+} from '../../shared/ui/modal/model/types'
 
 export const ModalsProvider = ({ children }: { children: ReactNode }) => {
   const [openedModals, setOpenedModals] = useState<ModalInfo[]>([])
 
-  const open = (
-    Component: ModalInfo['Component'],
-    props?: ModalInfo['props']
+  const open = <T extends ModalComponentProps>(
+    Component: ComponentType<T>,
+    props?: T
   ) => {
     setOpenedModals((prevModals) => {
       return [
         ...prevModals,
         {
-          Component,
+          Component: Component as ComponentType<ModalComponentProps>,
           props
-          // isOpen: true
-        }
+        } as ModalInfo
       ]
     })
   }
 
-  const close = (Component: ModalInfo['Component']) => {
+  const close = <T extends ModalComponentProps>(
+    Component: ComponentType<T>
+  ) => {
     setOpenedModals((prevModals) => {
       return prevModals.filter((item) => item.Component !== Component)
     })

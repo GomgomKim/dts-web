@@ -5,14 +5,14 @@ import { useState } from 'react'
 import { cn } from '@/shared/lib/utils'
 import { ModalComponentProps } from '@/shared/ui/modal/model/types'
 
+import { Plan } from '../../plan-Items/ui/plan-item/type'
 import { UI_TEXT } from '../constants'
 import { AgreementCheckbox, PlanModal } from '../ui'
 import { ComparePlans } from './ui/ComparePlans'
 
 interface UpgradeModalProps extends ModalComponentProps {
-  // TODO: modal interface 수정
-  // myPlan?: Plan
-  // selectedPlan?: Plan
+  myPlan: Plan
+  selectedPlan: Plan
 }
 
 const DUMMY_DAYS = 15

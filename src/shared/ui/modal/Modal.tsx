@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 
 import { useClickOutside } from '@/shared/lib/hooks/useClickOutside'
+import { useKeydown } from '@/shared/lib/hooks/useKeydown'
 import { usePreventScroll } from '@/shared/lib/hooks/usePreventScroll'
 import { cn } from '@/shared/lib/utils'
 
@@ -17,19 +18,7 @@ export const Modal = (props: ModalProps) => {
 
   usePreventScroll()
   useClickOutside(modalRef, props.onCloseModal)
-
-  const handleKeydown = (e: KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      props.onCloseModal()
-    }
-  }
-
-  useEffect(() => {
-    document.addEventListener('keydown', handleKeydown)
-    return () => {
-      document.removeEventListener('keydown', handleKeydown)
-    }
-  }, [])
+  useKeydown(props.onCloseModal)
 
   return (
     <div className="fixed inset-0 z-50 flex justify-center bg-neutral-0-90">

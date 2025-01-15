@@ -1,17 +1,24 @@
+import { ComponentType } from 'react'
+
 import { useModalsDispatchContext } from './Modals.context'
-import { ModalInfo } from './types'
+import { CloseModalType, ModalComponentProps, OpenModalType } from './types'
 
 export default function useModals() {
-  const { open, close } = useModalsDispatchContext()
+  const { open, close } = useModalsDispatchContext() as {
+    open: OpenModalType
+    close: CloseModalType
+  }
 
-  const openModal = (
-    Component: ModalInfo['Component'],
-    props?: ModalInfo['props']
+  const openModal = <T extends ModalComponentProps>(
+    Component: ComponentType<T>,
+    props?: T
   ) => {
     open(Component, props)
   }
 
-  const closeModal = (Component: ModalInfo['Component']) => {
+  const closeModal = <T extends ModalComponentProps>(
+    Component: ComponentType<T>
+  ) => {
     close(Component)
   }
 

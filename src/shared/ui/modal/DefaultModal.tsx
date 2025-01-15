@@ -1,23 +1,30 @@
 'use client'
 
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useRef } from 'react'
 
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
 import { useClickOutside } from '@/shared/lib/hooks/useClickOutside'
+import { useKeydown } from '@/shared/lib/hooks/useKeydown'
 import { usePreventScroll } from '@/shared/lib/hooks/usePreventScroll'
+import { cn } from '@/shared/lib/utils'
 
 import DTSLogo from '/public/icons/dts-logo.svg'
 
+import { Button } from '../button'
+
 interface DefaultModalProps {
+  className?: string
   closeable?: {
     isCloseable: boolean
     onClose: () => void
+    withCancel: boolean
   }
+  withLogo?: boolean
   title: React.ReactNode
   description: React.ReactNode
-  slot: React.ReactNode
+  children?: React.ReactNode // modal contents
+  footer: React.ReactNode
 }
 
 export const DefaultModal = (props: DefaultModalProps) => {
@@ -35,49 +42,52 @@ export const DefaultModal = (props: DefaultModalProps) => {
 
   usePreventScroll()
   useClickOutside(modalRef, handleClose)
-
-  const handleKeydown = (e: KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      handleClose()
-    }
-  }
-
-  useEffect(() => {
-    document.addEventListener('keydown', handleKeydown)
-    return () => {
-      document.removeEventListener('keydown', handleKeydown)
-    }
-  }, [])
+  useKeydown(handleClose)
 
   return (
     <div className="fixed inset-0 z-50 flex justify-center bg-neutral-0-90">
       <div
         ref={modalRef}
-        className="relative m-auto mx-2 flex w-[400px] flex-col gap-10 rounded-[12px] border border-neutral-2 bg-background p-10"
+        className={cn(
+          'relative m-auto mx-2 flex min-w-[400px] flex-col gap-8 rounded-[12px] border border-neutral-2 bg-background p-10',
+          props.className
+        )}
       >
-        <div className="mr-auto">
-          <button onClick={handleClickLogo}>
-            <DTSLogo />
-          </button>
+        {/* logo */}
+        {props.withLogo ? (
+          <div className="mb-2 mr-auto">
+            <button onClick={handleClickLogo} className="block">
+              <DTSLogo />
+            </button>
+          </div>
+        ) : null}
+
+        {/* header */}
+        <div>
+          <div className="mb-3 text-[1.5rem] font-semibold">{props.title}</div>
+          <p className="text-[0.875rem] text-neutral-7">{props.description}</p>
         </div>
 
+        {/* contents */}
+        {props.children ? <div>{props.children}</div> : null}
+
+        {/* footer */}
         <div>
-          <div className="mb-8">
-            <div className="mb-3 text-[24px] font-semibold">{props.title}</div>
-            <p className="text-[14px] text-neutral-7">{props.description}</p>
-          </div>
+          {props.footer}
 
-          {props.slot}
-
-          <div className="mt-3 text-center">
-            <Link
-              href="https://tally.so/r/314QEg"
-              target="_blank"
-              className="inline-block p-3 text-center text-[14px] underline underline-offset-4"
-            >
-              Feedback
-            </Link>
-          </div>
+          {/* close button */}
+          {props.closeable?.isCloseable && props.closeable?.withCancel ? (
+            <div className="text-center">
+              <Button
+                variant="link"
+                size="small"
+                className="mt-3 text-white underline underline-offset-[3px]"
+                onClick={handleClose}
+              >
+                Cancel
+              </Button>
+            </div>
+          ) : null}
         </div>
       </div>
     </div>

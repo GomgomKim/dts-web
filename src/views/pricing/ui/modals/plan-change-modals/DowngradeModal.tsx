@@ -2,14 +2,14 @@
 
 import { ModalComponentProps } from '@/shared/ui/modal/model/types'
 
+import { Plan } from '../../plan-Items/ui/plan-item/type'
 import { UI_TEXT } from '../constants'
 import { PlanModal } from '../ui'
 import { ComparePlans } from './ui'
 
 interface DowngradeModalProps extends ModalComponentProps {
-  // TODO: modal interface 수정
-  // myPlan?: Plan
-  // selectedPlan?: Plan
+  myPlan: Plan
+  selectedPlan: Plan
 }
 
 export const DowngradeModal = (props: DowngradeModalProps) => {

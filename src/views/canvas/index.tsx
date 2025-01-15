@@ -13,12 +13,13 @@ import { ControlEditor } from '@/features/control-editor/ControlEditor'
 
 import { DummyData } from '@/entities/recent-items/model/types'
 
-import { URL_BASE_IMAGE_FILE } from '@/shared/api/constants'
-import { Asset, Variation } from '@/shared/api/types'
+import { Variation } from '@/shared/api/types'
 import { cn } from '@/shared/lib/utils'
 
-import modelImage from '/public/images/lens-back.png'
+import modelImageEye from '/public/images/lens-back.png'
+import modelImage from '/public/images/lens-fore.png'
 
+import { getAssetUrl } from './lib/getAssetUrl'
 import {
   useCreamTextureStore // useEyeContactsStore
 } from './model/useEditorPanelsStore'
@@ -49,7 +50,8 @@ export default function Canvas({
         {
           ratio: 'ASPECT_RATIO_1_1',
           angle: 'LEFT',
-          encryptedImageUrl: modelImage.src
+          encryptedImageUrl: modelImageEye.src, // lens-back
+          lensFore: modelImage.src
         }
       ]
     }
@@ -162,15 +164,4 @@ const displayEditorPanel = (selectedAiTool: AiToolId | null) => {
     default:
       return null
   }
-}
-
-const getAssetUrl = (item: DummyData | Asset) => {
-  if ('src' in item) {
-    return item.src
-  }
-  return process.env.NEXT_PUBLIC_API_MOCKING === 'enabled'
-    ? item.encryptedAssetUrl
-    : process.env.NEXT_PUBLIC_API_URL +
-        URL_BASE_IMAGE_FILE +
-        encodeURIComponent(item.encryptedAssetUrl)
 }

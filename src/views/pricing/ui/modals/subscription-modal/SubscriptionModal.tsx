@@ -4,12 +4,12 @@ import { useState } from 'react'
 
 import { ModalComponentProps } from '@/shared/ui/modal/model/types'
 
+import { Plan } from '../../plan-Items/ui/plan-item/type'
 import { UI_TEXT } from '../constants'
 import { AgreementCheckbox, PlanModal } from '../ui'
 
 interface SubscriptionModalProps extends ModalComponentProps {
-  // TODO: modal interface 수정
-  // item?: Plan
+  item: Plan
 }
 
 export const SubscriptionModal = (props: SubscriptionModalProps) => {

@@ -7,7 +7,7 @@ import { useGenerativeItemStore } from './model/useGenerativeItemStore'
 import { GenerativeItemViewModal } from './ui/GenerativeItemViewModal'
 
 export const Generatives = () => {
-  const { openModal, closeModal } = useModals()
+  const { openModal } = useModals()
   const setIndex = useGenerativeItemStore((state) => state.setIndex)
 
   return (
@@ -17,9 +17,7 @@ export const Generatives = () => {
           key={item.id}
           onClick={() => {
             setIndex(index)
-            openModal(GenerativeItemViewModal, {
-              onClose: () => closeModal(GenerativeItemViewModal)
-            })
+            openModal(GenerativeItemViewModal)
           }}
           className="aspect-square w-[120px] bg-neutral-2"
         >

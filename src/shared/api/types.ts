@@ -29,7 +29,9 @@ export interface Variation {
 export interface VariationImage {
   ratio: AspectRatio
   angle: FaceAngle
-  encryptedImageUrl: string
+  // TODO: 인터페이스 임의 정의
+  encryptedImageUrl: string // lens back
+  lensFore: string
 }
 
 export type AspectRatio = 'ASPECT_RATIO_9_16' | 'ASPECT_RATIO_1_1'

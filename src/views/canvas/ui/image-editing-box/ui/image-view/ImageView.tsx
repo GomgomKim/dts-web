@@ -3,10 +3,12 @@
 import Image from 'next/image'
 
 import { useEditorStore } from '@/views/_generate/model/useEditorHistoryStore'
+import { getAssetUrl } from '@/views/canvas/lib/getAssetUrl'
 import { lensPositions } from '@/views/canvas/model/LensDummyData'
 import { useEyeContactsStore } from '@/views/canvas/model/useEditorPanelsStore'
 
 import { URL_VARIATION_IMAGE } from '@/entities/generate/constant'
+import { DummyData } from '@/entities/recent-items/model/types'
 
 import { Variation } from '@/shared/api/types'
 
@@ -65,6 +67,14 @@ export const ImageView = (props: ImageViewProps) => {
       {/* 메인 모델 이미지 */}
       <Image src={imgUrl} alt="" fill style={{ objectFit: 'contain' }} />
 
+      {/*  Back 레이어  */}
+      <Image
+        src={props.selectedVariation?.images[0].encryptedImageUrl}
+        alt="back layer"
+        fill
+        style={{ objectFit: 'contain' }}
+      />
+
       {/* 렌즈 레이어 */}
       {selectedEyeContactsItem && leftEyePos && (
         <div
@@ -78,8 +88,8 @@ export const ImageView = (props: ImageViewProps) => {
           }}
         >
           <Image
-            src={selectedEyeContactsItem.src}
-            alt={selectedEyeContactsItem.name}
+            src={getAssetUrl(selectedEyeContactsItem)}
+            alt={(selectedEyeContactsItem as DummyData).name || ''}
             fill
             style={{ objectFit: 'contain' }}
           />
@@ -98,8 +108,8 @@ export const ImageView = (props: ImageViewProps) => {
           }}
         >
           <Image
-            src={selectedEyeContactsItem.src}
-            alt={selectedEyeContactsItem.name}
+            src={getAssetUrl(selectedEyeContactsItem)}
+            alt={(selectedEyeContactsItem as DummyData).name || ''}
             fill
             style={{ objectFit: 'contain' }}
           />
@@ -108,12 +118,11 @@ export const ImageView = (props: ImageViewProps) => {
 
       {/* fore 레이어 */}
       <Image
-        src="/images/lens-fore.png"
+        src={props.selectedVariation.images[0].lensFore}
         alt="fore layer"
         fill
         style={{ objectFit: 'contain' }}
       />
-      {/* fore 레이어 */}
     </div>
   )
 }
