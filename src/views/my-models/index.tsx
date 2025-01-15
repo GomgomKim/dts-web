@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs/Tabs'
 
+import { getArchives } from './lib/api'
 import { EditsCardItems } from './ui/edits-card-items'
 import { Filters } from './ui/filters'
 import { Generatives } from './ui/generatives'
@@ -23,6 +24,11 @@ export default function MyModels() {
   const [currentTab, setCurrentTab] = useState<MyModelsTabs>(
     () => (searchParams.get('tab') || DEFAULT_TAB) as MyModelsTabs
   )
+
+  useEffect(() => {
+    const res = getArchives({})
+    console.log('archives res', res)
+  }, [])
 
   useEffect(() => {
     setCurrentTab((searchParams.get('tab') || DEFAULT_TAB) as MyModelsTabs)
