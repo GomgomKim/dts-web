@@ -15,10 +15,10 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: process.env.NEXT_PUBLIC_API_PROTOCOL,
-        hostname: process.env.NEXT_PUBLIC_API_HOST_NAME,
-        port: process.env.NEXT_PUBLIC_API_PORT,
-        pathname: process.env.NEXT_PUBLIC_API_PATH_NAME
+        protocol: process.env.NEXT_PUBLIC_API_PROTOCOL || 'https',
+        hostname: process.env.NEXT_PUBLIC_API_HOST_NAME || '',
+        port: process.env.NEXT_PUBLIC_API_PORT || '443',
+        pathname: process.env.NEXT_PUBLIC_API_PATH_NAME || ''
       },
       {
         protocol: 'https',
@@ -26,7 +26,7 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: process.env.NEXT_PUBLIC_API_GOOGLE_IMAGE_HOST_NAME
+        hostname: process.env.NEXT_PUBLIC_API_GOOGLE_IMAGE_HOST_NAME || ''
       }
     ]
   }
