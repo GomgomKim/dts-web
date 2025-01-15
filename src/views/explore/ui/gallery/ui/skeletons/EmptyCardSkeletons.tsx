@@ -1,4 +1,4 @@
-import { CardSkeleton } from '@/shared/ui'
+import { GalleryItemSkeleton } from '@/entities/gallery-item'
 
 interface EmptyCardSkeletonsProps {
   isShow: boolean
@@ -11,7 +11,7 @@ export const EmptyCardSkeletons = (props: EmptyCardSkeletonsProps) => {
   return (
     <>
       {Array.from({ length: props.count }).map((_value, idx) => (
-        <CardSkeleton key={idx} />
+        <GalleryItemSkeleton key={idx} />
       ))}
     </>
   )

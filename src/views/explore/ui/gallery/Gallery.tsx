@@ -3,7 +3,7 @@
 import { Fragment, useEffect, useMemo } from 'react'
 import { useInView } from 'react-intersection-observer'
 
-import { Card, CardSkeleton } from '@/shared/ui/card'
+import { GalleryItem, GalleryItemSkeleton } from '@/entities/gallery-item'
 
 import { useGetExploreList } from './model/adapter'
 import { LikeButton } from './ui/like-button'
@@ -39,12 +39,12 @@ export const Gallery = () => {
     return (
       <div className="grid-cols-auto-fill-small 2xl:grid-cols-auto-fill-large grid gap-5">
         {Array.from({ length: NUM_OF_DATA_PER_REQUEST }).map((_value, idx) => (
-          <CardSkeleton key={'loading' + idx} isLoading />
+          <GalleryItemSkeleton key={'loading' + idx} isLoading />
         ))}
         {Array.from({
           length: MAX_NULL_BOX_LENGTH - NUM_OF_DATA_PER_REQUEST
         }).map((_value, idx) => (
-          <CardSkeleton key={idx} />
+          <GalleryItemSkeleton key={idx} />
         ))}
       </div>
     )
@@ -71,7 +71,7 @@ export const Gallery = () => {
             const isLastItem =
               i * NUM_OF_DATA_PER_REQUEST + (cardIdx + 1) === totalCardItems
             return (
-              <Card
+              <GalleryItem
                 key={cardItem.id}
                 item={cardItem}
                 actionSlot={<LikeButton item={cardItem} />}

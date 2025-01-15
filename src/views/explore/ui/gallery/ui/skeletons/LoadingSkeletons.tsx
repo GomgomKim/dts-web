@@ -1,4 +1,4 @@
-import { CardSkeleton } from '@/shared/ui'
+import { GalleryItemSkeleton } from '@/entities/gallery-item'
 
 interface LoadingSkeletonsProps {
   isLoading: boolean
@@ -11,7 +11,7 @@ export const LoadingSkeletons = (props: LoadingSkeletonsProps) => {
   return (
     <>
       {Array.from({ length: props.count }).map((_value, idx) => (
-        <CardSkeleton key={idx} isLoading />
+        <GalleryItemSkeleton key={idx} isLoading />
       ))}
     </>
   )

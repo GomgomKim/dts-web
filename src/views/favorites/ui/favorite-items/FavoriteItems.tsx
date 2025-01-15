@@ -3,7 +3,7 @@
 import { Fragment, useEffect } from 'react'
 import { useInView } from 'react-intersection-observer'
 
-import { Card, CardSkeleton } from '@/shared/ui/card'
+import { GalleryItem, GalleryItemSkeleton } from '@/entities/gallery-item'
 
 import { v4 } from 'uuid'
 
@@ -44,7 +44,7 @@ export const FavoriteItems = () => {
         {data?.pages.map((page, i) => (
           <Fragment key={i}>
             {page.content.images.map((cardItem) => (
-              <Card
+              <GalleryItem
                 key={cardItem.id + v4()}
                 item={cardItem}
                 actionSlot={<LikeButton item={cardItem} />}
@@ -55,7 +55,7 @@ export const FavoriteItems = () => {
         {isFetching && isFetchingNextPage && (
           <>
             {Array.from({ length: 10 }).map((_value, idx) => (
-              <CardSkeleton key={idx} isLoading />
+              <GalleryItemSkeleton key={idx} isLoading />
             ))}
           </>
         )}

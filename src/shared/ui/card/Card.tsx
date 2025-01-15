@@ -1,94 +1,85 @@
-'use client'
+import * as React from 'react'
 
-import { ComponentProps, useState } from 'react'
+import { cn } from '@/shared/lib/utils'
 
-import Image from 'next/image'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+const Card = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn('rounded-[0.5rem] border bg-neutral-1/80', className)}
+    {...props}
+  />
+))
+Card.displayName = 'Card'
 
-import { URL_BASE_IMAGE_FILE } from '@/shared/api/constants'
-import { MainItem } from '@/shared/api/types'
-import { useAuthStore } from '@/shared/lib/stores/useAuthStore'
-import { track } from '@/shared/lib/utils/mixpanel'
-import { Button } from '@/shared/ui/button'
+const CardHeader = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div ref={ref} className={cn('p-6 pb-5', className)} {...props} />
+))
+CardHeader.displayName = 'CardHeader'
 
-import LinkIcon from '/public/icons/arrow-thin.svg'
+const CardTitle = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn('text-[1.25rem] font-semibold', className)}
+    {...props}
+  />
+))
+CardTitle.displayName = 'CardTitle'
 
-interface CardProps extends ComponentProps<'div'> {
-  item: MainItem
-  actionSlot?: React.ReactNode
-  inViewRef?: React.Ref<HTMLButtonElement>
-}
+const CardDescription = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn('text-[0.875rem] text-muted-foreground', className)}
+    {...props}
+  />
+))
+CardDescription.displayName = 'CardDescription'
 
-export const Card = (props: CardProps) => {
-  const {
-    id,
-    name: modelname,
-    description,
-    encryptedThumbnailUrl,
-    tags
-  } = props.item
-  const [isHovering, setIsHovering] = useState(false)
-  const router = useRouter()
-  const isAuth = useAuthStore((state) => state.isAuth)
+const CardContent = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div ref={ref} className={cn('px-6 pb-5 pt-0', className)} {...props} />
+))
+CardContent.displayName = 'CardContent'
 
-  const imgUrl =
-    process.env.NEXT_PUBLIC_API_MOCKING === 'enabled'
-      ? encryptedThumbnailUrl
-      : process.env.NEXT_PUBLIC_API_URL +
-        URL_BASE_IMAGE_FILE +
-        encryptedThumbnailUrl
+const CardFooter = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn('flex items-center p-6 pt-0', className)}
+    {...props}
+  />
+))
+CardFooter.displayName = 'CardFooter'
 
-  const isMember = isAuth === true
-  const CardWrapper = isMember ? Link : 'div'
+const CardImage = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div ref={ref} className={cn('p-6', className)} {...props} />
+))
+CardImage.displayName = 'CardImage'
 
-  const handleClickCard = (modelName: string, id: number) => {
-    track.sendToMixpanel('select_model', {
-      model_name: modelName,
-      model_tag: tags.join(',')
-    })
-    if (!isMember) {
-      router.push(`/signup?name=${modelName}&id=${id}`, { scroll: false })
-      return
-    }
-  }
-
-  return (
-    <button
-      onMouseOver={() => setIsHovering(true)}
-      onMouseLeave={() => setIsHovering(false)}
-      onFocus={() => setIsHovering(true)}
-      onBlur={() => setIsHovering(false)}
-      className="relative aspect-[9/16] cursor-auto overflow-hidden rounded-[8px] bg-neutral-1 focus:outline-none focus-visible:border focus-visible:border-white focus-visible:ring-2 focus-visible:ring-ring"
-      ref={props.inViewRef}
-    >
-      <Image
-        src={imgUrl}
-        alt={description}
-        fill
-        style={{ objectFit: 'cover' }}
-      />
-      {isHovering && (
-        <CardWrapper
-          href={isMember ? `/generate/${modelname}?id=${id}` : ''}
-          onClick={() => handleClickCard(modelname, id)}
-          className="absolute inset-0 z-10 bg-custom-gradient hover:cursor-pointer"
-        >
-          <Button
-            asChild
-            variant="outline"
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 border-[rgba(97,98,104,0.5)] text-white hover:border-border"
-          >
-            <div>
-              Start with This Model
-              <LinkIcon className="stroke-white" />
-            </div>
-          </Button>
-        </CardWrapper>
-      )}
-      {isHovering && props.actionSlot && (
-        <div className="absolute right-2 top-2 z-10">{props.actionSlot}</div>
-      )}
-    </button>
-  )
+export {
+  Card,
+  CardHeader,
+  CardFooter,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardImage
 }
