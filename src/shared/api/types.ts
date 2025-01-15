@@ -5,7 +5,7 @@ export interface ResData<T> {
 }
 
 export interface ScrollContent {
-  images: MainItem[]
+  data: MainItem[]
   hasNext: boolean
   scrollKey: string
 }

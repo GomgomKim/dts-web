@@ -29,6 +29,37 @@ const nextConfig = {
         hostname: process.env.NEXT_PUBLIC_API_GOOGLE_IMAGE_HOST_NAME
       }
     ]
+  },
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: '/api/:path*',
+          destination: 'https://api.dtsdevs.com/api/:path*',
+          basePath: false
+        }
+      ]
+    }
+  },
+  async headers() {
+    return [
+      {
+        source: '/api/:path*',
+        headers: [
+          { key: 'Access-Control-Allow-Credentials', value: 'true' },
+          { key: 'Access-Control-Allow-Origin', value: '*' },
+          {
+            key: 'Access-Control-Allow-Methods',
+            value: 'GET,POST,PUT,DELETE,OPTIONS'
+          },
+          {
+            key: 'Access-Control-Allow-Headers',
+            value:
+              'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+          }
+        ]
+      }
+    ]
   }
 }
 
