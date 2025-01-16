@@ -65,6 +65,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <script async src="https://docs.opencv.org/4.x/opencv.js" />
+      </head>
       <MswComponent />
       <body className={`${pretendard.variable} font-pretendard`}>
         <ReactQueryClientProvider>

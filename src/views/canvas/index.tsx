@@ -91,7 +91,10 @@ export default function Canvas({
         {/* ImageView */}
         {selectedVariation && (
           <div className={cn('relative flex', 'size-[45.75rem]', 'shrink-0')}>
-            <ImageView selectedVariation={selectedVariation} />
+            <ImageView
+              selectedVariation={selectedVariation}
+              selectedAiTool={selectedAiTool}
+            />
           </div>
         )}
         {/* BrushEraseToggle */}

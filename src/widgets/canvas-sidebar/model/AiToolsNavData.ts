@@ -5,6 +5,7 @@ import ColorBrush from '/public/icons/color-brush.svg'
 import CreamTexture from '/public/icons/cream-texture.svg'
 import EyeContacts from '/public/icons/eye-contacts.svg'
 import Freckles from '/public/icons/freckles.svg'
+import HairColor from '/public/icons/hair-color.svg'
 import SkinGlow from '/public/icons/skin-glow.svg'
 
 import { AI_TOOL } from './types'
@@ -19,13 +20,18 @@ interface MenuItem {
 export const AI_TOOLS: MenuItem[] = [
   {
     id: AI_TOOL.COLOR_BRUSH,
-    title: 'Color Brush',
+    title: 'Makeup Brush',
     icon: ColorBrush
   },
   {
     id: AI_TOOL.SKIN_GLOW,
     title: 'Skin Glow',
     icon: SkinGlow
+  },
+  {
+    id: AI_TOOL.HAIR_COLOR,
+    title: 'Hair Color',
+    icon: HairColor
   },
   {
     id: AI_TOOL.EYE_CONTACTS,

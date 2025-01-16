@@ -1,6 +1,5 @@
 import { useColorBrushStore } from '@/views/canvas/model/useEditorPanelsStore'
 import { UI_TEXT } from '@/views/canvas/ui/editor-panels/color-brush/model'
-import { AutoSelectToggle } from '@/views/canvas/ui/editor-panels/color-brush/ui/AutoSelectToggle'
 import { ColorBrushSmoothEdges } from '@/views/canvas/ui/editor-panels/color-brush/ui/ColorBrushSmoothEdges'
 
 import { AiToolId } from '@/widgets/canvas-sidebar/model/types'
@@ -24,13 +23,17 @@ export const ColorBrush = (props: ColorBrushProps) => {
   const setSelectedColorBrushItem = useColorBrushStore(
     (state) => state.setSelectedColorBrushItem
   )
+  const customBrushes = useColorBrushStore((state) => state.customBrushes)
+
+  // DUMMY_DATA와 customBrushes 합치기
+  const allTools = [...DUMMY_DATA, ...customBrushes]
 
   const prefixContent = (
     <SelectDrawTools
       toolType={TOOL_TYPE.BRUSH}
       selectedDrawTool={selectedColorBrushItem ?? null}
       onSelectDrawTool={(item: DrawTool) => setSelectedColorBrushItem(item)}
-      tools={DUMMY_DATA}
+      tools={allTools}
       drawToolText={UI_TEXT.BRUSH}
     />
   )
@@ -48,7 +51,6 @@ export const ColorBrush = (props: ColorBrushProps) => {
     <DrawingPanel
       title={UI_TEXT.SELECT_AREA}
       panelId={props.id ?? ''}
-      toggleAutoSelect={<AutoSelectToggle />}
       prefixColors={prefixContent}
       postfixColors={postfixContent}
     />

@@ -14,6 +14,7 @@ export const CANVAS_NAV = {
 export const AI_TOOL = {
   COLOR_BRUSH: 'color-brush',
   SKIN_GLOW: 'skin-glow',
+  HAIR_COLOR: 'hair-color',
   EYE_CONTACTS: 'eye-contacts',
   CREAM_TEXTURE: 'cream-texture',
   FRECKLES: 'freckles',

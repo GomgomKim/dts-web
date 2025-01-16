@@ -4,7 +4,10 @@ import { Asset } from '@/shared/api/types'
 
 import { create } from 'zustand'
 
-import { Brush } from '../ui/editor-panels/color-brush/model/DummyData'
+import {
+  Brush,
+  MAX_CUSTOM_BRUSHES
+} from '../ui/editor-panels/color-brush/model/DummyData'
 import { SkinGlow } from '../ui/editor-panels/skin-glow/model'
 
 const DEFAULT_TRANSPARENCY = 50
@@ -59,15 +62,24 @@ interface ColorBrushState {
   selectedColorBrushItem: Brush | null
   colorBrushSmoothEdges: number
   isAutoSelect: boolean
-  setSelectedColorBrushItem: (item: Brush) => void
+  colorBrushColor: [number, number, number]
+  colorBrushOpacity: number
+  customBrushes: Brush[]
+  setSelectedColorBrushItem: (item: Brush | null) => void
   setColorBrushSmoothEdges: (value: number) => void
   setIsAutoSelect: (value: boolean) => void
+  setColorBrushColor: (value: [number, number, number]) => void
+  setColorBrushOpacity: (value: number) => void
+  addCustomBrush: (brush: Brush) => void
 }
 
 export const useColorBrushStore = create<ColorBrushState>((set) => ({
   isAutoSelect: false,
   selectedColorBrushItem: null,
   colorBrushSmoothEdges: DEFAULT_SMOOTH_EDGES,
+  colorBrushColor: [255, 255, 255],
+  colorBrushOpacity: 0.3,
+  customBrushes: [],
   setIsAutoSelect: (value) =>
     set(() => ({
       isAutoSelect: value
@@ -75,14 +87,21 @@ export const useColorBrushStore = create<ColorBrushState>((set) => ({
   setSelectedColorBrushItem: (selectedColorBrushItem) =>
     set((state) => ({
       selectedColorBrushItem:
-        selectedColorBrushItem.id === state.selectedColorBrushItem?.id
+        selectedColorBrushItem?.id === state.selectedColorBrushItem?.id
           ? null
           : selectedColorBrushItem
     })),
   setColorBrushSmoothEdges: (value) =>
     set(() => ({
       colorBrushSmoothEdges: value
-    }))
+    })),
+  setColorBrushColor: (value) => set(() => ({ colorBrushColor: value })),
+  setColorBrushOpacity: (value) => set(() => ({ colorBrushOpacity: value })),
+  addCustomBrush: (brush) =>
+    set((state) => {
+      if (state.customBrushes.length >= MAX_CUSTOM_BRUSHES) return state
+      return { customBrushes: [...state.customBrushes, brush] }
+    })
 }))
 
 interface SkinGlowState {
