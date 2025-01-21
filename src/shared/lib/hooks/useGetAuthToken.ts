@@ -52,12 +52,6 @@ export const useGetAuthToken = (params: UseGetAuthTokenParams) => {
             }
 
             logIn(token)
-
-            if (params.redirectPath) {
-              router.replace(params.redirectPath)
-            } else {
-              removeSearchParams(['oAuthProviderType', 'code'])
-            }
           }
         })
         .catch((error) => {
@@ -68,6 +62,12 @@ export const useGetAuthToken = (params: UseGetAuthTokenParams) => {
           // 토큰에러 발생 여부와 상관없이 ui를 렌더링하여
           // 다른 API 요청에서 올바르지 않은 토큰이면 애러바운더리를 통해 에러 처리
           params.toggleIsGettingToken?.(false)
+
+          if (params.redirectPath) {
+            router.replace(params.redirectPath)
+          } else {
+            removeSearchParams(['oAuthProviderType', 'code'])
+          }
         })
     } else {
       params.toggleIsGettingToken?.(false)
