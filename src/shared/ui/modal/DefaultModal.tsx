@@ -24,7 +24,7 @@ interface DefaultModalProps {
   title: React.ReactNode
   description: React.ReactNode
   children?: React.ReactNode // modal contents
-  footer: React.ReactNode
+  footer?: React.ReactNode
 }
 
 export const DefaultModal = (props: DefaultModalProps) => {
