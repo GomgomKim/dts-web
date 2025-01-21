@@ -80,7 +80,7 @@ const getTokens = async (
   code: string,
   redirectUri: string
 ) => {
-  const response = await dtsAxios.get('/auth/access-token', {
+  const response = await dtsAxios.get('v1/auth/access-token', {
     params: {
       oAuthProviderType,
       code,
