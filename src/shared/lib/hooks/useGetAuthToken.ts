@@ -13,8 +13,8 @@ import { useClientSearchParams } from './useClientSearchParams'
 type RedirectUri = 'explore' | 'generate'
 
 interface UseGetAuthTokenParams {
-  redirectPath?: string
-  redirectUri: RedirectUri
+  redirectPath?: string // 서비스 페이지에서 한 번 더 리다이렉트할 페이지 (code, oauthprovidertype 등  제거할 때)
+  redirectUri: RedirectUri // 구글 로그인 페이지에서 돌아올 서비스 페이지
   toggleIsGettingToken?: (value: boolean) => void
 }
 
