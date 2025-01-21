@@ -44,7 +44,11 @@ export const GoogleButton = (props: GoogleButtonProps) => {
   }
 
   return (
-    <Button className="relative bg-white hover:bg-white" onClick={handleClick}>
+    <Button
+      className="relative bg-white hover:bg-white"
+      stretch
+      onClick={handleClick}
+    >
       <span className="absolute left-[20px]">
         <GoogleIcon />
       </span>
