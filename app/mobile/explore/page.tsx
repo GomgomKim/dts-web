@@ -7,7 +7,7 @@ import { Instructions } from '@/entities/mobile/ui/Instructions'
 import { useGetAuthToken } from '@/shared/lib/hooks/useGetAuthToken'
 
 export default function Page() {
-  useGetAuthToken({ redirectPath: '/mobile/explore', redirectUri: 'explore' })
+  useGetAuthToken({ redirectUri: 'explore' })
 
   return (
     <AuthCheck routePath="/mobile" isGettingToken={false}>

@@ -12,7 +12,6 @@ import { TAG_TYPES } from './ui/gallery/constant'
 
 export default function Explore() {
   useGetAuthToken({
-    redirectPath: '/explore?tagType=ALL',
     redirectUri: 'explore'
   })
 

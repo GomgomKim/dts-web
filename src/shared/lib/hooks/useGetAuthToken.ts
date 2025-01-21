@@ -13,7 +13,6 @@ import { useClientSearchParams } from './useClientSearchParams'
 type RedirectUri = 'explore' | 'generate'
 
 interface UseGetAuthTokenParams {
-  redirectPath?: string // 서비스 페이지에서 한 번 더 리다이렉트할 페이지 (code, oauthprovidertype 등  제거할 때)
   redirectUri: RedirectUri // 구글 로그인 페이지에서 돌아올 서비스 페이지
   toggleIsGettingToken?: (value: boolean) => void
 }
@@ -62,12 +61,7 @@ export const useGetAuthToken = (params: UseGetAuthTokenParams) => {
           // 토큰에러 발생 여부와 상관없이 ui를 렌더링하여
           // 다른 API 요청에서 올바르지 않은 토큰이면 애러바운더리를 통해 에러 처리
           params.toggleIsGettingToken?.(false)
-
-          if (params.redirectPath) {
-            router.replace(params.redirectPath)
-          } else {
-            removeSearchParams(['oAuthProviderType', 'code'])
-          }
+          removeSearchParams(['oAuthProviderType', 'code'])
         })
     } else {
       params.toggleIsGettingToken?.(false)
