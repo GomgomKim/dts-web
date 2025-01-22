@@ -29,7 +29,7 @@ export const Gallery = () => {
   const totalCardItems = useMemo(
     () =>
       data?.pages.reduce((total, page) => {
-        return total + page.content.images.length
+        return total + page.content.data.length
       }, 0),
     [data]
   )
@@ -49,7 +49,7 @@ export const Gallery = () => {
       </div>
     )
 
-  const isEmpty = data?.pages[0].content.images.length === 0
+  const isEmpty = data?.pages[0].content.data.length === 0
   if (isEmpty) return <p>no data</p>
 
   const totalItems = totalCardItems || 0 // totalCardItems가 없으면 0
@@ -67,7 +67,7 @@ export const Gallery = () => {
     <div className="grid-cols-auto-fill-small min-[3200px]:grid-cols-auto-fill-medium 2xl:grid-cols-auto-fill-large grid gap-5">
       {data?.pages.map((page, i) => (
         <Fragment key={i}>
-          {page.content.images.map((cardItem, cardIdx) => {
+          {page.content.data.map((cardItem, cardIdx) => {
             const isLastItem =
               i * NUM_OF_DATA_PER_REQUEST + (cardIdx + 1) === totalCardItems
             return (

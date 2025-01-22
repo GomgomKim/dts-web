@@ -34,8 +34,7 @@ export const FavoriteItems = () => {
   if (status === 'error') return <p>{error?.message}</p>
   if (isFetching && !isFetchingNextPage) return <FavoriteItemsSkeleton />
 
-  const isEmpty =
-    data === undefined || data?.pages[0].content.images.length === 0
+  const isEmpty = data === undefined || data?.pages[0].content.data.length === 0
   if (isEmpty) return <EmptyItems />
 
   return (
@@ -43,7 +42,7 @@ export const FavoriteItems = () => {
       <div className="grid-cols-auto-fill-small md:grid-cols-auto-fill-medium grid gap-5">
         {data?.pages.map((page, i) => (
           <Fragment key={i}>
-            {page.content.images.map((cardItem) => (
+            {page.content.data.map((cardItem) => (
               <GalleryItem
                 key={cardItem.id + v4()}
                 item={cardItem}

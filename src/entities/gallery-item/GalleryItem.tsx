@@ -26,7 +26,7 @@ export const GalleryItem = (props: GalleryItemProps) => {
     id,
     name: modelname,
     description,
-    encryptedThumbnailUrl,
+    encryptedThumbnailPath,
     tags
   } = props.item
   const [isHovering, setIsHovering] = useState(false)
@@ -35,10 +35,10 @@ export const GalleryItem = (props: GalleryItemProps) => {
 
   const imgUrl =
     process.env.NEXT_PUBLIC_API_MOCKING === 'enabled'
-      ? encryptedThumbnailUrl
+      ? encryptedThumbnailPath
       : process.env.NEXT_PUBLIC_API_URL +
         `${URL_BASE_IMAGE_FILE}` +
-        encryptedThumbnailUrl
+        encryptedThumbnailPath
 
   const isMember = isAuth === true
   const CardWrapper = isMember ? Link : 'div'

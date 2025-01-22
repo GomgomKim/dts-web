@@ -41,7 +41,7 @@ export const useDeleteFavorite = () => {
               ...page,
               content: {
                 ...page.content,
-                images: page.content.images.filter(
+                images: page.content.data.filter(
                   (item) => item.id.toString() !== mainImageId
                 )
               }

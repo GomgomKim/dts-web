@@ -44,7 +44,7 @@ export const usePostFavorite = () => {
               ...page,
               content: {
                 ...page.content,
-                images: page.content.images.map((item) => {
+                images: page.content.data.map((item) => {
                   if (item.id.toString() === mainImageId) {
                     return { ...item, isFavorite: true }
                   }
@@ -101,7 +101,7 @@ export const useDeleteFavorite = () => {
               ...page,
               content: {
                 ...page.content,
-                images: page.content.images.map((item) => {
+                images: page.content.data.map((item) => {
                   if (item.id.toString() === mainImageId)
                     return { ...item, isFavorite: false }
                   return item
