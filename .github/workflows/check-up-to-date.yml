@@ -1,0 +1,59 @@
+name: 브랜치 최신 상태 검사
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  pull_request_target:
+    types: [closed]
+
+jobs:
+  check-up-to-date:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: PR Merge시 Open PR에 최신화 검사 진행
+        if: github.event.pull_request.merged == true
+        id: get-prs
+        run: |
+          base_branch="${{ github.event.pull_request.base.ref }}"
+
+          gh api graphql -f query='
+            query {
+              repository(owner: "${{ github.repository_owner }}", name: "${{ github.event.repository.name }}") {
+                pullRequests(states: OPEN, first: 100) {
+                  nodes {
+                    number
+                    headRefName
+                    baseRefName
+                  }
+                }
+              }
+            }
+          ' -q '.data.repository.pullRequests.nodes' | jq -c '.[]' | while read -r pr; do
+            pr_number=$(echo "$pr" | jq -r '.number')
+            pr_base_branch=$(echo "$pr" | jq -r '.baseRefName')
+            
+            if [ "$pr_base_branch" = "$base_branch" ] && [ "$pr_number" != "${{ github.event.pull_request.number }}" ]; then
+              echo "🔄 PR #${pr_number} 재실행 트리거"
+              gh workflow run check-up-to-date.yml -r $(gh pr view $pr_number --json headRefName -q .headRefName)
+            fi
+          done
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 브랜치 최신 상태 확인
+        if: github.event.pull_request.merged != true
+        run: |
+          base_branch="${{ github.base_ref }}"
+          git fetch origin ${base_branch}
+
+          if ! git merge-base --is-ancestor origin/${base_branch} HEAD; then
+            echo "❌ 현재 브랜치가 ${base_branch}의 최신 커밋을 포함하고 있지 않습니다."
+            echo "리베이스가 필요합니다."
+            exit 1
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
