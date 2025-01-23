@@ -12,6 +12,7 @@ const nextConfig = {
     return config
   },
   images: {
+    domains: ['api.dtsdevs.com'],
     remotePatterns: [
       {
         protocol: process.env.NEXT_PUBLIC_API_PROTOCOL,
