@@ -37,7 +37,7 @@ export const GoogleButton = (props: GoogleButtonProps) => {
         redirectUri +
         (redirectState ? '&state=' + redirectState : '')
 
-      router.replace(replaceHref)
+      router.replace(replaceHref) // 구글 로그인 페이지로 이동
     } else {
       console.error('Google login URL is not defined')
     }
@@ -53,6 +53,7 @@ export const GoogleButton = (props: GoogleButtonProps) => {
   )
 }
 
+// 구글 로그인 후 리다이렉트 될 모델 generate 페이지 정보(name, id) 전달
 const getState = (redirectPageInfo: string) => {
   return redirectPageInfo.replaceAll('=', '-').replace('&', '-')
 }

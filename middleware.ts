@@ -14,6 +14,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(newUrl)
   }
 
+  // 소셜 로그인 후 state(name, id) 정보로 해당 generate 페이지로 리다이렉트
   if (!isMobile && pathname === '/generate' && searchParams.has('state')) {
     const generatePageInfo = searchParams.get('state')!
     const modelInfo = generatePageInfo.split('-')
