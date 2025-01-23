@@ -1,7 +1,7 @@
 import { AspectRatio, FaceAngle, SkinTexture } from '@/shared/api/types'
 
 export const URL_VARIATION_LIST = '/v1/image/variation-image'
-export const URL_VARIATION_IMAGE = '/v1/image-file/download?encryptedImageUrl='
+export const URL_VARIATION_IMAGE = '/v2/file/download?encryptedPath='
 export const URL_AI_IMAGE_GENERATE = '/v1/image/variation-ai-image/generate'
 export const URL_AI_IMAGE_GENERATE_PROGRESS =
   '/v1/image/variation-ai-image/progress'

@@ -6,14 +6,13 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
+import { URL_BASE_IMAGE_FILE } from '@/shared/api/constants'
 import { MainItem } from '@/shared/api/types'
 import { useAuthStore } from '@/shared/lib/stores/useAuthStore'
 import { track } from '@/shared/lib/utils/mixpanel'
 import { Button } from '@/shared/ui/button'
 
 import LinkIcon from '/public/icons/arrow-thin.svg'
-
-const URL_BASE_IMAGE_FILE = '/image-file/download?encryptedImageUrl='
 
 interface GalleryItemProps extends ComponentProps<'div'> {
   item: MainItem
@@ -37,7 +36,7 @@ export const GalleryItem = (props: GalleryItemProps) => {
     process.env.NEXT_PUBLIC_API_MOCKING === 'enabled'
       ? encryptedThumbnailPath
       : process.env.NEXT_PUBLIC_API_URL +
-        `${URL_BASE_IMAGE_FILE}` +
+        URL_BASE_IMAGE_FILE +
         encryptedThumbnailPath
 
   const isMember = isAuth === true
