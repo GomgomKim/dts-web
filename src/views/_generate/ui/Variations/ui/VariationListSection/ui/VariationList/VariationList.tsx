@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react'
 
+import { useSearchParams } from 'next/navigation'
+
 import { useAiImageGeneratingStore } from '@/entities/generate/store'
 
 import { Variation } from '@/shared/api/types'
@@ -23,11 +25,12 @@ interface VariationListProps {
 }
 
 export const VariationList = (props: VariationListProps) => {
-  const { searchParams, addSearchParams } = useClientSearchParams({
+  const searchParams = useSearchParams()
+  const mainImageId = searchParams.get('id') || ''
+
+  const { addSearchParams } = useClientSearchParams({
     action: 'replace'
   })
-
-  const mainImageId = searchParams.get('id') || ''
 
   useGenerateVariation(mainImageId)
 

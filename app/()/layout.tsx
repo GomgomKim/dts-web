@@ -13,7 +13,7 @@ export default function CommonLayout({
       <DefaultHeader />
       <div className="flex h-screen pt-14">
         <Sidebar />
-        <div className="ml-[240px] flex-1 lg:ml-[280px]">{children}</div>
+        <div className="ml-[240px] flex-1 md:ml-[280px]">{children}</div>
       </div>
     </Suspense>
   )

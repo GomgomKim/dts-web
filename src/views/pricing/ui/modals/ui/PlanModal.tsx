@@ -7,7 +7,7 @@ import { UI_TEXT } from '../constants'
 
 interface PlanModalProps {
   title: string
-  description: React.ReactNode
+  description: string
   children: React.ReactNode
   actionButtonTitle?: string
   onClickActionButton: () => void

@@ -28,7 +28,7 @@
   },
   "settings": {
     "tailwindcss": {
-      "callees": ["cn", "cva"] // cn() 안에 있는 클래스명에도 적용
+      "callees": ["cn"] // cn() 안에 있는 클래스명에도 적용
     }
   }
 }

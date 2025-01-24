@@ -59,7 +59,7 @@ export const PlanItems = () => {
           />
         ))}
         {/* Contact Us plan */}
-        {PLAN_ITEMS.slice(6, 7).map((item) => (
+        {PLAN_ITEMS.slice(6).map((item) => (
           <PlanItem
             key={item.id}
             {...item}

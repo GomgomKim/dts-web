@@ -2,7 +2,7 @@
 
 import React from 'react'
 
-import { usePathname } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 
 import { useTagTypeStore } from '@/features/filter-tag-types/model/useTagTypeStore'
 
@@ -22,12 +22,11 @@ export const FilterTagTypes = (props: FilterTagTypesProps) => {
   const { element, onMoveToElement } = useMoveScroll()
   const pathname = usePathname()
 
+  const searchParams = useSearchParams()
   const previousTagType = useTagTypeStore((state) => state.tagType)
   const setTagType = useTagTypeStore((state) => state.setTagType)
 
-  const { searchParams, addSearchParams } = useClientSearchParams({
-    action: 'replace'
-  })
+  const { addSearchParams } = useClientSearchParams({ action: 'replace' })
 
   const currentTagType =
     searchParams.get('tagType') ||

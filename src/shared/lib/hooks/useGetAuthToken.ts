@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 // import { ErrorModals } from '@/entities/ErrorModal/ErrorModals'
 import { dtsAxios } from '@/shared/api'
@@ -18,14 +18,13 @@ interface UseGetAuthTokenParams {
 }
 
 export const useGetAuthToken = (params: UseGetAuthTokenParams) => {
+  const searchParams = useSearchParams()
   const router = useRouter()
 
   const logIn = useAuthStore((state) => state.logIn)
   const isAuth = useAuthStore((state) => state.isAuth)
 
-  const { searchParams, removeSearchParams } = useClientSearchParams({
-    action: 'replace'
-  })
+  const { removeSearchParams } = useClientSearchParams({ action: 'replace' })
 
   useEffect(() => {
     if (isAuth === null) return

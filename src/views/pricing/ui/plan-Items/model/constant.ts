@@ -59,7 +59,6 @@ export const PLAN_ITEMS: Plan[] = [
     credits: 200,
     features: ['Unlimited models', 'Includes all features from previous plans']
   },
-  // TODO: 비즈니스 데이터 관리 방법 설계
   {
     id: '7',
     title: 'Custom',
@@ -69,12 +68,5 @@ export const PLAN_ITEMS: Plan[] = [
       'Custom models designed exclusively for your brand',
       'Includes all features from previous plans'
     ]
-  },
-  {
-    id: '8',
-    title: 'Cancel',
-    price: 'No active subscription',
-    credits: '',
-    features: []
   }
 ]

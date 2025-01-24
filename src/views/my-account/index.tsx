@@ -1,9 +1,10 @@
 'use client'
 
-import Link from 'next/link'
+import { useEffect, useState } from 'react'
 
-import { useClientSearchParams } from '@/shared/lib/hooks/useClientSearchParams'
-import { capitalizeFirstLetter } from '@/shared/lib/utils'
+import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs/Tabs'
 
 import { MY_ACCOUNT_TABS } from './model'
@@ -14,15 +15,14 @@ type MyAccountTabs = keyof typeof MY_ACCOUNT_TABS
 const DEFAULT_TAB = MY_ACCOUNT_TABS.subscriptions
 
 export default function MyAccount() {
-  const { searchParams, addSearchParams } = useClientSearchParams({
-    action: 'replace'
-  })
+  const searchParams = useSearchParams()
+  const [currentTab, setCurrentTab] = useState<MyAccountTabs>(
+    () => (searchParams.get('tab') || DEFAULT_TAB) as MyAccountTabs
+  )
 
-  const currentTab = searchParams.get('tab') || DEFAULT_TAB
-
-  const handleClickTab = (type: MyAccountTabs) => {
-    addSearchParams({ tab: type })
-  }
+  useEffect(() => {
+    setCurrentTab((searchParams.get('tab') || DEFAULT_TAB) as MyAccountTabs)
+  }, [searchParams])
 
   return (
     <>
@@ -32,7 +32,7 @@ export default function MyAccount() {
 
       <Tabs
         value={currentTab}
-        onValueChange={(value) => handleClickTab(value as MyAccountTabs)}
+        onValueChange={(value) => setCurrentTab(value as MyAccountTabs)}
       >
         {/* 탭 */}
         <TabsList className="mb-5">
@@ -81,4 +81,8 @@ export default function MyAccount() {
       </Tabs>
     </>
   )
+}
+
+const capitalizeFirstLetter = (string: string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1)
 }

@@ -9,5 +9,5 @@ export default function MyAccountLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  return <>{children}</>
+  return <main className="pr-5 pt-3 md:px-12">{children}</main>
 }

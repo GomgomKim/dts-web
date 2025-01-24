@@ -1,8 +1,8 @@
-'use client'
+import { useEffect, useState } from 'react'
 
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 
-import { useClientSearchParams } from '@/shared/lib/hooks/useClientSearchParams'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs/Tabs'
 
 import { EditsCardItems } from './ui/edits-card-items'
@@ -19,15 +19,14 @@ type MyModelsTabs = keyof typeof MY_MODELS_TABS
 const DEFAULT_TAB = MY_MODELS_TABS.generatives
 
 export default function MyModels() {
-  const { searchParams, addSearchParams } = useClientSearchParams({
-    action: 'replace'
-  })
+  const searchParams = useSearchParams()
+  const [currentTab, setCurrentTab] = useState<MyModelsTabs>(
+    () => (searchParams.get('tab') || DEFAULT_TAB) as MyModelsTabs
+  )
 
-  const currentTab = searchParams.get('tab') || DEFAULT_TAB
-
-  const handleClickTab = (type: MyModelsTabs) => {
-    addSearchParams({ tab: type })
-  }
+  useEffect(() => {
+    setCurrentTab((searchParams.get('tab') || DEFAULT_TAB) as MyModelsTabs)
+  }, [searchParams])
 
   return (
     <>
@@ -37,7 +36,7 @@ export default function MyModels() {
 
       <Tabs
         value={currentTab}
-        onValueChange={(value) => handleClickTab(value as MyModelsTabs)}
+        onValueChange={(value) => setCurrentTab(value as MyModelsTabs)}
       >
         <div className="mb-5 flex flex-nowrap items-center">
           {/* 탭 */}

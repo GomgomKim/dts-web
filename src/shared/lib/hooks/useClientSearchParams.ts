@@ -11,20 +11,23 @@ interface useClientSearchParamsParams {
 }
 
 export const useClientSearchParams = (props: useClientSearchParamsParams) => {
-  const searchParams = useSearchParams()
+  const _searchParams = useSearchParams()
   const router = useRouter()
   const pathname = usePathname()
-  const newSearchParams = new URLSearchParams(searchParams.toString())
+  const searchParams = new URLSearchParams(_searchParams.toString())
 
-  const createQueryStrings = (queryParams: QueryParams) => {
-    Object.entries(queryParams).forEach(([key, value]) => {
-      if (value) {
-        newSearchParams.set(key, value)
-      }
-    })
+  const createQueryStrings = useCallback(
+    (queryParams: QueryParams) => {
+      Object.entries(queryParams).forEach(([key, value]) => {
+        if (value) {
+          searchParams.set(key, value)
+        }
+      })
 
-    return newSearchParams.toString()
-  }
+      return searchParams.toString()
+    },
+    [_searchParams]
+  )
 
   const addSearchParams = useCallback(
     (queryParams: QueryParams) => {
@@ -39,24 +42,24 @@ export const useClientSearchParams = (props: useClientSearchParamsParams) => {
         })
       }
     },
-    [pathname, router]
+    [pathname, _searchParams, router, createQueryStrings]
   )
 
   const removeSearchParams = useCallback(
     (keys: string | string[]) => {
       if (typeof keys === 'string') {
-        newSearchParams.delete(keys)
+        searchParams.delete(keys)
       } else if (Array.isArray(keys)) {
-        keys.forEach((key) => newSearchParams.delete(key))
+        keys.forEach((key) => searchParams.delete(key))
       }
 
-      const paramsToString = newSearchParams.toString()
+      const paramsToString = searchParams.toString()
       const query = paramsToString ? `?${paramsToString}` : ''
 
       router.replace(`${pathname}${query}`)
     },
-    [pathname, router]
+    [pathname, _searchParams, router]
   )
 
-  return { searchParams, addSearchParams, removeSearchParams }
+  return { addSearchParams, removeSearchParams }
 }
