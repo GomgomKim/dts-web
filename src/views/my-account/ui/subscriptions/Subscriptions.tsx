@@ -1,3 +1,9 @@
+import { SubscriptionInfo } from './ui'
+
 export const Subscriptions = () => {
-  return <div>Subscriptions...</div>
+  return (
+    <div>
+      <SubscriptionInfo />
+    </div>
+  )
 }

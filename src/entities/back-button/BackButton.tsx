@@ -2,23 +2,22 @@
 
 import { useRouter } from 'next/navigation'
 
-import { Button } from '@/shared/ui'
-
 import Arrow from '/public/icons/arrow-thin.svg'
 
 export const BackButton = () => {
   const router = useRouter()
 
   return (
-    <Button
-      variant="ghost"
+    <button
       onClick={() => router.back()}
       className="group rounded-none p-0 hover:bg-inherit"
     >
       <div className="flex items-center gap-[4px]">
-        <Arrow className="rotate-[-135deg] stroke-secondary-foreground group-hover:stroke-white" />
-        <span className="text-[0.875rem]">Back</span>
+        <Arrow className="rotate-[-135deg] stroke-neutral-5 group-hover:stroke-white" />
+        <span className="w-8 text-[0.875rem] leading-[17px] text-neutral-5 group-hover:text-white">
+          Back
+        </span>
       </div>
-    </Button>
+    </button>
   )
 }

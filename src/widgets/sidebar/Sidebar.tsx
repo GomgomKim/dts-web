@@ -26,7 +26,7 @@ SidebarSeparator.displayName = 'SidebarSeparator'
 
 export const Sidebar = () => {
   return (
-    <div className="fixed z-10 h-screen w-[240px] bg-background px-5 py-3 md:w-[280px]">
+    <div className="fixed z-10 h-screen w-[240px] bg-background px-5 py-3 lg:w-[280px]">
       <Navs />
       <SidebarSeparator />
 

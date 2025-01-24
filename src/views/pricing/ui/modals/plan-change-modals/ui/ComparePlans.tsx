@@ -44,15 +44,30 @@ const PlanInfo = ({ label, planTitle, price, isPrimary }: PlanInfoProps) => {
     <div className="space-y-2">
       <p className="flex">
         <span className="mr-2 w-16 font-normal text-neutral-7">{label}</span>
-        <span className={cn('font-medium', isPrimary ? 'text-primary' : '')}>
+        <span
+          className={cn('font-medium', [
+            isPrimary ? 'text-primary' : '',
+            planTitle === 'Cancel' ? 'text-destructive' : ''
+          ])}
+        >
           {planTitle} Plan
         </span>
       </p>
       <p className="flex">
         <span className="mr-2 w-16 text-neutral-7">Price</span>
-        <span className="ml-auto text-[1.125rem]">${price}</span>
-        <span className="ml-[6px] text-nowrap text-neutral-7">/ month</span>
+        {isPriceString(price) ? (
+          <span className="ml-auto text-[1.125rem]">{price}</span>
+        ) : (
+          <>
+            <span className="ml-auto text-[1.125rem]">${price}</span>
+            <span className="ml-[6px] text-nowrap text-neutral-7">/ month</span>
+          </>
+        )}
       </p>
     </div>
   )
+}
+
+const isPriceString = (price: string | number) => {
+  return typeof price === 'string'
 }
