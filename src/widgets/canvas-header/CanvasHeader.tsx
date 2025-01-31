@@ -1,9 +1,10 @@
 'use client'
 
 // import { DownloadDropdown } from '@/views/_generate/ui/DownloadDropdown'
+import { BackButton } from '@/entities/back-button'
+
 import { HeaderLayout } from '@/shared/ui/header-layout'
 
-import { BackButton } from './ui/back-button'
 import { DownloadDropdown } from './ui/download-dropdown'
 import { HistoryControl } from './ui/history-control'
 import { ViewButton } from './ui/view-button'

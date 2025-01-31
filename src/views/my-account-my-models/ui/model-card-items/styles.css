@@ -1,0 +1,21 @@
+@tailwind utilities;
+
+@layer utilities {
+  .grid-models-small {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(299px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .grid-models-medium {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(384px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .grid-models-xlarge {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(474px, 1fr));
+    gap: 1.5rem;
+  }
+}
