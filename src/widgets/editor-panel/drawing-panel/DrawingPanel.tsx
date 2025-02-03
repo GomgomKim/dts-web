@@ -25,7 +25,7 @@ export const DrawingPanel = (props: DrawingPanelProps) => {
           {UI_TEXT.COLORS}
         </span>
         <div className="mt-3">
-          <ColorPicker />
+          <ColorPicker isHairColor={props.title === 'Hair Color'} />
         </div>
       </div>
 

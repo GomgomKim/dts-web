@@ -61,6 +61,7 @@ declare global {
 
     const CV_8UC3: number
     const CV_8UC4: number
+    const CV_32F: number
     const CV_32FC1: number
     const CV_32FC3: number
     const CV_8UC1: number
@@ -98,6 +99,7 @@ declare global {
       norm_type: number,
       dtype?: number
     ) => void
+    const sqrt: (src: Mat, dst: Mat) => void
     const GaussianBlur: (
       src: Mat,
       dst: Mat,

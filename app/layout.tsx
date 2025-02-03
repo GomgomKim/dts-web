@@ -2,6 +2,7 @@ import { Suspense } from 'react'
 
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
+import Script from 'next/script'
 
 import { AxiosInterceptorProvider } from '@/app/providers/AxiosInterceptorProvider'
 import { MixpanelProvider } from '@/app/providers/MixpanelProvider'
@@ -66,7 +67,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <script async src="https://docs.opencv.org/4.x/opencv.js" />
+        <Script src="/opencv.js" strategy="beforeInteractive" />
       </head>
       <MswComponent />
       <body className={`${pretendard.variable} font-pretendard`}>

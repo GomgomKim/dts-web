@@ -16,8 +16,8 @@ import { DummyData } from '@/entities/recent-items/model/types'
 import { Variation } from '@/shared/api/types'
 import { cn } from '@/shared/lib/utils'
 
+import modelImage from '/public/images/image.png'
 import modelImageEye from '/public/images/lens-back.png'
-import modelImage from '/public/images/lens-fore.png'
 
 import { getAssetUrl } from './lib/getAssetUrl'
 import {
@@ -28,6 +28,7 @@ import { useBrandAssetsStore } from './ui/brand-assets/model/useBrandAssetsStore
 import { ColorBrush } from './ui/editor-panels/color-brush/ColorBrush'
 import { CreamTexture } from './ui/editor-panels/cream-texture'
 import { EyeContacts } from './ui/editor-panels/eye-contacts'
+import { HairColor } from './ui/editor-panels/hair-color/HairColor'
 import { SkinGlow } from './ui/editor-panels/skin-glow/SkinGlow'
 import { ImageView } from './ui/image-editing-box/ui/image-view'
 
@@ -50,8 +51,8 @@ export default function Canvas({
         {
           ratio: 'ASPECT_RATIO_1_1',
           angle: 'LEFT',
-          encryptedImageUrl: modelImageEye.src, // lens-back
-          lensFore: modelImage.src
+          encryptedImageUrl: modelImage.src, // lens-back
+          lensFore: modelImageEye.src
         }
       ]
     }
@@ -164,6 +165,8 @@ const displayEditorPanel = (selectedAiTool: AiToolId | null) => {
       return <ColorBrush id={selectedAiTool} />
     case AI_TOOL.SKIN_GLOW:
       return <SkinGlow id={selectedAiTool} />
+    case AI_TOOL.HAIR_COLOR:
+      return <HairColor id={selectedAiTool} />
     default:
       return null
   }

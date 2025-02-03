@@ -4,31 +4,60 @@ import React, { useEffect } from 'react'
 import { Alpha, Hue, IColor, Saturation, useColor } from 'react-color-palette'
 import 'react-color-palette/css'
 
-import { useColorBrushStore } from '@/views/canvas/model/useEditorPanelsStore'
+import {
+  useColorBrushStore,
+  useHairColorStore
+} from '@/views/canvas/model/useEditorPanelsStore'
 
 import ColorizeIcon from '/public/icons/colorize.svg'
 
 import { DEFAULT_COLOR } from './constants'
+import { rgbToHex, rgbToHsv } from './lib/rgbToHsv'
 import './styles.css'
 
-export const ColorPicker = () => {
+interface ColorPickerProps {
+  isHairColor?: boolean
+}
+
+export const ColorPicker = (props: ColorPickerProps) => {
+  // 컬러피커용 훅
+  const [color, setColor] = useColor(DEFAULT_COLOR)
   const setColorBrushColor = useColorBrushStore(
     (state) => state.setColorBrushColor
   )
   const setColorBrushOpacity = useColorBrushStore(
     (state) => state.setColorBrushOpacity
   )
-  // 컬러피커용 훅
-  const [color, setColor] = useColor(DEFAULT_COLOR)
 
+  const hairColor = useHairColorStore((state) => state.hairColor)
+  const setHairColor = useHairColorStore((state) => state.setHairColor)
+  const hairColorOpacity = useHairColorStore((state) => state.hairColorOpacity)
+  const setHairColorOpacity = useHairColorStore(
+    (state) => state.setHairColorOpacity
+  )
+
+  // 초기 알파값 설정
   useEffect(() => {
-    // 초기 색상의 알파값 설정
     handleChangeColor({
       ...color,
-      rgb: { ...color.rgb, a: 0.3 },
-      hsv: { ...color.hsv, a: 0.3 }
+      rgb: { ...color.rgb, a: props.isHairColor ? 1.0 : 0.3 },
+      hsv: { ...color.hsv, a: props.isHairColor ? 1.0 : 0.3 }
     })
   }, [])
+
+  useEffect(() => {
+    if (props.isHairColor && hairColor) {
+      const [r, g, b] = hairColor
+      const hex = rgbToHex(r, g, b)
+      const hsv = rgbToHsv(r, g, b)
+
+      setColor({
+        hex,
+        rgb: { r, g, b, a: hairColorOpacity },
+        hsv: { ...hsv, a: hairColorOpacity }
+      })
+    }
+  }, [props.isHairColor, hairColor])
 
   /**
    * 컬러피커에서 색상이 바뀔 때 호출됨.
@@ -37,14 +66,18 @@ export const ColorPicker = () => {
   const handleChangeColor = (newColor: IColor) => {
     setColor(newColor)
 
-    // 소수점을 정수로 반올림 (react-color-palette가 float로 줄 수 있음)
     const r = Math.round(newColor.rgb.r)
     const g = Math.round(newColor.rgb.g)
     const b = Math.round(newColor.rgb.b)
     const a = newColor.rgb.a ?? 0.3
 
-    setColorBrushColor([r, g, b])
-    setColorBrushOpacity(a)
+    if (props.isHairColor) {
+      setHairColor([r, g, b])
+      setHairColorOpacity(a)
+    } else {
+      setColorBrushColor([r, g, b])
+      setColorBrushOpacity(a)
+    }
   }
 
   return (

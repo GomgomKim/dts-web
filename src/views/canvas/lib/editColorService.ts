@@ -141,6 +141,7 @@ const to3D = (src: cv.Mat, dst: cv.Mat) => {
 let originalModelMat: cv.Mat | null = null
 // 세그먼트별 현재 적용된 색상을 저장하는 Map
 const segmentColorMap = new Map<number, [number, number, number]>()
+const segmentOpacityMap = new Map<number, number>()
 const segmentFeatherValues = new Map<number, number>()
 
 export const applyMultiplyAndFeather = (
@@ -167,6 +168,7 @@ export const applyMultiplyAndFeather = (
   // 타겟 세그먼트들에 새로운 색상 저장
   targetSegments.forEach((segment) => {
     segmentColorMap.set(segment, newColor)
+    segmentOpacityMap.set(segment, opacity)
   })
 
   if (!originalModelMat) {
@@ -182,6 +184,7 @@ export const applyMultiplyAndFeather = (
   for (const [segment, color] of Array.from(segmentColorMap.entries())) {
     // 현재 세그먼트에 대한 마스크 생성
     const segmentMask = new cv.Mat(maskMap.rows, maskMap.cols, cv.CV_32FC1)
+    const segmentOpacity = segmentOpacityMap.get(segment) ?? 1
     for (let i = 0; i < maskMap.rows; i++) {
       for (let j = 0; j < maskMap.cols; j++) {
         const val = maskImage.ucharAt(i, j)
@@ -212,7 +215,8 @@ export const applyMultiplyAndFeather = (
       tmp.delete()
     }
 
-    segmentMask.convertTo(segmentMask, cv.CV_32FC1, opacity)
+    // 투명도를 마스크에 적용
+    segmentMask.convertTo(segmentMask, cv.CV_32FC1, segmentOpacity)
 
     const maskImap = new cv.Mat()
     to3D(segmentMask, maskImap)
@@ -242,6 +246,81 @@ export const applyMultiplyAndFeather = (
   return result
 }
 
+let originalHairModelMat: cv.Mat | null = null
+export const dyeHairColor = (
+  modelImage: cv.Mat,
+  maskImage: cv.Mat,
+  featherAmount = 10,
+  opacity = 1,
+  minNorm = 0.0,
+  newColor: [number, number, number] = [0, 0, 255]
+): string => {
+  if (!Number.isInteger(featherAmount) || featherAmount < 0) {
+    throw new Error('Not proper value for featherAmount')
+  } else if (opacity < 0 || opacity > 1) {
+    throw new Error('Not proper value for opacity')
+  }
+
+  // 첫 호출시 원본 이미지 저장
+  if (!originalHairModelMat) {
+    originalHairModelMat = modelImage.clone()
+  }
+
+  // 원본 이미지로부터 시작
+  const currentModelMat = originalHairModelMat.clone()
+
+  const width = currentModelMat.cols
+  const height = currentModelMat.rows
+
+  const modelImap = toImap(currentModelMat)
+  const maskImap = new cv.Mat()
+  const maskMap = toMap(maskImage)
+  const colorImap = new cv.Mat(
+    height,
+    width,
+    cv.CV_32FC3,
+    new cv.Scalar(newColor[0], newColor[1], newColor[2])
+  )
+
+  const newModelMap = modelImap.clone()
+  cv.normalize(
+    newModelMap,
+    newModelMap,
+    minNorm,
+    1,
+    cv.NORM_MINMAX,
+    cv.CV_32FC1
+  )
+  cv.sqrt(newModelMap, newModelMap)
+  cv.multiply(newModelMap, colorImap, colorImap)
+  newModelMap.delete()
+
+  cv.normalize(maskMap, maskMap, 0, 1, cv.NORM_MINMAX, cv.CV_32FC1)
+  if (featherAmount > 0) {
+    const ksize = featherAmount * 2 + 1
+    const ksizeObj = new cv.Size(ksize, ksize)
+    cv.GaussianBlur(maskMap, maskMap, ksizeObj, 0)
+  }
+  maskMap.convertTo(maskMap, cv.CV_32FC1, opacity)
+  to3D(maskMap, maskImap)
+
+  cv.multiply(colorImap, maskImap, colorImap)
+
+  maskImap.convertTo(maskImap, cv.CV_32F, -1.0, 1.0)
+  cv.multiply(modelImap, maskImap, modelImap)
+
+  cv.add(colorImap, modelImap, modelImap)
+
+  const resImage = matToBase64(modelImap)
+
+  modelImap.delete()
+  maskImap.delete()
+  maskMap.delete()
+  colorImap.delete()
+
+  return resImage
+}
+
 // 메모리 정리 함수 추가
 export const clearSegmentColors = () => {
   segmentFeatherValues.clear()
@@ -249,5 +328,9 @@ export const clearSegmentColors = () => {
   if (originalModelMat) {
     originalModelMat.delete()
     originalModelMat = null
+  }
+  if (originalHairModelMat) {
+    originalHairModelMat.delete()
+    originalHairModelMat = null
   }
 }

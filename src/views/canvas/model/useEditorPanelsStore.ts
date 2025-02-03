@@ -126,3 +126,21 @@ export const useSkinGlowStore = create<SkinGlowState>((set) => ({
       skinGlowSize: value
     }))
 }))
+
+interface HairColorState {
+  hairColor: [number, number, number] | null
+  hairColorOpacity: number
+  hairColorLevel: number
+  setHairColor: (color: [number, number, number]) => void
+  setHairColorOpacity: (opacity: number) => void
+  setHairColorLevel: (value: number) => void
+}
+
+export const useHairColorStore = create<HairColorState>((set) => ({
+  hairColor: null,
+  hairColorOpacity: 1.0,
+  hairColorLevel: 50,
+  setHairColor: (color) => set({ hairColor: color }),
+  setHairColorOpacity: (opacity) => set({ hairColorOpacity: opacity }),
+  setHairColorLevel: (value) => set({ hairColorLevel: value })
+}))
