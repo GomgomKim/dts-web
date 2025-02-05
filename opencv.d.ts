@@ -3,6 +3,13 @@
  */
 declare global {
   namespace cv {
+    class MatVector {
+      constructor()
+      size(): number
+      get(index: number): Mat
+      delete(): void
+      push_back(mat: Mat): void
+    }
     class Mat {
       constructor()
       constructor(rows: number, cols: number, type: number, scalar?: Scalar)
@@ -13,12 +20,13 @@ declare global {
       data: Uint8Array | Float32Array
       type(): number
       channels(): number
-
+      ptr(): number;
       roi(rect: Rect): Mat
       convertTo(dst: Mat, type: number, alpha?: number, beta?: number): void
       copyTo(dst: Mat, mask?: Mat): void
       setTo(value: Scalar, mask?: Mat): void
       clone(): Mat
+      empty(): boolean
 
       // 픽셀값(uchar)을 읽어오는 함수
       ucharAt(row: number, col: number): number
@@ -76,6 +84,8 @@ declare global {
     const COLOR_GRAY2BGR: number
     const COLOR_BGR2BGRA: number
     const COLOR_BGRA2RGBA: number
+    const COLOR_RGBA2GRAY: number
+    const COLOR_BGRA2GRAY: number
     const NORM_MINMAX: number
     const onRuntimeInitialized: boolean | undefined
 
@@ -86,6 +96,16 @@ declare global {
     const CMP_LT: number
     const CMP_LE: number
     const CMP_NE: number
+
+    // threshold 관련 상수들
+    const THRESH_BINARY: number
+    const THRESH_BINARY_INV: number
+    const THRESH_TRUNC: number
+    const THRESH_TOZERO: number
+    const THRESH_TOZERO_INV: number
+    const THRESH_MASK: number
+    const THRESH_OTSU: number
+    const THRESH_TRIANGLE: number
     const compare: (src1: Mat, src2: Mat, dst: Mat, cmpop: number) => void
 
     // 주요 함수들
@@ -129,6 +149,18 @@ declare global {
       shift?: number
     ) => void
     const countNonZero: (src: Mat) => number
+    const inRange: (src: Mat, lowerb: Scalar, upperb: Scalar, dst: Mat) => void
+    // threshold 함수
+    const threshold: (
+      src: Mat,
+      dst: Mat,
+      thresh: number,
+      maxval: number,
+      type: number
+    ) => void
+    // 비트 연산 함수
+    const bitwise_and: (src1: Mat, src2: Mat, dst: Mat, mask?: Mat) => void
+    const absdiff: (src1: Mat, src2: Mat, dst: Mat) => void
   }
 
   const cv: typeof cv

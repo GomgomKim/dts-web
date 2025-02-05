@@ -2,7 +2,8 @@ import { useCallback } from 'react'
 
 import {
   applyMultiplyAndFeather,
-  dyeHairColor
+  dyeHairColor,
+  updateOriginalModelMat
 } from '@/views/canvas/lib/editColorService'
 import {
   useColorBrushStore,
@@ -35,14 +36,15 @@ export const useCanvasApplyColor = (props: UseCanvasApplyColorProps) => {
 
   const hairColor = useHairColorStore((state) => state.hairColor)
   const hairColorOpacity = useHairColorStore((state) => state.hairColorOpacity)
+  const hairColorLevel = useHairColorStore((state) => state.hairColorLevel)
 
   const colorBrushOpacity = useColorBrushStore(
     (state) => state.colorBrushOpacity
   )
   const colorBrushColor = useColorBrushStore((state) => state.colorBrushColor)
 
-  const applyColor = useCallback(() => {
-    if (!props.modelMat || !props.maskMatRef.current) return
+  const applyColor = useCallback((): cv.Mat | null => {
+    if (!props.modelMat || !props.maskMatRef.current) return null
 
     // hair 모드일 경우, 고정 segment 목록
     // 아닐 경우, 현재 선택된 브러시 세그먼트 목록 or 신규 브러시 segment
@@ -50,7 +52,7 @@ export const useCanvasApplyColor = (props: UseCanvasApplyColorProps) => {
       selectedColorBrushItem?.segments ??
       (props.currentBrushSegment ? [props.currentBrushSegment] : null)
 
-    if (!segmentsToColor) return
+    if (!segmentsToColor) return null
 
     // 새로 그린 브러시가 아직 등록되지 않았다면 새로 등록
     if (
@@ -72,8 +74,8 @@ export const useCanvasApplyColor = (props: UseCanvasApplyColorProps) => {
     const base64 = applyMultiplyAndFeather(
       props.modelMat,
       props.maskMatRef.current,
-      colorBrushOpacity,
-      colorBrushColor,
+      hairColor ? 1 : colorBrushOpacity,
+      hairColor ? hairColor : colorBrushColor,
       1,
       'type1',
       segmentsToColor,
@@ -81,9 +83,9 @@ export const useCanvasApplyColor = (props: UseCanvasApplyColorProps) => {
     )
 
     const mainCanvas = props.canvasRef.current
-    if (!mainCanvas) return
+    if (!mainCanvas) return null
     const ctx = mainCanvas.getContext('2d')
-    if (!ctx) return
+    if (!ctx) return null
 
     const outImg = new Image()
     outImg.onload = () => {
@@ -97,42 +99,53 @@ export const useCanvasApplyColor = (props: UseCanvasApplyColorProps) => {
       props.setShowHighlight(false)
     }
     outImg.src = base64
+    return window.cv.imread(mainCanvas)
   }, [
     colorBrushColor,
     colorBrushOpacity,
     colorBrushSmoothEdges,
     props.currentBrushSegment,
-    selectedColorBrushItem
+    selectedColorBrushItem,
+    hairColor,
+    hairColorOpacity,
+    hairColorLevel
   ])
 
-  const applyHairColor = useCallback(() => {
-    if (!props.modelMat || !props.hairMaskMatRef.current || !hairColor) return
+  const applyHairColor = useCallback((): cv.Mat | null => {
+    if (!props.modelMat || !props.hairMaskMatRef.current || !hairColor)
+      return null
 
     const base64 = dyeHairColor(
       props.modelMat,
       props.hairMaskMatRef.current,
       10,
       hairColorOpacity,
-      0.0,
+      (hairColorLevel / 100 - 0.5) * 0.4, // -0.2 ~ 0.2
       hairColor
     )
 
     const mainCanvas = props.canvasRef.current
-    if (!mainCanvas) return
+    if (!mainCanvas) return null
     const ctx = mainCanvas.getContext('2d')
-    if (!ctx) return
+    if (!ctx) return null
 
     const outImg = new Image()
     outImg.onload = () => {
       ctx.clearRect(0, 0, mainCanvas.width, mainCanvas.height)
       ctx.drawImage(outImg, 0, 0)
+
+      // 캔버스의 최종 결과를 읽어와서 modelMat 업데이트
+      const newMat = window.cv.imread(mainCanvas)
+      props.setModelMat(newMat)
+      updateOriginalModelMat(newMat)
     }
 
     outImg.src = base64
 
     // modelMat 업데이트
     props.setModelMat(window.cv.imread(mainCanvas))
-  }, [hairColor, hairColorOpacity])
+    return window.cv.imread(mainCanvas)
+  }, [hairColor, hairColorOpacity, hairColorLevel])
 
   return { applyColor, applyHairColor }
 }

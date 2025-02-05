@@ -2,16 +2,14 @@ import { forwardRef, useEffect, useState } from 'react'
 
 import Image from 'next/image'
 
+import { compositeHairAndBrush } from '@/views/canvas/lib/editColorService'
 import {
   useColorBrushStore,
   useHairColorStore
 } from '@/views/canvas/model/useEditorPanelsStore'
 import { useToolModeStore } from '@/views/canvas/model/useToolModeStore'
 import { TOOL_IDS } from '@/views/canvas/ui/brush-erase-toggle/model'
-import {
-  MAX_CUSTOM_BRUSHES,
-  SEGMENT_MAP
-} from '@/views/canvas/ui/editor-panels/color-brush/model'
+import { MAX_CUSTOM_BRUSHES } from '@/views/canvas/ui/editor-panels/color-brush/model'
 import { CUSTOM_BRUSH_START } from '@/views/canvas/ui/editor-panels/color-brush/model'
 
 import { useCanvasApplyColor } from '../lib/useCanvasApplyColor'
@@ -36,7 +34,7 @@ export const ColorBrushView = forwardRef<
     colorBrushColor,
     colorBrushOpacity
   } = useColorBrushStore()
-  const { hairColor, hairColorOpacity } = useHairColorStore()
+  const { hairColor, hairColorOpacity, hairColorLevel } = useHairColorStore()
 
   const [currentBrushSegment, setCurrentBrushSegment] = useState<number | null>(
     null
@@ -45,6 +43,7 @@ export const ColorBrushView = forwardRef<
   const [isDrawing, setIsDrawing] = useState(false)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const [prevPos, setPrevPos] = useState<{ x: number; y: number } | null>(null)
+  const [isHairColorChange, setIsHairColorChange] = useState(false)
 
   // 브러시 커서 사이즈 및 종류 (brush / erase)
   const { toolSize, selectedTool } = useToolModeStore()
@@ -74,12 +73,53 @@ export const ColorBrushView = forwardRef<
 
   // 머리 색상 변경 시 applyHairColor 호출
   useEffect(() => {
-    applyHairColor()
-  }, [hairColor, hairColorOpacity])
+    // 브러시 마스크 먼저 저장
+    const brushMat = applyColor()
+
+    // 헤어 색상 적용
+    const hairMat = applyHairColor()
+
+    if (props.hairMaskMatRef.current) {
+      const compositeMat = compositeHairAndBrush(
+        hairMat,
+        brushMat,
+        props.hairMaskMatRef.current,
+        hairColor || [0, 0, 0]
+      )
+
+      // 합성 결과를 modelMat으로 설정
+      if (compositeMat) {
+        const finalMat = compositeMat.clone()
+        props.setModelMat(finalMat)
+        compositeMat.delete()
+        setIsHairColorChange(true)
+      }
+    }
+
+    // 메모리 해제
+    brushMat?.delete()
+  }, [hairColor, hairColorOpacity, hairColorLevel])
+
+  // 레이어 업데이트
+  useEffect(() => {
+    // 동기화 위한 타임아웃
+    if (isHairColorChange) {
+      setTimeout(() => {
+        applyColor()
+        setIsHairColorChange(false)
+      }, 10)
+    }
+  }, [isHairColorChange])
 
   // 브러시 색상 변경 시 applyColor 호출
   useEffect(() => {
-    applyColor()
+    const brushMat = applyColor()
+
+    // brushMat의 복제본을 생성해 modelMat 업데이트
+    if (brushMat) {
+      props.setModelMat(brushMat.clone())
+      brushMat.delete()
+    }
   }, [colorBrushColor, colorBrushOpacity])
 
   // 브러시 선택 시 호버 표시
@@ -137,7 +177,6 @@ export const ColorBrushView = forwardRef<
   const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const mainCanvas = (ref as React.RefObject<HTMLCanvasElement>).current
     if (!mainCanvas || !props.maskMatRef.current) return
-
     const pos = getMousePosition(e)
     if (!pos) return
 
@@ -146,13 +185,9 @@ export const ColorBrushView = forwardRef<
 
     // 브러시 기능
     if (isDrawing && selectedTool) {
-      // hairColor가 선택되었는지 여부를 더 명확하게 체크
-      const isHairColorMode = hairColor && hairColorOpacity > 0
-
-      const segments = isHairColorMode
-        ? [SEGMENT_MAP.HAIR]
-        : (selectedColorBrushItem?.segments ??
-          (currentBrushSegment ? [currentBrushSegment] : []))
+      const segments =
+        selectedColorBrushItem?.segments ??
+        (currentBrushSegment ? [currentBrushSegment] : [])
 
       if (segments.length > 0) {
         // 캔버스에 브러시 표시
@@ -228,7 +263,14 @@ export const ColorBrushView = forwardRef<
 
   // 마우스 업 이벤트 추가
   const handleMouseUp = () => {
-    applyColor()
+    const brushMat = applyColor()
+
+    // brushMat의 복제본을 생성해 modelMat 업데이트
+    if (brushMat) {
+      const updatedModelMat = brushMat.clone()
+      props.setModelMat(updatedModelMat)
+      brushMat.delete()
+    }
     setIsDrawing(false)
   }
 

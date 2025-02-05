@@ -236,6 +236,39 @@ export const applyMultiplyAndFeather = (
     segmentMask.delete()
   }
 
+  // 색상 적용 부분을 더 명확하게 수정
+  targetSegments.forEach((segment) => {
+    const mask = new cv.Mat()
+    const segmentMat = new cv.Mat(
+      maskImage.rows,
+      maskImage.cols,
+      maskImage.type(),
+      new cv.Scalar(segment)
+    )
+
+    // 마스크 이미지와 세그먼트 값 비교
+    cv.compare(maskImage, segmentMat, mask, cv.CMP_EQ)
+
+    // 이미지 복사본 사용 (충돌 방지용)
+    const safeModelImage = getSafeModelImage(modelImage)
+
+    // 클론된 safeModelImage를 기반으로 색상 매트릭스 생성
+    const colorMat = new cv.Mat(
+      safeModelImage.rows,
+      safeModelImage.cols,
+      safeModelImage.type(),
+      new cv.Scalar(newColor[0], newColor[1], newColor[2], 255)
+    )
+
+    // 색상 매트릭스를 기존 modelImage에 적용 (mask로 영역 지정)
+    colorMat.copyTo(safeModelImage, mask)
+
+    // 메모리 해제: mask, colorMat, segmentMat, 그리고 클론된 safeModelImage 삭제
+    mask.delete()
+    colorMat.delete()
+    segmentMat.delete()
+  })
+
   const result = matToBase64(modelImap)
 
   // 메모리 정리
@@ -311,6 +344,18 @@ export const dyeHairColor = (
 
   cv.add(colorImap, modelImap, modelImap)
 
+  // 색상 적용
+  for (let i = 0; i < height; i++) {
+    for (let j = 0; j < width; j++) {
+      if (maskMap.ucharAt(i, j) === 254) {
+        // 세그먼트 값 확인
+        currentModelMat.ucharPtr(i, j)[0] = newColor[0] // B
+        currentModelMat.ucharPtr(i, j)[1] = newColor[1] // G
+        currentModelMat.ucharPtr(i, j)[2] = newColor[2] // R
+      }
+    }
+  }
+
   const resImage = matToBase64(modelImap)
 
   modelImap.delete()
@@ -321,16 +366,173 @@ export const dyeHairColor = (
   return resImage
 }
 
-// 메모리 정리 함수 추가
-export const clearSegmentColors = () => {
-  segmentFeatherValues.clear()
-  segmentColorMap.clear()
+export const updateOriginalModelMat = (newMat: cv.Mat) => {
   if (originalModelMat) {
     originalModelMat.delete()
-    originalModelMat = null
+  }
+  originalModelMat = newMat.clone()
+}
+
+/**
+ * 머리 색상과 브러시 색상을 합성하여 최종 매트릭스 반환
+ * @param hairMat 머리 색상이 적용된 매트릭스 (세그먼트 13)
+ * @param brushMaskMat 브러시로 칠한 영역의 마스크 매트릭스 (세그먼트 254)
+ * @param hairMaskMat 머리 영역의 원본 마스크 매트릭스 (세그먼트 13과 254 포함)
+ * @param hairColor 머리 색상 [B, G, R]
+ * @returns 최종 합성된 매트릭스 또는 null
+ */
+export const compositeHairAndBrush = (
+  hairMat: cv.Mat | null,
+  brushMaskMat: cv.Mat | null,
+  hairMaskMat: cv.Mat,
+  hairColor: [number, number, number]
+): cv.Mat | null => {
+  if (
+    !hairMat ||
+    !brushMaskMat ||
+    brushMaskMat.empty() ||
+    !originalHairModelMat
+  ) {
+    return null
+  }
+  // 원본 머리 이미지(아직 어떤 색상도 적용되지 않은 상태)를 항상 기준으로 사용
+  const composite = originalHairModelMat.clone()
+
+  // 머리 영역 적용 (세그먼트 13)
+  const hairRegionMask = new cv.Mat()
+  thresholdInRange(hairMaskMat, [13, 13, 13], [13, 13, 13], hairRegionMask)
+
+  const hairColorMat = new cv.Mat(
+    composite.rows,
+    composite.cols,
+    composite.type(),
+    new cv.Scalar(hairColor[0], hairColor[1], hairColor[2], 255)
+  )
+
+  // 머리 영역에 헤어 컬러 덮어쓰기
+  hairColorMat.copyTo(composite, hairRegionMask)
+
+  // 브러시 영역 적용 (세그먼트 254)
+  const brushRegionMask = new cv.Mat()
+  brushMaskMat.copyTo(brushRegionMask)
+
+  const brushColorMat = new cv.Mat(
+    composite.rows,
+    composite.cols,
+    composite.type(),
+    new cv.Scalar(hairColor[0], hairColor[1], hairColor[2], 255)
+  )
+
+  // 브러시 영역에 덮어쓰기
+  brushColorMat.copyTo(composite, brushRegionMask)
+
+  // 메모리 해제
+  hairRegionMask.delete()
+  hairColorMat.delete()
+  brushRegionMask.delete()
+  brushColorMat.delete()
+
+  return composite
+}
+/**
+ * 모델 매트릭스가 유효한지 확인한 후, 안전한 복제본 반환
+ */
+export const getSafeModelImage = (modelImage: cv.Mat): cv.Mat => {
+  try {
+    return modelImage.clone()
+  } catch (e) {
+    if (originalModelMat) {
+      return originalModelMat.clone()
+    }
+    throw new Error('유효한 modelImage가 없습니다.')
+  }
+}
+
+/**
+ * threshold를 사용하여 단일 값에 대한 마스크 생성
+ */
+export function thresholdInRange(
+  src: cv.Mat,
+  lowerb: [number, number, number],
+  upperb: [number, number, number],
+  mask: cv.Mat
+): void {
+  if (!src || src.empty()) {
+    return
+  }
+
+  // 단일 채널 이미지인 경우 (CV_8UC1)
+  if (src.type() === cv.CV_8UC1) {
+    // 하한 임계값 적용 (픽셀 >= lowerb[0]이면 255)
+    const lowerMask = new cv.Mat()
+    cv.threshold(src, lowerMask, lowerb[0], 255, cv.THRESH_BINARY)
+
+    // 상한 임계값 적용 (픽셀 <= upperb[0]이면 255)
+    const upperMask = new cv.Mat()
+    cv.threshold(src, upperMask, upperb[0], 255, cv.THRESH_BINARY_INV)
+
+    // 두 마스크를 논리 AND하여 최종 마스크 생성
+    cv.bitwise_and(lowerMask, upperMask, mask)
+
+    // 메모리 해제
+    lowerMask.delete()
+    upperMask.delete()
+  } else {
+    // 다중 채널 이미지인 경우 기존 로직 유지
+    const channels = new cv.MatVector()
+    cv.split(src, channels)
+
+    const lowerMask = new cv.Mat()
+    const upperMask = new cv.Mat()
+    const tempMask = new cv.Mat()
+
+    try {
+      for (let i = 0; i < channels.size(); i++) {
+        const channel = channels.get(i)
+
+        if (!channel || channel.empty()) {
+          continue
+        }
+
+        cv.threshold(channel, lowerMask, lowerb[i], 255, cv.THRESH_BINARY)
+        cv.threshold(channel, upperMask, upperb[i], 255, cv.THRESH_BINARY_INV)
+        cv.bitwise_and(lowerMask, upperMask, tempMask)
+
+        if (i === 0) {
+          tempMask.copyTo(mask)
+        } else {
+          cv.bitwise_and(mask, tempMask, mask)
+        }
+
+        channel.delete()
+      }
+    } finally {
+      channels.delete()
+      lowerMask.delete()
+      upperMask.delete()
+      tempMask.delete()
+    }
+  }
+}
+
+// TODO Revert to Original 버튼 클릭 시 호출
+export const resetAllMatOperations = (originalImage: cv.Mat): cv.Mat => {
+  // 기존에 저장된 원본 매트릭스 삭제 (존재한다면)
+  if (originalModelMat) {
+    originalModelMat.delete()
   }
   if (originalHairModelMat) {
     originalHairModelMat.delete()
-    originalHairModelMat = null
   }
+  // 입력받은 originalImage(초기 이미지)로 두 매트릭스를 다시 초기화합니다.
+  originalModelMat = originalImage.clone()
+  originalHairModelMat = originalImage.clone()
+
+  // 필요 시 다른 글로벌 상태들도 초기화합니다.
+  segmentColorMap.clear()
+  segmentOpacityMap.clear()
+  segmentFeatherValues.clear()
+
+  // 상태 복원 후 클론본을 반환하여, 이를 사용해 화면의 modelMat도 업데이트할 수 있습니다.
+  return originalModelMat.clone()
 }
