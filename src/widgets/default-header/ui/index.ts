@@ -1,2 +1,2 @@
 export * from './ExternalLinks'
-export * from './LoginSignupButtons'
+export * from './SignInButton'

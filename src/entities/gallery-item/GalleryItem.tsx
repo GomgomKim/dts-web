@@ -48,7 +48,7 @@ export const GalleryItem = (props: GalleryItemProps) => {
       model_tag: tags.join(',')
     })
     if (!isMember) {
-      router.push(`/signup?name=${modelName}&id=${id}`, { scroll: false })
+      router.push(`/login?name=${modelName}&id=${id}`, { scroll: false })
       return
     }
   }

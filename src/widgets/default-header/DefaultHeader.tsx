@@ -11,7 +11,7 @@ import { ErrorBoundary } from '@/shared/ui/error-boundary'
 import { HeaderLayout } from '@/shared/ui/header-layout'
 
 import { UI_TEXT } from './model/constants'
-import { ExternalLinks, LoginSignupButtons } from './ui'
+import { ExternalLinks, SignInButton } from './ui'
 
 export const DefaultHeader = () => {
   const isAuth = useAuthStore((state) => state.isAuth)
@@ -30,12 +30,12 @@ export const DefaultHeader = () => {
             </li>
             {/* end -------- MEMO: 임시 페이지 이동 링크 */}
             <li>
-              <Button variant="link" asChild>
+              <Button variant="link" asChild size="small" className="px-3">
                 <Link href="pricing">{UI_TEXT.PRICING}</Link>
               </Button>
             </li>
             <ExternalLinks />
-            {isAuth !== true ? <LoginSignupButtons /> : null}
+            {isAuth !== true ? <SignInButton /> : null}
           </ul>
         </nav>
         {isAuth === true ? (

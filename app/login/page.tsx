@@ -1,4 +1,4 @@
-import { Login } from '@/entities/login'
+import Login from '@/views/log-in'
 
 export default function Page() {
   return <Login />

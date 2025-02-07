@@ -17,7 +17,7 @@ export const CallToActionButtons = (props: CallToActionButtonsProps) => {
     <div className="mb-2 mt-6 flex h-[41px] justify-center gap-3">
       {isAuth !== true ? (
         <>
-          <Button onClick={() => router.push('/signup')}>
+          <Button onClick={() => router.push('/login')}>
             Get Started for Free
           </Button>
           {props.onClickSeeExample ? (

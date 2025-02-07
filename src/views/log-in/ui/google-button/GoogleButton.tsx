@@ -6,8 +6,9 @@ import { Button } from '@/shared/ui'
 
 import GoogleIcon from '/public/icons/google-logo.svg'
 
+import { getOAuthURL } from './lib/getOAuthURL'
+
 interface GoogleButtonProps {
-  children: React.ReactNode
   onClick?: () => void
   redirectPageInfo?: string
 }
@@ -22,33 +23,30 @@ export const GoogleButton = (props: GoogleButtonProps) => {
     props.onClick?.()
 
     if (loginUrl && redirectBaseUrl) {
-      const redirectUri =
-        redirectBaseUrl +
-        (props.redirectPageInfo ? '/generate' : '/explore') +
-        '?oAuthProviderType=GOOGLE'
-
+      const targetPath = props.redirectPageInfo ? '/generate' : '/explore'
       const redirectState = props.redirectPageInfo
         ? getState(props.redirectPageInfo)
         : ''
 
-      const replaceHref =
-        loginUrl +
-        '&redirect_uri=' +
-        redirectUri +
-        (redirectState ? '&state=' + redirectState : '')
-
-      router.replace(replaceHref) // 구글 로그인 페이지로 이동
+      const redirectSearchParam = redirectState ? '&state=' + redirectState : ''
+      const redirectPath = `${targetPath}${redirectSearchParam ? `?${redirectSearchParam}` : ''}`
+      const oAuthUrl = getOAuthURL('google', redirectPath)
+      router.replace(oAuthUrl.href)
     } else {
       console.error('Google login URL is not defined')
     }
   }
 
   return (
-    <Button className="relative bg-white hover:bg-white" onClick={handleClick}>
+    <Button
+      className="relative bg-white text-[0.875rem] hover:bg-white"
+      onClick={handleClick}
+      stretch
+    >
       <span className="absolute left-[20px]">
         <GoogleIcon />
       </span>
-      {props.children}
+      Continue with Google
     </Button>
   )
 }

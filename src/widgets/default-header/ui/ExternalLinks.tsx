@@ -8,14 +8,14 @@ export const ExternalLinks = () => {
   return (
     <>
       <li>
-        <Button asChild variant="link">
+        <Button asChild variant="link" size="small" className="px-3">
           <Link href="https://medium.com/do-things-with-ai" target="_blank">
             {UI_TEXT.MEDIUM}
           </Link>
         </Button>
       </li>
       <li>
-        <Button asChild variant="link">
+        <Button asChild variant="link" size="small" className="px-3">
           <Link
             href="https://www.instagram.com/dothings.studio/"
             target="_blank"

@@ -30,7 +30,7 @@ export default function AuthCheck(props: AuthCheckProps) {
       setLoading(true)
     } else {
       if (!isAuth && props.isGettingToken === false) {
-        router.replace(props.routePath ? props.routePath : '/signup')
+        router.replace(props.routePath ? props.routePath : '/login')
       }
       if (props.isGettingToken !== null) {
         setLoading(false)

@@ -5,7 +5,7 @@ export function middleware(request: NextRequest) {
   const { device } = userAgent(request)
   const isMobile = device.type === 'mobile'
 
-  if (pathname === '/signup' || pathname === '/login') {
+  if (pathname === '/login') {
     return NextResponse.next()
   }
 

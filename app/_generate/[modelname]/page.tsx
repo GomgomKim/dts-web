@@ -46,7 +46,7 @@ export default function Page() {
   return (
     <AuthCheck
       isGettingToken={isGettingToken}
-      routePath={`/signup${currentPageInfo}`}
+      routePath={`/login${currentPageInfo}`}
     >
       <Generate isGettingToken={isGettingToken} />
     </AuthCheck>

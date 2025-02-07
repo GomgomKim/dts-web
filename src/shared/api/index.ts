@@ -10,3 +10,7 @@ const newConfig: AxiosRequestConfig = {
 }
 
 export const dtsAxios = axios.create(newConfig)
+export const dtsAuthAxios = axios.create({
+  ...newConfig,
+  baseURL: process.env.NEXT_PUBLIC_AUTH_API_URL
+})

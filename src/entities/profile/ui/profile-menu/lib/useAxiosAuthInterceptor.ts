@@ -11,8 +11,7 @@ export const useAxiosAuthInterceptor = () => {
     const requestHandler = (config: InternalAxiosRequestConfig) => {
       const { tokens } = useAuthStore.getState()
       if (tokens) {
-        config.headers['Authorization'] = tokens.accessToken
-        config.headers['Refresh-Token'] = tokens.refreshToken
+        config.headers['Authorization'] = `Bearer ${tokens.accessToken}`
       }
 
       return config
