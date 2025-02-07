@@ -1,3 +1,10 @@
+import { CreditInfo, CreditUsage } from './ui'
+
 export const Credits = () => {
-  return <div>Credits...</div>
+  return (
+    <div>
+      <CreditInfo />
+      <CreditUsage />
+    </div>
+  )
 }

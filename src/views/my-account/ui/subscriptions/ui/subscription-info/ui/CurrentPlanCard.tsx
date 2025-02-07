@@ -32,7 +32,9 @@ export const CurrentPlanCard = (props: CurrentPlanCardProps) => {
       <div className="flex grow flex-col md:flex-row">
         <div className="flex grow flex-col justify-between">
           <CardHeader className="flex items-center gap-[11px] pr-5 ">
-            <CardTitle>{UI_TEXT.CURRENT_PLAN}</CardTitle>
+            <CardTitle>
+              <h3>{UI_TEXT.CURRENT_PLAN}</h3>
+            </CardTitle>
             <ModelStatus isActive={props.isSubscribing} />
           </CardHeader>
           <CardContent className="space-y-3 pr-5 md:space-y-4">

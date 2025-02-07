@@ -13,9 +13,9 @@ interface AgreementCheckboxProps {
 export const AgreementCheckbox = (props: AgreementCheckboxProps) => {
   return (
     <div className="relative">
-      <div className="mt-5 flex items-center gap-2 pb-2">
+      <div className="mt-5 flex items-center pb-2">
         <Checkbox checked={props.isChecked} onCheckedChange={props.onChange} />
-        <p className="text-neutral-7">
+        <span className="ml-2 text-neutral-7">
           {UI_TEXT.AGREEMENT_TEXT_1}
           <Link
             href="#"
@@ -24,7 +24,7 @@ export const AgreementCheckbox = (props: AgreementCheckboxProps) => {
             {UI_TEXT.AGREEMENT_TEXT_2}
           </Link>
           .
-        </p>
+        </span>
       </div>
       {props.isShowError && (
         <p className="absolute bottom-[-15px] ml-8 text-destructive">

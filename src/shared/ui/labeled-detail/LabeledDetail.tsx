@@ -18,7 +18,11 @@ const LabeledDetailLabel = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn('text-neutral-7', className)} {...props} />
+  <div
+    ref={ref}
+    className={cn('font-medium text-neutral-7', className)}
+    {...props}
+  />
 ))
 LabeledDetailLabel.displayName = 'LabeledDetailLabel'
 

@@ -27,7 +27,9 @@ export const BillingNPaymentCard = (props: BillingNPaymentCardProps) => {
       <div className="flex grow flex-col justify-between">
         <CardHeader className="pr-5">
           <CardTitle>
-            {UI_TEXT.BILLING} & {UI_TEXT.PAYMENT}
+            <h3>
+              {UI_TEXT.BILLING} & {UI_TEXT.PAYMENT}
+            </h3>
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3 pr-5 md:space-y-4">

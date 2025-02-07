@@ -43,7 +43,7 @@ export default function MyAccount() {
                 query: `tab=${MY_ACCOUNT_TABS.subscriptions}`
               }}
             >
-              {capitalizeFirstLetter(MY_ACCOUNT_TABS.subscriptions)}
+              <h2>{capitalizeFirstLetter(MY_ACCOUNT_TABS.subscriptions)}</h2>
             </Link>
           </TabsTrigger>
           <TabsTrigger value={MY_ACCOUNT_TABS.credits} asChild>
@@ -53,7 +53,7 @@ export default function MyAccount() {
                 query: `tab=${MY_ACCOUNT_TABS.credits}`
               }}
             >
-              {capitalizeFirstLetter(MY_ACCOUNT_TABS.credits)}
+              <h2>{capitalizeFirstLetter(MY_ACCOUNT_TABS.credits)}</h2>
             </Link>
           </TabsTrigger>
           <TabsTrigger value={MY_ACCOUNT_TABS.settings} asChild>
@@ -63,7 +63,7 @@ export default function MyAccount() {
                 query: `tab=${MY_ACCOUNT_TABS.settings}`
               }}
             >
-              {capitalizeFirstLetter(MY_ACCOUNT_TABS.settings)}
+              <h2>{capitalizeFirstLetter(MY_ACCOUNT_TABS.settings)}</h2>
             </Link>
           </TabsTrigger>
         </TabsList>
