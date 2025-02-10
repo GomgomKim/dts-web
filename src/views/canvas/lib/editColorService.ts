@@ -1,4 +1,4 @@
-const matToBase64 = (input_mat: cv.Mat): string => {
+export const matToBase64 = (input_mat: cv.Mat): string => {
   let mat: cv.Mat | null = null
   const type = input_mat.type()
 
@@ -515,24 +515,262 @@ export function thresholdInRange(
   }
 }
 
-// TODO Revert to Original 버튼 클릭 시 호출
-export const resetAllMatOperations = (originalImage: cv.Mat): cv.Mat => {
-  // 기존에 저장된 원본 매트릭스 삭제 (존재한다면)
+let originalRelightModelMat: cv.Mat | null = null
+export const relight = (
+  modelImage: cv.Mat,
+  maskImage: cv.Mat | null,
+  normalImage: cv.Mat,
+  lightYaw: number,
+  lightPitch: number,
+  specularPower: number,
+  ambientLight: number,
+  normalDiffuseStrength: number,
+  specularHighlightsStrength: number,
+  totalGain: number,
+  inputType: string = 'euler'
+): string | cv.Mat => {
+  const width = modelImage.cols
+  const height = modelImage.rows
+
+  if (!originalRelightModelMat) {
+    originalRelightModelMat = modelImage.clone()
+  }
+
+  const currentModelMat = originalRelightModelMat.clone()
+  const modelImap = toImap(currentModelMat)
+  const faceMaskMap = getFaceMask(maskImage)
+  let maskMap
+  if (faceMaskMap) {
+    maskMap = toMap(faceMaskMap)
+    cv.normalize(maskMap, maskMap, 0, 1, cv.NORM_MINMAX, cv.CV_32FC1)
+  }
+
+  const normalImap: cv.Mat = toImap(normalImage)
+
+  if (normalImap.cols !== width || normalImap.rows !== height) {
+    cv.resize(
+      normalImap,
+      normalImap,
+      new cv.Size(width, height),
+      0,
+      0,
+      cv.INTER_LINEAR
+    )
+  }
+
+  // assume normalImap's elements are in [0, 255] => normalize to [-1, 1]
+  normalizeL2(normalImap, normalImap)
+
+  // Diffuse 계산
+  const lightDirection: number[] =
+    inputType === 'euler'
+      ? eulerToVector(lightYaw, lightPitch)
+      : normalizeVector(lightYaw, lightPitch, 1)
+
+  const diffuseImap: cv.Mat = new cv.Mat(
+    height,
+    width,
+    cv.CV_32FC3,
+    new cv.Scalar(lightDirection[0], lightDirection[1], lightDirection[2])
+  )
+  const diffuseMap: cv.Mat = new cv.Mat()
+
+  cv.multiply(normalImap, diffuseImap, diffuseImap)
+  reduce(diffuseImap, diffuseMap)
+  cv.threshold(diffuseMap, diffuseMap, 1.0, 1.0, cv.THRESH_TRUNC)
+  if (maskImage && maskMap) {
+    cv.multiply(diffuseMap, maskMap, diffuseMap)
+  }
+  diffuseMap.convertTo(
+    diffuseMap,
+    cv.CV_32FC1,
+    normalDiffuseStrength,
+    ambientLight
+  )
+  to3D(diffuseMap, diffuseImap)
+
+  cv.multiply(modelImap, diffuseImap, modelImap, totalGain)
+
+  // Specular 계산
+  const highlightImap: cv.Mat = diffuseImap // 동일 메모리 사용
+  const highlightMap: cv.Mat = diffuseMap // 동일 메모리 사용
+  const cameraDirection: number[] = eulerToVector(0, 0)
+  const halfVector: number[] = normalizeList([
+    lightDirection[0] + cameraDirection[0],
+    lightDirection[1] + cameraDirection[1],
+    lightDirection[2] + cameraDirection[2]
+  ])
+  highlightImap.setTo(
+    new cv.Scalar(halfVector[0], halfVector[1], halfVector[2])
+  )
+
+  cv.multiply(normalImap, highlightImap, highlightImap)
+  reduce(highlightImap, highlightMap)
+  cv.threshold(highlightMap, highlightMap, 1, 1, cv.THRESH_TRUNC)
+  cv.pow(highlightMap, specularPower, highlightMap)
+  if (maskImage && maskMap) {
+    cv.multiply(highlightMap, maskMap, highlightMap)
+  }
+  highlightMap.convertTo(
+    highlightMap,
+    cv.CV_32FC1,
+    specularHighlightsStrength * 255 * totalGain
+  )
+  to3D(highlightMap, highlightImap)
+
+  // 최종 결과 계산
+  cv.add(modelImap, highlightImap, modelImap)
+
+  const resImage: string = matToBase64(modelImap)
+
+  if (maskImage && maskMap) {
+    maskMap.delete()
+  }
+  modelImap.delete()
+  normalImap.delete()
+  diffuseImap.delete()
+  diffuseMap.delete()
+
+  return resImage
+}
+
+/**
+ * L2 타입으로 정규화
+ *
+ * @param mat - 변환할 cv.Mat (cv.CV_32F 타입, 입력 매트릭스)
+ * @param res - 정규화된 cv.Mat (cv.CV_32F 타입, 출력 매트릭스)
+ */
+export const normalizeL2 = (mat: cv.Mat, res: cv.Mat): void => {
+  const rows: number = mat.rows
+  const cols: number = mat.cols
+
+  const channels: cv.MatVector = new cv.MatVector()
+
+  // 입력 매트릭스를 cv.CV_32F 타입으로 변환 (베타 값 -128 적용)
+  mat.convertTo(mat, cv.CV_32F, 1, -128)
+
+  cv.split(mat, channels)
+
+  const ch0: cv.Mat = channels.get(0)
+  const ch1: cv.Mat = channels.get(1)
+  const ch2: cv.Mat = channels.get(2)
+
+  const temp1: cv.Mat = new cv.Mat(rows, cols, cv.CV_32F)
+  const temp2: cv.Mat = new cv.Mat(rows, cols, cv.CV_32F)
+
+  cv.multiply(ch0, ch0, temp1)
+  cv.multiply(ch1, ch1, temp2)
+  cv.add(temp1, temp2, temp1)
+  cv.multiply(ch2, ch2, temp2)
+  cv.add(temp1, temp2, temp1)
+  cv.sqrt(temp1, temp2)
+
+  cv.divide(ch0, temp2, ch0)
+  cv.divide(ch1, temp2, ch1)
+  cv.divide(ch2, temp2, ch2)
+
+  const normalizedChannels: cv.MatVector = new cv.MatVector()
+  normalizedChannels.push_back(ch0)
+  normalizedChannels.push_back(ch1)
+  normalizedChannels.push_back(ch2)
+
+  cv.merge(normalizedChannels, res)
+
+  // 메모리 해제
+  ch0.delete()
+  ch1.delete()
+  ch2.delete()
+  temp1.delete()
+  temp2.delete()
+  normalizedChannels.delete()
+  channels.delete()
+}
+
+/**
+ * Euler 각도를 벡터로 변환
+ */
+export const eulerToVector = (yaw: number, pitch: number): number[] => {
+  const yawRad = (yaw * Math.PI) / 180
+  const pitchRad = (pitch * Math.PI) / 180
+  const cosPitch = Math.cos(pitchRad)
+  const sinPitch = Math.sin(pitchRad)
+  const cosYaw = Math.cos(yawRad)
+  const sinYaw = Math.sin(yawRad)
+  return [sinYaw * cosPitch, sinPitch, cosPitch * cosYaw]
+}
+
+// 3D 벡터 정규화
+export const normalizeVector = (x: number, y: number, z: number): number[] => {
+  const length = Math.sqrt(x * x + y * y + z * z)
+
+  if (length === 0) {
+    return [0, 0, 0]
+  }
+
+  return [x / length, y / length, z / length]
+}
+
+/**
+ * 3채널 Mat의 각 채널을 합산하여 1채널 Mat로 변환
+ */
+export const reduce = (mat: cv.Mat, res: cv.Mat): void => {
+  const channels = new cv.MatVector()
+  cv.split(mat, channels)
+  const ch0 = channels.get(0)
+  const ch1 = channels.get(1)
+  const ch2 = channels.get(2)
+  cv.add(ch0, ch1, res)
+  cv.add(res, ch2, res)
+  ch0.delete()
+  ch1.delete()
+  ch2.delete()
+  channels.delete()
+}
+
+/**
+ * 리스트를 L2 정규화
+ */
+export const normalizeList = (list: number[]): number[] => {
+  const norm = Math.sqrt(list.reduce((acc, val) => acc + val * val, 0))
+  return norm === 0 ? [0, 0, 0] : list.map((val) => val / norm)
+}
+
+// 메모리 정리 함수 추가
+export const clearSegmentColors = () => {
+  segmentFeatherValues.clear()
+  segmentColorMap.clear()
   if (originalModelMat) {
     originalModelMat.delete()
+    originalModelMat = null
   }
   if (originalHairModelMat) {
     originalHairModelMat.delete()
+    originalHairModelMat = null
   }
-  // 입력받은 originalImage(초기 이미지)로 두 매트릭스를 다시 초기화합니다.
-  originalModelMat = originalImage.clone()
-  originalHairModelMat = originalImage.clone()
+}
 
-  // 필요 시 다른 글로벌 상태들도 초기화합니다.
-  segmentColorMap.clear()
-  segmentOpacityMap.clear()
-  segmentFeatherValues.clear()
+/**
+ * 얼굴 영역에 해당하는 마스크(cv.Mat)를 생성하는 함수
+ * @param maskMat 원본 마스크 Mat (cv.Mat | null)
+ * @returns 얼굴 영역만 있는 마스크 Mat (cv.Mat) 또는 maskMat이 없으면 null
+ */
+export const getFaceMask = (maskMat: cv.Mat | null): cv.Mat | null => {
+  if (!maskMat) return null
 
-  // 상태 복원 후 클론본을 반환하여, 이를 사용해 화면의 modelMat도 업데이트할 수 있습니다.
-  return originalModelMat.clone()
+  // 얼굴 영역에 해당하는 값 목록 (프로젝트에 맞게 조정 가능)
+  const targetValues = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 19, 20, 21, 22]
+  const rows = maskMat.rows
+  const cols = maskMat.cols
+  const faceMask = cv.Mat.zeros(rows, cols, cv.CV_8UC1)
+  const valueMat = new cv.Mat(rows, cols, cv.CV_8UC1)
+
+  for (const value of targetValues) {
+    valueMat.setTo(new cv.Scalar(value))
+    const temp = new cv.Mat()
+    cv.compare(maskMat, valueMat, temp, cv.CMP_EQ) // maskMat 과 valueMat 비교
+    cv.bitwise_or(faceMask, temp, faceMask) // OR 연산으로 얼굴 영역 마스크 생성
+    temp.delete()
+  }
+  valueMat.delete()
+  return faceMask
 }

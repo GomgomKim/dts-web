@@ -16,6 +16,7 @@ export interface SelectDrawToolsProps {
   onSelectDrawTool: (tool: DrawTool) => void
   tools: DrawTool[]
   drawToolText: string
+  onAddTool: () => void
 }
 
 export const SelectDrawTools = (props: SelectDrawToolsProps) => {
@@ -36,7 +37,7 @@ export const SelectDrawTools = (props: SelectDrawToolsProps) => {
       {props.tools.length < 8 && (
         <Button
           variant="ghost"
-          disabled
+          onClick={props.onAddTool}
           className="flex h-[5.8125rem] flex-col items-center justify-center gap-2 rounded-[0.5rem] border border-dashed border-neutral-3 p-5"
         >
           <Plus className="size-6 stroke-neutral-7" />

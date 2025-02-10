@@ -78,6 +78,10 @@ export default function Canvas({
   const selectedToolMode = useToolModeStore((state) => state.selectedTool)
   const setSelectedToolMode = useToolModeStore((state) => state.setSelectedTool)
 
+  const isShowBrushEraseToggle = (toolId: AiToolId | null): boolean => {
+    return toolId === AI_TOOL.COLOR_BRUSH || toolId === AI_TOOL.HAIR_COLOR
+  }
+
   return (
     <div className="size-full bg-[url('/images/swatch.png')]">
       {/* Sidebar */}
@@ -100,10 +104,12 @@ export default function Canvas({
         )}
         {/* BrushEraseToggle */}
         <div className="mt-4">
-          <BrushEraseToggle
-            selectedToolId={selectedToolMode}
-            onSelectTool={setSelectedToolMode}
-          />
+          {isShowBrushEraseToggle(selectedAiTool) ? (
+            <BrushEraseToggle
+              selectedToolId={selectedToolMode}
+              onSelectTool={setSelectedToolMode}
+            />
+          ) : null}
         </div>
       </div>
 
@@ -164,7 +170,7 @@ const displayEditorPanel = (selectedAiTool: AiToolId | null) => {
     case AI_TOOL.COLOR_BRUSH:
       return <ColorBrush id={selectedAiTool} />
     case AI_TOOL.SKIN_GLOW:
-      return <SkinGlow id={selectedAiTool} />
+      return <SkinGlow />
     case AI_TOOL.HAIR_COLOR:
       return <HairColor id={selectedAiTool} />
     default:

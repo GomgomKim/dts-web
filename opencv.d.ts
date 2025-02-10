@@ -35,6 +35,8 @@ declare global {
       // Mat.zeros(...) static 메서드
       static zeros(rows: number, cols: number, type: number): Mat
 
+      static ones(rows: number, cols: number, type: number): Mat
+
       floatPtr(row: number, col: number): Float32Array
     }
 
@@ -110,6 +112,14 @@ declare global {
 
     // 주요 함수들
     const imread: (canvas: HTMLCanvasElement) => Mat
+    const subtract: (
+      src1: Mat,
+      src2: Mat,
+      dst: Mat,
+      mask?: Mat,
+      dtype?: number
+    ) => void
+
     const imshow: (canvasId: string | HTMLCanvasElement, mat: Mat) => void
     const normalize: (
       src: Mat,
@@ -161,6 +171,31 @@ declare global {
     // 비트 연산 함수
     const bitwise_and: (src1: Mat, src2: Mat, dst: Mat, mask?: Mat) => void
     const absdiff: (src1: Mat, src2: Mat, dst: Mat) => void
+    const divide: (src1: Mat, src2: Mat, dst: Mat, scale?: number) => void
+    // 이미지 리사이즈
+    function resize(
+      src: Mat,
+      dst: Mat,
+      dsize: Size,
+      fx?: number,
+      fy?: number,
+      interpolation?: number
+    ): void
+    // 보간법 상수
+    const INTER_LINEAR: number
+
+    // 임계값
+    const threshold: (
+      src: Mat,
+      dst: Mat,
+      thresh: number,
+      maxVal: number,
+      type: number
+    ) => void
+    const THRESH_TRUNC: number
+    const THRESH_BINARY: number
+
+    const bitwise_or: (src1: Mat, src2: Mat, dst: Mat) => void
   }
 
   const cv: typeof cv

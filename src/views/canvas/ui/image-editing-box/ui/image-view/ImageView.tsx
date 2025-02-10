@@ -14,9 +14,11 @@ import { Variation } from '@/shared/api/types'
 
 import FaceParseImg from '/public/images/face_parse.png'
 import HairMaskImg from '/public/images/hair_mask.png'
+import NormalMapImg from '/public/images/normal.png'
 
 import { ColorBrushView } from './ui/ColorBrushView'
 import { LensView } from './ui/LensView'
+import { SkinGlowView } from './ui/SkinGlowView'
 
 interface ImageViewProps {
   selectedVariation: Variation | null
@@ -35,6 +37,7 @@ export const ImageView = (props: ImageViewProps) => {
   const isColorBrush = props.selectedAiTool === AI_TOOL.COLOR_BRUSH
   const isHairColor = props.selectedAiTool === AI_TOOL.HAIR_COLOR
   const isEyeContacts = props.selectedAiTool === AI_TOOL.EYE_CONTACTS
+  const isSkinGlow = props.selectedAiTool === AI_TOOL.SKIN_GLOW
 
   // OpenCV.js용 Mat
   const maskMatRef = useRef<cv.Mat | null>(null)
@@ -44,7 +47,8 @@ export const ImageView = (props: ImageViewProps) => {
   // 브러시로 칠한 마스크 저장
   const [brushMaskMat, setBrushMaskMat] = useState<cv.Mat | null>(null)
   const [modelMat, setModelMat] = useState<cv.Mat | null>(null)
-
+  // 노멀 맵
+  const [normalMat, setNormalMat] = useState<cv.Mat | null>(null)
   // 브러시 마스킹 초기화
   useEffect(() => {
     if (maskMatRef.current && !brushMaskMat) {
@@ -238,6 +242,42 @@ export const ImageView = (props: ImageViewProps) => {
     }
     hairMaskImg.src = HairMaskImg.src
     originalImg.src = imgUrl
+
+    // Normal Map 이미지 로드
+    const normalMapImg = new Image()
+    normalMapImg.crossOrigin = 'anonymous'
+    normalMapImg.onload = () => {
+      // 비율을 유지하면서 리사이징하기 위한 계산
+      const scale = Math.min(
+        targetSize / normalMapImg.width,
+        targetSize / normalMapImg.height
+      )
+      const scaledWidth = Math.round(normalMapImg.width * scale)
+      const scaledHeight = Math.round(normalMapImg.height * scale)
+
+      // 중앙 정렬을 위한 오프셋 계산
+      const offsetX = Math.round((targetSize - scaledWidth) / 2)
+      const offsetY = Math.round((targetSize - scaledHeight) / 2)
+
+      const normalMapCanvas = document.createElement('canvas')
+      normalMapCanvas.width = targetSize
+      normalMapCanvas.height = targetSize
+      const normalMapCtx = normalMapCanvas.getContext('2d')
+      if (!normalMapCtx) return
+
+      // normal map 이미지도 동일한 비율과 위치로 그리기
+      normalMapCtx.drawImage(
+        normalMapImg,
+        offsetX,
+        offsetY,
+        scaledWidth,
+        scaledHeight
+      )
+
+      const normalMapMat = window.cv.imread(normalMapCanvas)
+      setNormalMat(normalMapMat)
+    }
+    normalMapImg.src = NormalMapImg.src
   }, [imgUrl, canvasElement])
 
   // 렌더
@@ -265,6 +305,21 @@ export const ImageView = (props: ImageViewProps) => {
       />
     )
   }
+
+  // 스킨 글로우 관련 탭 (SkinGlow)
+  if (isSkinGlow) {
+    return (
+      <SkinGlowView
+        ref={canvasRef}
+        imgUrl={imgUrl}
+        modelMat={modelMat}
+        normalMat={normalMat}
+        setModelMat={setModelMat}
+        maskMat={maskMatRef.current}
+      />
+    )
+  }
+
   // 기본 화면 (모델 이미지)
   return <NextImage src={imgUrl} alt="" fill style={{ objectFit: 'contain' }} />
 }

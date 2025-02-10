@@ -13,7 +13,7 @@ import { SkinGlow } from '../ui/editor-panels/skin-glow/model'
 const DEFAULT_TRANSPARENCY = 50
 const DEFAULT_SMOOTH_EDGES = 50
 const DEFAULT_SKIN_GLOW_SIZE = 50
-
+const DEFAULT_SKIN_GLOW_POWER = 50
 interface UploadPanelState<T> {
   selectedItem: T | null
   transparency: number
@@ -107,13 +107,16 @@ export const useColorBrushStore = create<ColorBrushState>((set) => ({
 interface SkinGlowState {
   selectedSkinGlowItem: SkinGlow | null
   skinGlowSize: number
+  skinGlowPower: number
   setSelectedSkinGlowItem: (item: SkinGlow) => void
   setSkinGlowSize: (value: number) => void
+  setSkinGlowPower: (value: number) => void
 }
 
 export const useSkinGlowStore = create<SkinGlowState>((set) => ({
   selectedSkinGlowItem: null,
   skinGlowSize: DEFAULT_SKIN_GLOW_SIZE,
+  skinGlowPower: DEFAULT_SKIN_GLOW_POWER,
   setSelectedSkinGlowItem: (selectedSkinGlowItem) =>
     set((state) => ({
       selectedSkinGlowItem:
@@ -124,6 +127,10 @@ export const useSkinGlowStore = create<SkinGlowState>((set) => ({
   setSkinGlowSize: (value) =>
     set(() => ({
       skinGlowSize: value
+    })),
+  setSkinGlowPower: (value) =>
+    set(() => ({
+      skinGlowPower: value
     }))
 }))
 
