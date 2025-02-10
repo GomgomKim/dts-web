@@ -17,7 +17,7 @@ import HairMaskImg from '/public/images/hair_mask.png'
 import NormalMapImg from '/public/images/normal.png'
 
 import { ColorBrushView } from './ui/ColorBrushView'
-import { LensView } from './ui/LensView'
+import { EyeContactsView } from './ui/EyeContactsView'
 import { SkinGlowView } from './ui/SkinGlowView'
 
 interface ImageViewProps {
@@ -32,6 +32,7 @@ export const ImageView = (props: ImageViewProps) => {
   const [canvasElement, setCanvasElement] = useState<HTMLCanvasElement | null>(
     null
   )
+  const [maskMat, setMaskMat] = useState<cv.Mat | null>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   const isColorBrush = props.selectedAiTool === AI_TOOL.COLOR_BRUSH
@@ -184,6 +185,7 @@ export const ImageView = (props: ImageViewProps) => {
         }
         originalMaskMatRef.current = initMaskMat.clone()
         maskMatRef.current = initMaskMat.clone()
+        setMaskMat(initMaskMat.clone())
       }
       parseImg.src = FaceParseImg.src
     }
@@ -296,12 +298,14 @@ export const ImageView = (props: ImageViewProps) => {
   }
 
   // 렌즈 관련 탭 (EyeContacts)
-  if (isEyeContacts && props.selectedVariation) {
+  if (isEyeContacts) {
     return (
-      <LensView
+      <EyeContactsView
+        ref={canvasRef}
         imgUrl={imgUrl}
-        selectedVariation={props.selectedVariation}
         targetSize={targetSize}
+        modelMat={modelMat}
+        maskMat={maskMat}
       />
     )
   }

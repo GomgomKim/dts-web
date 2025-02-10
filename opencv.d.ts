@@ -197,6 +197,7 @@ declare global {
     const THRESH_BINARY: number
 
     const bitwise_or: (src1: Mat, src2: Mat, dst: Mat) => void
+    const bitwise_not: (src: Mat, dst: Mat) => void
   }
 
   const cv: typeof cv
