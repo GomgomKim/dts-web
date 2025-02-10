@@ -4,6 +4,7 @@ import { useClientSearchParams } from '@/shared/lib/hooks/useClientSearchParams'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs/Tabs'
 
 import { UI_TEXT } from './model/constants'
+import { Credit } from './ui/credit'
 import { PlanItems } from './ui/plan-Items'
 
 const DEFAULT_TAB = 'plan'
@@ -49,12 +50,14 @@ export default function Pricing() {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="plan" className="w-full">
+        <TabsContent value="plan">
           <div className="mb-40 px-20 lg:px-40">
             <PlanItems />
           </div>
         </TabsContent>
-        <TabsContent value="credit">credits...</TabsContent>
+        <TabsContent value="credit">
+          <Credit />
+        </TabsContent>
       </Tabs>
     </>
   )
