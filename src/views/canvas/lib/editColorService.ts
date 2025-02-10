@@ -573,11 +573,19 @@ export const relight = (
     cv.CV_32FC3,
     new cv.Scalar(lightDirection[0], lightDirection[1], lightDirection[2])
   )
-  const diffuseMap: cv.Mat = new cv.Mat()
+
+  const diffuseMap: cv.Mat = new cv.Mat(
+    diffuseImap.rows,
+    diffuseImap.cols,
+    cv.CV_32FC1
+  )
 
   cv.multiply(normalImap, diffuseImap, diffuseImap)
+
   reduce(diffuseImap, diffuseMap)
+
   cv.threshold(diffuseMap, diffuseMap, 1.0, 1.0, cv.THRESH_TRUNC)
+
   if (maskImage && maskMap) {
     cv.multiply(diffuseMap, maskMap, diffuseMap)
   }
@@ -587,6 +595,7 @@ export const relight = (
     normalDiffuseStrength,
     ambientLight
   )
+
   to3D(diffuseMap, diffuseImap)
 
   cv.multiply(modelImap, diffuseImap, modelImap, totalGain)
@@ -605,8 +614,11 @@ export const relight = (
   )
 
   cv.multiply(normalImap, highlightImap, highlightImap)
+
   reduce(highlightImap, highlightMap)
+
   cv.threshold(highlightMap, highlightMap, 1, 1, cv.THRESH_TRUNC)
+
   cv.pow(highlightMap, specularPower, highlightMap)
   if (maskImage && maskMap) {
     cv.multiply(highlightMap, maskMap, highlightMap)
@@ -616,6 +628,7 @@ export const relight = (
     cv.CV_32FC1,
     specularHighlightsStrength * 255 * totalGain
   )
+
   to3D(highlightMap, highlightImap)
 
   // 최종 결과 계산
@@ -623,14 +636,14 @@ export const relight = (
 
   const resImage: string = matToBase64(modelImap)
 
-  if (maskImage && maskMap) {
+  if (maskMap) {
     maskMap.delete()
   }
+  currentModelMat.delete()
   modelImap.delete()
   normalImap.delete()
   diffuseImap.delete()
   diffuseMap.delete()
-
   return resImage
 }
 
@@ -714,17 +727,32 @@ export const normalizeVector = (x: number, y: number, z: number): number[] => {
  * 3채널 Mat의 각 채널을 합산하여 1채널 Mat로 변환
  */
 export const reduce = (mat: cv.Mat, res: cv.Mat): void => {
+  if (res.empty()) {
+    res.create(mat.rows, mat.cols, cv.CV_32FC1)
+  }
+
   const channels = new cv.MatVector()
-  cv.split(mat, channels)
-  const ch0 = channels.get(0)
-  const ch1 = channels.get(1)
-  const ch2 = channels.get(2)
-  cv.add(ch0, ch1, res)
-  cv.add(res, ch2, res)
-  ch0.delete()
-  ch1.delete()
-  ch2.delete()
-  channels.delete()
+  let ch0: cv.Mat | null = null
+  let ch1: cv.Mat | null = null
+  let ch2: cv.Mat | null = null
+
+  try {
+    cv.split(mat, channels)
+    ch0 = channels.get(0)
+    ch1 = channels.get(1)
+    ch2 = channels.get(2)
+
+    cv.add(ch0, ch1, res)
+    cv.add(res, ch2, res)
+  } catch (error) {
+    console.error('reduce 함수 에러:', error)
+  } finally {
+    // 생성된 모든 객체 정리
+    if (ch0) ch0.delete()
+    if (ch1) ch1.delete()
+    if (ch2) ch2.delete()
+    channels.delete()
+  }
 }
 
 /**

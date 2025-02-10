@@ -27,6 +27,7 @@ declare global {
       setTo(value: Scalar, mask?: Mat): void
       clone(): Mat
       empty(): boolean
+      create(rows: number, cols: number, type: number): void
 
       // 픽셀값(uchar)을 읽어오는 함수
       ucharAt(row: number, col: number): number

@@ -1,6 +1,6 @@
 import { forwardRef, useCallback, useEffect, useState } from 'react'
 
-import { matToBase64, relight } from '@/views/canvas/lib/editColorService'
+import { relight } from '@/views/canvas/lib/editColorService'
 import { useSkinGlowStore } from '@/views/canvas/model/useEditorPanelsStore'
 
 import { throttle } from 'lodash'
@@ -36,8 +36,16 @@ export const SkinGlowView = forwardRef<HTMLCanvasElement, SkinGlowViewProps>(
 
     const relightImage = useCallback(
       (x?: number, y?: number) => {
+        let clonedModelMat: cv.Mat | null = null
+        let clonedNormalMat: cv.Mat | null = null
         try {
           if (!canvas || !props.modelMat || !props.normalMat) return
+
+          if (props.modelMat.empty() || props.normalMat.empty()) {
+            console.log('Mat 객체가 비어있거나 유효하지 않음')
+            return
+          }
+
           const { yaw, pitch } = computeLightAngles(
             x ? x : lightPos.x,
             y ? y : lightPos.y,
@@ -45,10 +53,13 @@ export const SkinGlowView = forwardRef<HTMLCanvasElement, SkinGlowViewProps>(
             canvas.height
           )
 
+          clonedModelMat = props.modelMat.clone()
+          clonedNormalMat = props.normalMat.clone()
+
           const resultBase64 = relight(
-            props.modelMat,
+            clonedModelMat,
             props.maskMat,
-            props.normalMat,
+            clonedNormalMat,
             yaw,
             pitch,
             specularPower,
@@ -59,6 +70,9 @@ export const SkinGlowView = forwardRef<HTMLCanvasElement, SkinGlowViewProps>(
             inputType
           )
 
+          clonedModelMat.delete()
+          clonedNormalMat.delete()
+
           const img = new Image()
           img.onload = () => {
             try {
@@ -67,14 +81,17 @@ export const SkinGlowView = forwardRef<HTMLCanvasElement, SkinGlowViewProps>(
               ctx.clearRect(0, 0, canvas.width, canvas.height)
               ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
               const updatedMat = window.cv.imread(canvas)
+              if (props.modelMat) {
+                props.modelMat.delete()
+              }
               props.setModelMat(updatedMat)
             } catch (error) {
-              console.error('이미지 로드 에러 :', error)
+              // TODO error 처리
             }
           }
           img.src = resultBase64 as string
         } catch (error) {
-          console.error('Skin Glow 기능 에러 :', error)
+          // TODO error 처리
         }
       },
       [
@@ -181,22 +198,6 @@ export const SkinGlowView = forwardRef<HTMLCanvasElement, SkinGlowViewProps>(
       }
     }
 
-    // 초기 렌더 시, modelMat(원본 이미지)을 캔버스에 출력
-    useEffect(() => {
-      const canvas = (ref as React.RefObject<HTMLCanvasElement>).current
-      if (!canvas || !props.modelMat) return
-      const base64 = matToBase64(props.modelMat)
-      const ctx = canvas.getContext('2d')
-      if (!ctx) return
-      const img = new Image()
-      img.onload = () => {
-        ctx.clearRect(0, 0, canvas.width, canvas.height)
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
-        // relightImage()
-      }
-      img.src = base64 as string
-    }, [props.modelMat, ref])
-
     return (
       <div className="relative size-full">
         <canvas
@@ -218,11 +219,13 @@ export const SkinGlowView = forwardRef<HTMLCanvasElement, SkinGlowViewProps>(
             height: 40,
             borderRadius: '50%',
             pointerEvents: 'none',
-            // 내부 커서는 고정 크기, 외부 빛은 skinGlowSize에 따라 조절
-            boxShadow: `0 0 ${skinGlowSize}px ${skinGlowSize / 2}px rgba(255, 255, 150, 0.5)`,
+            // 더 밝고 강한 빛 효과
+            boxShadow: `0 0 ${skinGlowSize}px ${skinGlowSize / 1.5}px rgba(255, 255, 255, 0.5), 
+                       0 4px 40px rgba(255, 255, 255, 0.8)`,
             background: isDragging
-              ? 'radial-gradient(circle, rgba(255,255,150,1) 0%, rgba(255,255,150,0.5) 50%, rgba(255,255,150,0) 100%)'
-              : 'radial-gradient(circle, rgba(255,255,150,0.8) 0%, rgba(255,255,150,0.4) 50%, rgba(255,255,150,0) 100%)'
+              ? 'radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0.9) 50%, rgba(255,255,255,0) 100%)'
+              : 'radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0) 100%)',
+            border: '4px solid #FFF'
           }}
         />
       </div>
