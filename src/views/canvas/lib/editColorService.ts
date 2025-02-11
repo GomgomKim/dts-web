@@ -299,93 +299,6 @@ export const applyMultiplyAndFeather = (
   return result
 }
 
-let originalHairModelMat: cv.Mat | null = null
-export const dyeHairColor = (
-  modelImage: cv.Mat,
-  maskImage: cv.Mat,
-  featherAmount = 10,
-  opacity = 1,
-  minNorm = 0.0,
-  newColor: [number, number, number] = [0, 0, 255]
-): string => {
-  if (!Number.isInteger(featherAmount) || featherAmount < 0) {
-    throw new Error('Not proper value for featherAmount')
-  } else if (opacity < 0 || opacity > 1) {
-    throw new Error('Not proper value for opacity')
-  }
-
-  // 첫 호출시 원본 이미지 저장
-  if (!originalHairModelMat) {
-    originalHairModelMat = modelImage.clone()
-  }
-
-  // 원본 이미지로부터 시작
-  const currentModelMat = originalHairModelMat.clone()
-
-  const width = currentModelMat.cols
-  const height = currentModelMat.rows
-
-  const modelImap = toImap(currentModelMat)
-  const maskImap = new cv.Mat()
-  const maskMap = toMap(maskImage)
-  const colorImap = new cv.Mat(
-    height,
-    width,
-    cv.CV_32FC3,
-    new cv.Scalar(newColor[0], newColor[1], newColor[2])
-  )
-
-  const newModelMap = modelImap.clone()
-  cv.normalize(
-    newModelMap,
-    newModelMap,
-    minNorm,
-    1,
-    cv.NORM_MINMAX,
-    cv.CV_32FC1
-  )
-  cv.sqrt(newModelMap, newModelMap)
-  cv.multiply(newModelMap, colorImap, colorImap)
-  newModelMap.delete()
-
-  cv.normalize(maskMap, maskMap, 0, 1, cv.NORM_MINMAX, cv.CV_32FC1)
-  if (featherAmount > 0) {
-    const ksize = featherAmount * 2 + 1
-    const ksizeObj = new cv.Size(ksize, ksize)
-    cv.GaussianBlur(maskMap, maskMap, ksizeObj, 0)
-  }
-  maskMap.convertTo(maskMap, cv.CV_32FC1, opacity)
-  to3D(maskMap, maskImap)
-
-  cv.multiply(colorImap, maskImap, colorImap)
-
-  maskImap.convertTo(maskImap, cv.CV_32F, -1.0, 1.0)
-  cv.multiply(modelImap, maskImap, modelImap)
-
-  cv.add(colorImap, modelImap, modelImap)
-
-  // 색상 적용
-  for (let i = 0; i < height; i++) {
-    for (let j = 0; j < width; j++) {
-      if (maskMap.ucharAt(i, j) === 254) {
-        // 세그먼트 값 확인
-        currentModelMat.ucharPtr(i, j)[0] = newColor[0] // B
-        currentModelMat.ucharPtr(i, j)[1] = newColor[1] // G
-        currentModelMat.ucharPtr(i, j)[2] = newColor[2] // R
-      }
-    }
-  }
-
-  const resImage = matToBase64(modelImap)
-
-  modelImap.delete()
-  maskImap.delete()
-  maskMap.delete()
-  colorImap.delete()
-
-  return resImage
-}
-
 export const updateOriginalModelMat = (newMat: cv.Mat) => {
   if (originalModelMat) {
     originalModelMat.delete()
@@ -393,67 +306,6 @@ export const updateOriginalModelMat = (newMat: cv.Mat) => {
   originalModelMat = newMat.clone()
 }
 
-/**
- * 머리 색상과 브러시 색상을 합성하여 최종 매트릭스 반환
- * @param hairMat 머리 색상이 적용된 매트릭스 (세그먼트 13)
- * @param brushMaskMat 브러시로 칠한 영역의 마스크 매트릭스 (세그먼트 254)
- * @param hairMaskMat 머리 영역의 원본 마스크 매트릭스 (세그먼트 13과 254 포함)
- * @param hairColor 머리 색상 [B, G, R]
- * @returns 최종 합성된 매트릭스 또는 null
- */
-export const compositeHairAndBrush = (
-  hairMat: cv.Mat | null,
-  brushMaskMat: cv.Mat | null,
-  hairMaskMat: cv.Mat,
-  hairColor: [number, number, number]
-): cv.Mat | null => {
-  if (
-    !hairMat ||
-    !brushMaskMat ||
-    brushMaskMat.empty() ||
-    !originalHairModelMat
-  ) {
-    return null
-  }
-  // 원본 머리 이미지(아직 어떤 색상도 적용되지 않은 상태)를 항상 기준으로 사용
-  const composite = originalHairModelMat.clone()
-
-  // 머리 영역 적용 (세그먼트 13)
-  const hairRegionMask = new cv.Mat()
-  thresholdInRange(hairMaskMat, [13, 13, 13], [13, 13, 13], hairRegionMask)
-
-  const hairColorMat = new cv.Mat(
-    composite.rows,
-    composite.cols,
-    composite.type(),
-    new cv.Scalar(hairColor[0], hairColor[1], hairColor[2], 255)
-  )
-
-  // 머리 영역에 헤어 컬러 덮어쓰기
-  hairColorMat.copyTo(composite, hairRegionMask)
-
-  // 브러시 영역 적용 (세그먼트 254)
-  const brushRegionMask = new cv.Mat()
-  brushMaskMat.copyTo(brushRegionMask)
-
-  const brushColorMat = new cv.Mat(
-    composite.rows,
-    composite.cols,
-    composite.type(),
-    new cv.Scalar(hairColor[0], hairColor[1], hairColor[2], 255)
-  )
-
-  // 브러시 영역에 덮어쓰기
-  brushColorMat.copyTo(composite, brushRegionMask)
-
-  // 메모리 해제
-  hairRegionMask.delete()
-  hairColorMat.delete()
-  brushRegionMask.delete()
-  brushColorMat.delete()
-
-  return composite
-}
 /**
  * 모델 매트릭스가 유효한지 확인한 후, 안전한 복제본 반환
  */
@@ -781,20 +633,6 @@ export const reduce = (mat: cv.Mat, res: cv.Mat): void => {
 export const normalizeList = (list: number[]): number[] => {
   const norm = Math.sqrt(list.reduce((acc, val) => acc + val * val, 0))
   return norm === 0 ? [0, 0, 0] : list.map((val) => val / norm)
-}
-
-// 메모리 정리 함수 추가
-export const clearSegmentColors = () => {
-  segmentFeatherValues.clear()
-  segmentColorMap.clear()
-  if (originalModelMat) {
-    originalModelMat.delete()
-    originalModelMat = null
-  }
-  if (originalHairModelMat) {
-    originalHairModelMat.delete()
-    originalHairModelMat = null
-  }
 }
 
 /**
