@@ -1,3 +1,5 @@
+export const URL_PAYMENT_MEMBERSHIP = '/payment/membership'
+
 export const UI_TEXT = {
   PLAN: 'Plan',
   CREDIT: 'Credit',

@@ -1,7 +1,12 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+
 import Link from 'next/link'
 
 import { Badge, Button } from '@/shared/ui'
 
+import { useGetMemeberShip } from '../../model/adapter'
 import { useCurrencyStore } from '../../model/useCurrencyStore'
 import {
   PLAN_CUSTOM,
@@ -17,19 +22,30 @@ import { SubscribeButton } from './ui/subscription-button'
 const POPULAR_PLAN_TITLE = PLAN_TITLE_NAME_MAP['3 Models']
 
 export const PlanItems = () => {
-  // isLoggedIn = true이면 memebership 확인
-  const subscribingPlanName = 'MODEL_3' // api
-  const isBeforeSubscribing = true
-  // subscribingPlanName === 'FREE' || subscribingPlanName === null
-  const subscribingPlanTitle = subscribingPlanName
-
   const currency = useCurrencyStore((state) => state.currency)
-
-  const myPlan =
-    PLAN_ITEMS[currency].find((item) => item.name === subscribingPlanTitle) ||
-    null
+  const [myPlan, setMyPlan] = useState<Plan | null>(null)
+  const [isSubscribing, setIsSubscribing] = useState<boolean>(false)
 
   const endIndex = PLAN_ITEMS[currency].length - 1
+
+  const { data: subscribingPlanInfo, isLoading } = useGetMemeberShip()
+
+  useEffect(() => {
+    console.log(subscribingPlanInfo)
+    if (!subscribingPlanInfo) return
+
+    const myPlan =
+      PLAN_ITEMS[currency].find(
+        (item) => item.name === subscribingPlanInfo.plan
+      ) || null
+    setMyPlan(myPlan)
+
+    const isSubscribing =
+      subscribingPlanInfo.plan !== 'FREE' && subscribingPlanInfo.plan !== null
+    setIsSubscribing(isSubscribing)
+  }, [subscribingPlanInfo])
+
+  if (isLoading) return <div>Loading...</div>
 
   return (
     <div className="m-auto flex flex-col gap-5">
@@ -44,17 +60,17 @@ export const PlanItems = () => {
               item={item}
               features={PLAN_FEATURES[item.name as keyof typeof PLAN_FEATURES]}
               badge={
-                isBeforeSubscribing && isPopular ? (
+                !isSubscribing && isPopular ? (
                   <Badge className="bg-primary text-neutral-0">
                     {UI_TEXT.POPULAR}
                   </Badge>
                 ) : null
               }
               slot={
-                isBeforeSubscribing ? (
-                  <SubscribeButton item={item} isPopular={isPopular} />
-                ) : (
+                isSubscribing ? (
                   afterSubscribe(item, myPlan)
+                ) : (
+                  <SubscribeButton item={item} isPopular={isPopular} />
                 )
               }
             />
@@ -71,13 +87,13 @@ export const PlanItems = () => {
             ]
           }
           slot={
-            isBeforeSubscribing ? (
+            isSubscribing ? (
+              afterSubscribe(PLAN_ITEMS[currency][endIndex], myPlan)
+            ) : (
               <SubscribeButton
                 item={PLAN_ITEMS[currency][endIndex]}
                 isPopular={false}
               />
-            ) : (
-              afterSubscribe(PLAN_ITEMS[currency][endIndex], myPlan)
             )
           }
         />
@@ -107,7 +123,7 @@ export const PlanItems = () => {
 
 const afterSubscribe = (item: Plan, myPlan: Plan | null) => {
   if (myPlan === null) {
-    alert('my plan is null!')
+    console.log('my plan is null!')
     return null
   }
 
