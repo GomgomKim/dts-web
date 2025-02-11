@@ -1,7 +1,5 @@
 import { FilterTagTypes } from '@/features/filter-tag-types'
 
-import { BackButton } from '@/entities/back-button'
-
 import { TAG_TYPES, UI_TEXT } from './model/constants'
 import { ModelCardItems, PromotionBanner } from './ui'
 
@@ -9,10 +7,7 @@ export default function MyAccountMyModels() {
   const isSubscribing = false
   return (
     <>
-      <BackButton />
-      <h1 className="mb-3 mt-5 text-[2rem] font-semibold">
-        {UI_TEXT.MY_MODELS}
-      </h1>
+      <h1 className="mb-3 text-[2rem] font-semibold">{UI_TEXT.MY_MODELS}</h1>
       <div className="text-[1.5rem] font-semibold text-neutral-7">
         2 / 5 Models
       </div>
