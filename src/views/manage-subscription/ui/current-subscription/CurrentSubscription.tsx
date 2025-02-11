@@ -2,7 +2,9 @@
 
 import Link from 'next/link'
 
+import { useCurrencyStore } from '@/views/pricing/model/useCurrencyStore'
 import { PLAN_ITEMS } from '@/views/pricing/ui/plan-Items/model/constant'
+import { PLAN_NAME_TITLE_MAP } from '@/views/pricing/ui/plan-Items/model/types'
 
 import { Button } from '@/shared/ui'
 import {
@@ -28,9 +30,12 @@ export const CurrentSubscription = () => {
   const isActive = true
   const { openModal } = useModals()
 
+  const currency = useCurrencyStore((state) => state.currency)
+  const currencySign = useCurrencyStore((state) => state.getCurrencySign())
+
   // 더미 데이터
-  const myPlanId = '5'
-  const myPlan = PLAN_ITEMS.find((item) => item.id === myPlanId)!
+  const myPlanName = 'MODEL_5'
+  const myPlan = PLAN_ITEMS[currency].find((item) => item.name === myPlanName)!
 
   return (
     <Card className="flex h-[301px] max-w-[588px] flex-1 shrink-0 basis-[460px] flex-col">
@@ -43,7 +48,11 @@ export const CurrentSubscription = () => {
           <LabeledDetail>
             <LabeledDetailLabel>{UI_TEXT.PRICE}</LabeledDetailLabel>
             <LabeledDetailDetail>
-              <>{isActive ? `$${myPlan.price} for ${myPlan.title}` : '-'}</>
+              <>
+                {isActive
+                  ? `${currencySign}${myPlan.price} for ${PLAN_NAME_TITLE_MAP[myPlan.name]}`
+                  : '-'}
+              </>
             </LabeledDetailDetail>
           </LabeledDetail>
           <LabeledDetail>

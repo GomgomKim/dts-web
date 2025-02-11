@@ -2,11 +2,15 @@ import { useCurrencyStore } from '@/views/pricing/model/useCurrencyStore'
 
 import { cn } from '@/shared/lib/utils'
 
-import { PLAN_NAME_TITLE_MAP, Plan } from '../../../plan-Items/model/types'
+import {
+  OtherPlan,
+  PLAN_NAME_TITLE_MAP,
+  Plan
+} from '../../../plan-Items/model/types'
 
 interface ComparePlansProps {
   myPlan: Plan
-  selectedPlan: Plan
+  selectedPlan: Plan | OtherPlan
 }
 
 export const ComparePlans = (props: ComparePlansProps) => {
