@@ -1,5 +1,8 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
+
+import { useAuthStore } from '@/shared/lib/stores/useAuthStore'
 import { Button } from '@/shared/ui'
 import useModals from '@/shared/ui/modal/model/Modals.hooks'
 
@@ -13,9 +16,16 @@ interface SubscribeButtonProps {
 }
 
 export const SubscribeButton = (props: SubscribeButtonProps) => {
+  const isLoggedIn = useAuthStore((state) => state.isAuth)
+  const router = useRouter()
   const { openModal } = useModals()
 
   const handleClickSubscribe = () => {
+    if (!isLoggedIn) {
+      router.push('/login', { scroll: false })
+      return
+    }
+
     openModal(SubscriptionModal, { item: props.item })
   }
 
