@@ -18,6 +18,7 @@ import NormalMapImg from '/public/images/normal.png'
 
 import { ColorBrushView } from './ui/ColorBrushView'
 import { EyeContactsView } from './ui/EyeContactsView'
+import { LayeredImageView } from './ui/LayeredImageView'
 import { SkinGlowView } from './ui/SkinGlowView'
 
 interface ImageViewProps {
@@ -50,6 +51,10 @@ export const ImageView = (props: ImageViewProps) => {
   const [modelMat, setModelMat] = useState<cv.Mat | null>(null)
   // 노멀 맵
   const [normalMat, setNormalMat] = useState<cv.Mat | null>(null)
+
+  const [skinGlowMat, setSkinGlowMat] = useState<cv.Mat | null>(null)
+  const [colorBrushMats, setColorBrushMats] = useState<cv.Mat[]>([])
+  const [hairColorMat, setHairColorMat] = useState<cv.Mat | null>(null)
   // 브러시 마스킹 초기화
   useEffect(() => {
     if (maskMatRef.current && !brushMaskMat) {
@@ -293,6 +298,8 @@ export const ImageView = (props: ImageViewProps) => {
         setModelMat={setModelMat}
         maskMatRef={maskMatRef}
         hairMaskMatRef={hairMaskMatRef}
+        setColorBrushMats={setColorBrushMats}
+        setHairColorMat={setHairColorMat}
       />
     )
   }
@@ -320,6 +327,18 @@ export const ImageView = (props: ImageViewProps) => {
         normalMat={normalMat}
         setModelMat={setModelMat}
         maskMat={maskMatRef.current}
+        setSkinGlowMat={setSkinGlowMat}
+      />
+    )
+  }
+
+  {
+    modelMat && (
+      <LayeredImageView
+        baseMat={modelMat}
+        skinGlowMat={skinGlowMat ?? undefined}
+        colorBrushMats={colorBrushMats.length > 0 ? colorBrushMats : undefined}
+        hairColorMat={hairColorMat ?? undefined}
       />
     )
   }

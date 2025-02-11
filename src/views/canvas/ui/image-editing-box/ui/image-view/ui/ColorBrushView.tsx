@@ -21,6 +21,8 @@ type ColorBrushViewProps = {
   setModelMat: (val: cv.Mat) => void
   maskMatRef: React.RefObject<cv.Mat>
   hairMaskMatRef: React.RefObject<cv.Mat>
+  setColorBrushMats: (val: cv.Mat[]) => void
+  setHairColorMat: (val: cv.Mat) => void
 }
 
 export const ColorBrushView = forwardRef<
