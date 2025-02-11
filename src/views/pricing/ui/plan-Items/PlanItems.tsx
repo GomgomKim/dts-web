@@ -2,38 +2,56 @@ import Link from 'next/link'
 
 import { Badge, Button } from '@/shared/ui'
 
-import { PLAN_ITEMS, UI_TEXT } from './model/constant'
+import { useCurrencyStore } from '../../model/useCurrencyStore'
+import {
+  PLAN_CUSTOM,
+  PLAN_FEATURES,
+  PLAN_ITEMS,
+  UI_TEXT
+} from './model/constant'
+import { PLAN_TITLE_NAME_MAP, Plan } from './model/types'
 import { PlanChangeButton } from './ui/plan-change-button'
 import { PlanItem } from './ui/plan-item'
-import { Plan } from './ui/plan-item/type'
 import { SubscribeButton } from './ui/subscription-button'
 
-const POPULAR_PLANS = ['3 Models']
+const POPULAR_PLAN_TITLE = PLAN_TITLE_NAME_MAP['3 Models']
 
 export const PlanItems = () => {
-  const isBeforeSubscribe = true
-  const myPlanId = '3' // TODO: 유효한 id 검사
-  const myPlan = PLAN_ITEMS.find((item) => item.id === myPlanId) || null
+  // isLoggedIn = true이면 memebership 확인
+  const subscribingPlanName = 'MODEL_3' // api
+  const isBeforeSubscribing = true
+  // subscribingPlanName === 'FREE' || subscribingPlanName === null
+  const subscribingPlanTitle = subscribingPlanName
+
+  const currency = useCurrencyStore((state) => state.currency)
+
+  const myPlan =
+    PLAN_ITEMS[currency].find((item) => item.name === subscribingPlanTitle) ||
+    null
+
+  const endIndex = PLAN_ITEMS[currency].length - 1
 
   return (
     <div className="m-auto flex flex-col gap-5">
       {/* n models plans */}
       <div className="flex basis-[520px] gap-5">
-        {PLAN_ITEMS.slice(0, 5).map((item) => {
-          const isPopular = POPULAR_PLANS.includes(item.title)
+        {PLAN_ITEMS[currency].slice(0, endIndex).map((item) => {
+          const isPopular = POPULAR_PLAN_TITLE === item.name
+
           return (
             <PlanItem
               key={item.id}
-              {...item}
+              item={item}
+              features={PLAN_FEATURES[item.name as keyof typeof PLAN_FEATURES]}
               badge={
-                isBeforeSubscribe && isPopular ? (
+                isBeforeSubscribing && isPopular ? (
                   <Badge className="bg-primary text-neutral-0">
                     {UI_TEXT.POPULAR}
                   </Badge>
                 ) : null
               }
               slot={
-                isBeforeSubscribe ? (
+                isBeforeSubscribing ? (
                   <SubscribeButton item={item} isPopular={isPopular} />
                 ) : (
                   afterSubscribe(item, myPlan)
@@ -45,37 +63,43 @@ export const PlanItems = () => {
       </div>
       <div className="flex gap-5">
         {/* Unlimited plan */}
-        {PLAN_ITEMS.slice(5, 6).map((item) => (
-          <PlanItem
-            key={item.id}
-            {...item}
-            slot={
-              isBeforeSubscribe ? (
-                <SubscribeButton item={item} isPopular={false} />
-              ) : (
-                afterSubscribe(item, myPlan)
-              )
-            }
-          />
-        ))}
-        {/* Contact Us plan */}
-        {PLAN_ITEMS.slice(6, 7).map((item) => (
-          <PlanItem
-            key={item.id}
-            {...item}
-            slot={
-              <Button
-                variant="primary"
-                size="small"
-                stretch
-                className="bg-white font-semibold hover:bg-white"
-                asChild
-              >
-                <Link href="#">{UI_TEXT.LETS_TALK}</Link>
-              </Button>
-            }
-          />
-        ))}
+        <PlanItem
+          item={PLAN_ITEMS[currency][endIndex]}
+          features={
+            PLAN_FEATURES[
+              PLAN_ITEMS[currency][endIndex].name as keyof typeof PLAN_FEATURES
+            ]
+          }
+          slot={
+            isBeforeSubscribing ? (
+              <SubscribeButton
+                item={PLAN_ITEMS[currency][endIndex]}
+                isPopular={false}
+              />
+            ) : (
+              afterSubscribe(PLAN_ITEMS[currency][endIndex], myPlan)
+            )
+          }
+        />
+
+        {/* Custom plan */}
+        <PlanItem
+          item={PLAN_CUSTOM}
+          features={
+            PLAN_FEATURES[PLAN_CUSTOM.name as keyof typeof PLAN_FEATURES]
+          }
+          slot={
+            <Button
+              variant="primary"
+              size="small"
+              stretch
+              className="bg-white font-semibold hover:bg-white"
+              asChild
+            >
+              <Link href="#">{UI_TEXT.LETS_TALK}</Link>
+            </Button>
+          }
+        />
       </div>
     </div>
   )
@@ -83,19 +107,20 @@ export const PlanItems = () => {
 
 const afterSubscribe = (item: Plan, myPlan: Plan | null) => {
   if (myPlan === null) {
-    console.log('myPlan is null')
+    alert('my plan is null!')
     return null
   }
 
-  if (item.id === myPlan.id) {
+  if (item.name === myPlan.name) {
     return (
       <Button
         variant="primary"
         size="small"
         stretch
         className="bg-white font-semibold hover:bg-white"
+        disabled
       >
-        {UI_TEXT.ACTIVE}
+        {UI_TEXT.CURRENT_PLAN}
       </Button>
     )
   }

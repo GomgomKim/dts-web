@@ -5,7 +5,7 @@ import useModals from '@/shared/ui/modal/model/Modals.hooks'
 
 import { SubscriptionModal } from '../../../modals/subscription-modal'
 import { UI_TEXT } from '../../model/constant'
-import { Plan } from '../plan-item/type'
+import { Plan } from '../../model/types'
 
 interface SubscribeButtonProps {
   item: Plan
@@ -19,7 +19,7 @@ export const SubscribeButton = (props: SubscribeButtonProps) => {
     openModal(SubscriptionModal, { item: props.item })
   }
 
-  if (props.item.title === 'Unlimited') {
+  if (props.item.name === 'UNLIMITED') {
     return (
       <Button
         variant="primary"

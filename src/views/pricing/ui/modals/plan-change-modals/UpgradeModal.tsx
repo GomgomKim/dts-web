@@ -2,10 +2,12 @@
 
 import { useState } from 'react'
 
+import { useCurrencyStore } from '@/views/pricing/model/useCurrencyStore'
+
 import { cn } from '@/shared/lib/utils'
 import { ModalComponentProps } from '@/shared/ui/modal/model/types'
 
-import { Plan } from '../../plan-Items/ui/plan-item/type'
+import { PLAN_NAME_TITLE_MAP, Plan } from '../../plan-Items/model/types'
 import { UI_TEXT } from '../constants'
 import { AgreementCheckbox, PlanModal } from '../ui'
 import { ComparePlans } from './ui/ComparePlans'
@@ -28,6 +30,8 @@ export const UpgradeModal = (props: UpgradeModalProps) => {
 
   const underlineStyle =
     'relative pb-5 mb-5 after:absolute after:bottom-0 after:left-0 after:w-full after:border-b after:border-neutral-2 after:content-[""]'
+
+  const currencySign = useCurrencyStore((state) => state.getCurrencySign())
 
   return (
     <PlanModal
@@ -56,7 +60,10 @@ export const UpgradeModal = (props: UpgradeModalProps) => {
               {new Date().toLocaleDateString()}
             </span>
             <p className="inline-block">
-              <span className="text-[1.125rem]">${priceDifference}</span>
+              <span className="text-[1.125rem]">
+                {currencySign}
+                {priceDifference}
+              </span>
               <span className="ml-[6px] text-nowrap text-neutral-7">
                 / {UI_TEXT.PRORATED_FOR} {DUMMY_DAYS} {UI_TEXT.DAYS}
               </span>
@@ -66,12 +73,14 @@ export const UpgradeModal = (props: UpgradeModalProps) => {
         <p className="text-neutral-7 [&_strong]:font-medium [&_strong]:text-white">
           {UI_TEXT.UPGRADE_MODAL_DESCRIPTION_1}{' '}
           <strong>
-            {selectedPlan?.title} {UI_TEXT.UPGRADE_MODAL_DESCRIPTION_2} $
+            {PLAN_NAME_TITLE_MAP[selectedPlan.name]}{' '}
+            {UI_TEXT.UPGRADE_MODAL_DESCRIPTION_2} {currencySign}
             {priceDifference}{' '}
           </strong>
           {UI_TEXT.UPGRADE_MODAL_DESCRIPTION_3}{' '}
           <strong>
-            ${selectedPlan?.price} {UI_TEXT.UPGRADE_MODAL_DESCRIPTION_4}{' '}
+            {currencySign}
+            {selectedPlan.price} {UI_TEXT.UPGRADE_MODAL_DESCRIPTION_4}{' '}
             {new Date(
               new Date().getTime() + DUMMY_DAYS * 24 * 60 * 60 * 1000
             ).toLocaleDateString('en-US', {

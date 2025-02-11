@@ -2,9 +2,11 @@
 
 import { useState } from 'react'
 
+import { useCurrencyStore } from '@/views/pricing/model/useCurrencyStore'
+
 import { ModalComponentProps } from '@/shared/ui/modal/model/types'
 
-import { Plan } from '../../plan-Items/ui/plan-item/type'
+import { PLAN_NAME_TITLE_MAP, Plan } from '../../plan-Items/model/types'
 import { UI_TEXT } from '../constants'
 import { AgreementCheckbox, PlanModal } from '../ui'
 
@@ -18,8 +20,10 @@ export const SubscriptionModal = (props: SubscriptionModalProps) => {
   const [isCheckedAgreement, setIsCheckedAgreement] = useState(false)
   const [isShowError, setIsShowError] = useState(false)
 
+  const currencySign = useCurrencyStore((state) => state.getCurrencySign())
+
   const title = 'Confirm Your Subscription'
-  const description = `You're about to subscribe to the ${item.title} Plan for $${item.price} per month.`
+  const description = `You're about to subscribe to the ${PLAN_NAME_TITLE_MAP[item.name]} Plan for ${currencySign}${item.price} per month.`
 
   return (
     <PlanModal
@@ -43,11 +47,11 @@ export const SubscriptionModal = (props: SubscriptionModalProps) => {
             </span>
             <div>
               <p className="mb-2 text-[1.125rem] font-medium text-primary">
-                {item.title}
+                {PLAN_NAME_TITLE_MAP[item.name]}
                 {UI_TEXT.PLAN}
               </p>
               <p className="text-[1.125rem] font-medium">
-                ({UI_TEXT.CREDITS_DESCRIPTION_1} {item.credits}{' '}
+                ({UI_TEXT.CREDITS_DESCRIPTION_1} {item.creditNum}{' '}
                 {UI_TEXT.CREDITS_DESCRIPTION_2})
               </p>
               <p className="mt-4 text-neutral-5">
@@ -61,7 +65,10 @@ export const SubscriptionModal = (props: SubscriptionModalProps) => {
             <span className="mr-2 w-16 text-[1.125rem] text-neutral-7">
               Price
             </span>
-            <span className="ml-auto text-[1.125rem]">${item.price}</span>
+            <span className="ml-auto text-[1.125rem]">
+              {currencySign}
+              {item.price}
+            </span>
             <span className="ml-[6px] text-nowrap text-neutral-7">
               / {UI_TEXT.MONTH}
             </span>
