@@ -57,6 +57,26 @@ export const matToBase64 = (input_mat: cv.Mat): string => {
   return dataURL
 }
 
+export const base64ToMat = (base64: string): Promise<cv.Mat> => {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    img.crossOrigin = 'anonymous'
+    img.onload = () => {
+      const canvas = document.createElement('canvas')
+      canvas.width = img.width
+      canvas.height = img.height
+      const ctx = canvas.getContext('2d')
+      if (!ctx) return reject(new Error('2d context 없음'))
+      ctx.drawImage(img, 0, 0)
+      // cv.imread 기본적으로 8UC4 (RGBA) 로 읽어옴
+      const mat = window.cv.imread(canvas)
+      resolve(mat)
+    }
+    img.onerror = (err) => reject(err)
+    img.src = base64
+  })
+}
+
 // cv.Mat → float32 BGR (Imap) 로 변환
 const toImap = (matSrc: cv.Mat): cv.Mat => {
   const type = matSrc.type()
