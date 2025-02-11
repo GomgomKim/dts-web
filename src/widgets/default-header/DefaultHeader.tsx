@@ -2,12 +2,11 @@
 
 import Link from 'next/link'
 
-import { ErrorModals } from '@/entities/error-modal'
-import { Profile } from '@/entities/profile'
-
+// import { ErrorModals } from '@/entities/error-modal'
+// import { Profile } from '@/entities/profile'
 import { useAuthStore } from '@/shared/lib/stores/useAuthStore'
 import { Button } from '@/shared/ui'
-import { ErrorBoundary } from '@/shared/ui/error-boundary'
+// import { ErrorBoundary } from '@/shared/ui/error-boundary'
 import { HeaderLayout } from '@/shared/ui/header-layout'
 
 import { UI_TEXT } from './model/constants'
@@ -38,11 +37,11 @@ export const DefaultHeader = () => {
             {isAuth !== true ? <SignInButton /> : null}
           </ul>
         </nav>
-        {isAuth === true ? (
+        {/* {isAuth === true ? (
           <ErrorBoundary FallbackComponent={ErrorModals}>
             <Profile />
           </ErrorBoundary>
-        ) : null}
+        ) : null} */}
       </div>
     </HeaderLayout>
   )

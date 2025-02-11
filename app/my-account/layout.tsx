@@ -1,7 +1,12 @@
 import type { Metadata } from 'next'
 
+import { DefaultHeader } from '@/widgets/default-header'
+
 export const metadata: Metadata = {
-  title: 'My Account'
+  title: {
+    template: '%s | My Account',
+    default: 'My Account'
+  }
 }
 
 export default function MyAccountLayout({
@@ -9,5 +14,13 @@ export default function MyAccountLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  return <>{children}</>
+  return (
+    <>
+      {/* TODO: header 수정 */}
+      <DefaultHeader />
+      <div className="h-screen pt-14">
+        <main className="px-10 pb-36 pt-5">{children}</main>
+      </div>
+    </>
+  )
 }
