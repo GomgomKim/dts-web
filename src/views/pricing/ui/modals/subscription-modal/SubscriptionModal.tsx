@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 
+import { useRouter } from 'next/navigation'
+
 import { useCurrencyStore } from '@/views/pricing/model/useCurrencyStore'
 
 import { ModalComponentProps } from '@/shared/ui/modal/model/types'
@@ -16,6 +18,7 @@ interface SubscriptionModalProps extends ModalComponentProps {
 
 export const SubscriptionModal = (props: SubscriptionModalProps) => {
   const { onCloseModal, item } = props
+  const router = useRouter()
 
   const [isCheckedAgreement, setIsCheckedAgreement] = useState(false)
   const [isShowError, setIsShowError] = useState(false)
@@ -34,7 +37,7 @@ export const SubscriptionModal = (props: SubscriptionModalProps) => {
           setIsShowError(true)
           return
         }
-        alert('move to payment page')
+        router.push(`/checkout?planId=${item.id}`)
       }}
       onCloseModal={onCloseModal}
     >
