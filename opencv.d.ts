@@ -82,6 +82,7 @@ declare global {
     const COLOR_BGRA2BGR: number
     const COLOR_BGR2GRAY: number
     const COLOR_BGR2HSV: number
+    const COLOR_BGR2HSV_FULL: number
     const COLOR_HSV2BGR: number
     const COLOR_GRAY2BGRA: number
     const COLOR_GRAY2BGR: number
