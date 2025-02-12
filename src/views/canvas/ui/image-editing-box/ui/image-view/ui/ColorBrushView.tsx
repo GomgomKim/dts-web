@@ -2,17 +2,13 @@ import { forwardRef, useEffect, useState } from 'react'
 
 import Image from 'next/image'
 
-import { compositeHairAndBrush } from '@/views/canvas/lib/editColorService'
-import {
-  useColorBrushStore,
-  useHairColorStore
-} from '@/views/canvas/model/useEditorPanelsStore'
+import { useColorBrushStore } from '@/views/canvas/model/useEditorPanelsStore'
 import { useToolModeStore } from '@/views/canvas/model/useToolModeStore'
 import { TOOL_IDS } from '@/views/canvas/ui/brush-erase-toggle/model'
 import { MAX_CUSTOM_BRUSHES } from '@/views/canvas/ui/editor-panels/color-brush/model'
 import { CUSTOM_BRUSH_START } from '@/views/canvas/ui/editor-panels/color-brush/model'
 
-import { useCanvasApplyColor } from '../lib/useCanvasApplyColor'
+import { useApplyColor } from '../lib/useApplyColor'
 import { useCanvasHighlight } from '../lib/useCanvasHighlight'
 
 type ColorBrushViewProps = {
@@ -20,9 +16,7 @@ type ColorBrushViewProps = {
   modelMat: cv.Mat | null
   setModelMat: (val: cv.Mat) => void
   maskMatRef: React.RefObject<cv.Mat>
-  hairMaskMatRef: React.RefObject<cv.Mat>
   setColorBrushMats: (val: cv.Mat[]) => void
-  setHairColorMat: (val: cv.Mat) => void
 }
 
 export const ColorBrushView = forwardRef<
@@ -36,8 +30,6 @@ export const ColorBrushView = forwardRef<
     colorBrushColor,
     colorBrushOpacity
   } = useColorBrushStore()
-  const { hairColor, hairColorOpacity, hairColorLevel } = useHairColorStore()
-
   const [currentBrushSegment, setCurrentBrushSegment] = useState<number | null>(
     null
   )
@@ -45,7 +37,6 @@ export const ColorBrushView = forwardRef<
   const [isDrawing, setIsDrawing] = useState(false)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const [prevPos, setPrevPos] = useState<{ x: number; y: number } | null>(null)
-  const [isHairColorChange, setIsHairColorChange] = useState(false)
 
   // 브러시 커서 사이즈 및 종류 (brush / erase)
   const { toolSize, selectedTool } = useToolModeStore()
@@ -62,56 +53,15 @@ export const ColorBrushView = forwardRef<
   })
 
   // 색 적용
-  const { applyColor, applyHairColor } = useCanvasApplyColor({
+  const { applyColor } = useApplyColor({
     canvasRef: ref as React.RefObject<HTMLCanvasElement>,
     modelMat: props.modelMat,
     maskMatRef: props.maskMatRef,
-    hairMaskMatRef: props.hairMaskMatRef,
     setModelMat: props.setModelMat,
     setShowHighlight,
     currentBrushSegment,
     setCurrentBrushSegment
   })
-
-  // 머리 색상 변경 시 applyHairColor 호출
-  useEffect(() => {
-    // 브러시 마스크 먼저 저장
-    const brushMat = applyColor()
-
-    // 헤어 색상 적용
-    const hairMat = applyHairColor()
-
-    if (props.hairMaskMatRef.current) {
-      const compositeMat = compositeHairAndBrush(
-        hairMat,
-        brushMat,
-        props.hairMaskMatRef.current,
-        hairColor || [0, 0, 0]
-      )
-
-      // 합성 결과를 modelMat으로 설정
-      if (compositeMat) {
-        const finalMat = compositeMat.clone()
-        props.setModelMat(finalMat)
-        compositeMat.delete()
-        setIsHairColorChange(true)
-      }
-    }
-
-    // 메모리 해제
-    brushMat?.delete()
-  }, [hairColor, hairColorOpacity, hairColorLevel])
-
-  // 레이어 업데이트
-  useEffect(() => {
-    // 동기화 위한 타임아웃
-    if (isHairColorChange) {
-      setTimeout(() => {
-        applyColor()
-        setIsHairColorChange(false)
-      }, 10)
-    }
-  }, [isHairColorChange])
 
   // 브러시 색상 변경 시 applyColor 호출
   useEffect(() => {
