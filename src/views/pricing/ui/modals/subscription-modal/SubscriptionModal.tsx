@@ -37,6 +37,9 @@ export const SubscriptionModal = (props: SubscriptionModalProps) => {
           setIsShowError(true)
           return
         }
+
+        // TODO: 여기에서 로그인 모달창을 띄울지
+        onCloseModal()
         router.push(`/checkout?planId=${item.id}`)
       }}
       onCloseModal={onCloseModal}
