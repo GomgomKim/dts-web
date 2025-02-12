@@ -2,17 +2,28 @@
 
 import { dtsAuthAxios } from '@/shared/api'
 import { throwIfNotAxiosError } from '@/shared/lib/utils/throwIfNotAxiosError'
+import { Button } from '@/shared/ui'
 import useModals from '@/shared/ui/modal/model/Modals.hooks'
 
 import * as PortOne from '@portone/browser-sdk/v2'
 import { useMutation } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
 
+import { UI_TEXT } from '../../../model/constants'
 import { PaymentErrorModal } from './PaymentErrorModal'
 
 export const RecurringPaymentTossPaymentsTest = async () => {
   const { handle정기결제: onClick정기결제 } = useHandle정기결제()
-  return <button onClick={onClick정기결제}>정기 결제(빌링키 발급)</button>
+  return (
+    <Button
+      stretch
+      type="button"
+      className="bg-white hover:bg-white"
+      onClick={onClick정기결제}
+    >
+      {UI_TEXT.PAY_NOW}
+    </Button>
+  )
 }
 
 const useHandle정기결제 = () => {

@@ -6,10 +6,14 @@ import { useCurrencyStore } from '@/views/pricing/model/useCurrencyStore'
 import { PLAN_ITEMS } from '@/views/pricing/ui/plan-Items/model/constant'
 import { PLAN_NAME_TITLE_MAP } from '@/views/pricing/ui/plan-Items/model/types'
 
-import { Button } from '@/shared/ui'
+import { ErrorBoundary } from '@/shared/ui/error-boundary'
 
 import { UI_TEXT } from '../../model/constants'
-import { OrderLabeledDetail } from './ui'
+import {
+  OrderLabeledDetail,
+  PaymentErrorModal,
+  RecurringPaymentTossPaymentsTest
+} from './ui'
 import { PeriodOfUse } from './ui/PeriodOfUse'
 
 export const OrderSummary = () => {
@@ -94,9 +98,14 @@ export const OrderSummary = () => {
       </div>
       <div className="border-none">
         {/* usd이면 페이팔 버튼 렌더링 */}
-        <Button stretch type="button" className="bg-white hover:bg-white">
-          {UI_TEXT.PAY_NOW}
-        </Button>
+        <ErrorBoundary
+          FallbackComponent={({ error }) => <PaymentErrorModal e={error} />}
+        >
+          <div className="flex gap-10">
+            {/* <NormalPaymentTossPaymentsTest /> */}
+            <RecurringPaymentTossPaymentsTest />
+          </div>
+        </ErrorBoundary>
       </div>
     </div>
   )
