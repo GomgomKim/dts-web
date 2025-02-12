@@ -3,6 +3,8 @@ export const UI_TEXT = {
   ORDER_SUMMARY: 'Order Summary',
   CREDITS: 'Credits',
   PLAN: 'Plan',
+  PLAN_DESCRIPTION_1: 'plan (includes',
+  PLAN_DESCRIPTION_2: 'credits)',
   BILLING_CYCLE: 'Billing Cycle',
   MONTHLY: 'Monthly',
   PRICE: 'Price',
