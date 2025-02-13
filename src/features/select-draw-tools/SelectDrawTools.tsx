@@ -1,5 +1,8 @@
 import React from 'react'
 
+import { useColorBrushStore } from '@/views/canvas/model/useEditorPanelsStore'
+import { createCustomBrush } from '@/views/canvas/ui/editor-panels/color-brush/model'
+
 import {
   DrawTool,
   DrawToolType
@@ -16,10 +19,21 @@ export interface SelectDrawToolsProps {
   onSelectDrawTool: (tool: DrawTool) => void
   tools: DrawTool[]
   drawToolText: string
-  onAddTool: () => void
 }
 
 export const SelectDrawTools = (props: SelectDrawToolsProps) => {
+  const addCustomBrush = useColorBrushStore((state) => state.addCustomBrush)
+  const setSelectedColorBrushItem = useColorBrushStore(
+    (state) => state.setSelectedColorBrushItem
+  )
+  const customBrushes = useColorBrushStore((state) => state.customBrushes)
+  const addBrushTool = () => {
+    // 새로 그린 브러시가 아직 등록되지 않았다면 새로 등록
+    console.log('customBrushes:', customBrushes)
+    const newBrush = createCustomBrush(customBrushes.length + 1)
+    addCustomBrush(newBrush)
+    setSelectedColorBrushItem(newBrush)
+  }
   return (
     <div className="grid w-full grid-cols-4 gap-2">
       {/* 툴 버튼 */}
@@ -37,7 +51,7 @@ export const SelectDrawTools = (props: SelectDrawToolsProps) => {
       {props.tools.length < 8 && (
         <Button
           variant="ghost"
-          onClick={props.onAddTool}
+          onClick={() => addBrushTool()}
           className="flex h-[5.8125rem] flex-col items-center justify-center gap-2 rounded-[0.5rem] border border-dashed border-neutral-3 p-5"
         >
           <Plus className="size-6 stroke-neutral-7" />
