@@ -1,10 +1,9 @@
 import { PlanName } from '../ui/plan-Items/model/types'
 
-export interface GetMembershipResonse {
-  // TODO: 타입
+export interface GetMembershipResponse {
   status: string
   plan: PlanName
-  modelIds: number[] | null
+  modelIds: number[] | null // TODO: 타입
   nextPlanId: number | null
-  nextBillingAt: Date | null
+  nextBillingAt: string | null
 }
