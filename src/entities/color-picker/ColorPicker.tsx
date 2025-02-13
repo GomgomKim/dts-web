@@ -81,7 +81,18 @@ export const ColorPicker = (props: ColorPickerProps) => {
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div
+      className="flex flex-col gap-4"
+      onMouseDown={(e) => {
+        e.nativeEvent.stopImmediatePropagation()
+      }}
+      onTouchStart={(e) => {
+        e.nativeEvent.stopImmediatePropagation()
+      }}
+      onClick={(e) => {
+        e.nativeEvent.stopImmediatePropagation()
+      }}
+    >
       <Saturation color={color} onChange={handleChangeColor} height={160} />
 
       <div className="flex gap-4">
