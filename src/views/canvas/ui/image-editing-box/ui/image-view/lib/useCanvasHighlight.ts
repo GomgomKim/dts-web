@@ -1,11 +1,11 @@
-import { useCallback } from 'react'
-
 import { useColorBrushStore } from '@/views/canvas/model/useEditorPanelsStore'
 
 interface UseCanvasHighlightProps {
   canvasRef: React.RefObject<HTMLCanvasElement>
-  modelMat: cv.Mat | null
-  maskMatRef: React.RefObject<cv.Mat>
+  maskMatRef: React.RefObject<cv.Mat | null>
+}
+
+interface DrawHighlightProps {
   showHighlight: boolean
 }
 
@@ -14,21 +14,18 @@ export const useCanvasHighlight = (props: UseCanvasHighlightProps) => {
     (state) => state.selectedColorBrushItem
   )
 
-  const drawHighlight = useCallback(() => {
+  const drawHighlight = (innerProps: DrawHighlightProps) => {
+    if (!props.canvasRef?.current || !props.maskMatRef?.current) return
     const mainCanvas = props.canvasRef.current
-    if (
-      !mainCanvas ||
-      !props.modelMat ||
-      !props.maskMatRef.current ||
-      !props.showHighlight
-    )
-      return
+
+    if (!mainCanvas || !props.maskMatRef.current) return
 
     const ctx = mainCanvas.getContext('2d')
     if (!ctx) return
 
-    // 먼저 원본 이미지 다시 그리기
-    window.cv.imshow(mainCanvas, props.modelMat)
+    ctx.clearRect(0, 0, mainCanvas.width, mainCanvas.height)
+
+    if (!innerProps.showHighlight) return
 
     // 선택된 브러시의 세그먼트들만 하이라이트
     const segmentsToHighlight = selectedColorBrushItem?.segments ?? []
@@ -43,7 +40,7 @@ export const useCanvasHighlight = (props: UseCanvasHighlightProps) => {
         }
       }
     }
-  }, [props.showHighlight, selectedColorBrushItem])
+  }
 
   return { drawHighlight }
 }

@@ -237,6 +237,7 @@ export const applyMultiplyAndFeather = (
   opacity = 1,
   newColor = [0, 0, 255],
   coloringType = 'type1',
+  selectedSegment: number[] | null = null,
   powerNorm = 1,
   rect = null,
   min_v_value = 0,
@@ -255,6 +256,66 @@ export const applyMultiplyAndFeather = (
   let maskMap = null
   const maskImap = new cv.Mat()
 
+  // 세그먼트 필터링 부분 수정: selectedSegment가 배열인 경우 처리
+  let processedMask: cv.Mat
+  let createdFilteredMask = false
+  if (selectedSegment !== null) {
+    let tempMask: cv.Mat
+    // maskImage가 단일 채널이 아니라면 그레이스케일로 변환
+    if (maskImage.channels && maskImage.channels() > 1) {
+      tempMask = new cv.Mat()
+      if (maskImage.channels() === 4) {
+        cv.cvtColor(maskImage, tempMask, cv.COLOR_RGBA2GRAY)
+      } else if (maskImage.channels() === 3) {
+        cv.cvtColor(maskImage, tempMask, cv.COLOR_BGR2GRAY)
+      } else {
+        maskImage.copyTo(tempMask)
+      }
+    } else {
+      tempMask = maskImage.clone()
+    }
+
+    if (Array.isArray(selectedSegment)) {
+      // 빈 마스크를 생성하고, 각 세그먼트별 마스크를 OR 연산으로 결합
+      processedMask = new cv.Mat(
+        tempMask.rows,
+        tempMask.cols,
+        tempMask.type(),
+        new cv.Scalar(0)
+      )
+      selectedSegment.forEach((seg) => {
+        const maskBinary = new cv.Mat()
+        const constantMat = new cv.Mat(
+          tempMask.rows,
+          tempMask.cols,
+          tempMask.type(),
+          new cv.Scalar(seg)
+        )
+        cv.compare(tempMask, constantMat, maskBinary, cv.CMP_EQ)
+        constantMat.delete()
+        cv.bitwise_or(processedMask, maskBinary, processedMask)
+        maskBinary.delete()
+      })
+      tempMask.delete()
+      createdFilteredMask = true
+    } else {
+      processedMask = new cv.Mat()
+      const constantMat = new cv.Mat(
+        tempMask.rows,
+        tempMask.cols,
+        tempMask.type(),
+        new cv.Scalar(selectedSegment)
+      )
+      cv.compare(tempMask, constantMat, processedMask, cv.CMP_EQ)
+      constantMat.delete()
+      tempMask.delete()
+      createdFilteredMask = true
+    }
+  } else {
+    processedMask = maskImage
+  }
+  // 필터링 끝
+
   if (rect) {
     const roi_rect = new cv.Rect(
       parseInt(rect[0]),
@@ -263,12 +324,12 @@ export const applyMultiplyAndFeather = (
       parseInt(rect[3])
     )
     oriModelImap = toImap(modelImage)
-    oriMaskMap = toMap(maskImage)
+    oriMaskMap = toMap(processedMask)
     modelImap = oriModelImap.roi(roi_rect)
     maskMap = oriMaskMap.roi(roi_rect)
   } else {
     modelImap = toImap(modelImage)
-    maskMap = toMap(maskImage)
+    maskMap = toMap(processedMask)
   }
 
   const width = modelImap.cols
@@ -314,8 +375,7 @@ export const applyMultiplyAndFeather = (
   maskMap.convertTo(maskMap, cv.CV_32FC1, opacity)
   to3D(maskMap, maskImap)
 
-  // --- 기존 원본 이미지와의 합성 부분은 모두 제거하고,
-  //     칠한 색상(colorImap)과 마스크(maskImap)를 이용해 레이어를 생성합니다. ---
+  // 칠한 색상(colorImap)과 마스크(maskImap)를 이용해 레이어를 생성
 
   // 1. 색상 이미지에 페더링된 마스크를 곱하여 색칠된 영역만 남깁니다.
   cv.multiply(colorImap, maskImap, colorImap)
@@ -354,6 +414,11 @@ export const applyMultiplyAndFeather = (
   if (alphaMap) alphaMap.delete()
   if (channels) channels.delete()
   if (rgba) rgba.delete()
+
+  // 만약 필터링을 통해 생성한 경우, processedMask 해제
+  if (createdFilteredMask) {
+    processedMask.delete()
+  }
 
   return resImage
 }

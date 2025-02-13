@@ -7,14 +7,12 @@ import {
   createCustomBrush
 } from '@/views/canvas/ui/editor-panels/color-brush/model'
 
+import { brushSegmentMap } from '../model/constants'
+import { useLayersStore } from './useLayersStore'
+
 interface UseApplyColorProps {
-  canvasRef: React.RefObject<HTMLCanvasElement>
   modelMat: cv.Mat | null
   maskMatRef: React.RefObject<cv.Mat>
-  setModelMat: (val: cv.Mat) => void
-  setShowHighlight: (val: boolean) => void
-  currentBrushSegment: number | null
-  setCurrentBrushSegment: (val: number | null) => void
 }
 
 export const useApplyColor = (props: UseApplyColorProps) => {
@@ -33,30 +31,25 @@ export const useApplyColor = (props: UseApplyColorProps) => {
     (state) => state.colorBrushOpacity
   )
   const colorBrushColor = useColorBrushStore((state) => state.colorBrushColor)
-
+  const updateColorBrushLayer = useLayersStore(
+    (state) => state.updateColorBrushLayer
+  )
   const applyColor = useCallback(
     (isHairColor?: boolean) => {
-      if (!props.modelMat || !props.maskMatRef.current) return null
-
-      // hair 모드일 경우, 고정 segment 목록
-      // 아닐 경우, 현재 선택된 브러시 세그먼트 목록 or 신규 브러시 segment
-      const segmentsToColor =
-        selectedColorBrushItem?.segments ??
-        (props.currentBrushSegment ? [props.currentBrushSegment] : null)
-
-      if (!segmentsToColor) return null
+      if (!props.modelMat || !props.maskMatRef?.current) return null
 
       // 새로 그린 브러시가 아직 등록되지 않았다면 새로 등록
       if (
-        props.currentBrushSegment &&
         !selectedColorBrushItem &&
         customBrushes.length < MAX_CUSTOM_BRUSHES
       ) {
         const newBrush = createCustomBrush(customBrushes.length + 1)
         addCustomBrush(newBrush)
         setSelectedColorBrushItem(newBrush)
-        props.setCurrentBrushSegment(null)
       }
+
+      const segmentToApply = mappingBrushSegment(selectedColorBrushItem?.id)
+      if (segmentToApply === null || segmentToApply === undefined) return null
 
       const base64 = applyMultiplyAndFeather(
         props.modelMat,
@@ -64,33 +57,18 @@ export const useApplyColor = (props: UseApplyColorProps) => {
         converFeatherRange(colorBrushSmoothEdges),
         colorBrushOpacity,
         colorBrushColor,
-        isHairColor ? 'type3' : 'type1'
+        isHairColor ? 'type3' : 'type1',
+        segmentToApply
       )
 
-      const mainCanvas = props.canvasRef.current
-      if (!mainCanvas) return null
-      const ctx = mainCanvas.getContext('2d')
-      if (!ctx) return null
-
-      const outImg = new Image()
-      outImg.onload = () => {
-        ctx.clearRect(0, 0, mainCanvas.width, mainCanvas.height)
-        ctx.drawImage(outImg, 0, 0)
-
-        // modelMat 업데이트
-        props.setModelMat(window.cv.imread(mainCanvas))
-
-        // 색상 적용 후 하이라이트 숨김
-        props.setShowHighlight(false)
+      if (selectedColorBrushItem) {
+        updateColorBrushLayer(selectedColorBrushItem.id, base64)
       }
-      outImg.src = base64
-      return window.cv.imread(mainCanvas)
     },
     [
       colorBrushColor,
       colorBrushOpacity,
       colorBrushSmoothEdges,
-      props.currentBrushSegment,
       selectedColorBrushItem
     ]
   )
@@ -100,6 +78,11 @@ export const useApplyColor = (props: UseApplyColorProps) => {
     const normalized = value / 100
     // 1-20 범위로 변환
     return Math.round(normalized * 19 + 1)
+  }
+
+  const mappingBrushSegment = (brushId?: string) => {
+    if (!brushId) return null
+    return brushSegmentMap[brushId]
   }
 
   return { applyColor }

@@ -1,55 +1,90 @@
-'use client'
+import { useEffect } from 'react'
 
-import { useEffect, useRef, useState } from 'react'
+import Image from 'next/image'
 
-import { composeFinalImage } from '@/views/canvas/lib/layerManager'
-import { LayersState } from '@/views/canvas/lib/layerManager'
+import { useLayersStore } from '../lib/useLayersStore'
 
-interface LayeredImageViewProps {
-  baseMat: cv.Mat // 기본 모델 이미지 (RGBA)
-  skinGlowMat?: cv.Mat
-  colorBrushMats?: cv.Mat[] // 8개의 컬러브러시 레이어 (RGBA)
-  hairColorMat?: cv.Mat
-  eyeContactsMat?: cv.Mat
-}
+export const LayeredImageView = () => {
+  const baseLayer = useLayersStore((state) => state.baseLayer)
+  const skinGlowLayer = useLayersStore((state) => state.skinGlowLayer)
+  const colorBrushLayers = useLayersStore((state) => state.colorBrushLayers)
+  const hairColorLayer = useLayersStore((state) => state.hairColorLayer)
+  const eyeContactsLayer = useLayersStore((state) => state.eyeContactsLayer)
 
-export const LayeredImageView = (props: LayeredImageViewProps) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  const [finalMat, setFinalMat] = useState<cv.Mat | null>(null)
-
-  // 효과 업데이트 시 레이어를 합성
   useEffect(() => {
-    const layers: LayersState = {
-      base: props.baseMat,
-      skinGlow: props.skinGlowMat,
-      colorBrushLayers: props.colorBrushMats,
-      hairColor: props.hairColorMat,
-      eyeContacts: props.eyeContactsMat
-    }
+    console.log('colorBrushLayers:', colorBrushLayers)
+  }, [colorBrushLayers])
 
-    const composed = composeFinalImage(layers)
-    setFinalMat(composed)
+  return (
+    <div style={{ position: 'absolute', width: '100%', height: '100%' }}>
+      {/* 기본 이미지 레이어 */}
+      {baseLayer && (
+        <div className="absolute inset-0">
+          <Image
+            src={baseLayer}
+            alt="Base"
+            fill
+            style={{ objectFit: 'contain' }}
+            priority
+          />
+        </div>
+      )}
 
-    // 메모리 관리: 이전 finalMat 해제 등 필요한 처리
-    return () => {
-      // composed.delete(); // 필요 시 cleanup
-    }
-  }, [
-    props.baseMat,
-    props.skinGlowMat,
-    props.colorBrushMats,
-    props.hairColorMat,
-    props.eyeContactsMat
-  ])
+      {/* 스킨 글로우 레이어 */}
+      {skinGlowLayer && (
+        <div className="absolute inset-0" style={{ zIndex: 1 }}>
+          <Image
+            src={skinGlowLayer}
+            alt="Skin Glow"
+            fill
+            style={{ objectFit: 'contain' }}
+            priority
+          />
+        </div>
+      )}
 
-  // finalMat을 canvas에 렌더링
-  useEffect(() => {
-    if (!finalMat || !canvasRef.current) return
+      {/* 컬러 브러시 레이어들 */}
+      {Object.entries(colorBrushLayers).map(([brushId, base64], idx) => (
+        <div
+          key={brushId}
+          className="absolute inset-0"
+          style={{ zIndex: idx + 2 }}
+        >
+          <Image
+            src={base64}
+            alt={`Brush ${brushId}`}
+            fill
+            style={{ objectFit: 'contain' }}
+            priority
+          />
+        </div>
+      ))}
 
-    canvasRef.current.width = finalMat.cols
-    canvasRef.current.height = finalMat.rows
-    cv.imshow(canvasRef.current, finalMat)
-  }, [finalMat])
+      {/* 헤어 컬러 레이어 */}
+      {hairColorLayer && (
+        <div className="absolute inset-0" style={{ zIndex: 10 }}>
+          <Image
+            src={hairColorLayer}
+            alt="Hair Color"
+            fill
+            style={{ objectFit: 'contain' }}
+            priority
+          />
+        </div>
+      )}
 
-  return <canvas ref={canvasRef} />
+      {/* 아이 컨택트 레이어 */}
+      {eyeContactsLayer && (
+        <div className="absolute inset-0" style={{ zIndex: 11 }}>
+          <Image
+            src={eyeContactsLayer}
+            alt="Eye Contacts"
+            fill
+            style={{ objectFit: 'contain' }}
+            priority
+          />
+        </div>
+      )}
+    </div>
+  )
 }

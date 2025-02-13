@@ -1,55 +1,55 @@
-// layerManager.ts
-import { compositeLayers } from './layerCompositor'
-
-// 각 효과별 레이어를 하나의 상태 객체로 관리
 export interface LayersState {
   base: cv.Mat // 원본 모델 이미지
   skinGlow?: cv.Mat // 스킨 글로우 결과
-  // 컬러 브러시는 8개의 서브 레이어를 배열로 보관하고 내부에서 하나로 합성
-  colorBrushLayers?: cv.Mat[]
+  colorBrushs?: cv.Mat[] // 컬러 브러시는 여러 서브 레이어를 배열로 보관하고 내부에서 하나로 합성
   hairColor?: cv.Mat // 헤어 컬러 결과
   eyeContacts?: cv.Mat // 아이컨택츠 결과
 }
 
 /**
  * 최종 합성 이미지 생성 함수
- * 합성 순서는 (base) < 스킨 글로우 < (컬러브러시 복합) < 헤어 컬러 < 아이컨택츠
+ * 모든 레이어 겹치기
  */
-export const composeFinalImage = (layers: LayersState): cv.Mat => {
-  const layerList = []
-  // 기본 레이어 (order 0)
-  layerList.push({ name: 'base', order: 0, mat: layers.base })
-
-  // 아이컨택츠 (order 1)
-  if (layers.eyeContacts) {
-    layerList.push({ name: 'eyeContacts', order: 1, mat: layers.eyeContacts })
-  }
-
-  // 스킨 글로우 (order 2)
+export const composeFinalImage = (layers: LayersState) => {
+  if (!layers.base) return null
+  // 기본 레이어를 먼저 복제하여 최종 합성의 시작점으로 사용
+  let finalMat = layers.base.clone()
   if (layers.skinGlow) {
-    layerList.push({ name: 'skinGlow', order: 2, mat: layers.skinGlow })
+    finalMat = overlayLayer(finalMat, layers.skinGlow)
   }
-
-  // 헤어 컬러 (order 3)
   if (layers.hairColor) {
-    layerList.push({ name: 'hairColor', order: 3, mat: layers.hairColor })
+    finalMat = overlayLayer(finalMat, layers.hairColor)
+  }
+  if (layers.eyeContacts) {
+    finalMat = overlayLayer(finalMat, layers.eyeContacts)
+  }
+  if (layers.colorBrushs && layers.colorBrushs.length > 0) {
+    layers.colorBrushs.forEach((brushMat) => {
+      finalMat = overlayLayer(finalMat, brushMat)
+    })
   }
 
-  // 컬러 브러시: 8개의 서브 레이어가 있다면 먼저 내부에서 합성한 후 order 2 로 추가
-  if (layers.colorBrushLayers && layers.colorBrushLayers.length > 0) {
-    // 단순히 서브 레이어 순서대로 합성 (서로 겹치는 영역은 알파 블렌딩)
-    let colorBrushComposite = layers.colorBrushLayers[0].clone()
-    for (let i = 1; i < layers.colorBrushLayers.length; i++) {
-      const blended = compositeLayers([
-        { name: 'brush', order: 0, mat: colorBrushComposite },
-        { name: 'brush', order: 1, mat: layers.colorBrushLayers[i] }
-      ])
-      colorBrushComposite.delete()
-      colorBrushComposite = blended
-    }
-    layerList.push({ name: 'colorBrush', order: 2, mat: colorBrushComposite })
-  }
+  return finalMat
+}
 
-  // 최종 합성
-  return compositeLayers(layerList)
+/**
+ * 레이어 겹치기
+ * @param baseMat 기본 레이어 (하위 레이어)
+ * @param overlayMat 겹칠 상위 레이어
+ * @returns 겹쳐진 결과 Mat
+ */
+const overlayLayer = (baseMat: cv.Mat, overlayMat: cv.Mat): cv.Mat => {
+  // overlayMat의 알파 채널을 사용하여 baseMat에 겹침
+  // 알파 채널이 없으면 전체를 덮어씌우도록 설정
+  if (overlayMat.channels() === 4) {
+    cv.cvtColor(overlayMat, overlayMat, cv.COLOR_RGBA2BGRA)
+    cv.cvtColor(baseMat, baseMat, cv.COLOR_RGBA2BGRA)
+    const mask = new cv.Mat()
+    cv.extractChannel(overlayMat, mask, 3) // 알파 채널 추출
+    overlayMat.copyTo(baseMat, mask)
+    mask.delete()
+  } else {
+    overlayMat.copyTo(baseMat)
+  }
+  return baseMat
 }

@@ -90,6 +90,7 @@ declare global {
     const COLOR_BGRA2RGBA: number
     const COLOR_RGBA2GRAY: number
     const COLOR_BGRA2GRAY: number
+    const COLOR_RGBA2BGRA: number
     const NORM_MINMAX: number
     const onRuntimeInitialized: boolean | undefined
 
@@ -112,6 +113,7 @@ declare global {
     const THRESH_TRIANGLE: number
     const compare: (src1: Mat, src2: Mat, dst: Mat, cmpop: number) => void
 
+    const extractChannel: (src: Mat, dst: Mat, channel: number) => void
     // 주요 함수들
     const imread: (canvas: HTMLCanvasElement) => Mat
     const subtract: (
