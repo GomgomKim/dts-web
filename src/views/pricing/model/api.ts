@@ -3,12 +3,12 @@ import { dtsAuthAxios } from '@/shared/api'
 import { AxiosError, AxiosResponse } from 'axios'
 
 import { URL_PAYMENT_MEMBERSHIP } from './constants'
-import { GetMembershipResonse } from './types'
+import { GetMembershipResponse } from './types'
 
 export const getMembership = async () => {
   const response = await dtsAuthAxios.get<
-    GetMembershipResonse,
-    AxiosResponse<GetMembershipResonse, AxiosError>
+    GetMembershipResponse,
+    AxiosResponse<GetMembershipResponse, AxiosError>
   >(URL_PAYMENT_MEMBERSHIP)
   return response.data
 }
