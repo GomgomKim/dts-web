@@ -1,5 +1,4 @@
 export * from './OrderLabeledDetail'
 export * from './PeriodOfUse'
 export * from './PaymentErrorModal'
-export * from './NormalPaymentTossPaymentsTest'
 export * from './pay-now-toss-payments-button'
