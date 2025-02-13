@@ -59,10 +59,6 @@ export default function Pricing() {
           <Credit />
         </TabsContent>
       </Tabs>
-
-      <div className="mb-40 px-20 lg:px-40">
-        <PlanItems />
-      </div>
     </>
   )
 }

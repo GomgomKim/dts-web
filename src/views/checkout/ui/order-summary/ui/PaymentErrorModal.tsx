@@ -17,10 +17,12 @@ export const PaymentErrorModal = (props: PaymentErrorProps) => {
       }}
       title="Payment Error"
       description="Your payment couldn't be processed. Please check your payment details and try again."
-      footer=<>
-        <div>retry button</div>
-        <div>Change Payment Method</div>
-      </>
+      footer={
+        <>
+          <div>retry button</div>
+          <div>Change Payment Method</div>
+        </>
+      }
     >
       {JSON.stringify(props.e)}
     </DefaultModal>

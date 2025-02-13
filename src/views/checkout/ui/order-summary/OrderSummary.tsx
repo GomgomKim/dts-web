@@ -11,8 +11,8 @@ import { ErrorBoundary } from '@/shared/ui/error-boundary'
 import { UI_TEXT } from '../../model/constants'
 import {
   OrderLabeledDetail,
-  PaymentErrorModal,
-  RecurringPaymentTossPaymentsTest
+  PayNowTossPaymentsButton,
+  PaymentErrorModal
 } from './ui'
 import { PeriodOfUse } from './ui/PeriodOfUse'
 
@@ -97,14 +97,11 @@ export const OrderSummary = () => {
         </div>
       </div>
       <div className="border-none">
-        {/* usd이면 페이팔 버튼 렌더링 */}
+        {/* TODO: usd이면 페이팔 버튼 렌더링 */}
         <ErrorBoundary
           FallbackComponent={({ error }) => <PaymentErrorModal e={error} />}
         >
-          <div className="flex gap-10">
-            {/* <NormalPaymentTossPaymentsTest /> */}
-            <RecurringPaymentTossPaymentsTest />
-          </div>
+          <PayNowTossPaymentsButton />
         </ErrorBoundary>
       </div>
     </div>
