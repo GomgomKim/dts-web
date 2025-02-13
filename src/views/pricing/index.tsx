@@ -1,6 +1,9 @@
 'use client'
 
+import { ErrorModals } from '@/entities/error-modal'
+
 import { useClientSearchParams } from '@/shared/lib/hooks/useClientSearchParams'
+import { ErrorBoundary } from '@/shared/ui/error-boundary'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs/Tabs'
 
 import { UI_TEXT } from './model/constants'
@@ -52,7 +55,9 @@ export default function Pricing() {
 
         <TabsContent value="plan">
           <div className="mb-40 px-20 lg:px-40">
-            <PlanItems />
+            <ErrorBoundary FallbackComponent={ErrorModals}>
+              <PlanItems />
+            </ErrorBoundary>
           </div>
         </TabsContent>
         <TabsContent value="credit">
