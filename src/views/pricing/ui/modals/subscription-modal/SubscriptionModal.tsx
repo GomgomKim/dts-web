@@ -37,8 +37,6 @@ export const SubscriptionModal = (props: SubscriptionModalProps) => {
           setIsShowError(true)
           return
         }
-
-        // TODO: 여기에서 로그인 모달창을 띄울지
         onCloseModal()
         router.push(`/checkout?planId=${item.id}`)
       }}
@@ -46,38 +44,43 @@ export const SubscriptionModal = (props: SubscriptionModalProps) => {
     >
       {/* additional info  */}
       <div className="space-y-2">
+        {/* plan */}
         <div className="rounded-[0.5rem] bg-neutral-1 px-5 py-8">
-          <div className="flex">
+          <div className="flex justify-between">
             <span className="mr-2 w-16 text-[1.125rem] text-neutral-7">
               {UI_TEXT.PLAN}
             </span>
-            <div>
+
+            <div className="text-right">
               <p className="mb-2 text-[1.125rem] font-medium text-primary">
-                {PLAN_NAME_TITLE_MAP[item.name]}
-                {UI_TEXT.PLAN}
+                {PLAN_NAME_TITLE_MAP[item.name]} {UI_TEXT.PLAN}
               </p>
-              <p className="text-[1.125rem] font-medium">
+              <p className="font-medium text-neutral-5">
                 ({UI_TEXT.CREDITS_DESCRIPTION_1} {item.creditNum}{' '}
                 {UI_TEXT.CREDITS_DESCRIPTION_2})
-              </p>
-              <p className="mt-4 text-neutral-5">
-                {UI_TEXT.RENEWS_AUTOMATICALLY_UNLESS_CANCELED}
               </p>
             </div>
           </div>
         </div>
+        {/* price */}
         <div className="rounded-[0.5rem] bg-neutral-1 px-5 py-8">
-          <p className="flex">
+          <div className="mb-2 flex justify-between">
             <span className="mr-2 w-16 text-[1.125rem] text-neutral-7">
               Price
             </span>
-            <span className="ml-auto text-[1.125rem]">
-              {currencySign}
-              {item.price}
-            </span>
-            <span className="ml-[6px] text-nowrap text-neutral-7">
-              / {UI_TEXT.MONTH}
-            </span>
+            <div className="text-right">
+              <span className="ml-auto text-[1.125rem]">
+                {currencySign}
+                {item.price}
+              </span>
+              <span className="ml-[6px] text-nowrap text-neutral-7">
+                / {UI_TEXT.MONTH}
+              </span>
+            </div>
+          </div>
+
+          <p className="text-nowrap text-right text-neutral-5">
+            {UI_TEXT.RENEWS_AUTOMATICALLY_UNLESS_CANCELED}
           </p>
         </div>
       </div>
