@@ -32,7 +32,7 @@ export const AddCreditsModal = (props: AddCreditsModalProps) => {
           stretch
           className="bg-white text-[0.875rem] hover:bg-white md:text-[1rem]"
           disabled={!isSelectedCredit}
-          form="add-credits-form"
+          form="add-credits"
         >
           {isSelectedCredit ? 'Continue' : 'Select an amount'}
         </Button>

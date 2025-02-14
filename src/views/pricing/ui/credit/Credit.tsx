@@ -16,7 +16,7 @@ export const Credit = () => {
         className="mt-8 bg-white hover:bg-white"
         stretch
         type="submit"
-        form="add-credits-form"
+        form="add-credits"
         disabled={!isSelectedCredit}
       >
         {isSelectedCredit ? 'Continue' : 'Select an amount'}

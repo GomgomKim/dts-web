@@ -1,19 +1,22 @@
 import { FormEventHandler, useState } from 'react'
 
+import { useRouter } from 'next/navigation'
+
+import { useCurrencyStore } from '@/views/pricing/model/useCurrencyStore'
 import { AgreementCheckbox } from '@/views/pricing/ui/modals/ui'
 
 import { Checkbox } from '@/shared/ui/checkbox'
 
-import { CREDITS_OPTIONS } from './model/constants'
-import { Credit, CreditOption, PostPurchaseCreditRequest } from './model/types'
-
-type PostPurchaseCreditFormValues = PostPurchaseCreditRequest
+import { CREDIT_ITEMS, CREDIT_NAME_TITLE_MAP, UI_TEXT } from './model/constants'
+import { Credit } from './model/types'
 
 interface AddCreditsFormProps {
   toggleIsSelectedCredit: (value: boolean) => void
 }
 
 export const AddCreditsForm = (props: AddCreditsFormProps) => {
+  const router = useRouter()
+
   const [agreeToPricingPolicy, setAgreeToPricingPolicy] = useState<{
     isChecked: boolean
     isShowError: boolean
@@ -23,14 +26,17 @@ export const AddCreditsForm = (props: AddCreditsFormProps) => {
   })
   const [checkedCredit, setCheckedCredit] = useState<{
     isChecked: boolean
-    checkedItemId: CreditOption['id'] | null
+    checkedItemId: Credit['id'] | null
   }>({
     isChecked: false,
     checkedItemId: null
   })
 
+  const currency = useCurrencyStore((state) => state.currency)
+  const currencySign = useCurrencyStore((state) => state.getCurrencySign())
+
   const handleChangeCheckbox: (
-    id: CreditOption['id']
+    id: Credit['id']
   ) => (checked: boolean) => void = (id) => (checked) => {
     if (!checked) {
       setCheckedCredit(() => ({ isChecked: false, checkedItemId: null }))
@@ -41,7 +47,7 @@ export const AddCreditsForm = (props: AddCreditsFormProps) => {
     props.toggleIsSelectedCredit(checked)
   }
 
-  const handleSubmit: FormEventHandler = async (e) => {
+  const handleClickContinue: FormEventHandler = async (e) => {
     e.preventDefault()
 
     // 동의 체크박스 확인
@@ -53,26 +59,24 @@ export const AddCreditsForm = (props: AddCreditsFormProps) => {
       return
     }
 
-    const postPurchaseCreditFormValues: PostPurchaseCreditFormValues = {
-      credit: checkedCredit.checkedItemId as Credit,
-      isAgreeToPricingPolicy: agreeToPricingPolicy.isChecked
-    }
-
-    // TODO: form 제출
-    alert(JSON.stringify(postPurchaseCreditFormValues))
+    router.push(`/checkout?creditId=${checkedCredit.checkedItemId}`)
   }
 
   return (
     <>
-      <form id="add-credits-form" className="space-y-3" onSubmit={handleSubmit}>
-        {CREDITS_OPTIONS.map(({ id, label, value }) => (
+      <form
+        id="add-credits"
+        className="space-y-3"
+        onSubmit={handleClickContinue}
+      >
+        {CREDIT_ITEMS[currency].map(({ id, name, price }) => (
           <div
             key={id}
             className="flex justify-between rounded-[0.5rem] bg-neutral-1 p-5"
           >
-            <label className="flex cursor-pointer items-center " htmlFor={id}>
+            <label className="flex cursor-pointer items-center " htmlFor={name}>
               <Checkbox
-                id={id}
+                id={name}
                 name="credit_option"
                 className="mr-2"
                 checked={
@@ -80,9 +84,14 @@ export const AddCreditsForm = (props: AddCreditsFormProps) => {
                 }
                 onCheckedChange={handleChangeCheckbox(id)}
               />
-              <span className="text-[1.125rem] font-medium">{label}</span>
+              <span className="text-[1.125rem] font-medium">
+                {CREDIT_NAME_TITLE_MAP[name]} {UI_TEXT.CREDITS}
+              </span>
             </label>
-            <span className="text-[1.125rem] text-neutral-7">${value}</span>
+            <span className="text-[1.125rem] text-neutral-7">
+              {currencySign}
+              {price}
+            </span>
           </div>
         ))}
       </form>
