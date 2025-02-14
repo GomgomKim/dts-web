@@ -2,6 +2,8 @@
 
 import { useEffect } from 'react'
 
+import { useSearchParams } from 'next/navigation'
+
 import { dtsAuthAxios } from '@/shared/api'
 import { cn } from '@/shared/lib/utils'
 import { throwIfNotAxiosError } from '@/shared/lib/utils/throwIfNotAxiosError'
@@ -14,14 +16,22 @@ import { isAxiosError } from 'axios'
 import { PaymentErrorModal } from '../PaymentErrorModal'
 
 export const PayNowPaypalButton = () => {
+  const searchParams = useSearchParams()
   const postBillingKeyMutation = usePostBillingKey()
   const storeId = process.env.NEXT_PUBLIC_STORE_ID
   const channelKey = process.env.NEXT_PUBLIC_CHANNEL_KEY_PAYPAL
 
   const { openModal } = useModals()
 
+  const planId = searchParams.get('planId')
+  const creditId = searchParams.get('creditId')
+
+  const isDisabled = !planId && !creditId
+
   useEffect(() => {
     const initializePaypal = async () => {
+      if (isDisabled) return
+
       if (!storeId || !channelKey) {
         throw new Error('No store id or channel key')
       }
@@ -95,6 +105,7 @@ const usePostBillingKey = () => {
   })
 }
 
+//  TODO: plan, credit id 연결!!!!!!!!
 const postBillingKey = async (billingKey: string) => {
   const response = await dtsAuthAxios.post('/payment/subscription', {
     planId: 10,

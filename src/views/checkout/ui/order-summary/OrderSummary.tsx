@@ -3,37 +3,61 @@
 import { useSearchParams } from 'next/navigation'
 
 import { useCurrencyStore } from '@/views/pricing/model/useCurrencyStore'
-import { PLAN_ITEMS } from '@/views/pricing/ui/plan-Items/model/constant'
-import { PLAN_NAME_TITLE_MAP } from '@/views/pricing/ui/plan-Items/model/types'
 
+import {
+  CREDIT_ITEMS,
+  CREDIT_NAME_TITLE_MAP
+} from '@/features/add-credits/model/constants'
+
+// import { PLAN_ITEMS } from '@/views/pricing/ui/plan-Items/model/constant'
+// import { PLAN_NAME_TITLE_MAP } from '@/views/pricing/ui/plan-Items/model/types'
 import { ErrorBoundary } from '@/shared/ui/error-boundary'
 
 import { UI_TEXT } from '../../model/constants'
 import './style.css'
 import {
   OrderLabeledDetail,
-  PayNowPaypalButton, // PayNowTossPaymentsButton,
+  PayNowPaypalButton,
+  PayNowTossPaymentsButton,
   PaymentErrorModal
 } from './ui'
-import { PeriodOfUse } from './ui/PeriodOfUse'
+
+// import { PeriodOfUse } from './ui/PeriodOfUse'
 
 export const OrderSummary = () => {
   const searchParams = useSearchParams()
   const currency = useCurrencyStore((state) => state.currency)
   const currencySign = useCurrencyStore((state) => state.getCurrencySign())
 
-  const planId = searchParams.get('planId')
+  // const planId = searchParams.get('planId') || '10'
+  const creditId = searchParams.get('creditId')
 
-  if (!planId) return null
+  // if (!planId) {
+  //   console.log('planId is not found')
+  //   return null
+  // }
 
-  const selectedPlan = PLAN_ITEMS[currency].find(
-    (item) => item.id === parseInt(planId)
+  // const selectedPlan = PLAN_ITEMS[currency].find(
+  //   (item) => item.id === parseInt(planId)
+  // )
+
+  // if (!selectedPlan) return null
+
+  // const discount = 0
+  // const subtotal = selectedPlan.price - discount
+
+  if (!creditId) {
+    console.log('creditId is not found')
+    return null
+  }
+  const selectedCredit = CREDIT_ITEMS[currency].find(
+    (item) => item.id === parseInt(creditId)
   )
 
-  if (!selectedPlan) return null
+  if (!selectedCredit) return null
 
   const discount = 0
-  const subtotal = selectedPlan.price - discount
+  const subtotal = selectedCredit?.price - discount
 
   return (
     <div className="m-auto w-[560px] divide-y rounded-[0.5rem] border border-neutral-2 p-10">
@@ -41,7 +65,7 @@ export const OrderSummary = () => {
         {UI_TEXT.ORDER_SUMMARY}
       </h2>
       <div className="space-y-3 py-6">
-        <OrderLabeledDetail
+        {/* <OrderLabeledDetail
           label={UI_TEXT.PLAN}
           detail={`${PLAN_NAME_TITLE_MAP[selectedPlan?.name]} ${UI_TEXT.PLAN_DESCRIPTION_1} ${selectedPlan?.creditNum} ${UI_TEXT.PLAN_DESCRIPTION_2}`}
         />
@@ -57,12 +81,17 @@ export const OrderSummary = () => {
               </div>
             </>
           }
+        /> */}
+        <OrderLabeledDetail
+          label={'credits'}
+          detail={`${CREDIT_NAME_TITLE_MAP[selectedCredit.name]} Credits`}
         />
       </div>
       <div className="py-8">
         <OrderLabeledDetail
           label={UI_TEXT.PRICE}
-          detail={`${currencySign}${selectedPlan?.price}`}
+          // detail={`${currencySign}${selectedPlan?.price}`}
+          detail={`${currencySign}${selectedCredit?.price}`}
         />
       </div>
       <div className="divide-y pb-6 pt-8">
@@ -98,12 +127,14 @@ export const OrderSummary = () => {
         </div>
       </div>
       <div className="h-[48px] rounded-full border-none bg-neutral-1">
-        {/* TODO: usd이면 페이팔 버튼 렌더링 */}
         <ErrorBoundary
           FallbackComponent={({ error }) => <PaymentErrorModal e={error} />}
         >
-          <PayNowPaypalButton />
-          {/* <PayNowTossPaymentsButton /> */}
+          {currency === 'USD' ? (
+            <PayNowPaypalButton />
+          ) : (
+            <PayNowTossPaymentsButton />
+          )}
         </ErrorBoundary>
       </div>
     </div>

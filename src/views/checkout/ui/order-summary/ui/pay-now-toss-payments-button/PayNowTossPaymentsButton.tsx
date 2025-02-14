@@ -18,9 +18,12 @@ export const PayNowTossPaymentsButton = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { openModal } = useModals()
+  const postBillingKeyMutation = usePostBillingKey()
 
   const planId = searchParams.get('planId')
-  const postBillingKeyMutation = usePostBillingKey()
+  const creditId = searchParams.get('creditId')
+
+  const isDisabled = !planId && !creditId
 
   const handleClickPayNow = async (planId: number) => {
     // 1. 결제창을 통해 빌링키를 발급받습니다.
@@ -38,6 +41,7 @@ export const PayNowTossPaymentsButton = () => {
     // 2. 고객사 서버에 빌링키를 전달합니다
     postBillingKeyMutation.mutate(postPaymentSubscriptionData, {
       onSuccess: () => {
+        // TODO:
         alert('정기 결제 성공')
         router.replace('/my-account?tab=subscription')
       },
@@ -51,14 +55,13 @@ export const PayNowTossPaymentsButton = () => {
     })
   }
 
-  if (!planId) return null
-
+  if (isDisabled) return null
   return (
     <Button
       stretch
       type="button"
       className="bg-white hover:bg-white"
-      disabled={!planId}
+      disabled={isDisabled}
       onClick={() => handleClickPayNow(parseInt(planId!))}
     >
       {UI_TEXT.PAY_NOW}
