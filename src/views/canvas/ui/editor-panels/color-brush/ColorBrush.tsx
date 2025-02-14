@@ -39,7 +39,18 @@ export const ColorBrush = (props: ColorBrushProps) => {
   )
 
   const postfixContent = (
-    <div className="mt-4">
+    <div
+      className="mt-4"
+      onMouseDown={(e) => {
+        e.nativeEvent.stopImmediatePropagation()
+      }}
+      onTouchStart={(e) => {
+        e.nativeEvent.stopImmediatePropagation()
+      }}
+      onClick={(e) => {
+        e.nativeEvent.stopImmediatePropagation()
+      }}
+    >
       <h4 className="mb-2 text-[1rem] text-neutral-7">
         {DRAWING_PANEL_UI_TEXT.SMOOTH_EDGES}
       </h4>
