@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 
 import { getMembership } from './api'
 
-export const useGetMemeberShip = () => {
+export const useGetMemberShip = () => {
   const isAuth = useAuthStore((state) => state.isAuth)
 
   return useQuery({

@@ -6,7 +6,7 @@ import Link from 'next/link'
 
 import { Badge, Button } from '@/shared/ui'
 
-import { useGetMemeberShip } from '../../model/adapter'
+import { useGetMemberShip } from '../../model/adapter'
 import { useCurrencyStore } from '../../model/useCurrencyStore'
 import {
   PLAN_CUSTOM,
@@ -28,7 +28,7 @@ export const PlanItems = () => {
 
   const endIndex = PLAN_ITEMS[currency].length - 1
 
-  const { data: subscribingPlanInfo, isLoading } = useGetMemeberShip()
+  const { data: subscribingPlanInfo, isLoading } = useGetMemberShip()
 
   useEffect(() => {
     console.log(subscribingPlanInfo)
