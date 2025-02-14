@@ -8,10 +8,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs/Tabs'
 
 import { UI_TEXT } from './model/constants'
 import { Credit } from './ui/credit'
-import {
-  NormalPaymentPaypalTest // RecurringPaymentPaypalTest
-} from './ui/modals/subscription-modal/ui'
-import { PaymentErrorModal } from './ui/modals/subscription-modal/ui/PaymentErrorModal'
 import { PlanItems } from './ui/plan-Items'
 
 const DEFAULT_TAB = 'plan'
@@ -38,16 +34,6 @@ export default function Pricing() {
       <p className="mb-16 text-center text-[1.25rem] font-medium text-neutral-7">
         {isPlanTab ? UI_TEXT.PLAN_DESCRIPTION : UI_TEXT.CREDIT_DESCRIPTION}
       </p>
-
-      <ErrorBoundary
-        FallbackComponent={({ error }) => <PaymentErrorModal e={error} />}
-      >
-        <div className="flex gap-10">
-          <NormalPaymentPaypalTest />
-          {/* <RecurringPaymentPaypalTest /> */}
-        </div>
-      </ErrorBoundary>
-
       <Tabs
         value={currentTab}
         onValueChange={(value) => handleClickTab(value as PricingTabs)}

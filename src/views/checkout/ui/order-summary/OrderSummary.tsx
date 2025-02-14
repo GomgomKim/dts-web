@@ -9,9 +9,10 @@ import { PLAN_NAME_TITLE_MAP } from '@/views/pricing/ui/plan-Items/model/types'
 import { ErrorBoundary } from '@/shared/ui/error-boundary'
 
 import { UI_TEXT } from '../../model/constants'
+import './style.css'
 import {
   OrderLabeledDetail,
-  PayNowTossPaymentsButton,
+  PayNowPaypalButton, // PayNowTossPaymentsButton,
   PaymentErrorModal
 } from './ui'
 import { PeriodOfUse } from './ui/PeriodOfUse'
@@ -96,12 +97,13 @@ export const OrderSummary = () => {
           />
         </div>
       </div>
-      <div className="border-none">
+      <div className="h-[48px] rounded-full border-none bg-neutral-1">
         {/* TODO: usd이면 페이팔 버튼 렌더링 */}
         <ErrorBoundary
           FallbackComponent={({ error }) => <PaymentErrorModal e={error} />}
         >
-          <PayNowTossPaymentsButton />
+          <PayNowPaypalButton />
+          {/* <PayNowTossPaymentsButton /> */}
         </ErrorBoundary>
       </div>
     </div>
