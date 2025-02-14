@@ -17,6 +17,9 @@ type ColorBrushViewProps = {
 export const ColorBrushView = (props: ColorBrushViewProps) => {
   // 컬러 브러시 관련 (Zustand 등)
   const customBrushes = useColorBrushStore((state) => state.customBrushes)
+  const colorBrushSmoothEdges = useColorBrushStore(
+    (state) => state.colorBrushSmoothEdges
+  )
   const selectedColorBrushItem = useColorBrushStore(
     (state) => state.selectedColorBrushItem
   )
@@ -88,7 +91,7 @@ export const ColorBrushView = (props: ColorBrushViewProps) => {
   useEffect(() => {
     applyColor()
     drawHighlight({ showHighlight: false })
-  }, [colorBrushColor, colorBrushOpacity])
+  }, [colorBrushColor, colorBrushOpacity, colorBrushSmoothEdges])
 
   // 브러시 선택 시 호버 표시
   useEffect(() => {
