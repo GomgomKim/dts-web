@@ -35,6 +35,10 @@ export const ColorPicker = (props: ColorPickerProps) => {
   const setHairColorOpacity = useHairColorStore(
     (state) => state.setHairColorOpacity
   )
+  const updateBrushColor = useColorBrushStore((state) => state.updateBrushColor)
+  const selectedColorBrushItem = useColorBrushStore(
+    (state) => state.selectedColorBrushItem
+  )
 
   // 초기 알파값 설정
   useEffect(() => {
@@ -44,6 +48,26 @@ export const ColorPicker = (props: ColorPickerProps) => {
       hsv: { ...color.hsv, a: props.isHairColor ? 1.0 : 0.3 }
     })
   }, [])
+
+  // 선택된 브러시의 색상으로 컬러피커 색상 업데이트
+  useEffect(() => {
+    if (
+      !props.isHairColor &&
+      selectedColorBrushItem?.color &&
+      selectedColorBrushItem.opacity
+    ) {
+      const [r, g, b] = selectedColorBrushItem.color
+      const hex = rgbToHex(r, g, b)
+      const hsv = rgbToHsv(r, g, b)
+      setColor({
+        hex,
+        rgb: { r, g, b, a: selectedColorBrushItem.opacity },
+        hsv: { ...hsv, a: selectedColorBrushItem.opacity }
+      })
+      setColorBrushColor(selectedColorBrushItem.color)
+      setColorBrushOpacity(selectedColorBrushItem.opacity)
+    }
+  }, [selectedColorBrushItem])
 
   useEffect(() => {
     if (props.isHairColor && hairColor) {
@@ -74,9 +98,13 @@ export const ColorPicker = (props: ColorPickerProps) => {
     if (props.isHairColor) {
       setHairColor([r, g, b])
       setHairColorOpacity(a)
-    } else {
+    }
+    if (!props.isHairColor) {
       setColorBrushColor([r, g, b])
       setColorBrushOpacity(a)
+      if (selectedColorBrushItem?.id) {
+        updateBrushColor(selectedColorBrushItem.id, [r, g, b])
+      }
     }
   }
 

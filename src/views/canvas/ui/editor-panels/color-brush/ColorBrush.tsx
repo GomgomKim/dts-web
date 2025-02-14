@@ -10,8 +10,6 @@ import { SelectDrawTools } from '@/features/select-draw-tools'
 import { TOOL_TYPE } from '@/features/select-draw-tools/model/constants'
 import { DrawTool } from '@/features/select-draw-tools/model/types'
 
-import { DUMMY_DATA } from './model'
-
 interface ColorBrushProps {
   id: AiToolId | null
 }
@@ -26,7 +24,7 @@ export const ColorBrush = (props: ColorBrushProps) => {
   const customBrushes = useColorBrushStore((state) => state.customBrushes)
 
   // DUMMY_DATA와 customBrushes 합치기
-  const allTools = [...DUMMY_DATA, ...customBrushes]
+  const allTools = [...customBrushes]
 
   const prefixContent = (
     <SelectDrawTools

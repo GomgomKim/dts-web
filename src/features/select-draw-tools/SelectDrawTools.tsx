@@ -26,11 +26,19 @@ export const SelectDrawTools = (props: SelectDrawToolsProps) => {
   const setSelectedColorBrushItem = useColorBrushStore(
     (state) => state.setSelectedColorBrushItem
   )
+  const colorBrushColor = useColorBrushStore((state) => state.colorBrushColor)
+  const colorBrushOpacity = useColorBrushStore(
+    (state) => state.colorBrushOpacity
+  )
   const customBrushes = useColorBrushStore((state) => state.customBrushes)
   const addBrushTool = () => {
     // 새로 그린 브러시가 아직 등록되지 않았다면 새로 등록
-    console.log('customBrushes:', customBrushes)
-    const newBrush = createCustomBrush(customBrushes.length + 1)
+    const newBrush = createCustomBrush(
+      customBrushes.length - 1,
+      colorBrushColor,
+      colorBrushOpacity
+    )
+
     addCustomBrush(newBrush)
     setSelectedColorBrushItem(newBrush)
   }

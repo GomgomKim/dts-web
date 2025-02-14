@@ -90,7 +90,6 @@ export const ColorBrushView = (props: ColorBrushViewProps) => {
   // 브러시 색상 변경 시 applyColor 호출
   useEffect(() => {
     applyColor()
-    drawHighlight({ showHighlight: false })
   }, [colorBrushColor, colorBrushOpacity, colorBrushSmoothEdges])
 
   // 브러시 선택 시 호버 표시
@@ -135,6 +134,8 @@ export const ColorBrushView = (props: ColorBrushViewProps) => {
     // 새로운 클릭 시 이전 위치 초기화 (선이 이어지지 않도록)
     setPrevPos(null)
 
+    drawHighlight({ showHighlight: false })
+
     // 새 브러시 그리기 시작할 때 새로운 세그먼트 값 할당
     if (!selectedColorBrushItem) {
       if (customBrushes.length < MAX_CUSTOM_BRUSHES) {
@@ -163,8 +164,8 @@ export const ColorBrushView = (props: ColorBrushViewProps) => {
         if (ctx) {
           ctx.fillStyle =
             selectedTool === TOOL_IDS.ERASE
-              ? 'rgba(255, 0, 0, 0.1)'
-              : 'rgba(110, 255, 182, 0.1)'
+              ? 'rgba(0, 0, 0, 0)'
+              : 'rgba(0, 0, 0, 0)'
 
           if (prevPos) {
             ctx.beginPath()
@@ -222,13 +223,12 @@ export const ColorBrushView = (props: ColorBrushViewProps) => {
       }
 
       setPrevPos({ x: pos.real.x, y: pos.real.y })
+      applyColor()
     }
   }
 
   // 마우스 업 이벤트 추가
   const handleMouseUp = () => {
-    applyColor()
-    drawHighlight({ showHighlight: false })
     setIsDrawing(false)
   }
 

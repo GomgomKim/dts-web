@@ -34,6 +34,10 @@ export const useApplyColor = (props: UseApplyColorProps) => {
   const updateColorBrushLayer = useLayersStore(
     (state) => state.updateColorBrushLayer
   )
+  const updateBrushColor = useColorBrushStore((state) => state.updateBrushColor)
+  const updateBrushOpacity = useColorBrushStore(
+    (state) => state.updateBrushOpacity
+  )
   const applyColor = useCallback(
     (isHairColor?: boolean) => {
       if (!props.modelMat || !props.maskMatRef?.current) return null
@@ -43,13 +47,25 @@ export const useApplyColor = (props: UseApplyColorProps) => {
         !selectedColorBrushItem &&
         customBrushes.length < MAX_CUSTOM_BRUSHES
       ) {
-        const newBrush = createCustomBrush(customBrushes.length + 1)
+        const newBrush = createCustomBrush(
+          customBrushes.length - 1,
+          colorBrushColor,
+          colorBrushOpacity
+        )
         addCustomBrush(newBrush)
         setSelectedColorBrushItem(newBrush)
       }
 
       const segmentToApply = mappingBrushSegment(selectedColorBrushItem?.id)
-      if (segmentToApply === null || segmentToApply === undefined) return null
+      if (
+        !selectedColorBrushItem?.id ||
+        segmentToApply === null ||
+        segmentToApply === undefined
+      )
+        return null
+
+      updateBrushColor(selectedColorBrushItem?.id, colorBrushColor)
+      updateBrushOpacity(selectedColorBrushItem?.id, colorBrushOpacity)
 
       const base64 = applyMultiplyAndFeather(
         props.modelMat,

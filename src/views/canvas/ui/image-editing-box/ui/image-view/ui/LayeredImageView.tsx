@@ -1,5 +1,3 @@
-import { useEffect } from 'react'
-
 import Image from 'next/image'
 
 import { useLayersStore } from '../lib/useLayersStore'
@@ -10,10 +8,6 @@ export const LayeredImageView = () => {
   const colorBrushLayers = useLayersStore((state) => state.colorBrushLayers)
   const hairColorLayer = useLayersStore((state) => state.hairColorLayer)
   const eyeContactsLayer = useLayersStore((state) => state.eyeContactsLayer)
-
-  useEffect(() => {
-    console.log('colorBrushLayers:', colorBrushLayers)
-  }, [colorBrushLayers])
 
   return (
     <div style={{ position: 'absolute', width: '100%', height: '100%' }}>

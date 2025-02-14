@@ -375,27 +375,23 @@ export const applyMultiplyAndFeather = (
   maskMap.convertTo(maskMap, cv.CV_32FC1, opacity)
   to3D(maskMap, maskImap)
 
-  // 칠한 색상(colorImap)과 마스크(maskImap)를 이용해 레이어를 생성
-
-  // 1. 색상 이미지에 페더링된 마스크를 곱하여 색칠된 영역만 남깁니다.
-  cv.multiply(colorImap, maskImap, colorImap)
-
-  // 2. alpha 채널 생성 : maskMap을 [0, 255] 범위의 8비트 단일 채널로 변환합니다.
+  // 1. alpha 채널 생성
+  // maskMap을 0~255 범위의 8비트 단일 채널 이미지로 변환
   const alphaMap = new cv.Mat()
   maskMap.convertTo(alphaMap, cv.CV_8UC1, 255)
 
-  // 3. colorImap을 8비트 3채널(BGR) 이미지로 변환합니다.
+  // 2. colorImap을 8비트 3채널(BGR) 이미지로 변환
   const color8U = new cv.Mat()
   colorImap.convertTo(color8U, cv.CV_8UC3)
 
-  // 4. BGR 채널과 생성한 alpha 채널을 결합하여 RGBA 이미지(레이어) 생성
-  const rgba = new cv.Mat()
+  // 3. B, G, R 채널을 분리한 후, alphaMap을 4번째 채널로 추가해 4채널 RGBA 이미지 생성
   const channels = new cv.MatVector()
-  cv.split(color8U, channels) // B, G, R 채널 분리
-  channels.push_back(alphaMap) // alpha 채널 추가
-  cv.merge(channels, rgba) // 4채널 이미지 생성
+  cv.split(color8U, channels) // channels: [B, G, R]
+  channels.push_back(alphaMap) // 4번째 채널에 alpha 추가
+  const rgba = new cv.Mat()
+  cv.merge(channels, rgba)
 
-  // 5. 결과 이미지를 base64로 변환
+  // 4. 결과 이미지를 base64로 변환
   const resImage = matToBase64(rgba)
 
   // 메모리 정리

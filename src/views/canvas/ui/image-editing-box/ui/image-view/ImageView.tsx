@@ -123,7 +123,6 @@ export const ImageView = (props: ImageViewProps) => {
     const originalImg = new Image()
     originalImg.crossOrigin = 'anonymous'
     originalImg.onload = () => {
-      console.log('originalImg:', originalImg)
       // 비율을 유지하면서 리사이징하기 위한 계산
       const scale = Math.min(
         targetSize / originalImg.width,
@@ -199,7 +198,6 @@ export const ImageView = (props: ImageViewProps) => {
         }
         originalMaskMatRef.current = initMaskMat.clone()
         maskMatRef.current = initMaskMat.clone()
-        console.log('initMaskMat:', initMaskMat)
       }
       parseImg.src = FaceParseImg.src
     }

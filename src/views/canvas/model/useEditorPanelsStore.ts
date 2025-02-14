@@ -5,6 +5,7 @@ import { Asset } from '@/shared/api/types'
 import { create } from 'zustand'
 
 import {
+  BASIC_BRUSHES,
   Brush,
   MAX_CUSTOM_BRUSHES
 } from '../ui/editor-panels/color-brush/model/DummyData'
@@ -71,6 +72,8 @@ interface ColorBrushState {
   setColorBrushColor: (value: [number, number, number]) => void
   setColorBrushOpacity: (value: number) => void
   addCustomBrush: (brush: Brush) => void
+  updateBrushColor: (brushId: string, color: [number, number, number]) => void
+  updateBrushOpacity: (brushId: string, opacity: number) => void
 }
 
 export const useColorBrushStore = create<ColorBrushState>((set) => ({
@@ -79,7 +82,7 @@ export const useColorBrushStore = create<ColorBrushState>((set) => ({
   colorBrushSmoothEdges: DEFAULT_SMOOTH_EDGES,
   colorBrushColor: [255, 255, 255],
   colorBrushOpacity: 0.3,
-  customBrushes: [],
+  customBrushes: [...BASIC_BRUSHES],
   setIsAutoSelect: (value) =>
     set(() => ({
       isAutoSelect: value
@@ -101,7 +104,19 @@ export const useColorBrushStore = create<ColorBrushState>((set) => ({
     set((state) => {
       if (state.customBrushes.length >= MAX_CUSTOM_BRUSHES) return state
       return { customBrushes: [...state.customBrushes, brush] }
-    })
+    }),
+  updateBrushColor: (brushId, color) =>
+    set((state) => ({
+      customBrushes: state.customBrushes.map((brush) =>
+        brush.id === brushId ? { ...brush, color } : brush
+      )
+    })),
+  updateBrushOpacity: (brushId, opacity) =>
+    set((state) => ({
+      customBrushes: state.customBrushes.map((brush) =>
+        brush.id === brushId ? { ...brush, opacity } : brush
+      )
+    }))
 }))
 
 interface SkinGlowState {
