@@ -11,6 +11,7 @@ interface SkinGlowViewProps {
   normalMat: cv.Mat | null
   maskMat: cv.Mat | null
   setModelMat: (mat: cv.Mat) => void
+  setSkinGlowMat: (mat: cv.Mat) => void
 }
 
 export const SkinGlowView = forwardRef<HTMLCanvasElement, SkinGlowViewProps>(

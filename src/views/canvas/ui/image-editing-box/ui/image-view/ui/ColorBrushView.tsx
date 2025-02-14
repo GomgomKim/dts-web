@@ -1,142 +1,112 @@
-import { forwardRef, useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
-import Image from 'next/image'
-
-import { compositeHairAndBrush } from '@/views/canvas/lib/editColorService'
-import {
-  useColorBrushStore,
-  useHairColorStore
-} from '@/views/canvas/model/useEditorPanelsStore'
+import { useColorBrushStore } from '@/views/canvas/model/useEditorPanelsStore'
 import { useToolModeStore } from '@/views/canvas/model/useToolModeStore'
 import { TOOL_IDS } from '@/views/canvas/ui/brush-erase-toggle/model'
 import { MAX_CUSTOM_BRUSHES } from '@/views/canvas/ui/editor-panels/color-brush/model'
 import { CUSTOM_BRUSH_START } from '@/views/canvas/ui/editor-panels/color-brush/model'
 
-import { useCanvasApplyColor } from '../lib/useCanvasApplyColor'
+import { useApplyColor } from '../lib/useApplyColor'
 import { useCanvasHighlight } from '../lib/useCanvasHighlight'
 
 type ColorBrushViewProps = {
-  imgUrl: string
   modelMat: cv.Mat | null
-  setModelMat: (val: cv.Mat) => void
   maskMatRef: React.RefObject<cv.Mat>
-  hairMaskMatRef: React.RefObject<cv.Mat>
 }
 
-export const ColorBrushView = forwardRef<
-  HTMLCanvasElement,
-  ColorBrushViewProps
->((props, ref) => {
+export const ColorBrushView = (props: ColorBrushViewProps) => {
   // 컬러 브러시 관련 (Zustand 등)
-  const {
-    customBrushes,
-    selectedColorBrushItem,
-    colorBrushColor,
-    colorBrushOpacity
-  } = useColorBrushStore()
-  const { hairColor, hairColorOpacity, hairColorLevel } = useHairColorStore()
-
+  const customBrushes = useColorBrushStore((state) => state.customBrushes)
+  const colorBrushSmoothEdges = useColorBrushStore(
+    (state) => state.colorBrushSmoothEdges
+  )
+  const selectedColorBrushItem = useColorBrushStore(
+    (state) => state.selectedColorBrushItem
+  )
+  const colorBrushColor = useColorBrushStore((state) => state.colorBrushColor)
+  const colorBrushOpacity = useColorBrushStore(
+    (state) => state.colorBrushOpacity
+  )
   const [currentBrushSegment, setCurrentBrushSegment] = useState<number | null>(
     null
   )
+  const ref = useRef<HTMLCanvasElement>(null)
   // 마우스 위치 상태
   const [isDrawing, setIsDrawing] = useState(false)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const [prevPos, setPrevPos] = useState<{ x: number; y: number } | null>(null)
-  const [isHairColorChange, setIsHairColorChange] = useState(false)
+  const [brushMaskMatRefs, setBrushMaskMatRefs] = useState<{
+    [key: string]: React.MutableRefObject<cv.Mat | null>
+  }>({})
 
   // 브러시 커서 사이즈 및 종류 (brush / erase)
   const { toolSize, selectedTool } = useToolModeStore()
 
-  // 호버 노출 여부
-  const [showHighlight, setShowHighlight] = useState(false)
+  useEffect(() => {
+    if (props.maskMatRef.current) {
+      setBrushMaskMatRefs({
+        lips: { current: props.maskMatRef.current.clone() },
+        eyebrows: { current: props.maskMatRef.current.clone() },
+        brush_1: { current: props.maskMatRef.current.clone() },
+        brush_2: { current: props.maskMatRef.current.clone() },
+        brush_3: { current: props.maskMatRef.current.clone() },
+        brush_4: { current: props.maskMatRef.current.clone() },
+        brush_5: { current: props.maskMatRef.current.clone() },
+        brush_6: { current: props.maskMatRef.current.clone() }
+      })
+    }
+    // 만약 props.maskMatRef.current가 변경된다면 다시 clone 처리
+  }, [props.maskMatRef.current])
+
+  // 현재 선택된 브러시 아이디에 따라 활성화된 mask ref를 결정합니다.
+  const getActiveMaskRef = () => {
+    if (selectedColorBrushItem && brushMaskMatRefs[selectedColorBrushItem.id]) {
+      return brushMaskMatRefs[selectedColorBrushItem.id]
+    }
+    return props.maskMatRef
+  }
 
   // 얼굴 부위별 호버
   const { drawHighlight } = useCanvasHighlight({
     canvasRef: ref as React.RefObject<HTMLCanvasElement>,
-    modelMat: props.modelMat,
-    maskMatRef: props.maskMatRef,
-    showHighlight
+    maskMatRef: getActiveMaskRef()
   })
 
   // 색 적용
-  const { applyColor, applyHairColor } = useCanvasApplyColor({
-    canvasRef: ref as React.RefObject<HTMLCanvasElement>,
+  const { applyColor } = useApplyColor({
     modelMat: props.modelMat,
-    maskMatRef: props.maskMatRef,
-    hairMaskMatRef: props.hairMaskMatRef,
-    setModelMat: props.setModelMat,
-    setShowHighlight,
-    currentBrushSegment,
-    setCurrentBrushSegment
+    maskMatRef: getActiveMaskRef()
   })
 
-  // 머리 색상 변경 시 applyHairColor 호출
+  // 캔버스의 내부 해상도를 컨테이너 크기에 맞게 설정 (좌표 계산 정확도 개선)
   useEffect(() => {
-    // 브러시 마스크 먼저 저장
-    const brushMat = applyColor()
-
-    // 헤어 색상 적용
-    const hairMat = applyHairColor()
-
-    if (props.hairMaskMatRef.current) {
-      const compositeMat = compositeHairAndBrush(
-        hairMat,
-        brushMat,
-        props.hairMaskMatRef.current,
-        hairColor || [0, 0, 0]
-      )
-
-      // 합성 결과를 modelMat으로 설정
-      if (compositeMat) {
-        const finalMat = compositeMat.clone()
-        props.setModelMat(finalMat)
-        compositeMat.delete()
-        setIsHairColorChange(true)
-      }
+    const canvas = ref.current
+    if (canvas) {
+      canvas.width = canvas.offsetWidth
+      canvas.height = canvas.offsetHeight
     }
-
-    // 메모리 해제
-    brushMat?.delete()
-  }, [hairColor, hairColorOpacity, hairColorLevel])
-
-  // 레이어 업데이트
-  useEffect(() => {
-    // 동기화 위한 타임아웃
-    if (isHairColorChange) {
-      setTimeout(() => {
-        applyColor()
-        setIsHairColorChange(false)
-      }, 10)
-    }
-  }, [isHairColorChange])
+  }, [])
 
   // 브러시 색상 변경 시 applyColor 호출
   useEffect(() => {
-    const brushMat = applyColor()
-
-    // brushMat의 복제본을 생성해 modelMat 업데이트
-    if (brushMat) {
-      props.setModelMat(brushMat.clone())
-      brushMat.delete()
-    }
-  }, [colorBrushColor, colorBrushOpacity])
+    applyColor()
+    drawHighlight({ showHighlight: false })
+  }, [colorBrushColor, colorBrushOpacity, colorBrushSmoothEdges])
 
   // 브러시 선택 시 호버 표시
   useEffect(() => {
     if (selectedColorBrushItem) {
-      setShowHighlight(true)
+      drawHighlight({ showHighlight: true })
+    }
+    if (!selectedColorBrushItem) {
+      drawHighlight({ showHighlight: false })
     }
   }, [selectedColorBrushItem])
-
-  useEffect(() => {
-    drawHighlight()
-  }, [drawHighlight])
 
   // 마우스 좌표 계산 함수
   const getMousePosition = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const canvas = (ref as React.RefObject<HTMLCanvasElement>).current
-    if (!canvas || !props.maskMatRef.current) return null
+    if (!canvas || !getActiveMaskRef()?.current) return null
 
     const rect = canvas.getBoundingClientRect()
     const displayX = e.clientX - rect.left
@@ -151,7 +121,7 @@ export const ColorBrushView = forwardRef<
     return {
       display: { x: displayX, y: displayY },
       real: { x: realX, y: realY },
-      segment: props.maskMatRef.current.ucharAt(
+      segment: getActiveMaskRef()?.current?.ucharAt(
         Math.floor(realY),
         Math.floor(realX)
       )
@@ -175,22 +145,20 @@ export const ColorBrushView = forwardRef<
   }
 
   const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    const mainCanvas = (ref as React.RefObject<HTMLCanvasElement>).current
-    if (!mainCanvas || !props.maskMatRef.current) return
+    const mainCanvas = ref.current
+    const activeMaskRef = getActiveMaskRef()
+    if (!mainCanvas || !activeMaskRef?.current) return
     const pos = getMousePosition(e)
     if (!pos) return
 
-    // 커서 위치용
     setMousePos(pos.display)
 
-    // 브러시 기능
     if (isDrawing && selectedTool) {
       const segments =
         selectedColorBrushItem?.segments ??
         (currentBrushSegment ? [currentBrushSegment] : [])
 
       if (segments.length > 0) {
-        // 캔버스에 브러시 표시
         const ctx = mainCanvas.getContext('2d')
         if (ctx) {
           ctx.fillStyle =
@@ -199,7 +167,6 @@ export const ColorBrushView = forwardRef<
               : 'rgba(110, 255, 182, 0.1)'
 
           if (prevPos) {
-            // 부드러운 선 그리기
             ctx.beginPath()
             ctx.moveTo(prevPos.x, prevPos.y)
             ctx.lineTo(pos.real.x, pos.real.y)
@@ -209,7 +176,6 @@ export const ColorBrushView = forwardRef<
             ctx.lineJoin = 'round'
             ctx.stroke()
 
-            // 마스킹도 선형으로 처리
             const dx = pos.real.x - prevPos.x
             const dy = pos.real.y - prevPos.y
             const distance = Math.sqrt(dx * dx + dy * dy)
@@ -223,7 +189,7 @@ export const ColorBrushView = forwardRef<
               if (selectedTool === TOOL_IDS.BRUSH) {
                 segments.forEach((segmentValue) => {
                   window.cv.circle(
-                    props.maskMatRef.current!,
+                    activeMaskRef.current!,
                     new window.cv.Point(x, y),
                     mapToolSizeToPx(toolSize) / 2,
                     new window.cv.Scalar(segmentValue),
@@ -231,10 +197,9 @@ export const ColorBrushView = forwardRef<
                   )
                 })
               }
-              // 지우개 모드일 때는 단일 -1 값으로 마스킹
               if (selectedTool === TOOL_IDS.ERASE) {
                 window.cv.circle(
-                  props.maskMatRef.current!,
+                  activeMaskRef.current!,
                   new window.cv.Point(x, y),
                   mapToolSizeToPx(toolSize) / 2,
                   new window.cv.Scalar(0),
@@ -243,7 +208,6 @@ export const ColorBrushView = forwardRef<
               }
             }
           } else {
-            // 첫 점은 원으로 그리기
             ctx.beginPath()
             ctx.arc(
               pos.real.x,
@@ -263,14 +227,8 @@ export const ColorBrushView = forwardRef<
 
   // 마우스 업 이벤트 추가
   const handleMouseUp = () => {
-    const brushMat = applyColor()
-
-    // brushMat의 복제본을 생성해 modelMat 업데이트
-    if (brushMat) {
-      const updatedModelMat = brushMat.clone()
-      props.setModelMat(updatedModelMat)
-      brushMat.delete()
-    }
+    applyColor()
+    drawHighlight({ showHighlight: false })
     setIsDrawing(false)
   }
 
@@ -287,21 +245,10 @@ export const ColorBrushView = forwardRef<
 
   return (
     <div className="relative size-full">
-      {/* 배경 이미지 */}
-      <div className="relative size-full">
-        <Image
-          src={props.imgUrl}
-          alt=""
-          fill
-          style={{ objectFit: 'contain' }}
-          priority
-        />
-      </div>
-
       {/* 캔버스 레이어 */}
       <canvas
         ref={ref}
-        className="absolute left-0 top-0 size-full cursor-none"
+        className="absolute left-0 top-0 z-10 size-full cursor-none"
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseLeave}
@@ -319,11 +266,10 @@ export const ColorBrushView = forwardRef<
           border: `1px solid ${selectedTool === TOOL_IDS.BRUSH ? '#6effb6' : '#ffffff'}`,
           borderRadius: '50%',
           backgroundColor: 'rgba(0,0,0,0.05)',
-          pointerEvents: 'none'
+          pointerEvents: 'none',
+          zIndex: 10
         }}
       />
     </div>
   )
-})
-
-ColorBrushView.displayName = 'ColorBrushView'
+}

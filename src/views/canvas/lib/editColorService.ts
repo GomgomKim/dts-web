@@ -57,6 +57,26 @@ export const matToBase64 = (input_mat: cv.Mat): string => {
   return dataURL
 }
 
+export const base64ToMat = (base64: string): Promise<cv.Mat> => {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    img.crossOrigin = 'anonymous'
+    img.onload = () => {
+      const canvas = document.createElement('canvas')
+      canvas.width = img.width
+      canvas.height = img.height
+      const ctx = canvas.getContext('2d')
+      if (!ctx) return reject(new Error('2d context 없음'))
+      ctx.drawImage(img, 0, 0)
+      // cv.imread 기본적으로 8UC4 (RGBA) 로 읽어옴
+      const mat = window.cv.imread(canvas)
+      resolve(mat)
+    }
+    img.onerror = (err) => reject(err)
+    img.src = base64
+  })
+}
+
 // cv.Mat → float32 BGR (Imap) 로 변환
 const toImap = (matSrc: cv.Mat): cv.Mat => {
   const type = matSrc.type()
@@ -128,6 +148,68 @@ const coloringTypeII = (img1: cv.Mat, img2: cv.Mat): cv.Mat => {
   return resultBgr
 }
 
+/*
+ * 헤어 염색을 위한 색상 변경 함수
+ *
+ * @param {cv.Mat} img1 - 얼굴 이미지
+ * @param {cv.Mat} img2 - 컬러 이미지
+ * @param {number} min_v_value - V 채널 최소값
+ * @param {number} max_v_value - V 채널 최대값
+ * @param {number} level - 비선형 정규화 정도
+ * @returns {cv.Mat} 결과 이미지
+ */
+export const coloringTypeIII = (
+  img1: cv.Mat,
+  img2: cv.Mat,
+  min_v_value = 0,
+  max_v_value = 255,
+  level = 1.0
+) => {
+  const hsv1 = new cv.Mat()
+  const hsv2 = new cv.Mat()
+  cv.cvtColor(img1, hsv1, cv.COLOR_BGR2HSV_FULL)
+  cv.cvtColor(img2, hsv2, cv.COLOR_BGR2HSV_FULL)
+
+  const channels1 = new cv.MatVector()
+  cv.split(hsv1, channels1)
+  const value1 = channels1.get(2) // Value 채널
+
+  const channels2 = new cv.MatVector()
+  cv.split(hsv2, channels2)
+  const value2 = channels2.get(2) // Value 채널
+
+  const min_v_norm = min_v_value / 255
+  const max_v_norm = max_v_value / 255
+  const norm_w = (1 / 255) * (max_v_norm - min_v_norm)
+  const norm_b = min_v_norm
+  value1.convertTo(value1, cv.CV_32FC1, norm_w, norm_b)
+
+  cv.pow(value1, level, value1)
+  value2.convertTo(value2, cv.CV_32FC1)
+  cv.multiply(value1, value2, value2)
+  value2.convertTo(value2, cv.CV_8UC1)
+
+  value2.copyTo(channels2.get(2))
+
+  // 채널을 병합하여 결과 이미지 생성
+  const resultHSV = new cv.Mat()
+  cv.merge(channels2, resultHSV)
+
+  // 결과 이미지를 다시 RGBA로 변환
+  const result = new cv.Mat()
+  cv.cvtColor(resultHSV, result, cv.COLOR_HSV2BGR)
+
+  // 메모리 해제
+  hsv1.delete()
+  hsv2.delete()
+  channels1.delete()
+  channels2.delete()
+  value1.delete()
+  resultHSV.delete()
+
+  return result
+}
+
 const to3D = (src: cv.Mat, dst: cv.Mat) => {
   // 1 채널(src)을 3채널(dst)로 확장
   const channels = new cv.MatVector()
@@ -138,197 +220,153 @@ const to3D = (src: cv.Mat, dst: cv.Mat) => {
   channels.delete()
 }
 
-let originalModelMat: cv.Mat | null = null
-// 세그먼트별 현재 적용된 색상을 저장하는 Map
-const segmentColorMap = new Map<number, [number, number, number]>()
-const segmentOpacityMap = new Map<number, number>()
-const segmentFeatherValues = new Map<number, number>()
-
+/**
+ * 선택한 부위의 색상을 변경하는 함수
+ *
+ * @param {cv.Mat} modelImage: cv.CV_8UC3|cv.CV_8UC4
+ * @param {cv.Mat} maskImage: cv.CV_8UC1
+ * @param {number} featherAmount
+ * @param {number} opacity: range [0.0~1.0]
+ * @param {list} newColor
+ * @returns {cv.Mat|string} 결과(cv.CV_8UC3;BGR) 혹은 오류 메시지
+ */
 export const applyMultiplyAndFeather = (
-  modelImage: cv.Mat,
-  maskImage: cv.Mat,
-  opacity = 1,
-  newColor: [number, number, number] = [0, 0, 255],
-  powerNorm = 1,
-  coloringType: 'type1' | 'type2' = 'type1',
-  targetSegments?: number[],
-  segmentFeatherMap?: Map<number, number>
-): string => {
-  if (!targetSegments) {
-    return matToBase64(modelImage)
-  }
-
-  // 새로운 feather 값들을 전역 Map에 저장
-  if (segmentFeatherMap) {
-    for (const [segment, value] of Array.from(segmentFeatherMap.entries())) {
-      segmentFeatherValues.set(segment, value)
-    }
-  }
-
-  // 타겟 세그먼트들에 새로운 색상 저장
-  targetSegments.forEach((segment) => {
-    segmentColorMap.set(segment, newColor)
-    segmentOpacityMap.set(segment, opacity)
-  })
-
-  if (!originalModelMat) {
-    originalModelMat = modelImage.clone()
-  }
-
-  // 원본 이미지로부터 시작
-  const currentModelMat = originalModelMat.clone()
-  const modelImap = toImap(currentModelMat)
-  const maskMap = toMap(maskImage)
-
-  // 모든 세그먼트에 대해 저장된 색상 적용
-  for (const [segment, color] of Array.from(segmentColorMap.entries())) {
-    // 현재 세그먼트에 대한 마스크 생성
-    const segmentMask = new cv.Mat(maskMap.rows, maskMap.cols, cv.CV_32FC1)
-    const segmentOpacity = segmentOpacityMap.get(segment) ?? 1
-    for (let i = 0; i < maskMap.rows; i++) {
-      for (let j = 0; j < maskMap.cols; j++) {
-        const val = maskImage.ucharAt(i, j)
-        segmentMask.floatPtr(i, j)[0] = val === segment ? 1 : 0
-      }
-    }
-
-    // 마스크 처리 - 세그먼트별 featherAmount 적용 (기본값 : 1)
-    const currentFeatherAmount = segmentFeatherValues.get(segment) ?? 1
-    if (currentFeatherAmount > 0) {
-      const ksize = Math.max(1, Math.round(currentFeatherAmount)) * 2 + 1
-      cv.GaussianBlur(segmentMask, segmentMask, new cv.Size(ksize, ksize), 0)
-    }
-
-    // 색상 적용
-    let colorImap = new cv.Mat(
-      modelImap.rows,
-      modelImap.cols,
-      cv.CV_32FC3,
-      new cv.Scalar(color[0], color[1], color[2])
-    )
-
-    if (coloringType === 'type1') {
-      cv.multiply(modelImap, colorImap, colorImap, powerNorm / 255.0)
-    } else {
-      const tmp = colorImap
-      colorImap = coloringTypeII(modelImap, colorImap)
-      tmp.delete()
-    }
-
-    // 투명도를 마스크에 적용
-    segmentMask.convertTo(segmentMask, cv.CV_32FC1, segmentOpacity)
-
-    const maskImap = new cv.Mat()
-    to3D(segmentMask, maskImap)
-
-    const tempColorImap = new cv.Mat()
-    cv.multiply(colorImap, maskImap, tempColorImap)
-
-    maskImap.convertTo(maskImap, cv.CV_32FC3, -1.0, 1.0)
-    cv.multiply(modelImap, maskImap, modelImap)
-
-    cv.add(tempColorImap, modelImap, modelImap)
-
-    // 메모리 정리
-    colorImap.delete()
-    maskImap.delete()
-    tempColorImap.delete()
-    segmentMask.delete()
-  }
-
-  // 색상 적용 부분을 더 명확하게 수정
-  targetSegments.forEach((segment) => {
-    const mask = new cv.Mat()
-    const segmentMat = new cv.Mat(
-      maskImage.rows,
-      maskImage.cols,
-      maskImage.type(),
-      new cv.Scalar(segment)
-    )
-
-    // 마스크 이미지와 세그먼트 값 비교
-    cv.compare(maskImage, segmentMat, mask, cv.CMP_EQ)
-
-    // 이미지 복사본 사용 (충돌 방지용)
-    const safeModelImage = getSafeModelImage(modelImage)
-
-    // 클론된 safeModelImage를 기반으로 색상 매트릭스 생성
-    const colorMat = new cv.Mat(
-      safeModelImage.rows,
-      safeModelImage.cols,
-      safeModelImage.type(),
-      new cv.Scalar(newColor[0], newColor[1], newColor[2], 255)
-    )
-
-    // 색상 매트릭스를 기존 modelImage에 적용 (mask로 영역 지정)
-    colorMat.copyTo(safeModelImage, mask)
-
-    // 메모리 해제: mask, colorMat, segmentMat, 그리고 클론된 safeModelImage 삭제
-    mask.delete()
-    colorMat.delete()
-    segmentMat.delete()
-  })
-
-  const result = matToBase64(modelImap)
-
-  // 메모리 정리
-  modelImap.delete()
-  maskMap.delete()
-  currentModelMat.delete()
-
-  return result
-}
-
-let originalHairModelMat: cv.Mat | null = null
-export const dyeHairColor = (
   modelImage: cv.Mat,
   maskImage: cv.Mat,
   featherAmount = 10,
   opacity = 1,
-  minNorm = 0.0,
-  newColor: [number, number, number] = [0, 0, 255]
-): string => {
+  newColor = [0, 0, 255],
+  coloringType = 'type1',
+  selectedSegment: number[] | null = null,
+  powerNorm = 1,
+  rect = null,
+  min_v_value = 0,
+  max_v_value = 255,
+  level = 1.0
+) => {
   if (!Number.isInteger(featherAmount) || featherAmount < 0) {
-    throw new Error('Not proper value for featherAmount')
+    throw new Error('적절한 featherAmount 값이 아닙니다.')
   } else if (opacity < 0 || opacity > 1) {
-    throw new Error('Not proper value for opacity')
+    throw new Error('적절한 opacity 값이 아닙니다.')
   }
 
-  // 첫 호출시 원본 이미지 저장
-  if (!originalHairModelMat) {
-    originalHairModelMat = modelImage.clone()
-  }
-
-  // 원본 이미지로부터 시작
-  const currentModelMat = originalHairModelMat.clone()
-
-  const width = currentModelMat.cols
-  const height = currentModelMat.rows
-
-  const modelImap = toImap(currentModelMat)
+  let oriModelImap = null
+  let oriMaskMap = null
+  let modelImap = null
+  let maskMap = null
   const maskImap = new cv.Mat()
-  const maskMap = toMap(maskImage)
-  const colorImap = new cv.Mat(
+
+  // 세그먼트 필터링 부분 수정: selectedSegment가 배열인 경우 처리
+  let processedMask: cv.Mat
+  let createdFilteredMask = false
+  if (selectedSegment !== null) {
+    let tempMask: cv.Mat
+    // maskImage가 단일 채널이 아니라면 그레이스케일로 변환
+    if (maskImage.channels && maskImage.channels() > 1) {
+      tempMask = new cv.Mat()
+      if (maskImage.channels() === 4) {
+        cv.cvtColor(maskImage, tempMask, cv.COLOR_RGBA2GRAY)
+      } else if (maskImage.channels() === 3) {
+        cv.cvtColor(maskImage, tempMask, cv.COLOR_BGR2GRAY)
+      } else {
+        maskImage.copyTo(tempMask)
+      }
+    } else {
+      tempMask = maskImage.clone()
+    }
+
+    if (Array.isArray(selectedSegment)) {
+      // 빈 마스크를 생성하고, 각 세그먼트별 마스크를 OR 연산으로 결합
+      processedMask = new cv.Mat(
+        tempMask.rows,
+        tempMask.cols,
+        tempMask.type(),
+        new cv.Scalar(0)
+      )
+      selectedSegment.forEach((seg) => {
+        const maskBinary = new cv.Mat()
+        const constantMat = new cv.Mat(
+          tempMask.rows,
+          tempMask.cols,
+          tempMask.type(),
+          new cv.Scalar(seg)
+        )
+        cv.compare(tempMask, constantMat, maskBinary, cv.CMP_EQ)
+        constantMat.delete()
+        cv.bitwise_or(processedMask, maskBinary, processedMask)
+        maskBinary.delete()
+      })
+      tempMask.delete()
+      createdFilteredMask = true
+    } else {
+      processedMask = new cv.Mat()
+      const constantMat = new cv.Mat(
+        tempMask.rows,
+        tempMask.cols,
+        tempMask.type(),
+        new cv.Scalar(selectedSegment)
+      )
+      cv.compare(tempMask, constantMat, processedMask, cv.CMP_EQ)
+      constantMat.delete()
+      tempMask.delete()
+      createdFilteredMask = true
+    }
+  } else {
+    processedMask = maskImage
+  }
+  // 필터링 끝
+
+  if (rect) {
+    const roi_rect = new cv.Rect(
+      parseInt(rect[0]),
+      parseInt(rect[1]),
+      parseInt(rect[2]),
+      parseInt(rect[3])
+    )
+    oriModelImap = toImap(modelImage)
+    oriMaskMap = toMap(processedMask)
+    modelImap = oriModelImap.roi(roi_rect)
+    maskMap = oriMaskMap.roi(roi_rect)
+  } else {
+    modelImap = toImap(modelImage)
+    maskMap = toMap(processedMask)
+  }
+
+  const width = modelImap.cols
+  const height = modelImap.rows
+  let colorImap = new cv.Mat(
     height,
     width,
     cv.CV_32FC3,
     new cv.Scalar(newColor[0], newColor[1], newColor[2])
   )
 
-  const newModelMap = modelImap.clone()
-  cv.normalize(
-    newModelMap,
-    newModelMap,
-    minNorm,
-    1,
-    cv.NORM_MINMAX,
-    cv.CV_32FC1
-  )
-  cv.sqrt(newModelMap, newModelMap)
-  cv.multiply(newModelMap, colorImap, colorImap)
-  newModelMap.delete()
+  // 색상 이미지에 멀티플라이 블렌딩 적용 (색상 조절)
+  if (coloringType === 'type1') {
+    cv.multiply(modelImap, colorImap, colorImap, 1.0 / 255.0)
+  }
 
+  if (coloringType === 'type2') {
+    const tempImap = colorImap
+    colorImap = coloringTypeII(modelImap, colorImap)
+    tempImap.delete()
+  }
+
+  if (coloringType === 'type3') {
+    const tempImap = colorImap
+    colorImap = coloringTypeIII(
+      modelImap,
+      colorImap,
+      min_v_value,
+      max_v_value,
+      level
+    )
+    tempImap.delete()
+  }
+
+  // 페더링 효과 적용한 마스크 생성
   cv.normalize(maskMap, maskMap, 0, 1, cv.NORM_MINMAX, cv.CV_32FC1)
+  cv.pow(maskMap, powerNorm, maskMap)
   if (featherAmount > 0) {
     const ksize = featherAmount * 2 + 1
     const ksizeObj = new cv.Size(ksize, ksize)
@@ -337,182 +375,52 @@ export const dyeHairColor = (
   maskMap.convertTo(maskMap, cv.CV_32FC1, opacity)
   to3D(maskMap, maskImap)
 
+  // 칠한 색상(colorImap)과 마스크(maskImap)를 이용해 레이어를 생성
+
+  // 1. 색상 이미지에 페더링된 마스크를 곱하여 색칠된 영역만 남깁니다.
   cv.multiply(colorImap, maskImap, colorImap)
 
-  maskImap.convertTo(maskImap, cv.CV_32F, -1.0, 1.0)
-  cv.multiply(modelImap, maskImap, modelImap)
+  // 2. alpha 채널 생성 : maskMap을 [0, 255] 범위의 8비트 단일 채널로 변환합니다.
+  const alphaMap = new cv.Mat()
+  maskMap.convertTo(alphaMap, cv.CV_8UC1, 255)
 
-  cv.add(colorImap, modelImap, modelImap)
+  // 3. colorImap을 8비트 3채널(BGR) 이미지로 변환합니다.
+  const color8U = new cv.Mat()
+  colorImap.convertTo(color8U, cv.CV_8UC3)
 
-  // 색상 적용
-  for (let i = 0; i < height; i++) {
-    for (let j = 0; j < width; j++) {
-      if (maskMap.ucharAt(i, j) === 254) {
-        // 세그먼트 값 확인
-        currentModelMat.ucharPtr(i, j)[0] = newColor[0] // B
-        currentModelMat.ucharPtr(i, j)[1] = newColor[1] // G
-        currentModelMat.ucharPtr(i, j)[2] = newColor[2] // R
-      }
-    }
+  // 4. BGR 채널과 생성한 alpha 채널을 결합하여 RGBA 이미지(레이어) 생성
+  const rgba = new cv.Mat()
+  const channels = new cv.MatVector()
+  cv.split(color8U, channels) // B, G, R 채널 분리
+  channels.push_back(alphaMap) // alpha 채널 추가
+  cv.merge(channels, rgba) // 4채널 이미지 생성
+
+  // 5. 결과 이미지를 base64로 변환
+  const resImage = matToBase64(rgba)
+
+  // 메모리 정리
+  if (rect) {
+    if (oriModelImap) oriModelImap.delete()
+    if (oriMaskMap) oriMaskMap.delete()
+    if (modelImap) modelImap.delete()
+    if (maskMap) maskMap.delete()
+  } else {
+    if (modelImap) modelImap.delete()
+    if (maskMap) maskMap.delete()
   }
+  if (maskImap) maskImap.delete()
+  if (colorImap) colorImap.delete()
+  if (color8U) color8U.delete()
+  if (alphaMap) alphaMap.delete()
+  if (channels) channels.delete()
+  if (rgba) rgba.delete()
 
-  const resImage = matToBase64(modelImap)
-
-  modelImap.delete()
-  maskImap.delete()
-  maskMap.delete()
-  colorImap.delete()
+  // 만약 필터링을 통해 생성한 경우, processedMask 해제
+  if (createdFilteredMask) {
+    processedMask.delete()
+  }
 
   return resImage
-}
-
-export const updateOriginalModelMat = (newMat: cv.Mat) => {
-  if (originalModelMat) {
-    originalModelMat.delete()
-  }
-  originalModelMat = newMat.clone()
-}
-
-/**
- * 머리 색상과 브러시 색상을 합성하여 최종 매트릭스 반환
- * @param hairMat 머리 색상이 적용된 매트릭스 (세그먼트 13)
- * @param brushMaskMat 브러시로 칠한 영역의 마스크 매트릭스 (세그먼트 254)
- * @param hairMaskMat 머리 영역의 원본 마스크 매트릭스 (세그먼트 13과 254 포함)
- * @param hairColor 머리 색상 [B, G, R]
- * @returns 최종 합성된 매트릭스 또는 null
- */
-export const compositeHairAndBrush = (
-  hairMat: cv.Mat | null,
-  brushMaskMat: cv.Mat | null,
-  hairMaskMat: cv.Mat,
-  hairColor: [number, number, number]
-): cv.Mat | null => {
-  if (
-    !hairMat ||
-    !brushMaskMat ||
-    brushMaskMat.empty() ||
-    !originalHairModelMat
-  ) {
-    return null
-  }
-  // 원본 머리 이미지(아직 어떤 색상도 적용되지 않은 상태)를 항상 기준으로 사용
-  const composite = originalHairModelMat.clone()
-
-  // 머리 영역 적용 (세그먼트 13)
-  const hairRegionMask = new cv.Mat()
-  thresholdInRange(hairMaskMat, [13, 13, 13], [13, 13, 13], hairRegionMask)
-
-  const hairColorMat = new cv.Mat(
-    composite.rows,
-    composite.cols,
-    composite.type(),
-    new cv.Scalar(hairColor[0], hairColor[1], hairColor[2], 255)
-  )
-
-  // 머리 영역에 헤어 컬러 덮어쓰기
-  hairColorMat.copyTo(composite, hairRegionMask)
-
-  // 브러시 영역 적용 (세그먼트 254)
-  const brushRegionMask = new cv.Mat()
-  brushMaskMat.copyTo(brushRegionMask)
-
-  const brushColorMat = new cv.Mat(
-    composite.rows,
-    composite.cols,
-    composite.type(),
-    new cv.Scalar(hairColor[0], hairColor[1], hairColor[2], 255)
-  )
-
-  // 브러시 영역에 덮어쓰기
-  brushColorMat.copyTo(composite, brushRegionMask)
-
-  // 메모리 해제
-  hairRegionMask.delete()
-  hairColorMat.delete()
-  brushRegionMask.delete()
-  brushColorMat.delete()
-
-  return composite
-}
-/**
- * 모델 매트릭스가 유효한지 확인한 후, 안전한 복제본 반환
- */
-export const getSafeModelImage = (modelImage: cv.Mat): cv.Mat => {
-  try {
-    return modelImage.clone()
-  } catch (e) {
-    if (originalModelMat) {
-      return originalModelMat.clone()
-    }
-    throw new Error('유효한 modelImage가 없습니다.')
-  }
-}
-
-/**
- * threshold를 사용하여 단일 값에 대한 마스크 생성
- */
-export function thresholdInRange(
-  src: cv.Mat,
-  lowerb: [number, number, number],
-  upperb: [number, number, number],
-  mask: cv.Mat
-): void {
-  if (!src || src.empty()) {
-    return
-  }
-
-  // 단일 채널 이미지인 경우 (CV_8UC1)
-  if (src.type() === cv.CV_8UC1) {
-    // 하한 임계값 적용 (픽셀 >= lowerb[0]이면 255)
-    const lowerMask = new cv.Mat()
-    cv.threshold(src, lowerMask, lowerb[0], 255, cv.THRESH_BINARY)
-
-    // 상한 임계값 적용 (픽셀 <= upperb[0]이면 255)
-    const upperMask = new cv.Mat()
-    cv.threshold(src, upperMask, upperb[0], 255, cv.THRESH_BINARY_INV)
-
-    // 두 마스크를 논리 AND하여 최종 마스크 생성
-    cv.bitwise_and(lowerMask, upperMask, mask)
-
-    // 메모리 해제
-    lowerMask.delete()
-    upperMask.delete()
-  } else {
-    // 다중 채널 이미지인 경우 기존 로직 유지
-    const channels = new cv.MatVector()
-    cv.split(src, channels)
-
-    const lowerMask = new cv.Mat()
-    const upperMask = new cv.Mat()
-    const tempMask = new cv.Mat()
-
-    try {
-      for (let i = 0; i < channels.size(); i++) {
-        const channel = channels.get(i)
-
-        if (!channel || channel.empty()) {
-          continue
-        }
-
-        cv.threshold(channel, lowerMask, lowerb[i], 255, cv.THRESH_BINARY)
-        cv.threshold(channel, upperMask, upperb[i], 255, cv.THRESH_BINARY_INV)
-        cv.bitwise_and(lowerMask, upperMask, tempMask)
-
-        if (i === 0) {
-          tempMask.copyTo(mask)
-        } else {
-          cv.bitwise_and(mask, tempMask, mask)
-        }
-
-        channel.delete()
-      }
-    } finally {
-      channels.delete()
-      lowerMask.delete()
-      upperMask.delete()
-      tempMask.delete()
-    }
-  }
 }
 
 let originalRelightModelMat: cv.Mat | null = null
@@ -761,20 +669,6 @@ export const reduce = (mat: cv.Mat, res: cv.Mat): void => {
 export const normalizeList = (list: number[]): number[] => {
   const norm = Math.sqrt(list.reduce((acc, val) => acc + val * val, 0))
   return norm === 0 ? [0, 0, 0] : list.map((val) => val / norm)
-}
-
-// 메모리 정리 함수 추가
-export const clearSegmentColors = () => {
-  segmentFeatherValues.clear()
-  segmentColorMap.clear()
-  if (originalModelMat) {
-    originalModelMat.delete()
-    originalModelMat = null
-  }
-  if (originalHairModelMat) {
-    originalHairModelMat.delete()
-    originalHairModelMat = null
-  }
 }
 
 /**

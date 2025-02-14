@@ -26,6 +26,15 @@ export const BrushEraseToggle = (props: BrushEraseToggleProps) => {
         'gap-4 pl-3 pr-8',
         'rounded-[100px] border border-neutral-2 bg-neutral-1'
       )}
+      onMouseDown={(e) => {
+        e.nativeEvent.stopImmediatePropagation()
+      }}
+      onTouchStart={(e) => {
+        e.nativeEvent.stopImmediatePropagation()
+      }}
+      onClick={(e) => {
+        e.nativeEvent.stopImmediatePropagation()
+      }}
     >
       <div
         className={cn(

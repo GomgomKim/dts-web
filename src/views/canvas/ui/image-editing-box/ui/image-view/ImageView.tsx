@@ -2,9 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react'
 
-import NextImage from 'next/image'
-
+import { matToBase64 } from '@/views/canvas/lib/editColorService'
 import { useEditorStore } from '@/views/canvas/model/useEditorHistoryStore'
+import { useColorBrushStore } from '@/views/canvas/model/useEditorPanelsStore'
 
 import { AI_TOOL, AiToolId } from '@/widgets/canvas-sidebar/model/types'
 
@@ -16,9 +16,10 @@ import FaceParseImg from '/public/images/face_parse.png'
 import HairMaskImg from '/public/images/hair_mask.png'
 import NormalMapImg from '/public/images/normal.png'
 
+import { useLayersStore } from './lib/useLayersStore'
+import { useOnClickOutside } from './lib/useOnClickOutside'
 import { ColorBrushView } from './ui/ColorBrushView'
-import { EyeContactsView } from './ui/EyeContactsView'
-import { SkinGlowView } from './ui/SkinGlowView'
+import { LayeredImageView } from './ui/LayeredImageView'
 
 interface ImageViewProps {
   selectedVariation: Variation | null
@@ -32,7 +33,6 @@ export const ImageView = (props: ImageViewProps) => {
   const [canvasElement, setCanvasElement] = useState<HTMLCanvasElement | null>(
     null
   )
-  const [maskMat, setMaskMat] = useState<cv.Mat | null>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   const isColorBrush = props.selectedAiTool === AI_TOOL.COLOR_BRUSH
@@ -48,8 +48,19 @@ export const ImageView = (props: ImageViewProps) => {
   // 브러시로 칠한 마스크 저장
   const [brushMaskMat, setBrushMaskMat] = useState<cv.Mat | null>(null)
   const [modelMat, setModelMat] = useState<cv.Mat | null>(null)
-  // 노멀 맵
-  const [normalMat, setNormalMat] = useState<cv.Mat | null>(null)
+
+  const setBaseLayer = useLayersStore((state) => state.setBaseLayer)
+
+  const backgroundRef = useRef<HTMLDivElement>(null)
+  const setSelectedColorBrushItem = useColorBrushStore(
+    (state) => state.setSelectedColorBrushItem
+  )
+
+  // 외부(배경) 클릭 시 도구 선택 해제
+  useOnClickOutside(backgroundRef, () => {
+    setSelectedColorBrushItem(null)
+  })
+
   // 브러시 마스킹 초기화
   useEffect(() => {
     if (maskMatRef.current && !brushMaskMat) {
@@ -112,6 +123,7 @@ export const ImageView = (props: ImageViewProps) => {
     const originalImg = new Image()
     originalImg.crossOrigin = 'anonymous'
     originalImg.onload = () => {
+      console.log('originalImg:', originalImg)
       // 비율을 유지하면서 리사이징하기 위한 계산
       const scale = Math.min(
         targetSize / originalImg.width,
@@ -136,6 +148,8 @@ export const ImageView = (props: ImageViewProps) => {
       // 모델 mat 정보 저장
       const modelMat = window.cv.imread(tempCanvas)
       setModelMat(modelMat)
+      const base64 = matToBase64(modelMat)
+      setBaseLayer(base64)
 
       // UI 캔버스에도 동일하게 적용
       const mainCanvas = canvasRef.current
@@ -185,7 +199,7 @@ export const ImageView = (props: ImageViewProps) => {
         }
         originalMaskMatRef.current = initMaskMat.clone()
         maskMatRef.current = initMaskMat.clone()
-        setMaskMat(initMaskMat.clone())
+        console.log('initMaskMat:', initMaskMat)
       }
       parseImg.src = FaceParseImg.src
     }
@@ -275,55 +289,38 @@ export const ImageView = (props: ImageViewProps) => {
         scaledWidth,
         scaledHeight
       )
-
-      const normalMapMat = window.cv.imread(normalMapCanvas)
-      setNormalMat(normalMapMat)
     }
     normalMapImg.src = NormalMapImg.src
   }, [imgUrl, canvasElement])
 
   // 렌더
-  // 브러시 관련 탭 (ColorBrush, HairColor)
-  if (isColorBrush || isHairColor) {
-    return (
-      <ColorBrushView
-        ref={canvasRef}
-        imgUrl={imgUrl}
-        modelMat={modelMat}
-        setModelMat={setModelMat}
-        maskMatRef={maskMatRef}
-        hairMaskMatRef={hairMaskMatRef}
-      />
-    )
-  }
+  return (
+    <div
+      ref={backgroundRef}
+      style={{ position: 'relative', width: '100%', height: '100%' }}
+    >
+      {/* 최종 합성 캔버스 */}
+      <LayeredImageView />
 
-  // 렌즈 관련 탭 (EyeContacts)
-  if (isEyeContacts) {
-    return (
-      <EyeContactsView
-        ref={canvasRef}
-        imgUrl={imgUrl}
-        targetSize={targetSize}
-        modelMat={modelMat}
-        maskMat={maskMat}
-      />
-    )
-  }
+      {/* 브러시 */}
+      {isColorBrush ? (
+        <ColorBrushView modelMat={modelMat} maskMatRef={maskMatRef} />
+      ) : null}
 
-  // 스킨 글로우 관련 탭 (SkinGlow)
-  if (isSkinGlow) {
-    return (
-      <SkinGlowView
-        ref={canvasRef}
-        imgUrl={imgUrl}
-        modelMat={modelMat}
-        normalMat={normalMat}
-        setModelMat={setModelMat}
-        maskMat={maskMatRef.current}
-      />
-    )
-  }
+      {/* 헤어 컬러 */}
+      {isHairColor ? <></> : null}
 
-  // 기본 화면 (모델 이미지)
-  return <NextImage src={imgUrl} alt="" fill style={{ objectFit: 'contain' }} />
+      {/* 스킨 글로우 */}
+      {isSkinGlow ? <></> : null}
+
+      {/* 렌즈 효과  */}
+      {isEyeContacts ? <></> : null}
+
+      {/* Mat 제작용 캔버스 (UI에 보여주지 않음) */}
+      <canvas
+        ref={canvasRef}
+        style={{ position: 'absolute', left: '-9999px', top: '0' }}
+      />
+    </div>
+  )
 }

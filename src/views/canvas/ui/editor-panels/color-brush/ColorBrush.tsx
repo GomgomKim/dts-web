@@ -1,5 +1,3 @@
-import { useState } from 'react'
-
 import { useColorBrushStore } from '@/views/canvas/model/useEditorPanelsStore'
 import { UI_TEXT } from '@/views/canvas/ui/editor-panels/color-brush/model'
 import { ColorBrushSmoothEdges } from '@/views/canvas/ui/editor-panels/color-brush/ui/ColorBrushSmoothEdges'
@@ -27,16 +25,6 @@ export const ColorBrush = (props: ColorBrushProps) => {
   )
   const customBrushes = useColorBrushStore((state) => state.customBrushes)
 
-  const [tools, setTools] = useState<DrawTool[]>([])
-
-  const handleAddTool = () => {
-    const newTool: DrawTool = {
-      id: `${tools.length + 1}`,
-      text: `Brush ${tools.length + 1}`
-    }
-    setTools((prev) => [...prev, newTool])
-  }
-
   // DUMMY_DATA와 customBrushes 합치기
   const allTools = [...DUMMY_DATA, ...customBrushes]
 
@@ -47,12 +35,22 @@ export const ColorBrush = (props: ColorBrushProps) => {
       onSelectDrawTool={(item: DrawTool) => setSelectedColorBrushItem(item)}
       tools={allTools}
       drawToolText={UI_TEXT.BRUSH}
-      onAddTool={handleAddTool}
     />
   )
 
   const postfixContent = (
-    <div className="mt-4">
+    <div
+      className="mt-4"
+      onMouseDown={(e) => {
+        e.nativeEvent.stopImmediatePropagation()
+      }}
+      onTouchStart={(e) => {
+        e.nativeEvent.stopImmediatePropagation()
+      }}
+      onClick={(e) => {
+        e.nativeEvent.stopImmediatePropagation()
+      }}
+    >
       <h4 className="mb-2 text-[1rem] text-neutral-7">
         {DRAWING_PANEL_UI_TEXT.SMOOTH_EDGES}
       </h4>
