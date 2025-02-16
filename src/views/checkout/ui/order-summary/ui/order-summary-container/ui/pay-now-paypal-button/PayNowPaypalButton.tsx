@@ -92,9 +92,12 @@ export const PayNowPaypalButton = () => {
   }
 
   return (
-    <div className={cn('portone-ui-container')}>
-      {/* <button>페이팔</button> */}
-    </div>
+    <>
+      {/* eslint-disable-next-line tailwindcss/no-custom-classname */}
+      <div className={cn('portone-ui-container')}>
+        {/* <button>페이팔</button> */}
+      </div>
+    </>
   )
 }
 

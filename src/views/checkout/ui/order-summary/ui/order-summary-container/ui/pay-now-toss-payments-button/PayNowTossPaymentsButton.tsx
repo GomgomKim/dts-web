@@ -8,10 +8,10 @@ import useModals from '@/shared/ui/modal/model/Modals.hooks'
 
 import { isAxiosError } from 'axios'
 
-import { UI_TEXT } from '../../../../model/constants'
 import { PaymentErrorModal } from '../PaymentErrorModal'
 import { usePostBillingKey } from './model/adapter'
 import { getBillingKey } from './model/api'
+import { UI_TEXT } from './model/constants'
 import { PostPaymentSubscriptionRequest } from './model/types'
 
 export const PayNowTossPaymentsButton = () => {

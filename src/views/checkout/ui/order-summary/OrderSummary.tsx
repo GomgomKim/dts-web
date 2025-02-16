@@ -2,141 +2,16 @@
 
 import { useSearchParams } from 'next/navigation'
 
-import { useCurrencyStore } from '@/views/pricing/model/useCurrencyStore'
-
-import {
-  CREDIT_ITEMS,
-  CREDIT_NAME_TITLE_MAP
-} from '@/features/add-credits/model/constants'
-
-// import { PLAN_ITEMS } from '@/views/pricing/ui/plan-Items/model/constant'
-// import { PLAN_NAME_TITLE_MAP } from '@/views/pricing/ui/plan-Items/model/types'
-import { ErrorBoundary } from '@/shared/ui/error-boundary'
-
-import { UI_TEXT } from '../../model/constants'
-import './style.css'
-import {
-  OrderLabeledDetail,
-  PayNowPaypalButton,
-  PayNowTossPaymentsButton,
-  PaymentErrorModal
-} from './ui'
-
-// import { PeriodOfUse } from './ui/PeriodOfUse'
+import { CreditOrderSummary, PlanOrderSummary } from './ui'
 
 export const OrderSummary = () => {
   const searchParams = useSearchParams()
-  const currency = useCurrencyStore((state) => state.currency)
-  const currencySign = useCurrencyStore((state) => state.getCurrencySign())
 
-  // const planId = searchParams.get('planId') || '10'
+  const planId = searchParams.get('planId')
   const creditId = searchParams.get('creditId')
+  // const upgrade
 
-  // if (!planId) {
-  //   console.log('planId is not found')
-  //   return null
-  // }
-
-  // const selectedPlan = PLAN_ITEMS[currency].find(
-  //   (item) => item.id === parseInt(planId)
-  // )
-
-  // if (!selectedPlan) return null
-
-  // const discount = 0
-  // const subtotal = selectedPlan.price - discount
-
-  if (!creditId) {
-    console.log('creditId is not found')
-    return null
-  }
-  const selectedCredit = CREDIT_ITEMS[currency].find(
-    (item) => item.id === parseInt(creditId)
-  )
-
-  if (!selectedCredit) return null
-
-  const discount = 0
-  const subtotal = selectedCredit?.price - discount
-
-  return (
-    <div className="m-auto w-[560px] divide-y rounded-[0.5rem] border border-neutral-2 p-10">
-      <h2 className="mb-8 text-[1.5rem] font-semibold">
-        {UI_TEXT.ORDER_SUMMARY}
-      </h2>
-      <div className="space-y-3 py-6">
-        {/* <OrderLabeledDetail
-          label={UI_TEXT.PLAN}
-          detail={`${PLAN_NAME_TITLE_MAP[selectedPlan?.name]} ${UI_TEXT.PLAN_DESCRIPTION_1} ${selectedPlan?.creditNum} ${UI_TEXT.PLAN_DESCRIPTION_2}`}
-        />
-        <OrderLabeledDetail
-          label={UI_TEXT.BILLING_CYCLE}
-          detail={
-            <>
-              <div className="mb-1 text-right text-[1.125rem] font-normal text-white">
-                {UI_TEXT.MONTHLY}
-              </div>
-              <div className="text-right text-[1rem] text-neutral-5">
-                <PeriodOfUse />
-              </div>
-            </>
-          }
-        /> */}
-        <OrderLabeledDetail
-          label={'credits'}
-          detail={`${CREDIT_NAME_TITLE_MAP[selectedCredit.name]} Credits`}
-        />
-      </div>
-      <div className="py-8">
-        <OrderLabeledDetail
-          label={UI_TEXT.PRICE}
-          // detail={`${currencySign}${selectedPlan?.price}`}
-          detail={`${currencySign}${selectedCredit?.price}`}
-        />
-      </div>
-      <div className="divide-y pb-6 pt-8">
-        <div className="space-y-3 pb-6">
-          <OrderLabeledDetail
-            label={UI_TEXT.DISCOUNT}
-            detail={discount ? `-${currencySign}${discount}` : '-'}
-          />
-          <OrderLabeledDetail
-            label={UI_TEXT.SUBTOTAL}
-            detail={`${currencySign}${subtotal}`}
-          />
-        </div>
-        <div className="pt-6">
-          <OrderLabeledDetail
-            label={
-              <>
-                <span className="text-[1.125rem] font-bold">
-                  {UI_TEXT.AMOUNT_PAID}
-                </span>{' '}
-                <span className="text-[1.125rem] text-neutral-5">
-                  ({UI_TEXT.TAXES_INCLUDED})
-                </span>
-              </>
-            }
-            detail={
-              <span className="text-[1.125rem] font-bold">
-                {currencySign}
-                {subtotal}
-              </span>
-            }
-          />
-        </div>
-      </div>
-      <div className="h-[48px] rounded-full border-none bg-neutral-1">
-        <ErrorBoundary
-          FallbackComponent={({ error }) => <PaymentErrorModal e={error} />}
-        >
-          {currency === 'USD' ? (
-            <PayNowPaypalButton />
-          ) : (
-            <PayNowTossPaymentsButton />
-          )}
-        </ErrorBoundary>
-      </div>
-    </div>
-  )
+  if (planId) return <PlanOrderSummary />
+  if (creditId) return <CreditOrderSummary />
+  // if(upgradeId)
 }
