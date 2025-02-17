@@ -8,9 +8,9 @@ import { cn } from '@/shared/lib/utils'
 
 import Arrow from '/public/icons/arrow-thin.svg'
 
-interface BakcButtonProps extends ComponentProps<'button'> {}
+interface BackButtonProps extends ComponentProps<'button'> {}
 
-export const BackButton = (props: BakcButtonProps) => {
+export const BackButton = (props: BackButtonProps) => {
   const router = useRouter()
 
   return (
