@@ -35,7 +35,7 @@ export const CreditOrderSummary = () => {
     <OrderSummaryContainer subtotal={subtotal} discount={discount}>
       <div className="space-y-3 py-6">
         <OrderLabeledDetail
-          label={'credits'}
+          label={UI_TEXT.CREDITS}
           detail={`${CREDIT_NAME_TITLE_MAP[selectedCredit.name]} ${UI_TEXT.CREDITS}`}
         />
       </div>
