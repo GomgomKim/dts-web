@@ -7,7 +7,7 @@ import { PLAN_NAME_TITLE_MAP } from '@/views/pricing/ui/plan-Items/model/types'
 import { UI_TEXT } from '../../../../model/constants'
 import { OrderLabeledDetail } from '../OrderLabeledDetail'
 import { OrderSummaryContainer } from '../order-summary-container'
-import { PeriodOfUse } from './ui'
+import { PeriodOfUse } from '../period-of-use'
 
 export const PlanOrderSummary = () => {
   const searchParams = useSearchParams()

@@ -1,4 +1,4 @@
-import { formattedDate, getPeriodDate } from '../lib'
+import { formattedDate, getPeriodDate } from './lib'
 
 const PERIOD = 30
 
