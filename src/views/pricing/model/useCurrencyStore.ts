@@ -17,7 +17,7 @@ export interface CurrencyActions {
 export const useCurrencyStore = create(
   persist<CurrencyState & CurrencyActions>(
     (set, get) => ({
-      currency: 'KRW',
+      currency: 'USD',
       setCurrency: (currency) => {
         set({ currency })
       },
