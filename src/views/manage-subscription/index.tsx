@@ -1,3 +1,7 @@
+'use client'
+
+import { ErrorBoundary } from '@/shared/ui/error-boundary'
+
 import { UI_TEXT } from './model/constants'
 import { CurrentSubscription, PaymentMethods } from './ui'
 
@@ -8,8 +12,11 @@ export default function ManageSubscription() {
         {UI_TEXT.MANAGE_SUBSCRIPTION}
       </h1>
       <div className="flex gap-6">
-        <CurrentSubscription />
-        <PaymentMethods />
+        {/* TODO: error ui 처리 어떻게 할지 */}
+        <ErrorBoundary FallbackComponent={({ error }) => <>{error?.message}</>}>
+          <CurrentSubscription />
+          <PaymentMethods />
+        </ErrorBoundary>
       </div>
     </>
   )

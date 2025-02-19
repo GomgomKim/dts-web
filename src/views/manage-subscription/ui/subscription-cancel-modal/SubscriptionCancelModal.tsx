@@ -8,7 +8,10 @@ import { Plan } from '@/views/pricing/ui/plan-Items/model/types'
 import { cn } from '@/shared/lib/utils'
 import { ModalComponentProps } from '@/shared/ui/modal/model/types'
 
+import { useQueryClient } from '@tanstack/react-query'
+
 import { UI_TEXT } from '../../model/constants'
+import { useDeleteSubscription } from './model/adapter'
 
 interface SubscriptionCancelModalProps extends ModalComponentProps {
   myPlan: Plan
@@ -18,12 +21,27 @@ export const SubscriptionCancelModal = (
   props: SubscriptionCancelModalProps
 ) => {
   const { onCloseModal } = props
+  const queryClient = useQueryClient()
+  const cancelSubscriptionMutation = useDeleteSubscription()
 
   const selectedPlan = PLAN_CANCEL
 
   // TODO: tailwind 커스텀 스타일 지정?
   const underlineStyle =
     'relative pb-5 mb-5 after:absolute after:bottom-0 after:left-0 after:w-full after:border-b after:border-neutral-2 after:content-[""]'
+
+  const handleClickCancelButton = async () => {
+    try {
+      const res = await cancelSubscriptionMutation.mutateAsync()
+      if (res.message === 'succeeded') {
+        onCloseModal()
+        // TODO:
+        queryClient.invalidateQueries({ queryKey: ['membership'] })
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
 
   return (
     <PlanModal
@@ -36,7 +54,7 @@ export const SubscriptionCancelModal = (
         </p>
       }
       actionButtonTitle="Cancel Subscription"
-      onClickActionButton={() => alert('구독 취소')}
+      onClickActionButton={handleClickCancelButton}
       onCloseModal={onCloseModal}
     >
       {/* compare plans */}
