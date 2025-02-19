@@ -7,8 +7,15 @@ import {
   CREDIT_NAME_TITLE_MAP
 } from '@/features/add-credits/model/constants'
 
+import { ErrorBoundary } from '@/shared/ui/error-boundary'
+
 import { OrderLabeledDetail } from '../OrderLabeledDetail'
+import { PaymentErrorModal } from '../PaymentErrorModal'
 import { OrderSummaryContainer } from '../order-summary-container'
+import {
+  PayNowPaypalButton,
+  PayNowTossPaymentsButton
+} from '../order-summary-container/ui'
 import { UI_TEXT } from './model/constants'
 
 export const CreditOrderSummary = () => {
@@ -32,7 +39,24 @@ export const CreditOrderSummary = () => {
   const subtotal = selectedCredit?.price - discount
 
   return (
-    <OrderSummaryContainer subtotal={subtotal} discount={discount}>
+    <OrderSummaryContainer
+      subtotal={subtotal}
+      discount={discount}
+      // TODO: 첫 결제 수단 버튼으로 렌더링!!
+      checkoutButton={
+        <>
+          <ErrorBoundary
+            FallbackComponent={({ error }) => <PaymentErrorModal e={error} />}
+          >
+            {currency === 'USD' ? (
+              <PayNowPaypalButton />
+            ) : (
+              <PayNowTossPaymentsButton />
+            )}
+          </ErrorBoundary>
+        </>
+      }
+    >
       <div className="space-y-3 py-6">
         <OrderLabeledDetail
           label={UI_TEXT.CREDITS}

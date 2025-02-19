@@ -4,25 +4,18 @@ import { ReactNode } from 'react'
 
 import { useCurrencyStore } from '@/views/pricing/model/useCurrencyStore'
 
-import { ErrorBoundary } from '@/shared/ui/error-boundary'
-
 import { OrderLabeledDetail } from '../OrderLabeledDetail'
 import { UI_TEXT } from './model/constants'
 import './style.css'
-import {
-  PayNowPaypalButton,
-  PayNowTossPaymentsButton,
-  PaymentErrorModal
-} from './ui'
 
 interface OrderSummaryContainerProps {
   children: ReactNode
   discount: number
   subtotal: number
+  checkoutButton: ReactNode
 }
 
 export const OrderSummaryContainer = (props: OrderSummaryContainerProps) => {
-  const currency = useCurrencyStore((state) => state.currency)
   const currencySign = useCurrencyStore((state) => state.getCurrencySign())
 
   return (
@@ -66,15 +59,7 @@ export const OrderSummaryContainer = (props: OrderSummaryContainerProps) => {
         </div>
       </div>
       <div className="h-[48px] rounded-full border-none bg-neutral-1">
-        <ErrorBoundary
-          FallbackComponent={({ error }) => <PaymentErrorModal e={error} />}
-        >
-          {currency === 'USD' ? (
-            <PayNowPaypalButton />
-          ) : (
-            <PayNowTossPaymentsButton />
-          )}
-        </ErrorBoundary>
+        {props.checkoutButton}
       </div>
     </div>
   )

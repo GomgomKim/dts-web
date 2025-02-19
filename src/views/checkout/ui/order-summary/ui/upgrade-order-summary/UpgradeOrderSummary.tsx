@@ -2,9 +2,11 @@ import { useCurrencyStore } from '@/views/pricing/model/useCurrencyStore'
 import { PLAN_NAME_TITLE_MAP } from '@/views/pricing/ui/plan-Items/model/types'
 
 import { useGetPlanInfo } from '@/shared/lib/hooks/useGetPlanInfo'
+import { ErrorBoundary } from '@/shared/ui/error-boundary'
 
 import { OrderLabeledDetail } from '../OrderLabeledDetail'
 import { OrderLabeledMultiDetail } from '../OrderLabeledMultiDetail'
+import { PaymentErrorModal } from '../PaymentErrorModal'
 import { OrderSummaryContainer } from '../order-summary-container'
 import { PeriodOfUse } from '../period-of-use'
 import { UI_TEXT } from './model/constants'
@@ -22,7 +24,17 @@ export const UpgradeOrderSummary = () => {
   if (!currentPlan || !upgradePlan) return null
 
   return (
-    <OrderSummaryContainer subtotal={0} discount={0}>
+    <OrderSummaryContainer
+      subtotal={0}
+      discount={0}
+      checkoutButton={
+        <ErrorBoundary
+          FallbackComponent={({ error }) => <PaymentErrorModal e={error} />}
+        >
+          <button>pay now</button>
+        </ErrorBoundary>
+      }
+    >
       {/* section 1 */}
       <div className="space-y-3 py-6">
         <OrderLabeledMultiDetail

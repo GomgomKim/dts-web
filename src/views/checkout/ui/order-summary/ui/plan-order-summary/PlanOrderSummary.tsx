@@ -4,16 +4,23 @@ import { useCurrencyStore } from '@/views/pricing/model/useCurrencyStore'
 import { PLAN_NAME_TITLE_MAP } from '@/views/pricing/ui/plan-Items/model/types'
 
 import { useGetPlanInfo } from '@/shared/lib/hooks/useGetPlanInfo'
+import { ErrorBoundary } from '@/shared/ui/error-boundary'
 
 import { UI_TEXT } from '../../../../model/constants'
 import { OrderLabeledDetail } from '../OrderLabeledDetail'
 import { OrderLabeledMultiDetail } from '../OrderLabeledMultiDetail'
+import { PaymentErrorModal } from '../PaymentErrorModal'
 import { OrderSummaryContainer } from '../order-summary-container'
+import {
+  PayNowPaypalButton,
+  PayNowTossPaymentsButton
+} from '../order-summary-container/ui'
 import { PeriodOfUse } from '../period-of-use'
 
 export const PlanOrderSummary = () => {
   const searchParams = useSearchParams()
   const { getPlanById } = useGetPlanInfo()
+  const currency = useCurrencyStore((state) => state.currency)
   const currencySign = useCurrencyStore((state) => state.getCurrencySign())
 
   const planId = searchParams.get('planId')
@@ -26,7 +33,23 @@ export const PlanOrderSummary = () => {
   const subtotal = selectedPlan.price - discount
 
   return (
-    <OrderSummaryContainer subtotal={subtotal} discount={discount}>
+    <OrderSummaryContainer
+      subtotal={subtotal}
+      discount={discount}
+      checkoutButton={
+        <>
+          <ErrorBoundary
+            FallbackComponent={({ error }) => <PaymentErrorModal e={error} />}
+          >
+            {currency === 'USD' ? (
+              <PayNowPaypalButton />
+            ) : (
+              <PayNowTossPaymentsButton />
+            )}
+          </ErrorBoundary>
+        </>
+      }
+    >
       <div className="space-y-3 py-6">
         <OrderLabeledDetail
           label={UI_TEXT.PLAN}
