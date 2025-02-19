@@ -13,7 +13,7 @@ import * as PortOne from '@portone/browser-sdk/v2'
 import { useMutation } from '@tanstack/react-query'
 import { isAxiosError } from 'axios'
 
-import { PaymentErrorModal } from '../PaymentErrorModal'
+import { PaymentErrorModal } from '../../../PaymentErrorModal'
 
 export const PayNowPaypalButton = () => {
   const searchParams = useSearchParams()
