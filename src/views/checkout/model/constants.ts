@@ -8,3 +8,5 @@ export const UI_TEXT = {
   MONTHLY: 'Monthly',
   PRICE: 'Price'
 } as const
+
+export const URL_PAYMENT_SUBSCRIPTION = '/payment/subscription'

@@ -63,7 +63,7 @@ export const UpgradeModal = (props: UpgradeModalProps) => {
         }
 
         onCloseModal()
-        router.push(`/checkout?planId=${selectedPlan?.id}`)
+        router.push(`/checkout?upgradePlanId=${selectedPlan?.id}`)
       }}
       onCloseModal={onCloseModal}
     >

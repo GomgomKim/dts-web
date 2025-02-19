@@ -1,9 +1,10 @@
+import { URL_PAYMENT_SUBSCRIPTION } from '@/views/checkout/model/constants'
+
 import { dtsAxios } from '@/shared/api'
 
 import * as PortOne from '@portone/browser-sdk/v2'
 import { AxiosError, AxiosResponse } from 'axios'
 
-import { URL_PAYMENT_SUBSCRIPTION } from './constants'
 import {
   PostPaymentSubscriptionRequest,
   PostPaymentSubscriptionResponse

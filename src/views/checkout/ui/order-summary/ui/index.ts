@@ -1,5 +1,6 @@
-export * from './credit-order-summary'
 export * from './order-summary-container'
 export * from './plan-order-summary'
+export * from './credit-order-summary'
+export * from './upgrade-order-summary'
 export * from './OrderLabeledDetail'
 export * from './PaymentErrorModal'

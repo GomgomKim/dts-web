@@ -10,8 +10,6 @@ export const useGetMemberShip = () => {
   return useQuery({
     queryKey: ['membership'],
     queryFn: () => getMembership(),
-    staleTime: 60 * 1000,
-    gcTime: 300 * 1000,
     enabled: isAuth === true,
     throwOnError: true
   })
