@@ -5,9 +5,14 @@ import { throwIfNotAxiosError } from '@/shared/lib/utils/throwIfNotAxiosError'
 
 import { AxiosError } from 'axios'
 
+import { PutSubscriptionResponse } from './types'
+
 export const putSubscription = async (planId: number) => {
   try {
-    const response = await dtsAxios.put(URL_PAYMENT_SUBSCRIPTION, {
+    const response = await dtsAxios.put<
+      PutSubscriptionResponse,
+      AxiosError<PutSubscriptionResponse, Error>
+    >(URL_PAYMENT_SUBSCRIPTION, {
       planId
     })
     return response
