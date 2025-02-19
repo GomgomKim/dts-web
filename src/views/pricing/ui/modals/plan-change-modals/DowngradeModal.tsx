@@ -1,8 +1,14 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
+
+import { usePutSubscription } from '@/views/checkout/ui/order-summary/ui/upgrade-order-summary/model/adapter'
 import { useCurrencyStore } from '@/views/pricing/model/useCurrencyStore'
 
+import { throwIfNotAxiosError } from '@/shared/lib/utils/throwIfNotAxiosError'
 import { ModalComponentProps } from '@/shared/ui/modal/model/types'
+
+import { AxiosError } from 'axios'
 
 import { Plan } from '../../plan-Items/model/types'
 import { UI_TEXT } from '../constants'
@@ -17,14 +23,37 @@ interface DowngradeModalProps extends ModalComponentProps {
 export const DowngradeModal = (props: DowngradeModalProps) => {
   const { onCloseModal, myPlan, selectedPlan } = props
 
+  const router = useRouter()
   const currencySign = useCurrencyStore((state) => state.getCurrencySign())
+  const updateSubscriptionMutation = usePutSubscription()
+
+  const handleClickDowngradeButton = async () => {
+    if (!selectedPlan.id) {
+      alert('no downgrade plan id')
+    }
+
+    const planId = selectedPlan.id
+
+    try {
+      await updateSubscriptionMutation.mutateAsync({ planId })
+      // if (res?.statusText === 'OK') {
+      onCloseModal()
+      router.replace('/my-account?tab=subscriptions') // TODO: 다음 플랜이 다운그레이드다 UI 처리 필요
+      // }
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        throw new Error(e.message)
+      }
+      throwIfNotAxiosError(e)
+    }
+  }
 
   return (
     <PlanModal
       title={UI_TEXT.DOWNGRADE_PLAN}
       description={UI_TEXT.DOWNGRADE_PLAN_DESCRIPTION}
       actionButtonTitle={UI_TEXT.CONFIRM_CHANGE}
-      onClickActionButton={() => alert('downgrade! move page')}
+      onClickActionButton={handleClickDowngradeButton}
       onCloseModal={onCloseModal}
     >
       {/* compare plans */}
