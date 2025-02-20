@@ -2,14 +2,19 @@ import { cn } from '@/shared/lib/utils'
 
 import CheckIcon from '/public/icons/check.svg'
 
-import { Plan } from './type'
+import { OtherPlan, PLAN_NAME_TITLE_MAP, Plan } from '../../model/types'
+import { Price } from './ui/Price'
 
-interface PlanItemProps extends Plan {
+interface PlanItemProps {
+  item: Plan | OtherPlan
+  features: string[]
   badge?: React.ReactNode
   slot: React.ReactNode
 }
 
 export const PlanItem = (props: PlanItemProps) => {
+  const { name, price, creditNum } = props.item
+
   return (
     <div className="size-full rounded-[0.5rem] bg-neutral-1">
       {/* plan price */}
@@ -19,14 +24,16 @@ export const PlanItem = (props: PlanItemProps) => {
           "after:absolute after:bottom-0 after:left-0 after:block after:w-full after:border-b after:border-neutral-3 after:content-['']"
         )}
       >
-        <header className="mb-10 text-[1.125rem] font-normal">
-          <span>{props.title}</span>
+        <header className="mb-10">
+          <span className="text-[1.125rem] font-normal">
+            {PLAN_NAME_TITLE_MAP[name]}
+          </span>
           {props.badge ? <span className="ml-1">{props.badge}</span> : null}
         </header>
         <div className="mb-5">
-          <p className="mb-2 *:text-nowrap">{displayPrice(props.price)}</p>
+          <p className="mb-2 *:text-nowrap">{displayPrice(price)}</p>
           <p className="text-nowrap pb-[5px] text-neutral-7">
-            {displayCredits(props.credits)}
+            {displayCredits(creditNum)}
           </p>
         </div>
         <div className="h-[50px]">{props.slot}</div>
@@ -44,14 +51,8 @@ export const PlanItem = (props: PlanItemProps) => {
 const displayPrice = (price: number | string) => {
   if (typeof price === 'string')
     return <span className="text-[2rem] font-medium">{price}</span>
-  return (
-    <>
-      <span className="text-[2rem] font-medium">${price}</span>
-      <span className="ml-2 text-[0.875rem] font-medium text-neutral-7">
-        per month
-      </span>
-    </>
-  )
+
+  return <Price price={price} />
 }
 
 const displayCredits = (credits: number | string) => {

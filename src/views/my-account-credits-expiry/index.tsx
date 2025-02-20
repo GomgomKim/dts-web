@@ -1,13 +1,10 @@
-import { BackButton } from '@/entities/back-button'
-
 import { UI_TEXT } from './model/constants'
 import { CreditsExpiryTable } from './ui/CreditsExpiryTable'
 
 export default function CreditsExpiry() {
   return (
     <>
-      <BackButton />
-      <div className="mb-12 mt-5">
+      <div className="mb-12">
         <h1 className="mb-3 text-[2rem] font-semibold">
           {UI_TEXT.CREDIT_EXPIRY}
         </h1>

@@ -1,9 +1,84 @@
-import { CreditOption } from './types'
+import { Currency } from '@/views/pricing/ui/plan-Items/model/types'
 
-export const CREDITS_OPTIONS: CreditOption[] = [
-  { id: '10', label: '10 Credits', value: 10 },
-  { id: '20', label: '20 Credits', value: 20 },
-  { id: '30', label: '30 Credits', value: 30 },
-  { id: '50', label: '50 Credits', value: 50 },
-  { id: '100', label: '100 Credits', value: 100 }
-]
+import { Credit, CreditName, CreditNum } from './types'
+
+export const UI_TEXT = {
+  // AddCreditsForm
+  CREDITS: 'Credits',
+  //AddCreditsContinueButton
+  CONTINUE: 'Continue',
+  SELECT_AN_AMOUNT: 'Select an amount'
+} as const
+
+export const CREDIT_NAME_TITLE_MAP: Record<string, CreditNum> = {
+  CREDIT_1: '10',
+  CREDIT_2: '30',
+  CREDIT_3: '50',
+  CREDIT_4: '100',
+  CREDIT_5: '200'
+}
+
+export const CREDIT_TITLE_NAME_MAP: Record<CreditNum, CreditName> = {
+  10: 'CREDIT_1',
+  30: 'CREDIT_2',
+  50: 'CREDIT_3',
+  100: 'CREDIT_4',
+  200: 'CREDIT_5'
+}
+
+export const CREDIT_ITEMS: { [key in Currency]: Credit[] } = {
+  KRW: [
+    {
+      id: 2,
+      name: 'CREDIT_1',
+      price: 14000
+    },
+    {
+      id: 3,
+      name: 'CREDIT_2',
+      price: 42000
+    },
+    {
+      id: 4,
+      name: 'CREDIT_3',
+      price: 70000
+    },
+    {
+      id: 5,
+      name: 'CREDIT_4',
+      price: 140000
+    },
+    {
+      id: 6,
+      name: 'CREDIT_5',
+      price: 280000
+    }
+  ],
+  USD: [
+    {
+      id: 2,
+      name: 'CREDIT_1',
+      price: 10
+    },
+    {
+      id: 3,
+      name: 'CREDIT_2',
+      price: 30
+    },
+    {
+      id: 4,
+      name: 'CREDIT_3',
+      price: 50
+    },
+    {
+      id: 5,
+      name: 'CREDIT_4',
+      price: 100
+    },
+    {
+      id: 6,
+      name: 'CREDIT_5',
+      price: 200
+    }
+  ]
+}

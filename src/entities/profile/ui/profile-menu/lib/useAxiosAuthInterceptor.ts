@@ -1,9 +1,8 @@
 import { useEffect } from 'react'
 
-import { dtsAxios } from '@/shared/api'
+import { dtsAuthAxios } from '@/shared/api'
 import { useAuthStore } from '@/shared/lib/stores/useAuthStore'
 
-// import { useQueryClient } from '@tanstack/react-query'
 import { InternalAxiosRequestConfig } from 'axios'
 
 export const useAxiosAuthInterceptor = () => {
@@ -17,24 +16,6 @@ export const useAxiosAuthInterceptor = () => {
       return config
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const responseHandler = (response: any) => {
-      const { logIn } = useAuthStore.getState()
-
-      if (
-        response.headers['authorization'] &&
-        response.headers['refresh-token']
-      ) {
-        const accessToken = response.headers['authorization']
-        const refreshToken = response.headers['refresh-token']
-
-        logIn({ accessToken: accessToken, refreshToken: refreshToken })
-      }
-
-      return response
-    }
-
-    dtsAxios.interceptors.request.use(requestHandler)
-    dtsAxios.interceptors.response.use(responseHandler)
+    dtsAuthAxios.interceptors.request.use(requestHandler)
   }, [])
 }

@@ -1,12 +1,8 @@
-import type { Metadata } from 'next'
-
 import { DefaultHeader } from '@/widgets/default-header'
 
-export const metadata: Metadata = {
-  title: 'My Models | My Account'
-}
+import { BackButton } from '@/entities/back-button'
 
-export default function MyAccountMyModelsLayout({
+export default function MyAccountLayout({
   children
 }: Readonly<{
   children: React.ReactNode
@@ -16,7 +12,10 @@ export default function MyAccountMyModelsLayout({
       {/* TODO: header 수정 */}
       <DefaultHeader />
       <div className="h-screen pt-14">
-        <main className="px-10 pb-36 pt-5">{children}</main>
+        <main className="px-10 pb-36 pt-5">
+          <BackButton className="mb-5" />
+          {children}
+        </main>
       </div>
     </>
   )

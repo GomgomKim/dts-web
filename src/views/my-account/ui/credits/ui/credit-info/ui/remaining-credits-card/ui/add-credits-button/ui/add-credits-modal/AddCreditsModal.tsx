@@ -2,9 +2,9 @@
 
 import { useState } from 'react'
 
-import { AddCreditsForm } from '@/features/add-credits/AddCreditsForm'
+import { AddCreditsContinueButton } from '@/features/add-credits/ui'
+import { AddCreditsForm } from '@/features/add-credits/ui/AddCreditsForm'
 
-import { Button } from '@/shared/ui'
 import { DefaultModal } from '@/shared/ui/modal/DefaultModal'
 import { ModalComponentProps } from '@/shared/ui/modal/model/types'
 
@@ -26,16 +26,10 @@ export const AddCreditsModal = (props: AddCreditsModalProps) => {
       title="Add Credits"
       description="Select the number of credits to add instantly."
       footer={
-        <Button
-          type="submit"
-          variant="primary"
-          stretch
+        <AddCreditsContinueButton
           className="bg-white text-[0.875rem] hover:bg-white md:text-[1rem]"
-          disabled={!isSelectedCredit}
-          form="add-credits-form"
-        >
-          {isSelectedCredit ? 'Continue' : 'Select an amount'}
-        </Button>
+          isSelectedCredit={isSelectedCredit}
+        />
       }
     >
       <AddCreditsForm

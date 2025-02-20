@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@portone/browser-sdk':
+        specifier: ^0.0.11
+        version: 0.0.11
       '@radix-ui/react-checkbox':
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@18.3.0)(@types/react@18.3.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1598,6 +1601,9 @@ packages:
         optional: true
       webpack-plugin-serve:
         optional: true
+
+  '@portone/browser-sdk@0.0.11':
+    resolution: {integrity: sha512-NxvODPjSmfst/hTbEQAiTrd/zTyckC+Mggtz8H2PGBXbjKsUXKwNReIt6BHvZEmgDWuRQ94ltkTZapkTO4H1Aw==}
 
   '@prisma/instrumentation@5.19.1':
     resolution: {integrity: sha512-VLnzMQq7CWroL5AeaW0Py2huiNKeoMfCH3SUxstdzPrlWQi6UQ9UrfcbUkNHlVFqOMacqy8X/8YtE0kuKDpD9w==}
@@ -7994,6 +8000,8 @@ snapshots:
     optionalDependencies:
       type-fest: 4.26.1
       webpack-hot-middleware: 2.26.1
+
+  '@portone/browser-sdk@0.0.11': {}
 
   '@prisma/instrumentation@5.19.1':
     dependencies:

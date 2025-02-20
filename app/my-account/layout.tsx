@@ -1,7 +1,10 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'My Account'
+  title: {
+    template: '%s | My Account',
+    default: 'My Account'
+  }
 }
 
 export default function MyAccountLayout({

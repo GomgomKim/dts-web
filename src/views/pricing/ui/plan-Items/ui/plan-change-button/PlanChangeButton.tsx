@@ -8,7 +8,7 @@ import {
   UpgradeModal
 } from '../../../modals/plan-change-modals'
 import { UI_TEXT } from '../../model/constant'
-import { Plan } from '../plan-item/type'
+import { Plan } from '../../model/types'
 
 interface PlanChangeButtonProps {
   myPlan: Plan
@@ -18,7 +18,7 @@ interface PlanChangeButtonProps {
 export const PlanChangeButton = (props: PlanChangeButtonProps) => {
   const { openModal } = useModals()
 
-  const isUpgrade = parseInt(props.selectedPlan.id) > parseInt(props.myPlan.id)
+  const isUpgrade = props.selectedPlan.id > props.myPlan.id
 
   const handleClickPlanChange = () => {
     openModal(isUpgrade ? UpgradeModal : DowngradeModal, {
@@ -27,7 +27,7 @@ export const PlanChangeButton = (props: PlanChangeButtonProps) => {
     })
   }
 
-  if (props.selectedPlan.title === 'Unlimited') {
+  if (props.selectedPlan.name === 'UNLIMITED') {
     return (
       <Button
         variant="primary"

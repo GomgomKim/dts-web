@@ -2,8 +2,10 @@
 
 import Link from 'next/link'
 
-import { PLAN_ITEMS } from '@/views/pricing/ui/plan-Items/model/constant'
+import { useCurrencyStore } from '@/views/pricing/model/useCurrencyStore'
+import { PLAN_NAME_TITLE_MAP } from '@/views/pricing/ui/plan-Items/model/types'
 
+import { useGetPlanInfo } from '@/shared/lib/hooks/useGetPlanInfo'
 import { Button } from '@/shared/ui'
 import {
   Card,
@@ -27,10 +29,13 @@ import { SubscriptionCancelModal } from '../subscription-cancel-modal'
 export const CurrentSubscription = () => {
   const isActive = true
   const { openModal } = useModals()
+  const { getPlanByName } = useGetPlanInfo()
+  const currencySign = useCurrencyStore((state) => state.getCurrencySign())
 
   // 더미 데이터
-  const myPlanId = '5'
-  const myPlan = PLAN_ITEMS.find((item) => item.id === myPlanId)!
+  const myPlanName = 'MODEL_5'
+  const myPlan = getPlanByName(myPlanName)
+  if (!myPlan) return <div>sorry, not found the plan by name</div>
 
   return (
     <Card className="flex h-[301px] max-w-[588px] flex-1 shrink-0 basis-[460px] flex-col">
@@ -43,7 +48,11 @@ export const CurrentSubscription = () => {
           <LabeledDetail>
             <LabeledDetailLabel>{UI_TEXT.PRICE}</LabeledDetailLabel>
             <LabeledDetailDetail>
-              <>{isActive ? `$${myPlan.price} for ${myPlan.title}` : '-'}</>
+              <>
+                {isActive
+                  ? `${currencySign}${myPlan.price} for ${PLAN_NAME_TITLE_MAP[myPlan.name]}`
+                  : '-'}
+              </>
             </LabeledDetailDetail>
           </LabeledDetail>
           <LabeledDetail>

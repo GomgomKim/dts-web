@@ -1,10 +1,16 @@
+import { useCurrencyStore } from '@/views/pricing/model/useCurrencyStore'
+
 import { cn } from '@/shared/lib/utils'
 
-import { Plan } from '../../../plan-Items/ui/plan-item/type'
+import {
+  OtherPlan,
+  PLAN_NAME_TITLE_MAP,
+  Plan
+} from '../../../plan-Items/model/types'
 
 interface ComparePlansProps {
   myPlan: Plan
-  selectedPlan: Plan
+  selectedPlan: Plan | OtherPlan
 }
 
 export const ComparePlans = (props: ComparePlansProps) => {
@@ -17,15 +23,15 @@ export const ComparePlans = (props: ComparePlansProps) => {
       <div className={underlineStyle}>
         <PlanInfo
           label="From"
-          planTitle={props.myPlan?.title}
-          price={props.myPlan?.price}
+          planTitle={PLAN_NAME_TITLE_MAP[props.myPlan.name]}
+          price={props.myPlan.price}
         />
       </div>
       {/* Selected plan */}
       <PlanInfo
         label="To"
-        planTitle={props.selectedPlan?.title}
-        price={props.selectedPlan?.price}
+        planTitle={PLAN_NAME_TITLE_MAP[props.selectedPlan.name]}
+        price={props.selectedPlan.price}
         isPrimary
       />
     </div>
@@ -40,6 +46,8 @@ interface PlanInfoProps {
 }
 
 const PlanInfo = ({ label, planTitle, price, isPrimary }: PlanInfoProps) => {
+  const currencySign = useCurrencyStore((state) => state.getCurrencySign())
+
   return (
     <div className="space-y-2">
       <p className="flex">
@@ -59,7 +67,10 @@ const PlanInfo = ({ label, planTitle, price, isPrimary }: PlanInfoProps) => {
           <span className="ml-auto text-[1.125rem]">{price}</span>
         ) : (
           <>
-            <span className="ml-auto text-[1.125rem]">${price}</span>
+            <span className="ml-auto text-[1.125rem]">
+              {currencySign}
+              {price}
+            </span>
             <span className="ml-[6px] text-nowrap text-neutral-7">/ month</span>
           </>
         )}

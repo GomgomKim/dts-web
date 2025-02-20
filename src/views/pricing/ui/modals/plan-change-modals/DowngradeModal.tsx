@@ -1,8 +1,10 @@
 'use client'
 
+import { useCurrencyStore } from '@/views/pricing/model/useCurrencyStore'
+
 import { ModalComponentProps } from '@/shared/ui/modal/model/types'
 
-import { Plan } from '../../plan-Items/ui/plan-item/type'
+import { Plan } from '../../plan-Items/model/types'
 import { UI_TEXT } from '../constants'
 import { PlanModal } from '../ui'
 import { ComparePlans } from './ui'
@@ -14,6 +16,8 @@ interface DowngradeModalProps extends ModalComponentProps {
 
 export const DowngradeModal = (props: DowngradeModalProps) => {
   const { onCloseModal, myPlan, selectedPlan } = props
+
+  const currencySign = useCurrencyStore((state) => state.getCurrencySign())
 
   return (
     <PlanModal
@@ -39,7 +43,10 @@ export const DowngradeModal = (props: DowngradeModalProps) => {
               ).toLocaleDateString()}
             </span>
             <p className="inline-block">
-              <span className="text-[1.125rem]">${selectedPlan?.price}</span>
+              <span className="text-[1.125rem]">
+                {currencySign}
+                {selectedPlan?.price}
+              </span>
               <span className="ml-[6px] text-nowrap text-neutral-7">
                 / {UI_TEXT.MONTH}
               </span>

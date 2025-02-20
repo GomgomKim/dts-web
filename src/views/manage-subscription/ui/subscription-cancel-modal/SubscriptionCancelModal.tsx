@@ -2,8 +2,8 @@
 
 import { ComparePlans } from '@/views/pricing/ui/modals/plan-change-modals/ui'
 import { PlanModal } from '@/views/pricing/ui/modals/ui'
-import { PLAN_ITEMS } from '@/views/pricing/ui/plan-Items/model/constant'
-import { Plan } from '@/views/pricing/ui/plan-Items/ui/plan-item/type'
+import { PLAN_CANCEL } from '@/views/pricing/ui/plan-Items/model/constant'
+import { Plan } from '@/views/pricing/ui/plan-Items/model/types'
 
 import { cn } from '@/shared/lib/utils'
 import { ModalComponentProps } from '@/shared/ui/modal/model/types'
@@ -19,7 +19,7 @@ export const SubscriptionCancelModal = (
 ) => {
   const { onCloseModal } = props
 
-  const selectedPlan = PLAN_ITEMS.find((item) => item.title === 'Cancel')!
+  const selectedPlan = PLAN_CANCEL
 
   // TODO: tailwind 커스텀 스타일 지정?
   const underlineStyle =
