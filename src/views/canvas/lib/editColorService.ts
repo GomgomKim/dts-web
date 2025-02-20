@@ -238,11 +238,11 @@ export const applyMultiplyAndFeather = (
   newColor = [0, 0, 255],
   coloringType = 'type1',
   selectedSegment: number[] | null = null,
+  level = 1.0,
   powerNorm = 1,
   rect = null,
   min_v_value = 0,
-  max_v_value = 255,
-  level = 1.0
+  max_v_value = 255
 ) => {
   if (!Number.isInteger(featherAmount) || featherAmount < 0) {
     throw new Error('적절한 featherAmount 값이 아닙니다.')

@@ -47,14 +47,14 @@ export const BrushEraseToggle = (props: BrushEraseToggleProps) => {
         <ToggleToolButton
           icon={<ColorBrushDarkIcon />}
           text={UI_TEXT.BRUSH}
-          selected={props.selectedToolId === TOOL_IDS.BRUSH}
+          isSelected={props.selectedToolId === TOOL_IDS.BRUSH}
           onClick={() => handleClickBrushErase(TOOL_IDS.BRUSH)}
         />
 
         <ToggleToolButton
           icon={<EraseIcon />}
           text={UI_TEXT.ERASE}
-          selected={props.selectedToolId === TOOL_IDS.ERASE}
+          isSelected={props.selectedToolId === TOOL_IDS.ERASE}
           onClick={() => handleClickBrushErase(TOOL_IDS.ERASE)}
         />
       </div>

@@ -24,6 +24,7 @@ import {
   useCreamTextureStore // useEyeContactsStore
 } from './model/useEditorPanelsStore'
 import { useToolModeStore } from './model/useToolModeStore'
+import { AddRemoveToggle } from './ui/add-remove-toggle'
 import { useBrandAssetsStore } from './ui/brand-assets/model/useBrandAssetsStore'
 import { ColorBrush } from './ui/editor-panels/color-brush/ColorBrush'
 import { CreamTexture } from './ui/editor-panels/cream-texture'
@@ -31,6 +32,7 @@ import { EyeContacts } from './ui/editor-panels/eye-contacts'
 import { HairColor } from './ui/editor-panels/hair-color/HairColor'
 import { SkinGlow } from './ui/editor-panels/skin-glow/SkinGlow'
 import { ImageView } from './ui/image-editing-box/ui/image-view'
+import { RevertToOriginalModal } from './ui/image-editing-box/ui/revert-to-original'
 
 export default function Canvas({
   canvasRef
@@ -79,7 +81,11 @@ export default function Canvas({
   const setSelectedToolMode = useToolModeStore((state) => state.setSelectedTool)
 
   const isShowBrushEraseToggle = (toolId: AiToolId | null): boolean => {
-    return toolId === AI_TOOL.COLOR_BRUSH || toolId === AI_TOOL.HAIR_COLOR
+    return toolId === AI_TOOL.COLOR_BRUSH
+  }
+
+  const isShowAddRemoveToggle = (toolId: AiToolId | null): boolean => {
+    return toolId === AI_TOOL.HAIR_COLOR
   }
 
   return (
@@ -110,6 +116,11 @@ export default function Canvas({
               onSelectTool={setSelectedToolMode}
             />
           ) : null}
+        </div>
+
+        {/* AddRemoveToggle */}
+        <div className="mt-4">
+          {isShowAddRemoveToggle(selectedAiTool) ? <AddRemoveToggle /> : null}
         </div>
       </div>
 
@@ -157,6 +168,8 @@ export default function Canvas({
           ref={canvasRef}
         ></div>
       </div>
+
+      <RevertToOriginalModal />
     </div>
   )
 }

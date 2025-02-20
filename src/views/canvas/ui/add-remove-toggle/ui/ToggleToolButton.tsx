@@ -6,14 +6,14 @@ import { Button } from '@/shared/ui'
 interface ToggleToolButtonProps {
   icon: React.ReactNode
   text: string
-  isSelected: boolean
+  selected: boolean
   onClick: () => void
 }
 
 export const ToggleToolButton = ({
   icon,
   text,
-  isSelected,
+  selected,
   onClick
 }: ToggleToolButtonProps) => {
   return (
@@ -22,8 +22,8 @@ export const ToggleToolButton = ({
       onClick={onClick}
       className={cn(
         'flex h-10 w-24 flex-1',
-        'gap-2 py-1.5 pl-1 pr-3',
-        isSelected ? 'bg-white text-neutral-0' : 'bg-neutral-2 text-neutral-5',
+        'gap-2 px-3 py-1.5',
+        selected ? 'bg-white text-neutral-0' : 'bg-neutral-2 text-neutral-5',
         'hover:bg-white hover:text-neutral-0'
       )}
     >

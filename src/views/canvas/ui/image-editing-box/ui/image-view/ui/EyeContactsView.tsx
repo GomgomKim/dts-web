@@ -6,6 +6,9 @@ import { getBlackEyesFace } from '@/views/canvas/lib/eyeContactsService'
 import { getAssetUrl } from '@/views/canvas/lib/getAssetUrl'
 import { lensPositions } from '@/views/canvas/model/LensDummyData'
 import { useEyeContactsStore } from '@/views/canvas/model/useEditorPanelsStore'
+import { useLayerVisibilityStore } from '@/views/canvas/model/useLayerVisibilityStore'
+
+import { AI_TOOL } from '@/widgets/canvas-sidebar/model/types'
 
 interface EyeContactsViewProps {
   imgUrl: string
@@ -24,6 +27,7 @@ export const EyeContactsView = forwardRef<
   const eyeContactsTransparency = useEyeContactsStore(
     (state) => state.transparency
   )
+  const setActiveTool = useLayerVisibilityStore((state) => state.setActiveTool)
   const lensPosData = lensPositions('ASPECT_RATIO_1_1')
   const leftEyePos = lensPosData.left_eye
   const rightEyePos = lensPosData.right_eye
@@ -31,6 +35,10 @@ export const EyeContactsView = forwardRef<
   const scale = props.targetSize / originalWidth
 
   const [foreLayer, setForeLayer] = useState<string | null>(null)
+
+  useEffect(() => {
+    setActiveTool(AI_TOOL.EYE_CONTACTS)
+  }, [])
 
   useEffect(() => {
     // modelMat와 maskMat이 모두 준비되었을 때 실행

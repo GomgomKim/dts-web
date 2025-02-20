@@ -1,10 +1,15 @@
 import { useEffect, useRef, useState } from 'react'
 
 import { useColorBrushStore } from '@/views/canvas/model/useEditorPanelsStore'
+import { useLayerVisibilityStore } from '@/views/canvas/model/useLayerVisibilityStore'
 import { useToolModeStore } from '@/views/canvas/model/useToolModeStore'
 import { TOOL_IDS } from '@/views/canvas/ui/brush-erase-toggle/model'
 import { MAX_CUSTOM_BRUSHES } from '@/views/canvas/ui/editor-panels/color-brush/model'
 import { CUSTOM_BRUSH_START } from '@/views/canvas/ui/editor-panels/color-brush/model'
+
+import { AI_TOOL } from '@/widgets/canvas-sidebar/model/types'
+
+import { cn } from '@/shared/lib/utils'
 
 import { useApplyColor } from '../lib/useApplyColor'
 import { useCanvasHighlight } from '../lib/useCanvasHighlight'
@@ -12,6 +17,12 @@ import { useCanvasHighlight } from '../lib/useCanvasHighlight'
 type ColorBrushViewProps = {
   modelMat: cv.Mat | null
   maskMatRef: React.RefObject<cv.Mat>
+  brushMaskMatRefs: {
+    [key: string]: React.MutableRefObject<cv.Mat | null>
+  }
+  setBrushMaskMatRefs: (refs: {
+    [key: string]: React.MutableRefObject<cv.Mat | null>
+  }) => void
 }
 
 export const ColorBrushView = (props: ColorBrushViewProps) => {
@@ -27,24 +38,45 @@ export const ColorBrushView = (props: ColorBrushViewProps) => {
   const colorBrushOpacity = useColorBrushStore(
     (state) => state.colorBrushOpacity
   )
+
+  const activeToolVisibility = useLayerVisibilityStore(
+    (state) => state.activeToolVisibility
+  )
+  const globalVisibility = useLayerVisibilityStore(
+    (state) => state.globalVisibility
+  )
+  const disableBrush = !activeToolVisibility || !globalVisibility
+
   const [currentBrushSegment, setCurrentBrushSegment] = useState<number | null>(
     null
   )
+  const setActiveTool = useLayerVisibilityStore((state) => state.setActiveTool)
   const ref = useRef<HTMLCanvasElement>(null)
   // 마우스 위치 상태
-  const [isDrawing, setIsDrawing] = useState(false)
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
-  const [prevPos, setPrevPos] = useState<{ x: number; y: number } | null>(null)
-  const [brushMaskMatRefs, setBrushMaskMatRefs] = useState<{
-    [key: string]: React.MutableRefObject<cv.Mat | null>
-  }>({})
+  const [isDrawing, setIsDrawing] = useState<boolean>(false)
+  const [mousePos, setMousePos] = useState<{
+    x: number | null
+    y: number | null
+  }>({ x: null, y: null })
+  const [prevPos, setPrevPos] = useState<{
+    x: number | null
+    y: number | null
+  }>({ x: null, y: null })
 
   // 브러시 커서 사이즈 및 종류 (brush / erase)
-  const { toolSize, selectedTool } = useToolModeStore()
+  const toolSize = useToolModeStore((state) => state.toolSize)
+  const selectedTool = useToolModeStore((state) => state.selectedTool)
+
+  const prevSelectedBrushRef = useRef<typeof selectedColorBrushItem>(null)
+
+  const isFirstRender = useRef<boolean>(true)
 
   useEffect(() => {
-    if (props.maskMatRef.current) {
-      setBrushMaskMatRefs({
+    if (
+      props.maskMatRef.current &&
+      Object.keys(props.brushMaskMatRefs).length === 0
+    ) {
+      props.setBrushMaskMatRefs({
         lips: { current: props.maskMatRef.current.clone() },
         eyebrows: { current: props.maskMatRef.current.clone() },
         brush_1: { current: props.maskMatRef.current.clone() },
@@ -60,8 +92,11 @@ export const ColorBrushView = (props: ColorBrushViewProps) => {
 
   // 현재 선택된 브러시 아이디에 따라 활성화된 mask ref를 결정합니다.
   const getActiveMaskRef = () => {
-    if (selectedColorBrushItem && brushMaskMatRefs[selectedColorBrushItem.id]) {
-      return brushMaskMatRefs[selectedColorBrushItem.id]
+    if (
+      selectedColorBrushItem &&
+      props.brushMaskMatRefs[selectedColorBrushItem.id]
+    ) {
+      return props.brushMaskMatRefs[selectedColorBrushItem.id]
     }
     return props.maskMatRef
   }
@@ -85,14 +120,26 @@ export const ColorBrushView = (props: ColorBrushViewProps) => {
       canvas.width = canvas.offsetWidth
       canvas.height = canvas.offsetHeight
     }
+    setActiveTool(AI_TOOL.COLOR_BRUSH)
   }, [])
 
   // 브러시 색상 변경 시 applyColor 호출
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+      return
+    }
     applyColor()
+    if (prevSelectedBrushRef.current && selectedColorBrushItem) {
+      // 기존 브러시와 동일하다면 하이라이트 숨김 (같은 브러시 내 색상 변경 등)
+      if (prevSelectedBrushRef.current.id === selectedColorBrushItem.id) {
+        drawHighlight({ showHighlight: false })
+      }
+    }
+    prevSelectedBrushRef.current = selectedColorBrushItem
   }, [colorBrushColor, colorBrushOpacity, colorBrushSmoothEdges])
 
-  // 브러시 선택 시 호버 표시
+  // 선택된 브러시가 변경되었는지 이전 값과 비교하여 하이라이트 제어
   useEffect(() => {
     if (selectedColorBrushItem) {
       drawHighlight({ showHighlight: true })
@@ -132,7 +179,7 @@ export const ColorBrushView = (props: ColorBrushViewProps) => {
     setIsDrawing(true)
 
     // 새로운 클릭 시 이전 위치 초기화 (선이 이어지지 않도록)
-    setPrevPos(null)
+    setPrevPos({ x: null, y: null })
 
     drawHighlight({ showHighlight: false })
 
@@ -167,7 +214,7 @@ export const ColorBrushView = (props: ColorBrushViewProps) => {
               ? 'rgba(0, 0, 0, 0)'
               : 'rgba(0, 0, 0, 0)'
 
-          if (prevPos) {
+          if (prevPos.x && prevPos.y) {
             ctx.beginPath()
             ctx.moveTo(prevPos.x, prevPos.y)
             ctx.lineTo(pos.real.x, pos.real.y)
@@ -223,7 +270,9 @@ export const ColorBrushView = (props: ColorBrushViewProps) => {
       }
 
       setPrevPos({ x: pos.real.x, y: pos.real.y })
-      applyColor()
+      if (!disableBrush) {
+        applyColor()
+      }
     }
   }
 
@@ -248,7 +297,10 @@ export const ColorBrushView = (props: ColorBrushViewProps) => {
       {/* 캔버스 레이어 */}
       <canvas
         ref={ref}
-        className="absolute left-0 top-0 z-10 size-full cursor-none"
+        className={cn(
+          'absolute left-0 top-0 z-40 size-full',
+          disableBrush ? 'cursor-auto' : 'cursor-none'
+        )}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseLeave}
@@ -256,20 +308,22 @@ export const ColorBrushView = (props: ColorBrushViewProps) => {
       />
 
       {/* 브러시 커서 */}
-      <div
-        style={{
-          position: 'absolute',
-          top: mousePos.y - mapToolSizeToPx(toolSize) / 2,
-          left: mousePos.x - mapToolSizeToPx(toolSize) / 2,
-          width: mapToolSizeToPx(toolSize),
-          height: mapToolSizeToPx(toolSize),
-          border: `1px solid ${selectedTool === TOOL_IDS.BRUSH ? '#6effb6' : '#ffffff'}`,
-          borderRadius: '50%',
-          backgroundColor: 'rgba(0,0,0,0.05)',
-          pointerEvents: 'none',
-          zIndex: 10
-        }}
-      />
+      {disableBrush ? null : (
+        <div
+          style={{
+            position: 'absolute',
+            top: mousePos?.y ? mousePos.y - mapToolSizeToPx(toolSize) / 2 : 0,
+            left: mousePos?.x ? mousePos.x - mapToolSizeToPx(toolSize) / 2 : 0,
+            width: mapToolSizeToPx(toolSize),
+            height: mapToolSizeToPx(toolSize),
+            border: `1px solid ${selectedTool === TOOL_IDS.BRUSH ? '#6effb6' : '#ffffff'}`,
+            borderRadius: '50%',
+            backgroundColor: 'rgba(0,0,0,0.05)',
+            pointerEvents: 'none',
+            zIndex: 20
+          }}
+        />
+      )}
     </div>
   )
 }

@@ -2,6 +2,9 @@ import { forwardRef, useCallback, useEffect, useState } from 'react'
 
 import { relight } from '@/views/canvas/lib/editColorService'
 import { useSkinGlowStore } from '@/views/canvas/model/useEditorPanelsStore'
+import { useLayerVisibilityStore } from '@/views/canvas/model/useLayerVisibilityStore'
+
+import { AI_TOOL } from '@/widgets/canvas-sidebar/model/types'
 
 import { throttle } from 'lodash'
 
@@ -18,6 +21,9 @@ export const SkinGlowView = forwardRef<HTMLCanvasElement, SkinGlowViewProps>(
   (props, ref) => {
     const skinGlowSize = useSkinGlowStore((state) => state.skinGlowSize)
     const skinGlowPower = useSkinGlowStore((state) => state.skinGlowPower)
+    const setActiveTool = useLayerVisibilityStore(
+      (state) => state.setActiveTool
+    )
 
     const [specularPower, setSpecularPower] = useState<number>(120)
     const [specularHighlightsStrength, setSpecularHighlightsStrength] =
@@ -115,6 +121,10 @@ export const SkinGlowView = forwardRef<HTMLCanvasElement, SkinGlowViewProps>(
       }, 200),
       [relightImage]
     )
+
+    useEffect(() => {
+      setActiveTool(AI_TOOL.SKIN_GLOW)
+    }, [])
 
     useEffect(() => {
       relightImage()

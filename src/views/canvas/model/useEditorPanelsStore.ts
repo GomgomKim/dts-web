@@ -4,6 +4,7 @@ import { Asset } from '@/shared/api/types'
 
 import { create } from 'zustand'
 
+import { TOOL_MODE } from '../ui/add-remove-toggle/model'
 import {
   BASIC_BRUSHES,
   Brush,
@@ -87,13 +88,7 @@ export const useColorBrushStore = create<ColorBrushState>((set) => ({
     set(() => ({
       isAutoSelect: value
     })),
-  setSelectedColorBrushItem: (selectedColorBrushItem) =>
-    set((state) => ({
-      selectedColorBrushItem:
-        selectedColorBrushItem?.id === state.selectedColorBrushItem?.id
-          ? null
-          : selectedColorBrushItem
-    })),
+  setSelectedColorBrushItem: (item) => set({ selectedColorBrushItem: item }),
   setColorBrushSmoothEdges: (value) =>
     set(() => ({
       colorBrushSmoothEdges: value
@@ -153,16 +148,24 @@ interface HairColorState {
   hairColor: [number, number, number] | null
   hairColorOpacity: number
   hairColorLevel: number
+  selectedToolId: TOOL_MODE | null
+  isEditing: boolean
   setHairColor: (color: [number, number, number]) => void
   setHairColorOpacity: (opacity: number) => void
   setHairColorLevel: (value: number) => void
+  setSelectedToolId: (toolId: TOOL_MODE | null) => void
+  setIsEditing: (value: boolean) => void
 }
 
 export const useHairColorStore = create<HairColorState>((set) => ({
   hairColor: null,
   hairColorOpacity: 1.0,
   hairColorLevel: 50,
+  selectedToolId: null,
+  isEditing: false,
   setHairColor: (color) => set({ hairColor: color }),
   setHairColorOpacity: (opacity) => set({ hairColorOpacity: opacity }),
-  setHairColorLevel: (value) => set({ hairColorLevel: value })
+  setHairColorLevel: (value) => set({ hairColorLevel: value }),
+  setSelectedToolId: (toolId) => set({ selectedToolId: toolId }),
+  setIsEditing: (value) => set({ isEditing: value })
 }))

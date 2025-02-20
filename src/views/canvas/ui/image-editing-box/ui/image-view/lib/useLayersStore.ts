@@ -11,10 +11,10 @@ interface LayersState {
 interface LayersStore extends LayersState {
   setBaseLayer: (layer: string) => void
   setSkinGlowLayer: (layer: string) => void
-  setColorBrushLayers: (layers: Record<string, string>) => void
-  updateColorBrushLayer: (brushId: string, layer: string) => void
+  setColorBrushLayers: (brushId: string, layer: string) => void
   setHairColorLayer: (layer: string) => void
   setEyeContactsLayer: (layer: string) => void
+  resetLayers: () => void
 }
 
 export const useLayersStore = create<LayersStore>((set) => ({
@@ -25,8 +25,7 @@ export const useLayersStore = create<LayersStore>((set) => ({
   eyeContactsLayer: '',
   setBaseLayer: (layer) => set({ baseLayer: layer }),
   setSkinGlowLayer: (layer) => set({ skinGlowLayer: layer }),
-  setColorBrushLayers: (layers) => set({ colorBrushLayers: layers }),
-  updateColorBrushLayer: (brushId, layer) =>
+  setColorBrushLayers: (brushId, layer) =>
     set((state) => ({
       colorBrushLayers: {
         ...state.colorBrushLayers,
@@ -34,5 +33,12 @@ export const useLayersStore = create<LayersStore>((set) => ({
       }
     })),
   setHairColorLayer: (layer) => set({ hairColorLayer: layer }),
-  setEyeContactsLayer: (layer) => set({ eyeContactsLayer: layer })
+  setEyeContactsLayer: (layer) => set({ eyeContactsLayer: layer }),
+  resetLayers: () =>
+    set({
+      skinGlowLayer: '',
+      colorBrushLayers: {},
+      hairColorLayer: '',
+      eyeContactsLayer: ''
+    })
 }))

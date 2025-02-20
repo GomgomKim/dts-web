@@ -1,5 +1,9 @@
 import Image from 'next/image'
 
+import { useLayerVisibilityStore } from '@/views/canvas/model/useLayerVisibilityStore'
+
+import { AI_TOOL, AiToolId } from '@/widgets/canvas-sidebar/model/types'
+
 import { useLayersStore } from '../lib/useLayersStore'
 
 export const LayeredImageView = () => {
@@ -8,9 +12,25 @@ export const LayeredImageView = () => {
   const colorBrushLayers = useLayersStore((state) => state.colorBrushLayers)
   const hairColorLayer = useLayersStore((state) => state.hairColorLayer)
   const eyeContactsLayer = useLayersStore((state) => state.eyeContactsLayer)
+  const activeToolVisibility = useLayerVisibilityStore(
+    (state) => state.activeToolVisibility
+  )
+  const globalVisibility = useLayerVisibilityStore(
+    (state) => state.globalVisibility
+  )
+  const activeTool = useLayerVisibilityStore((state) => state.activeTool)
+
+  const isActiveTool = (tool: AiToolId) => {
+    return activeTool === tool
+  }
+
+  const getVisibilityClass = (tool: AiToolId) => {
+    if (!isActiveTool(tool)) return 'block'
+    return activeToolVisibility ? 'block' : 'hidden'
+  }
 
   return (
-    <div style={{ position: 'absolute', width: '100%', height: '100%' }}>
+    <div className="absolute inset-0 size-full">
       {/* 기본 이미지 레이어 */}
       {baseLayer && (
         <div className="absolute inset-0">
@@ -24,61 +44,78 @@ export const LayeredImageView = () => {
         </div>
       )}
 
-      {/* 스킨 글로우 레이어 */}
-      {skinGlowLayer && (
-        <div className="absolute inset-0" style={{ zIndex: 1 }}>
-          <Image
-            src={skinGlowLayer}
-            alt="Skin Glow"
-            fill
-            style={{ objectFit: 'contain' }}
-            priority
-          />
-        </div>
-      )}
+      <div
+        className={`absolute inset-0 size-full ${globalVisibility ? 'block' : 'hidden'}`}
+      >
+        {/* 스킨 글로우 레이어 */}
+        {skinGlowLayer && (
+          <div
+            className={`absolute inset-0 z-10 ${getVisibilityClass(
+              AI_TOOL.SKIN_GLOW
+            )}`}
+          >
+            <Image
+              src={skinGlowLayer}
+              alt="Skin Glow"
+              fill
+              style={{ objectFit: 'contain' }}
+              priority
+            />
+          </div>
+        )}
 
-      {/* 컬러 브러시 레이어들 */}
-      {Object.entries(colorBrushLayers).map(([brushId, base64], idx) => (
-        <div
-          key={brushId}
-          className="absolute inset-0"
-          style={{ zIndex: idx + 2 }}
-        >
-          <Image
-            src={base64}
-            alt={`Brush ${brushId}`}
-            fill
-            style={{ objectFit: 'contain' }}
-            priority
-          />
-        </div>
-      ))}
+        {/* 컬러 브러시 레이어들 */}
+        {Object.entries(colorBrushLayers).map(([brushId, base64]) => (
+          <div
+            key={brushId}
+            className={`absolute inset-0 z-20 ${getVisibilityClass(
+              AI_TOOL.COLOR_BRUSH
+            )}`}
+          >
+            <Image
+              src={base64}
+              alt={`Brush ${brushId}`}
+              fill
+              style={{ objectFit: 'contain' }}
+              priority
+            />
+          </div>
+        ))}
 
-      {/* 헤어 컬러 레이어 */}
-      {hairColorLayer && (
-        <div className="absolute inset-0" style={{ zIndex: 10 }}>
-          <Image
-            src={hairColorLayer}
-            alt="Hair Color"
-            fill
-            style={{ objectFit: 'contain' }}
-            priority
-          />
-        </div>
-      )}
+        {/* 헤어 컬러 레이어 */}
+        {hairColorLayer && (
+          <div
+            className={`absolute inset-0 z-30 ${getVisibilityClass(
+              AI_TOOL.HAIR_COLOR
+            )}`}
+          >
+            <Image
+              src={hairColorLayer}
+              alt="Hair Color"
+              fill
+              style={{ objectFit: 'contain' }}
+              priority
+            />
+          </div>
+        )}
 
-      {/* 아이 컨택트 레이어 */}
-      {eyeContactsLayer && (
-        <div className="absolute inset-0" style={{ zIndex: 11 }}>
-          <Image
-            src={eyeContactsLayer}
-            alt="Eye Contacts"
-            fill
-            style={{ objectFit: 'contain' }}
-            priority
-          />
-        </div>
-      )}
+        {/* 아이 컨택트 레이어 */}
+        {eyeContactsLayer && (
+          <div
+            className={`absolute inset-0 z-40 ${getVisibilityClass(
+              AI_TOOL.EYE_CONTACTS
+            )}`}
+          >
+            <Image
+              src={eyeContactsLayer}
+              alt="Eye Contacts"
+              fill
+              style={{ objectFit: 'contain' }}
+              priority
+            />
+          </div>
+        )}
+      </div>
     </div>
   )
 }

@@ -31,63 +31,57 @@ export const useApplyColor = (props: UseApplyColorProps) => {
     (state) => state.colorBrushOpacity
   )
   const colorBrushColor = useColorBrushStore((state) => state.colorBrushColor)
-  const updateColorBrushLayer = useLayersStore(
-    (state) => state.updateColorBrushLayer
+  const setColorBrushLayers = useLayersStore(
+    (state) => state.setColorBrushLayers
   )
   const updateBrushColor = useColorBrushStore((state) => state.updateBrushColor)
   const updateBrushOpacity = useColorBrushStore(
     (state) => state.updateBrushOpacity
   )
-  const applyColor = useCallback(
-    (isHairColor?: boolean) => {
-      if (!props.modelMat || !props.maskMatRef?.current) return null
+  const applyColor = useCallback(() => {
+    if (!props.modelMat || !props.maskMatRef?.current) return null
 
-      // 새로 그린 브러시가 아직 등록되지 않았다면 새로 등록
-      if (
-        !selectedColorBrushItem &&
-        customBrushes.length < MAX_CUSTOM_BRUSHES
-      ) {
-        const newBrush = createCustomBrush(
-          customBrushes.length - 1,
-          colorBrushColor,
-          colorBrushOpacity
-        )
-        addCustomBrush(newBrush)
-        setSelectedColorBrushItem(newBrush)
-      }
-
-      const segmentToApply = mappingBrushSegment(selectedColorBrushItem?.id)
-      if (
-        !selectedColorBrushItem?.id ||
-        segmentToApply === null ||
-        segmentToApply === undefined
-      )
-        return null
-
-      updateBrushColor(selectedColorBrushItem?.id, colorBrushColor)
-      updateBrushOpacity(selectedColorBrushItem?.id, colorBrushOpacity)
-
-      const base64 = applyMultiplyAndFeather(
-        props.modelMat,
-        props.maskMatRef.current,
-        converFeatherRange(colorBrushSmoothEdges),
-        colorBrushOpacity,
+    // 새로 그린 브러시가 아직 등록되지 않았다면 새로 등록
+    if (!selectedColorBrushItem && customBrushes.length < MAX_CUSTOM_BRUSHES) {
+      const newBrush = createCustomBrush(
+        customBrushes.length - 1,
         colorBrushColor,
-        isHairColor ? 'type3' : 'type1',
-        segmentToApply
+        colorBrushOpacity
       )
+      addCustomBrush(newBrush)
+      setSelectedColorBrushItem(newBrush)
+    }
 
-      if (selectedColorBrushItem) {
-        updateColorBrushLayer(selectedColorBrushItem.id, base64)
-      }
-    },
-    [
-      colorBrushColor,
+    const segmentToApply = mappingBrushSegment(selectedColorBrushItem?.id)
+    if (
+      !selectedColorBrushItem?.id ||
+      segmentToApply === null ||
+      segmentToApply === undefined
+    )
+      return null
+
+    updateBrushColor(selectedColorBrushItem?.id, colorBrushColor)
+    updateBrushOpacity(selectedColorBrushItem?.id, colorBrushOpacity)
+
+    const base64 = applyMultiplyAndFeather(
+      props.modelMat,
+      props.maskMatRef.current,
+      converFeatherRange(colorBrushSmoothEdges),
       colorBrushOpacity,
-      colorBrushSmoothEdges,
-      selectedColorBrushItem
-    ]
-  )
+      colorBrushColor,
+      'type1',
+      segmentToApply
+    )
+
+    if (selectedColorBrushItem) {
+      setColorBrushLayers(selectedColorBrushItem.id, base64)
+    }
+  }, [
+    colorBrushColor,
+    colorBrushOpacity,
+    colorBrushSmoothEdges,
+    selectedColorBrushItem
+  ])
 
   const converFeatherRange = (value: number): number => {
     // 입력값을 0-1 사이로 정규화

@@ -40,15 +40,6 @@ export const ColorPicker = (props: ColorPickerProps) => {
     (state) => state.selectedColorBrushItem
   )
 
-  // 초기 알파값 설정
-  useEffect(() => {
-    handleChangeColor({
-      ...color,
-      rgb: { ...color.rgb, a: props.isHairColor ? 1.0 : 0.3 },
-      hsv: { ...color.hsv, a: props.isHairColor ? 1.0 : 0.3 }
-    })
-  }, [])
-
   // 선택된 브러시의 색상으로 컬러피커 색상 업데이트
   useEffect(() => {
     if (

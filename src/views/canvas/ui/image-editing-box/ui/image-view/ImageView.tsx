@@ -19,6 +19,7 @@ import NormalMapImg from '/public/images/normal.png'
 import { useLayersStore } from './lib/useLayersStore'
 import { useOnClickOutside } from './lib/useOnClickOutside'
 import { ColorBrushView } from './ui/ColorBrushView'
+import { HairColorView } from './ui/HairColorView'
 import { LayeredImageView } from './ui/LayeredImageView'
 
 interface ImageViewProps {
@@ -55,6 +56,10 @@ export const ImageView = (props: ImageViewProps) => {
   const setSelectedColorBrushItem = useColorBrushStore(
     (state) => state.setSelectedColorBrushItem
   )
+
+  const [brushMaskMatRefs, setBrushMaskMatRefs] = useState<{
+    [key: string]: React.MutableRefObject<cv.Mat | null>
+  }>({})
 
   // 외부(배경) 클릭 시 도구 선택 해제
   useOnClickOutside(backgroundRef, () => {
@@ -302,11 +307,18 @@ export const ImageView = (props: ImageViewProps) => {
 
       {/* 브러시 */}
       {isColorBrush ? (
-        <ColorBrushView modelMat={modelMat} maskMatRef={maskMatRef} />
+        <ColorBrushView
+          modelMat={modelMat}
+          maskMatRef={maskMatRef}
+          brushMaskMatRefs={brushMaskMatRefs}
+          setBrushMaskMatRefs={setBrushMaskMatRefs}
+        />
       ) : null}
 
       {/* 헤어 컬러 */}
-      {isHairColor ? <></> : null}
+      {isHairColor ? (
+        <HairColorView modelMat={modelMat} maskMatRef={hairMaskMatRef} />
+      ) : null}
 
       {/* 스킨 글로우 */}
       {isSkinGlow ? <></> : null}
