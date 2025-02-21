@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation'
 
 import { usePutSubscription } from '@/views/checkout/ui/order-summary/ui/upgrade-order-summary/model/adapter'
+import { MY_ACCOUNT_TABS } from '@/views/my-account/model'
 import { useCurrencyStore } from '@/views/pricing/model/useCurrencyStore'
 
 import { throwIfNotAxiosError } from '@/shared/lib/utils/throwIfNotAxiosError'
@@ -38,7 +39,7 @@ export const DowngradeModal = (props: DowngradeModalProps) => {
       await updateSubscriptionMutation.mutateAsync({ planId })
       // if (res?.statusText === 'OK') {
       onCloseModal()
-      router.replace('/my-account?tab=subscriptions') // TODO: 다음 플랜이 다운그레이드다 UI 처리 필요
+      router.replace(`/my-account?tab=${MY_ACCOUNT_TABS.subscriptions}`)
       // }
     } catch (e) {
       if (e instanceof AxiosError) {
