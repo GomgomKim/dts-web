@@ -3,6 +3,24 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
+  // 로컬 CORS 우회용 rewrite
+  async rewrites() {
+    return [
+      {
+        source: '/proxy/api/:path*',
+        destination: process.env.NEXT_PUBLIC_API_URL + '/api/:path*'
+      },
+      {
+        source: '/proxy/payment/:path*',
+        destination: process.env.NEXT_PUBLIC_API_URL + '/payment/:path*'
+      },
+      {
+        source: '/proxy/auth/:path*',
+        destination: process.env.NEXT_PUBLIC_API_URL + '/auth/:path*'
+      }
+    ]
+  },
+
   webpack: (config) => {
     config.module.rules.push({
       test: /\.svg$/,

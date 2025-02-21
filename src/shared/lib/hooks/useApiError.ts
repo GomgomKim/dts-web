@@ -48,19 +48,11 @@ const useApiError = () => {
       console.error('400')
     },
     401: (msg, errorCode) => {
-      if (errorCode === 3005) {
-        // logOut(null)
-        console.error('로그인 세션이 만료가 되었습니다. 다시 로그인 해주세요.')
-        return
-      }
-
-      if (errorCode === 9003) {
-        // logOut(null)
-        console.error('로그인에 문제가 생겼습니다. 다시 로그인 해주세요.')
-        return
-      }
-
-      console.error('로그인에 문제가 생겼습니다. 다시 로그인 해주세요.')
+      console.error(
+        '로그인에 문제가 생겼습니다. 다시 로그인 해주세요.',
+        errorCode,
+        msg
+      )
     },
     404: () => console.error('404 요청하신 페이지를 찾을 수 없습니다.'),
     409: (msg, errorCode) => {

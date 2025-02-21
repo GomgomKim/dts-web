@@ -33,7 +33,6 @@ export const PlanItems = () => {
   const { data: subscribingPlanInfo, isLoading } = useGetMemberShip()
 
   useEffect(() => {
-    console.log(subscribingPlanInfo)
     if (!subscribingPlanInfo) return
 
     const myPlan = getPlanByName(subscribingPlanInfo.plan) || null

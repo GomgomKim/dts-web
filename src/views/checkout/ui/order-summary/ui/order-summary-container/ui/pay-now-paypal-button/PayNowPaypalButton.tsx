@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 
 import { useSearchParams } from 'next/navigation'
 
-import { dtsAuthAxios } from '@/shared/api'
+import { dtsAxios } from '@/shared/api'
 import { cn } from '@/shared/lib/utils'
 import { throwIfNotAxiosError } from '@/shared/lib/utils/throwIfNotAxiosError'
 import useModals from '@/shared/ui/modal/model/Modals.hooks'
@@ -110,7 +110,7 @@ const usePostBillingKey = () => {
 
 //  TODO: plan, credit id 연결!!!!!!!!
 const postBillingKey = async (billingKey: string) => {
-  const response = await dtsAuthAxios.post('/payment/subscription', {
+  const response = await dtsAxios.post('/payment/subscription', {
     planId: 10,
     billingKey
   })

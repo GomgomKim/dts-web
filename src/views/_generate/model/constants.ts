@@ -1,1 +1,1 @@
-export const URL_CONTENT_BY_MODEL = '/v2/contents/by-model'
+export const URL_CONTENT_BY_MODEL = '/api/v2/contents/by-model'

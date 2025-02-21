@@ -1,4 +1,4 @@
-import { dtsAuthAxios } from '@/shared/api'
+import { dtsAxios } from '@/shared/api'
 
 import { URL_AUTH_REGISTER, URL_AUTH_SOCIAL } from './constants'
 import {
@@ -12,7 +12,7 @@ const MAX_NAME_LENGTH = 20
 
 export const postSignIn = async (postSignInReq: PostSignInRequest) => {
   try {
-    const response = await dtsAuthAxios.post<PostSignInResponse>(
+    const response = await dtsAxios.post<PostSignInResponse>(
       URL_AUTH_SOCIAL,
       postSignInReq
     )
@@ -25,7 +25,7 @@ export const postSignIn = async (postSignInReq: PostSignInRequest) => {
 
 export const postSignUp = async (data: PostSignUpRequest) => {
   try {
-    const response = await dtsAuthAxios.post<PostSignUpResponse>(
+    const response = await dtsAxios.post<PostSignUpResponse>(
       URL_AUTH_REGISTER,
       {
         ...data,

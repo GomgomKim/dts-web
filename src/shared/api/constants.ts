@@ -1,1 +1,1 @@
-export const URL_BASE_IMAGE_FILE = '/v2/file/download?encryptedPath='
+export const URL_BASE_IMAGE_FILE = '/api/v2/file/download?encryptedPath='

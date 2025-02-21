@@ -1,4 +1,4 @@
-import { dtsAuthAxios } from '@/shared/api'
+import { dtsAxios } from '@/shared/api'
 
 import * as PortOne from '@portone/browser-sdk/v2'
 import { AxiosError, AxiosResponse } from 'axios'
@@ -36,7 +36,7 @@ export const getBillingKey = async () => {
 }
 
 export const postBillingKey = async (data: PostPaymentSubscriptionRequest) => {
-  const response = await dtsAuthAxios.post<
+  const response = await dtsAxios.post<
     PostPaymentSubscriptionRequest,
     AxiosResponse<PostPaymentSubscriptionResponse, AxiosError>
   >(URL_PAYMENT_SUBSCRIPTION, {
