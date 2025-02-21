@@ -6,6 +6,7 @@ export const UI_TEXT = {
   CREDITS: 'Credits',
   SUBSCRIPTION: 'Subscription',
   RENEWS_ON: 'Renews on',
+  ENDS_ON: 'Ends on',
   UPGRADE_PLAN: 'Upgrade Plan',
   REACTIVATE_PLAN: 'Reactivate Plan',
   VIEW_MY_MODELS: 'View My Models',
