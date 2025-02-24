@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react'
 import { matToBase64 } from '@/views/canvas/lib/editColorService'
 import { useEditorStore } from '@/views/canvas/model/useEditorHistoryStore'
 import { useColorBrushStore } from '@/views/canvas/model/useEditorPanelsStore'
+import { useLayerVisibilityStore } from '@/views/canvas/model/useLayerVisibilityStore'
 
 import { AI_TOOL, AiToolId } from '@/widgets/canvas-sidebar/model/types'
 
@@ -16,11 +17,13 @@ import FaceParseImg from '/public/images/face_parse.png'
 import HairMaskImg from '/public/images/hair_mask.png'
 import NormalMapImg from '/public/images/normal.png'
 
+import { useEyeContactsLayer } from './lib/useEyeContactsLayer'
 import { useLayersStore } from './lib/useLayersStore'
 import { useOnClickOutside } from './lib/useOnClickOutside'
 import { ColorBrushView } from './ui/ColorBrushView'
 import { HairColorView } from './ui/HairColorView'
 import { LayeredImageView } from './ui/LayeredImageView'
+import { SkinGlowView } from './ui/SkinGlowView'
 
 interface ImageViewProps {
   selectedVariation: Variation | null
@@ -38,8 +41,8 @@ export const ImageView = (props: ImageViewProps) => {
 
   const isColorBrush = props.selectedAiTool === AI_TOOL.COLOR_BRUSH
   const isHairColor = props.selectedAiTool === AI_TOOL.HAIR_COLOR
-  const isEyeContacts = props.selectedAiTool === AI_TOOL.EYE_CONTACTS
   const isSkinGlow = props.selectedAiTool === AI_TOOL.SKIN_GLOW
+  const isEyeContacts = props.selectedAiTool === AI_TOOL.EYE_CONTACTS
 
   // OpenCV.js용 Mat
   const maskMatRef = useRef<cv.Mat | null>(null)
@@ -51,6 +54,7 @@ export const ImageView = (props: ImageViewProps) => {
   const [modelMat, setModelMat] = useState<cv.Mat | null>(null)
 
   const setBaseLayer = useLayersStore((state) => state.setBaseLayer)
+  const setActiveTool = useLayerVisibilityStore((state) => state.setActiveTool)
 
   const backgroundRef = useRef<HTMLDivElement>(null)
   const setSelectedColorBrushItem = useColorBrushStore(
@@ -61,10 +65,19 @@ export const ImageView = (props: ImageViewProps) => {
     [key: string]: React.MutableRefObject<cv.Mat | null>
   }>({})
 
+  // 노멀 맵
+  const [normalMat, setNormalMat] = useState<cv.Mat | null>(null)
+
   // 외부(배경) 클릭 시 도구 선택 해제
   useOnClickOutside(backgroundRef, () => {
     setSelectedColorBrushItem(null)
   })
+
+  useEffect(() => {
+    if (isEyeContacts) {
+      setActiveTool(AI_TOOL.EYE_CONTACTS)
+    }
+  }, [isEyeContacts])
 
   // 브러시 마스킹 초기화
   useEffect(() => {
@@ -262,39 +275,55 @@ export const ImageView = (props: ImageViewProps) => {
     hairMaskImg.src = HairMaskImg.src
     originalImg.src = imgUrl
 
-    // Normal Map 이미지 로드
     const normalMapImg = new Image()
     normalMapImg.crossOrigin = 'anonymous'
     normalMapImg.onload = () => {
-      // 비율을 유지하면서 리사이징하기 위한 계산
+      // 원본 노멀맵 이미지의 크기에 따라 스케일 계산 (비율 유지)
       const scale = Math.min(
         targetSize / normalMapImg.width,
         targetSize / normalMapImg.height
       )
       const scaledWidth = Math.round(normalMapImg.width * scale)
       const scaledHeight = Math.round(normalMapImg.height * scale)
-
       // 중앙 정렬을 위한 오프셋 계산
       const offsetX = Math.round((targetSize - scaledWidth) / 2)
       const offsetY = Math.round((targetSize - scaledHeight) / 2)
+      const canvasForNormal = document.createElement('canvas')
+      canvasForNormal.width = targetSize
+      canvasForNormal.height = targetSize
+      canvasForNormal.style.position = 'absolute'
+      canvasForNormal.style.left = '-9999px'
+      document.body.appendChild(canvasForNormal)
 
-      const normalMapCanvas = document.createElement('canvas')
-      normalMapCanvas.width = targetSize
-      normalMapCanvas.height = targetSize
-      const normalMapCtx = normalMapCanvas.getContext('2d')
-      if (!normalMapCtx) return
+      const ctx = canvasForNormal.getContext('2d')
+      if (ctx) {
+        // 캔버스 전체를 흰색으로 채우거나, 필요에 따라 배경색 설정
+        ctx.fillStyle = '#FFFFFF'
+        ctx.fillRect(0, 0, targetSize, targetSize)
+        // 이미지 그리기 (중앙 정렬)
+        ctx.drawImage(normalMapImg, offsetX, offsetY, scaledWidth, scaledHeight)
 
-      // normal map 이미지도 동일한 비율과 위치로 그리기
-      normalMapCtx.drawImage(
-        normalMapImg,
-        offsetX,
-        offsetY,
-        scaledWidth,
-        scaledHeight
-      )
+        // OpenCV.js의 cv.imread()를 통해 캔버스의 내용을 cv.Mat으로 읽어들임
+        const normalMat = window.cv.imread(canvasForNormal)
+        setNormalMat(normalMat)
+      }
+
+      // OffscreenCanvas가 아니라면 DOM에서 제거
+      if (!(canvasForNormal instanceof OffscreenCanvas)) {
+        ;(canvasForNormal as HTMLCanvasElement).remove()
+      }
+    }
+    normalMapImg.onerror = (err) => {
+      console.error('노멀맵 이미지 로드 에러:', err)
     }
     normalMapImg.src = NormalMapImg.src
   }, [imgUrl, canvasElement])
+
+  useEyeContactsLayer({
+    targetSize: targetSize,
+    modelMat: modelMat,
+    maskMat: maskMatRef.current
+  })
 
   // 렌더
   return (
@@ -321,10 +350,13 @@ export const ImageView = (props: ImageViewProps) => {
       ) : null}
 
       {/* 스킨 글로우 */}
-      {isSkinGlow ? <></> : null}
-
-      {/* 렌즈 효과  */}
-      {isEyeContacts ? <></> : null}
+      {isSkinGlow ? (
+        <SkinGlowView
+          modelMat={modelMat}
+          normalMat={normalMat}
+          maskMat={maskMatRef.current}
+        />
+      ) : null}
 
       {/* Mat 제작용 캔버스 (UI에 보여주지 않음) */}
       <canvas

@@ -70,6 +70,7 @@ declare global {
       y: number
     }
 
+    const CV_8UC1: number
     const CV_8UC3: number
     const CV_8UC4: number
     const CV_32F: number
@@ -147,6 +148,7 @@ declare global {
     const merge: (mv: MatVector, dst: Mat) => void
     const split: (src: Mat, mv: MatVector) => void
     const cvtColor: (src: Mat, dst: Mat, code: number) => void
+    const convertScaleAbs: (src: Mat, dst?: Mat, alpha?: number, beta?: number) => void
     const minMaxLoc: (src: Mat) => {
       minVal: number
       maxVal: number

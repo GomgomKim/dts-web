@@ -419,7 +419,24 @@ export const applyMultiplyAndFeather = (
   return resImage
 }
 
-let originalRelightModelMat: cv.Mat | null = null
+/**
+ * 주변광, 반사광, 하이라이트광을 분리하여 리라이트 효과 레이어(반사광/하이라이트 레이어)를 생성하는 함수
+ *
+ * @param {cv.Mat} modelImage - cv.CV_8UC3 | cv.CV_8UC4 (원본 모델 이미지)
+ * @param {cv.Mat|null} maskImage - cv.CV_8UC3 | cv.CV_8UC4 (마스크 이미지, 없을 수도 있음)
+ * @param {cv.Mat} normalImage - cv.CV_8UC3 | cv.CV_8UC4 (노멀 이미지)
+ * @param {number} lightYaw - 광원 yaw 각도
+ * @param {number} lightPitch - 광원 pitch 각도
+ * @param {number} specularPower - 반사광(스페큘러) 거듭제곱 지수
+ * @param {number} ambientLight - 주변광 계수
+ * @param {number} normalDiffuseStrength - 노멀-디퓨즈 강도
+ * @param {number} specularHighlightsStrength - 스페큘러 하이라이트 강도
+ * @param {number} totalGain - 전체 게인 값
+ * @param {string} inputType - "euler" (기본값) 또는 기타 (포인트 조명 등)
+ * @param {number[]} specularColor - 반사광 색상 [R, G, B] (기본값: [255,255,255])
+ * @param {cv.Mat|null} pointImap - 포인트 조명용 이미지 (inputType이 "euler"가 아닐 경우 사용)
+ * @returns {cv.Mat|string} - RGBA 이미지 (cv.CV_8UC4) 형태로 생성된 하이라이트 레이어 또는 오류 메시지
+ */
 export const relight = (
   modelImage: cv.Mat,
   maskImage: cv.Mat | null,
@@ -431,124 +448,194 @@ export const relight = (
   normalDiffuseStrength: number,
   specularHighlightsStrength: number,
   totalGain: number,
-  inputType: string = 'euler'
-): string | cv.Mat => {
-  const width = modelImage.cols
-  const height = modelImage.rows
+  inputType: string = 'euler',
+  specularColor: number[] = [255, 255, 255],
+  pointImap: cv.Mat | null = null
+): string => {
+  try {
+    const width = modelImage.cols
+    const height = modelImage.rows
 
-  if (!originalRelightModelMat) {
-    originalRelightModelMat = modelImage.clone()
-  }
+    let maskMap: cv.Mat | undefined
+    if (maskImage) {
+      maskMap = maskImage.clone()
+      cv.normalize(maskMap, maskMap, 0, 1, cv.NORM_MINMAX, cv.CV_32FC1)
+    }
 
-  const currentModelMat = originalRelightModelMat.clone()
-  const modelImap = toImap(currentModelMat)
-  const faceMaskMap = getFaceMask(maskImage)
-  let maskMap
-  if (faceMaskMap) {
-    maskMap = toMap(faceMaskMap)
-    cv.normalize(maskMap, maskMap, 0, 1, cv.NORM_MINMAX, cv.CV_32FC1)
-  }
+    const normalImap = toImap(normalImage)
+    if (normalImap.cols !== width || normalImap.rows !== height) {
+      cv.resize(
+        normalImap,
+        normalImap,
+        new cv.Size(width, height),
+        0,
+        0,
+        cv.INTER_LINEAR
+      )
+    }
 
-  const normalImap: cv.Mat = toImap(normalImage)
+    // 노멀 맵 정규화: [0, 255] -> [-1, 1]
+    normalizeL2(normalImap, normalImap)
 
-  if (normalImap.cols !== width || normalImap.rows !== height) {
-    cv.resize(
-      normalImap,
-      normalImap,
-      new cv.Size(width, height),
-      0,
-      0,
-      cv.INTER_LINEAR
+    // Diffuse 계산
+    const lightDirection: number[] =
+      inputType === 'euler'
+        ? eulerToVector(lightYaw, lightPitch)
+        : normalizeVector(lightYaw, lightPitch, 1)
+    const diffuseImap = new cv.Mat(
+      height,
+      width,
+      cv.CV_32FC3,
+      new cv.Scalar(lightDirection[0], lightDirection[1], lightDirection[2])
     )
+
+    const diffuseMap: cv.Mat = new cv.Mat(
+      diffuseImap.rows,
+      diffuseImap.cols,
+      cv.CV_32FC1
+    )
+
+    cv.multiply(normalImap, diffuseImap, diffuseImap)
+    reduce(diffuseImap, diffuseMap)
+    cv.threshold(diffuseMap, diffuseMap, 1.0, 1.0, cv.THRESH_TRUNC)
+    if (maskMap) {
+      cv.multiply(diffuseMap, maskMap, diffuseMap)
+    }
+    diffuseMap.convertTo(
+      diffuseMap,
+      cv.CV_32FC1,
+      normalDiffuseStrength,
+      ambientLight
+    )
+    to3D(diffuseMap, diffuseImap)
+    // Specular(하이라이트) 계산
+    // diffuseImap과 diffuseMap을 재사용하여 스페큘러 효과를 계산함
+    const highlightImap = diffuseImap // CV_32FC3
+    const highlightMap = diffuseMap // CV_32FC1
+
+    const cameraDirection = eulerToVector(0, 0)
+    const halfVector = normalizeList([
+      lightDirection[0] + cameraDirection[0],
+      lightDirection[1] + cameraDirection[1],
+      lightDirection[2] + cameraDirection[2]
+    ])
+
+    if (inputType === 'euler') {
+      highlightImap.setTo(
+        new cv.Scalar(halfVector[0], halfVector[1], halfVector[2])
+      )
+    }
+
+    if (pointImap) {
+      setPointLightDirection(
+        highlightImap,
+        pointImap,
+        lightDirection,
+        cameraDirection
+      )
+    }
+    cv.multiply(normalImap, highlightImap, highlightImap)
+    reduce(highlightImap, highlightMap)
+    cv.threshold(highlightMap, highlightMap, 1, 1, cv.THRESH_TRUNC)
+    cv.pow(highlightMap, specularPower, highlightMap)
+
+    highlightMap.convertTo(
+      highlightMap,
+      cv.CV_32FC1,
+      specularHighlightsStrength * 255 * totalGain
+    )
+    to3D(highlightMap, highlightImap)
+
+    // 색상 적용 (스페큘러 색상 적용)
+    const colorImap = new cv.Mat(
+      height,
+      width,
+      cv.CV_32FC3,
+      new cv.Scalar(
+        specularColor[0] / 255,
+        specularColor[1] / 255,
+        specularColor[2] / 255
+      )
+    )
+
+    cv.multiply(colorImap, highlightImap, highlightImap)
+
+    const alphaMat = new cv.Mat()
+    highlightMap.convertTo(alphaMat, cv.CV_8UC1)
+
+    // 얼굴에만 적용
+    const faceMask = getFaceMask(maskImage)
+    if (faceMask) {
+      cv.threshold(faceMask, faceMask, 0, 255, cv.THRESH_BINARY)
+      cv.multiply(alphaMat, faceMask, alphaMat, 1 / 255)
+      faceMask.delete()
+    }
+
+    const colorLayer = new cv.Mat()
+    cv.convertScaleAbs(highlightImap, colorLayer, 255)
+
+    const channels = new cv.MatVector()
+    const bgr = new cv.MatVector()
+    cv.split(colorLayer, bgr) // bgr: [B, G, R]
+    channels.push_back(bgr.get(0))
+    channels.push_back(bgr.get(1))
+    channels.push_back(bgr.get(2))
+    channels.push_back(alphaMat) // alpha 채널
+
+    const rgba = new cv.Mat()
+    cv.merge(channels, rgba)
+
+    // 이후 임시 객체 해제 및 결과 리턴
+    bgr.delete()
+    channels.delete()
+    colorLayer.delete()
+    alphaMat.delete()
+    colorImap.delete()
+    if (maskMap) maskMap.delete()
+    normalImap.delete()
+    diffuseImap.delete()
+    diffuseMap.delete()
+
+    const resImage = matToBase64(rgba)
+    rgba.delete()
+
+    return resImage
+  } catch (error) {
+    // TODO: error 처리
+    return ''
   }
+}
 
-  // assume normalImap's elements are in [0, 255] => normalize to [-1, 1]
-  normalizeL2(normalImap, normalImap)
-
-  // Diffuse 계산
-  const lightDirection: number[] =
-    inputType === 'euler'
-      ? eulerToVector(lightYaw, lightPitch)
-      : normalizeVector(lightYaw, lightPitch, 1)
-
-  const diffuseImap: cv.Mat = new cv.Mat(
-    height,
-    width,
-    cv.CV_32FC3,
-    new cv.Scalar(lightDirection[0], lightDirection[1], lightDirection[2])
+const setPointLightDirection = (
+  pldImap: cv.Mat,
+  pointImap: cv.Mat,
+  lightPosition: number[],
+  cameraDirection: number[]
+) => {
+  pldImap.setTo(
+    new cv.Scalar(lightPosition[0], -lightPosition[1], lightPosition[2])
   )
-
-  const diffuseMap: cv.Mat = new cv.Mat(
-    diffuseImap.rows,
-    diffuseImap.cols,
-    cv.CV_32FC1
+  cv.subtract(pldImap, pointImap, pldImap)
+  const normImap = new cv.Mat(pldImap.rows, pldImap.cols, cv.CV_32FC3)
+  normalizeL2(pldImap, normImap)
+  pldImap.setTo(
+    new cv.Scalar(cameraDirection[0], cameraDirection[1], cameraDirection[2])
   )
+  cv.add(pldImap, normImap, normImap)
+  normalizeL2(normImap, pldImap)
 
-  cv.multiply(normalImap, diffuseImap, diffuseImap)
+  normImap.delete()
+}
 
-  reduce(diffuseImap, diffuseMap)
-
-  cv.threshold(diffuseMap, diffuseMap, 1.0, 1.0, cv.THRESH_TRUNC)
-
-  if (maskImage && maskMap) {
-    cv.multiply(diffuseMap, maskMap, diffuseMap)
-  }
-  diffuseMap.convertTo(
-    diffuseMap,
-    cv.CV_32FC1,
-    normalDiffuseStrength,
-    ambientLight
-  )
-
-  to3D(diffuseMap, diffuseImap)
-
-  cv.multiply(modelImap, diffuseImap, modelImap, totalGain)
-
-  // Specular 계산
-  const highlightImap: cv.Mat = diffuseImap // 동일 메모리 사용
-  const highlightMap: cv.Mat = diffuseMap // 동일 메모리 사용
-  const cameraDirection: number[] = eulerToVector(0, 0)
-  const halfVector: number[] = normalizeList([
-    lightDirection[0] + cameraDirection[0],
-    lightDirection[1] + cameraDirection[1],
-    lightDirection[2] + cameraDirection[2]
-  ])
-  highlightImap.setTo(
-    new cv.Scalar(halfVector[0], halfVector[1], halfVector[2])
-  )
-
-  cv.multiply(normalImap, highlightImap, highlightImap)
-
-  reduce(highlightImap, highlightMap)
-
-  cv.threshold(highlightMap, highlightMap, 1, 1, cv.THRESH_TRUNC)
-
-  cv.pow(highlightMap, specularPower, highlightMap)
-  if (maskImage && maskMap) {
-    cv.multiply(highlightMap, maskMap, highlightMap)
-  }
-  highlightMap.convertTo(
-    highlightMap,
-    cv.CV_32FC1,
-    specularHighlightsStrength * 255 * totalGain
-  )
-
-  to3D(highlightMap, highlightImap)
-
-  // 최종 결과 계산
-  cv.add(modelImap, highlightImap, modelImap)
-
-  const resImage: string = matToBase64(modelImap)
-
-  if (maskMap) {
-    maskMap.delete()
-  }
-  currentModelMat.delete()
-  modelImap.delete()
-  normalImap.delete()
-  diffuseImap.delete()
-  diffuseMap.delete()
-  return resImage
+/**
+ * 1채널 매트릭스를 이진화하여, 값이 0보다 크면 255, 0이면 0인 매트릭스를 생성하는 함수
+ */
+export const binarizeMat = (m: cv.Mat): cv.Mat => {
+  // m: 입력 1채널 cv.Mat
+  // 결과: 각 픽셀이 0보다 크면 1, 아니면 0이 되는 cv.Mat (CV_32FC1 타입)
+  const dst: cv.Mat = new cv.Mat(m.rows, m.cols, cv.CV_32FC1)
+  cv.threshold(m, dst, 0, 1, cv.THRESH_BINARY)
+  return dst
 }
 
 /**

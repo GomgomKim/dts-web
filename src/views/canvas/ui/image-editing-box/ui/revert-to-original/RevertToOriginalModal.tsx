@@ -1,3 +1,4 @@
+import { useEyeContactsStore } from '@/views/canvas/model/useEditorPanelsStore'
 import { useLayerVisibilityStore } from '@/views/canvas/model/useLayerVisibilityStore'
 
 import { Button } from '@/shared/ui/button'
@@ -14,6 +15,9 @@ export const RevertToOriginalModal = () => {
     (state) => state.setResetStatus
   )
   const resetLayers = useLayersStore((state) => state.resetLayers)
+  const resetSelectedItem = useEyeContactsStore(
+    (state) => state.resetSelectedItem
+  )
   return resetStatus ? (
     <Modal onCloseModal={() => setResetStatus(false)} className="min-w-[400px]">
       <div className="flex w-[320px] flex-col pb-4">
@@ -37,6 +41,7 @@ export const RevertToOriginalModal = () => {
           onClick={() => {
             resetLayers()
             setResetStatus(false)
+            resetSelectedItem()
           }}
         >
           {UI_TEXT.REVERT_BUTTON_TEXT}

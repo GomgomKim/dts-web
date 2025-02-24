@@ -23,6 +23,7 @@ interface UploadPanelState<T> {
   setSelectedItem: (item: T | null) => void
   setTransparency: (value: number) => void
   setIsShowRecentItems: (value: boolean) => void
+  resetSelectedItem: () => void
 }
 
 const createUploadPanelStore = <T extends { id: string | number }>() =>
@@ -51,7 +52,8 @@ const createUploadPanelStore = <T extends { id: string | number }>() =>
     setIsShowRecentItems: (value) =>
       set(() => ({
         isShowRecentItems: value
-      }))
+      })),
+    resetSelectedItem: () => set({ selectedItem: null })
   }))
 
 type EyeContactsType = DummyData | Asset
@@ -168,4 +170,14 @@ export const useHairColorStore = create<HairColorState>((set) => ({
   setHairColorLevel: (value) => set({ hairColorLevel: value }),
   setSelectedToolId: (toolId) => set({ selectedToolId: toolId }),
   setIsEditing: (value) => set({ isEditing: value })
+}))
+
+interface GlowState {
+  isGlowVisible: boolean
+  setIsGlowVisible: (value: boolean) => void
+}
+
+export const useGlowStore = create<GlowState>((set) => ({
+  isGlowVisible: true,
+  setIsGlowVisible: (value) => set({ isGlowVisible: value })
 }))

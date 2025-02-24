@@ -127,7 +127,7 @@ export const HairColorView = (props: HairColorViewProps) => {
 
     setMousePos(pos.display)
 
-    if (isMouseDown) {
+    if (isMouseDown && isEditing) {
       drawSegmentAt(pos.real.x, pos.real.y)
       drawHairHighlight({ showHighlight: true })
     }
@@ -171,7 +171,7 @@ export const HairColorView = (props: HairColorViewProps) => {
             borderRadius: '50%',
             backgroundColor: 'rgba(0,0,0,0.05)',
             pointerEvents: 'none',
-            zIndex: 10
+            zIndex: 20
           }}
         />
       ) : null}

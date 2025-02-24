@@ -175,3 +175,26 @@ input::-webkit-inner-spin-button {
 input[type='number'] {
   -moz-appearance: textfield;
 }
+
+.moveable-control,
+.moveable-rotate {
+  border: 1px solid #6effb6 !important;
+  background-color: #6effb6 !important;
+  width: 10px !important;
+  height: 10px !important;
+  margin-left: -5px !important;
+  margin-top: -5px !important;
+}
+
+.moveable-line {
+  background-color: #6effb6 !important;
+  border-color: #6effb6 !important;
+  border: 1px dashed #6effb6 !important;
+}
+
+.hide-moveable-controls .moveable-control,
+.hide-moveable-controls .moveable-line,
+.hide-moveable-controls .moveable-rotate,
+.hide-moveable-controls .moveable-origin {
+  display: none !important;
+}

@@ -38,7 +38,6 @@ export const useLayersStore = create<LayersStore>((set) => ({
     set({
       skinGlowLayer: '',
       colorBrushLayers: {},
-      hairColorLayer: '',
-      eyeContactsLayer: ''
+      hairColorLayer: ''
     })
 }))
