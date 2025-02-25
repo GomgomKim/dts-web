@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useVirtualizer } from '@tanstack/react-virtual'
@@ -98,7 +98,7 @@ export const GenerativesItems: React.FC = () => {
     totalItems: number,
     containerWidth: number
   ) => {
-    const itemWidth = 120 // 아이템의 최대 너비
+    const itemWidth = 120 // 아이템의 최소 너비
     const gap = 4 // 아이템 간 간격
     const itemsPerRow = Math.floor((containerWidth + gap) / (itemWidth + gap))
 
@@ -111,9 +111,12 @@ export const GenerativesItems: React.FC = () => {
     return {
       aspectRatio: '1 / 1',
       padding: '10px',
-      border: '1px solid #ddd',
+      minWidth: `${itemWidth}px`,
       maxWidth: `${itemWidth}px`,
-      flex: `1 1 ${itemWidth}px`,
+      // minWidth: `${itemWidth}px`,
+      // maxWidth: '200px',
+      // flex: `1 1 ${itemWidth}px`,
+      background: '#202124',
       borderTopLeftRadius: isFirstRow && isLeftColumn ? '8px' : '0',
       borderTopRightRadius: isFirstRow && isRightColumn ? '8px' : '0',
       borderBottomLeftRadius: isLastRow && isLeftColumn ? '8px' : '0',
@@ -121,10 +124,10 @@ export const GenerativesItems: React.FC = () => {
     }
   }
 
-  const [containerWidth, setContainerWidth] = useState(0)
+  const [containerWidth, setContainerWidth] = useState(100)
   const containerRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const updateWidth = () => {
       if (containerRef.current) {
         setContainerWidth(containerRef.current.offsetWidth)
@@ -132,23 +135,28 @@ export const GenerativesItems: React.FC = () => {
     }
 
     updateWidth()
+
     window.addEventListener('resize', updateWidth)
     return () => window.removeEventListener('resize', updateWidth)
   }, [])
+
+  useLayoutEffect(() => {
+    if (status === 'success' && containerRef.current) {
+      setContainerWidth(containerRef.current.offsetWidth)
+    }
+  }, [status, data])
 
   if (status === 'pending') return <p>Loading...</p>
   if (status === 'error') return <span>Error: {(error as Error).message}</span>
 
   return (
     <div>
-      <h1>Grouped Infinite Scroll</h1>
       <div
         ref={parentRef}
         style={{
-          height: '500px',
+          height: '75vh',
           width: '100%',
-          overflow: 'auto',
-          border: '1px solid #ccc'
+          overflow: 'auto'
         }}
       >
         <div
@@ -183,8 +191,12 @@ export const GenerativesItems: React.FC = () => {
                   )
                 ) : (
                   <>
-                    <h3 style={{ backgroundColor: '#f0f0f0', padding: '5px' }}>
-                      {group.date}
+                    <h3
+                      style={{ padding: '5px' }}
+                      className="mt-5 text-[1.125rem] font-semibold text-neutral-7"
+                    >
+                      {/* TODO: formatted */}
+                      {formattedDate(group.date)}
                     </h3>
                     <div
                       ref={containerRef}
@@ -204,7 +216,7 @@ export const GenerativesItems: React.FC = () => {
                             containerWidth
                           )}
                         >
-                          {item.content}
+                          {/* {item.content} */}
                         </div>
                       ))}
                     </div>
@@ -220,4 +232,13 @@ export const GenerativesItems: React.FC = () => {
       ) : null}
     </div>
   )
+}
+
+const formattedDate = (dateString: string) => {
+  const dateParts = dateString.split('-')
+  const year = dateParts[0]
+  const month = parseInt(dateParts[1], 10) // parseInt로 숫자로 변환
+  const day = dateParts[2]
+
+  return `${year}. ${month}. ${day}`
 }
