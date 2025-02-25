@@ -8,7 +8,7 @@ import { useTagTypeStore } from '@/features/filter-tag-types/model/useTagTypeSto
 
 import { useClientSearchParams } from '@/shared/lib/hooks/useClientSearchParams'
 import { useMoveScroll } from '@/shared/lib/hooks/useMoveScroll'
-import { cn } from '@/shared/lib/utils'
+import { capitalizeFirstLetter, cn } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui/button'
 
 interface FilterTagTypesProps extends React.ComponentPropsWithRef<'div'> {
@@ -62,18 +62,17 @@ export const FilterTagTypes = (props: FilterTagTypesProps) => {
         <Button
           variant="ghost"
           key={type}
-          className={cn('rounded-[0.5rem] p-3', {
-            active: type === currentTagType
-          })}
+          className={cn(
+            'h-10 rounded-[0.5rem] p-3 text-[0.875rem] font-medium',
+            {
+              'bg-secondary text-white': type === currentTagType
+            }
+          )}
           onClick={() => handleClickFilter(type)}
         >
-          {capitalizeType(type)}
+          {capitalizeFirstLetter(type)}
         </Button>
       ))}
     </div>
   )
-}
-
-const capitalizeType = (type: string) => {
-  return type[0].toUpperCase() + type.slice(1, type.length).toLocaleLowerCase()
 }

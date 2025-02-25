@@ -23,7 +23,7 @@ import { faker } from '@faker-js/faker'
 import { HttpResponse, http } from 'msw'
 
 const ImageData = {
-  MAKEUP: [
+  NATURAL: [
     {
       id: 1,
       name: 'jisoo',
@@ -61,7 +61,7 @@ const ImageData = {
       features: ['HAIR_COLOR']
     }
   ],
-  SKINCARE: [
+  BOLD: [
     {
       id: 5,
       name: 'jisoo',
@@ -81,10 +81,52 @@ const ImageData = {
       features: ['HAIR_COLOR']
     }
   ],
-  HAIR: [
+  TRENDY: [
     {
       id: 7,
       name: 'jisoo',
+      description: '지수의 메인 이미지',
+      isFavorite: false,
+      encryptedThumbnailPath: faker.image.urlLoremFlickr(),
+      tags: ['tag1', 'tag2'],
+      features: ['HAIR_COLOR']
+    }
+  ],
+  ROMANTIC: [
+    {
+      id: 8,
+      name: 'jisoo',
+      description: '지수의 메인 이미지',
+      isFavorite: false,
+      encryptedThumbnailPath: faker.image.urlLoremFlickr(),
+      tags: ['tag1', 'tag2'],
+      features: ['HAIR_COLOR']
+    }
+  ],
+  YOUTHFUL: [
+    {
+      id: 9,
+      name: 'jisoo',
+      description: '지수의 메인 이미지',
+      isFavorite: false,
+      encryptedThumbnailPath: faker.image.urlLoremFlickr(),
+      tags: ['tag1', 'tag2'],
+      features: ['HAIR_COLOR']
+    }
+  ],
+  MODERN: [
+    {
+      id: 10,
+      name: 'gigi',
+      description: '지수의 메인 이미지',
+      isFavorite: false,
+      encryptedThumbnailPath: faker.image.urlLoremFlickr(),
+      tags: ['tag1', 'tag2'],
+      features: ['HAIR_COLOR']
+    },
+    {
+      id: 11,
+      name: 'bobo',
       description: '지수의 메인 이미지',
       isFavorite: false,
       encryptedThumbnailPath: faker.image.urlLoremFlickr(),
@@ -175,17 +217,26 @@ export const handlers = [
     const cursor = parseInt(url.searchParams.get('offset') as string) || 1
 
     let responseImages: MainItem[] = []
-    if (tagType === 'MAKEUP') {
-      responseImages = ImageData.MAKEUP
-    } else if (tagType === 'SKINCARE') {
-      responseImages = ImageData.SKINCARE
-    } else if (tagType === 'HAIR') {
-      responseImages = ImageData.HAIR
+    if (tagType === 'NATURAL') {
+      responseImages = ImageData.NATURAL
+    } else if (tagType === 'BOLD') {
+      responseImages = ImageData.BOLD
+    } else if (tagType === 'TRENDY') {
+      responseImages = ImageData.TRENDY
+    } else if (tagType === 'ROMANTIC') {
+      responseImages = ImageData.ROMANTIC
+    } else if (tagType === 'YOUTHFUL') {
+      responseImages = ImageData.YOUTHFUL
+    } else if (tagType === 'MODERN') {
+      responseImages = ImageData.MODERN
     } else {
       responseImages = [
-        ...ImageData.MAKEUP,
-        ...ImageData.SKINCARE,
-        ...ImageData.HAIR
+        ...ImageData.NATURAL,
+        ...ImageData.BOLD,
+        ...ImageData.TRENDY,
+        ...ImageData.ROMANTIC,
+        ...ImageData.YOUTHFUL,
+        ...ImageData.MODERN
       ]
     }
 

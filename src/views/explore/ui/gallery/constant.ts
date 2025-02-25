@@ -1,1 +1,11 @@
-export const TAG_TYPES = ['ALL', 'FEATURED', 'MAKEUP', 'SKINCARE', 'HAIR']
+export const TAG_TYPES = [
+  'ALL',
+  'FEATURED',
+  'NATURAL',
+  'BOLD',
+  'TRENDY',
+  'LUXURY',
+  'ROMANTIC',
+  'YOUTHFUL',
+  'MODERN'
+]
