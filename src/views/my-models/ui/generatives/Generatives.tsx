@@ -4,7 +4,7 @@ import useModals from '@/shared/ui/modal/model/Modals.hooks'
 
 import { DATA } from './model/DATA'
 import { useGenerativeItemStore } from './model/useGenerativeItemStore'
-import { GenerativeItemViewModal } from './ui/GenerativeItemViewModal'
+import { GenerativeItemViewModal, GenerativesItems } from './ui'
 
 export const Generatives = () => {
   const { openModal } = useModals()
@@ -24,6 +24,7 @@ export const Generatives = () => {
           item {item.id}
         </button>
       ))}
+      <GenerativesItems />
     </div>
   )
 }
