@@ -30,7 +30,8 @@ const ImageData = {
       description: '지수의 메인 이미지',
       isFavorite: false,
       encryptedThumbnailPath: faker.image.urlLoremFlickr(),
-      tags: ['tag1', 'tag2']
+      tags: ['tag1', 'tag2'],
+      features: ['HAIR_COLOR']
     },
     {
       id: 2,
@@ -38,7 +39,8 @@ const ImageData = {
       description: '지수의 메인 이미지',
       isFavorite: false,
       encryptedThumbnailPath: faker.image.urlLoremFlickr(),
-      tags: ['tag1', 'tag2']
+      tags: ['tag1', 'tag2'],
+      features: ['HAIR_COLOR']
     },
     {
       id: 3,
@@ -46,7 +48,8 @@ const ImageData = {
       description: '지수의 메인 이미지',
       isFavorite: true,
       encryptedThumbnailPath: faker.image.urlLoremFlickr(),
-      tags: ['tag1', 'tag2']
+      tags: ['tag1', 'tag2'],
+      features: ['HAIR_COLOR']
     },
     {
       id: 4,
@@ -54,7 +57,8 @@ const ImageData = {
       description: '지수의 메인 이미지',
       isFavorite: false,
       encryptedThumbnailPath: faker.image.urlLoremFlickr(),
-      tags: ['tag1', 'tag2']
+      tags: ['tag1', 'tag2'],
+      features: ['HAIR_COLOR']
     }
   ],
   SKINCARE: [
@@ -64,7 +68,8 @@ const ImageData = {
       description: '지수의 메인 이미지',
       isFavorite: true,
       encryptedThumbnailPath: faker.image.urlLoremFlickr(),
-      tags: ['tag1', 'tag2']
+      tags: ['tag1', 'tag2'],
+      features: ['HAIR_COLOR']
     },
     {
       id: 6,
@@ -72,7 +77,8 @@ const ImageData = {
       description: '지수의 메인 이미지',
       isFavorite: true,
       encryptedThumbnailPath: faker.image.urlLoremFlickr(),
-      tags: ['tag1', 'tag2']
+      tags: ['tag1', 'tag2'],
+      features: ['HAIR_COLOR']
     }
   ],
   HAIR: [
@@ -82,7 +88,8 @@ const ImageData = {
       description: '지수의 메인 이미지',
       isFavorite: false,
       encryptedThumbnailPath: faker.image.urlLoremFlickr(),
-      tags: ['tag1', 'tag2']
+      tags: ['tag1', 'tag2'],
+      features: ['HAIR_COLOR']
     }
   ]
 }
@@ -165,21 +172,21 @@ export const handlers = [
   http.get(`${URL_EXPLORE_LIST}`, ({ request }) => {
     const url = new URL(request.url)
     const tagType = url.searchParams.get('tagType')
-    const cursor = parseInt(url.searchParams.get('scrollKey') as string) || 1
+    const cursor = parseInt(url.searchParams.get('offset') as string) || 1
 
     let responseImages: MainItem[] = []
-    if (tagType === 'FEATURED' || tagType === 'ALL') {
-      responseImages = [
-        ...ImageData.MAKEUP,
-        ...ImageData.SKINCARE,
-        ...ImageData.HAIR
-      ]
-    } else if (tagType === 'MAKEUP') {
+    if (tagType === 'MAKEUP') {
       responseImages = ImageData.MAKEUP
     } else if (tagType === 'SKINCARE') {
       responseImages = ImageData.SKINCARE
     } else if (tagType === 'HAIR') {
       responseImages = ImageData.HAIR
+    } else {
+      responseImages = [
+        ...ImageData.MAKEUP,
+        ...ImageData.SKINCARE,
+        ...ImageData.HAIR
+      ]
     }
 
     const scrollkey = 10 * cursor === 1000 ? null : (10 * cursor).toString()
@@ -188,9 +195,9 @@ export const handlers = [
         code: 0,
         message: null,
         content: {
-          images: responseImages,
+          data: responseImages,
           hasNext: scrollkey === null ? false : true,
-          scrollKey: scrollkey
+          offset: scrollkey
         }
       },
       { status: 200 }

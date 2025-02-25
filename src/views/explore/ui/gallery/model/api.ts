@@ -17,7 +17,7 @@ export async function getExploreList({
     AxiosResponse<GetExploreListResData, AxiosError>
   >(
     `${URL_EXPLORE_LIST}?filterType=${tagType}&size=${size}` +
-      (scrollKey ? `&scrollKey=${scrollKey}` : '')
+      (scrollKey ? `&offset=${scrollKey}` : '')
   )
   return response.data
 }

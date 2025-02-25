@@ -35,10 +35,9 @@ export const useGetExploreList = () => {
     string | null
   >({
     queryKey: ['explore', tagType],
-    queryFn: ({ pageParam }) =>
-      getExploreList({ tagType, scrollKey: pageParam }),
+    queryFn: ({ pageParam }) => getExploreList({ tagType, offset: pageParam }),
     initialPageParam: null,
-    getNextPageParam: (lastPage) => lastPage.content.scrollKey,
+    getNextPageParam: (lastPage) => lastPage.content.offset,
     staleTime: 60 * 1000,
     gcTime: 300 * 1000,
     throwOnError: true
