@@ -14,14 +14,23 @@ export const CallToActionButtons = (props: CallToActionButtonsProps) => {
   const router = useRouter()
 
   return (
-    <div className="mb-2 mt-6 flex h-[41px] justify-center gap-3">
+    <div className="mb-5 mt-6 flex h-[41px] justify-center gap-3">
       {isAuth !== true ? (
         <>
-          <Button onClick={() => router.push('/login')}>
+          <Button
+            onClick={() => router.push('/login')}
+            size="small"
+            className="text-[0.875rem]"
+          >
             Get Started for Free
           </Button>
           {props.onClickSeeExample ? (
-            <Button variant="outline" onClick={props.onClickSeeExample}>
+            <Button
+              variant="outline"
+              onClick={props.onClickSeeExample}
+              size="small"
+              className="text-[0.875rem]"
+            >
               See Examples
             </Button>
           ) : null}
