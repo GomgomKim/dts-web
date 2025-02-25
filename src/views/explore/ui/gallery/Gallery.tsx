@@ -37,7 +37,7 @@ export const Gallery = () => {
   // if (status === 'error') return <p>{error?.message}</p>
   if (isFetching && !isFetchingNextPage)
     return (
-      <div className="grid-cols-auto-fill-small 2xl:grid-cols-auto-fill-large grid gap-5">
+      <div className="grid-cols-auto-fill-small 2xl:grid-cols-auto-fill-large grid gap-5 gap-y-[49px]">
         {Array.from({ length: NUM_OF_DATA_PER_REQUEST }).map((_value, idx) => (
           <GalleryItemSkeleton key={'loading' + idx} isLoading />
         ))}
