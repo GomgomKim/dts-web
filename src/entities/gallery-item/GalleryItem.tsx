@@ -4,9 +4,9 @@ import { ComponentProps, useState } from 'react'
 
 import Image from 'next/image'
 
-import { URL_BASE_IMAGE_FILE } from '@/shared/api/constants'
 import { MainItem } from '@/shared/api/types'
 import { useAuthStore } from '@/shared/lib/stores/useAuthStore'
+import { getImageUrl } from '@/shared/lib/utils/getImageUrl'
 
 import { PrivateButton } from './ui/private-button'
 import { PublicButton } from './ui/public-button'
@@ -29,12 +29,7 @@ export const GalleryItem = (props: GalleryItemProps) => {
   const [isHovering, setIsHovering] = useState(true)
   const isAuth = useAuthStore((state) => state.isAuth)
 
-  const imgUrl =
-    process.env.NEXT_PUBLIC_API_MOCKING === 'enabled'
-      ? encryptedThumbnailPath
-      : process.env.NEXT_PUBLIC_API_URL +
-        URL_BASE_IMAGE_FILE +
-        encryptedThumbnailPath
+  const imgUrl = getImageUrl(encryptedThumbnailPath)
 
   const isMember = isAuth === true
 

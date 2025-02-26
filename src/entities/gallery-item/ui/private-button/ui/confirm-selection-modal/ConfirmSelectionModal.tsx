@@ -2,8 +2,8 @@ import Image from 'next/image'
 
 import { PLAN_NAME_TITLE_MAP } from '@/views/pricing/ui/plan-Items/model/types'
 
-import { URL_BASE_IMAGE_FILE } from '@/shared/api/constants'
 import { MainItem } from '@/shared/api/types'
+import { getImageUrl } from '@/shared/lib/utils/getImageUrl'
 import { Button } from '@/shared/ui'
 import { DefaultModal } from '@/shared/ui/modal/DefaultModal'
 import { ModalComponentProps } from '@/shared/ui/modal/model/types'
@@ -23,13 +23,7 @@ export const ConfirmSelectionModal = (props: ConfirmSelectionModalProps) => {
     alert('confirm')
   }
 
-  // TODO: shared/utils로 함수화
-  const imgUrl =
-    process.env.NEXT_PUBLIC_API_MOCKING === 'enabled'
-      ? props.modelInfo.encryptedThumbnailPath
-      : process.env.NEXT_PUBLIC_API_URL +
-        URL_BASE_IMAGE_FILE +
-        props.modelInfo.encryptedThumbnailPath
+  const imgUrl = getImageUrl(props.modelInfo.encryptedThumbnailPath)
 
   return (
     <DefaultModal
