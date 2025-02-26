@@ -8,16 +8,13 @@ import useModals from '@/shared/ui/modal/model/Modals.hooks'
 import LinkIcon from '/public/icons/arrow-thin.svg'
 
 import { PrivateButton } from '../PrivateButton'
-import { UI_TEXT } from '../model/constants'
 import { ConfirmSelectionModal } from './confirm-selection-modal'
 
 type PrivateButtonProps = ComponentProps<typeof PrivateButton>
 
-interface SelectWithThisModelButtonProps extends PrivateButtonProps {}
+interface ActivableModelButtonProps extends PrivateButtonProps {}
 
-export const SelectWithThisModelButton = (
-  props: SelectWithThisModelButtonProps
-) => {
+export const ActivableModelButton = (props: ActivableModelButtonProps) => {
   const router = useRouter()
   const { openModal } = useModals()
 
@@ -54,7 +51,7 @@ export const SelectWithThisModelButton = (
       {...props}
       onClick={handleClickButton}
     >
-      {UI_TEXT.SELECT_THIS_MODEL}
+      {props.children}
       <LinkIcon className="ml-[2px] stroke-white" />
     </Button>
   )

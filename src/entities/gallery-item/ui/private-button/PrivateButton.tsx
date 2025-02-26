@@ -1,24 +1,32 @@
 import { ComponentProps } from 'react'
 
 import { MainItem } from '@/shared/api/types'
-import { Button } from '@/shared/ui'
 
-import { GetAccessButton, SelectWithThisModelButton } from './ui'
+import { UI_TEXT } from './model/constants'
+import { ActivableModelButton, GetAccessButton } from './ui'
 
 interface PrivateButtonProps extends ComponentProps<'button'> {
   modelInfo: MainItem
 }
 
 export const PrivateButton = (props: PrivateButtonProps) => {
-  const isRemainingActivatableModel = true
-  // TODO: 튜토리얼 . free일 때 처리
+  // TODO: membership api 연결
+  const isRemainingActivableModel = true
   const isFreePlan = false
 
-  if (isFreePlan) return <Button {...props}>try with this model</Button>
+  if (isFreePlan)
+    return (
+      <ActivableModelButton {...props}>
+        {UI_TEXT.TRY_WITH_THIS_MODEL}
+      </ActivableModelButton>
+    )
 
-  return isRemainingActivatableModel ? (
-    <SelectWithThisModelButton {...props} />
-  ) : (
-    <GetAccessButton {...props} />
-  )
+  if (isRemainingActivableModel)
+    return (
+      <ActivableModelButton {...props}>
+        {UI_TEXT.SELECT_THIS_MODEL}
+      </ActivableModelButton>
+    )
+
+  return <GetAccessButton {...props} />
 }

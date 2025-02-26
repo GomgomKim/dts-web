@@ -1,2 +1,2 @@
 export * from './GetAccessButton'
-export * from './SelectWithThisModelButton'
+export * from './ActivableModelButton'
