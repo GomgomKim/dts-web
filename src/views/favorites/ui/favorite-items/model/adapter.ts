@@ -35,7 +35,7 @@ export const useGetFavoriteList = () => {
       getFavoriteList({ order, scrollKey: pageParam }),
     enabled: isAuth === true && token !== null && !!order,
     initialPageParam: null,
-    getNextPageParam: (lastPage) => lastPage.content.scrollKey
+    getNextPageParam: (lastPage) => lastPage.content.offset
     // staleTime: 60 * 1000,
     // gcTime: 300 * 1000
   })
