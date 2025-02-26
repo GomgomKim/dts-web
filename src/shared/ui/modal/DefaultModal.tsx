@@ -65,7 +65,7 @@ export const DefaultModal = (props: DefaultModalProps) => {
         {/* header */}
         <div>
           <div className="mb-3 text-[1.5rem] font-semibold">{props.title}</div>
-          <p className="text-[0.875rem] text-neutral-7">{props.description}</p>
+          <div className="font-medium text-neutral-7">{props.description}</div>
         </div>
 
         {/* contents */}

@@ -28,7 +28,6 @@ export const ConfirmSelectionModal = (props: ConfirmSelectionModalProps) => {
   return (
     <DefaultModal
       title={UI_TEXT.CONFIRM_YOUR_SELECTION}
-      // TODO: 모달 description 기본 폰트 크기(14 to 16) 바꾸기
       description={UI_TEXT.CONFIRM_YOUR_SELECTION_DESCRIPTION}
       footer={
         <Button
