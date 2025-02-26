@@ -37,7 +37,7 @@ export const ConfirmSelectionModal = (props: ConfirmSelectionModalProps) => {
           stretch
           onClick={handleClickConfirm}
         >
-          Confirm
+          {UI_TEXT.CONFIRM}
         </Button>
       }
       closeable={{
