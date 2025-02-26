@@ -1,12 +1,12 @@
 import { ComponentProps } from 'react'
 
+import { MainItem } from '@/shared/api/types'
 import { Button } from '@/shared/ui'
 
 import { GetAccessButton, SelectWithThisModelButton } from './ui'
 
 interface PrivateButtonProps extends ComponentProps<'button'> {
-  modelName: string
-  modelId: number
+  modelInfo: MainItem
 }
 
 export const PrivateButton = (props: PrivateButtonProps) => {

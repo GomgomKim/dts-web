@@ -58,8 +58,7 @@ export const GalleryItem = (props: GalleryItemProps) => {
           <div className="absolute inset-0 z-[5] bg-custom-gradient hover:cursor-pointer">
             {isMember ? (
               <PrivateButton
-                modelId={id}
-                modelName={modelName}
+                modelInfo={props.item}
                 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 border-[rgba(97,98,104,0.5)] text-white hover:border-border hover:text-white"
               />
             ) : (
