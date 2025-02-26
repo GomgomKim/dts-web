@@ -48,6 +48,7 @@ export const ConfirmSelectionModal = (props: ConfirmSelectionModalProps) => {
       className="w-[560px]"
     >
       <div className="flex flex-col gap-3">
+        {/* image */}
         <div className="relative aspect-square w-[120px] overflow-hidden rounded-[0.5rem]">
           <Image
             src={imgUrl}
@@ -57,14 +58,16 @@ export const ConfirmSelectionModal = (props: ConfirmSelectionModalProps) => {
             style={{ objectFit: 'cover' }}
           />
         </div>
+        {/* model */}
         <div className="flex gap-2 rounded-[0.5rem] bg-neutral-1 p-5">
-          <span className="w-[64px] font-medium text-neutral-7">
+          <span className="shrink-0 basis-[64px] font-medium text-neutral-7">
             {UI_TEXT.MODEL}
           </span>
           <span>{props.modelInfo.name}</span>
         </div>
+        {/* plan */}
         <div className="flex gap-2 rounded-[0.5rem] bg-neutral-1 p-5">
-          <div className="w-[64px] font-medium text-neutral-7">
+          <div className="shrink-0 basis-[64px] font-medium text-neutral-7">
             {UI_TEXT.PLAN}
           </div>
           <div>

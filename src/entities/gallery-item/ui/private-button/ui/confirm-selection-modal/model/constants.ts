@@ -6,7 +6,7 @@ export const UI_TEXT = {
   MODEL: 'Model',
   PLAN: 'Plan',
   PLAN_DESCRIPTION:
-    'At your next renewal, you can reselect this model <br /> or switch to another model if you&#39;d like.',
+    "At your next renewal, you can reselect this model \n or switch to another model if you'd like.",
   FEATURES_DESCRIPTION:
     'in AI Tools may not work well with this model, but other features are fully supported.'
 } as const
