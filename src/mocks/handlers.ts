@@ -258,18 +258,21 @@ export const handlers = [
     const url = new URL(request.url)
     const tagType = url.searchParams.get('tagType')
     let responseImages: MainItem[] = []
-    if (tagType === 'FEATURED' || tagType === 'ALL') {
+    if (tagType === 'NATURAL') {
+      responseImages = ImageData.NATURAL.filter((i) => i.isFavorite)
+    } else if (tagType === 'BOLD') {
+      responseImages = ImageData.BOLD.filter((i) => i.isFavorite)
+    } else if (tagType === 'TRENDY') {
+      responseImages = ImageData.TRENDY.filter((i) => i.isFavorite)
+    } else {
       responseImages = [
-        ...ImageData.MAKEUP.filter((i) => i.isFavorite),
-        ...ImageData.SKINCARE.filter((i) => i.isFavorite),
-        ...ImageData.HAIR.filter((i) => i.isFavorite)
+        ...ImageData.NATURAL.filter((i) => i.isFavorite),
+        ...ImageData.BOLD.filter((i) => i.isFavorite),
+        ...ImageData.TRENDY.filter((i) => i.isFavorite),
+        ...ImageData.ROMANTIC.filter((i) => i.isFavorite),
+        ...ImageData.YOUTHFUL.filter((i) => i.isFavorite),
+        ...ImageData.MODERN.filter((i) => i.isFavorite)
       ]
-    } else if (tagType === 'MAKEUP') {
-      responseImages = ImageData.MAKEUP.filter((i) => i.isFavorite)
-    } else if (tagType === 'SKINCARE') {
-      responseImages = ImageData.SKINCARE.filter((i) => i.isFavorite)
-    } else if (tagType === 'HAIR') {
-      responseImages = ImageData.HAIR.filter((i) => i.isFavorite)
     }
     return HttpResponse.json(
       {
