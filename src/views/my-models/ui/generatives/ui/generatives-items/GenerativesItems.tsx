@@ -1,7 +1,12 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
+import useModals from '@/shared/ui/modal/model/Modals.hooks'
+
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useVirtualizer } from '@tanstack/react-virtual'
+
+// import { useGenerativeItemStore } from '../../model/useGenerativeItemStore'
+import { GenerativeItemViewModal } from '../GenerativeItemViewModal'
 
 interface Item {
   id: string
@@ -42,6 +47,9 @@ async function fetchGroupedData(cursor: number = 0): Promise<ServerResponse> {
 }
 
 export const GenerativesItems: React.FC = () => {
+  const { openModal } = useModals()
+  // const setIndex = useGenerativeItemStore((state) => state.setIndex)
+
   const {
     status,
     data,
@@ -69,6 +77,7 @@ export const GenerativesItems: React.FC = () => {
     estimateSize: () => 50, // 각 그룹의 예상 높이
     overscan: 5,
     measureElement: (element) => element.getBoundingClientRect().height
+    // getItemKey: (index) => allGroupedData[index]
   })
 
   useEffect(() => {
@@ -146,6 +155,10 @@ export const GenerativesItems: React.FC = () => {
     }
   }, [status, data])
 
+  // useEffect(() => {
+  //   console.log(allGroupedData)
+  // }, [allGroupedData])
+
   if (status === 'pending') return <p>Loading...</p>
   if (status === 'error') return <span>Error: {(error as Error).message}</span>
 
@@ -208,16 +221,25 @@ export const GenerativesItems: React.FC = () => {
                       }}
                     >
                       {group.items.map((item, index) => (
-                        <div
+                        <button
                           key={item.id}
                           style={getItemStyle(
                             index,
                             group.items.length,
                             containerWidth
                           )}
+                          onClick={() => {
+                            // setIndex(index)
+                            openModal(GenerativeItemViewModal, {
+                              data: allGroupedData,
+                              item: item,
+                              prevId: group.items[index - 1]?.id,
+                              nextId: group.items[index + 1]?.id
+                            })
+                          }}
                         >
                           {/* {item.content} */}
-                        </div>
+                        </button>
                       ))}
                     </div>
                   </>
