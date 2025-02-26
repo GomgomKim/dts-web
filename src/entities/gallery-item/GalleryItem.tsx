@@ -26,7 +26,7 @@ export const GalleryItem = (props: GalleryItemProps) => {
     description,
     encryptedThumbnailPath
   } = props.item
-  const [isHovering, setIsHovering] = useState(true)
+  const [isHovering, setIsHovering] = useState(false)
   const isAuth = useAuthStore((state) => state.isAuth)
 
   const imgUrl = getImageUrl(encryptedThumbnailPath)
