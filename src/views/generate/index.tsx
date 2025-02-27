@@ -59,7 +59,7 @@ export default function Generate() {
       return <div>Generate page ...</div>
     }
 
-    // TODO: Tutorial UI 구분
+    // TODO: api 연결
     openModal(ConfirmSelectionModal, {
       isCloseable: false,
       onClickCancel: () => {

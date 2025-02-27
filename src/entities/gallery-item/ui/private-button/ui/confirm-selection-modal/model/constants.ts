@@ -2,6 +2,8 @@ export const UI_TEXT = {
   CONFIRM_YOUR_SELECTION: 'Confirm Your Selection',
   CONFIRM_YOUR_SELECTION_DESCRIPTION:
     "You're about to subscribe to this model as part of your plan.",
+  FREE_PLAN_DESCRIPTION: "You're about to use tutorial credits for this model.",
+  TUTORIAL: 'Tutorial',
   CONFIRM: 'Confirm',
   MODEL: 'Model',
   PLAN: 'Plan',
