@@ -21,7 +21,7 @@ export default function Login(props: LoginProps) {
   const modelId = searchParams.get('id')
 
   const redirectPageInfo =
-    modelName && modelId ? `name=${modelName}&id=${modelId}` : ''
+    modelName && modelId ? `/${modelName}?id=${modelId}` : ''
 
   return (
     <div className="fixed inset-0 z-50 flex justify-center bg-neutral-0-90">

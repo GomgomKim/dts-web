@@ -118,7 +118,6 @@ export default function OAuth2Callback() {
 
         if (tokens) {
           authStore.logIn(tokens)
-          window.alert(redirectPath)
           router.replace(decodeURIComponent(redirectPath))
         } else {
           showSignUpFormToggle.on()
