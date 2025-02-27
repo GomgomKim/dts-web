@@ -54,11 +54,13 @@ export default function Generate() {
   }
 
   // 2.2 모델 활성화 상태 확인
-  if (myModelCount < myPlan.modelNum) {
-    if (membershipData.modelIds?.includes(Number(modelId))) {
-      return <div>Generate page ...</div>
-    }
+  if (myModelCount >= myPlan.modelNum) {
+    alert('redirect to pricing page')
+    // router.replace('/pricing')
+    return
+  }
 
+  if (!membershipData.modelIds?.includes(Number(modelId))) {
     // TODO: api 연결
     openModal(ConfirmSelectionModal, {
       isCloseable: false,
@@ -80,26 +82,5 @@ export default function Generate() {
     return null
   }
 
-  alert('redirect to pricing page')
-  // router.replace('/pricing')
-
   return <div>Generate page ...</div>
 }
-
-/**
- * 1. 인증 확인
- *    - 인증되지 않은 경우, 로그인 페이지로 리다이렉트
- *
- * 2. 멤버십 정보 가져오기
- *    2.1 구독 플랜 확인
- *        - 구독이 없는 경우(null), 가격 페이지로 리다이렉트
- *
- *    2.2 모델 활성화 상태 확인
- *        - 활성화된 경우: generate 페이지 데이터 가져오기
- *        - 비활성화 상태이지만 활성화 가능한 경우:
- *          a. 확인 모달 열기
- *          b. 모델 정보 데이터 가져오기
- *          c. 확인 클릭 시, 멤버십 업데이트 후 생성 페이지로 리다이렉트
- *             취소 클릭 시, explore 페이지로 리다이렉트
- *        - 비활성화 상태이고 활성화 불가능한 경우: 가격 페이지로 리다이렉트
- */
