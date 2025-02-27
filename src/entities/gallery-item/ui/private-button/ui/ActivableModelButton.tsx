@@ -39,6 +39,7 @@ export const ActivableModelButton = (props: ActivableModelButtonProps) => {
     }
     // 2. 아니면 컨펌 모달 오픈
     openModal(ConfirmSelectionModal, {
+      isCloseable: true,
       modelInfo,
       plan,
       subscribingModelCount: modelIds.length

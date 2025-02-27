@@ -8,5 +8,6 @@ export const UI_TEXT = {
   PLAN_DESCRIPTION:
     "At your next renewal, you can reselect this model \n or switch to another model if you'd like.",
   FEATURES_DESCRIPTION:
-    'in AI Tools may not work well with this model, but other features are fully supported.'
+    'in AI Tools may not work well with this model, but other features are fully supported.',
+  CANCEL: 'Cancel'
 } as const

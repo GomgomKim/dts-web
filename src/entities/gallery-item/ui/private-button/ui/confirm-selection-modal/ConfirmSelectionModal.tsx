@@ -11,6 +11,8 @@ import { ModalComponentProps } from '@/shared/ui/modal/model/types'
 import { UI_TEXT } from './model/constants'
 
 interface ConfirmSelectionModalProps extends ModalComponentProps {
+  isCloseable: boolean
+  onClickCancel?: () => void
   modelInfo: MainItem
   plan: string
   subscribingModelCount: number
@@ -30,19 +32,34 @@ export const ConfirmSelectionModal = (props: ConfirmSelectionModalProps) => {
       title={UI_TEXT.CONFIRM_YOUR_SELECTION}
       description={UI_TEXT.CONFIRM_YOUR_SELECTION_DESCRIPTION}
       footer={
-        <Button
-          variant="primary"
-          className="bg-white hover:bg-white"
-          stretch
-          onClick={handleClickConfirm}
-        >
-          {UI_TEXT.CONFIRM}
-        </Button>
+        <>
+          <Button
+            variant="primary"
+            className="bg-white hover:bg-white"
+            stretch
+            onClick={handleClickConfirm}
+          >
+            {UI_TEXT.CONFIRM}
+          </Button>
+          <div className="text-center">
+            <Button
+              variant="link"
+              size="small"
+              className="mt-3 text-white underline underline-offset-[3px]"
+              onClick={() => {
+                props.onClickCancel?.()
+                onCloseModal()
+              }}
+            >
+              {UI_TEXT.CANCEL}
+            </Button>
+          </div>
+        </>
       }
       closeable={{
-        isCloseable: true,
+        isCloseable: props.isCloseable,
         onClose: onCloseModal,
-        withCancel: true
+        withCancel: false
       }}
       className="w-[560px]"
     >
