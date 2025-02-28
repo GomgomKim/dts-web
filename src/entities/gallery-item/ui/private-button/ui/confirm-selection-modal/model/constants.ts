@@ -1,3 +1,5 @@
+import { Features } from '@/shared/api/types'
+
 export const UI_TEXT = {
   CONFIRM_YOUR_SELECTION: 'Confirm Your Selection',
   CONFIRM_YOUR_SELECTION_DESCRIPTION:
@@ -10,3 +12,13 @@ export const UI_TEXT = {
   FEATURES_DESCRIPTION:
     'in AI Tools may not work well with this model, but other features are fully supported.'
 } as const
+
+export const MODEL_FEATURES_TOOLS_MAP: Record<Features, string> = {
+  MAKEUP_BRUSH: 'Makeup Brush',
+  SKIN_GLOW: 'Skin Glow',
+  HAIR_COLOR: 'Hair Color',
+  EYE_CONTACT: 'Eye Contacts',
+  CREAM_TEXTURE: 'Cream Texture'
+  // FRECKLES: 'Freckles',
+  // AI_BACKGROUND: 'AI Background'
+}

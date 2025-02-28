@@ -8,7 +8,7 @@ import { Button } from '@/shared/ui'
 import { DefaultModal } from '@/shared/ui/modal/DefaultModal'
 import { ModalComponentProps } from '@/shared/ui/modal/model/types'
 
-import { UI_TEXT } from './model/constants'
+import { MODEL_FEATURES_TOOLS_MAP, UI_TEXT } from './model/constants'
 
 interface ConfirmSelectionModalProps extends ModalComponentProps {
   modelInfo: MainItem
@@ -79,10 +79,13 @@ export const ConfirmSelectionModal = (props: ConfirmSelectionModalProps) => {
             </p>
           </div>
         </div>
-        {/* TODO: features  */}
-        {props.modelInfo.features.length < 0 ? (
+        {/* features  */}
+        {props.modelInfo.features.length > 0 ? (
           <div className="font-medium text-destructive">
-            *{props.modelInfo.features.join(', ')}{' '}
+            *
+            {props.modelInfo.features
+              .map((feature) => MODEL_FEATURES_TOOLS_MAP[feature])
+              .join(', ')}{' '}
             {UI_TEXT.FEATURES_DESCRIPTION}
           </div>
         ) : null}

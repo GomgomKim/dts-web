@@ -17,7 +17,7 @@ export interface MainItem {
   isFavorite: boolean
   encryptedThumbnailPath: string
   tags: string[] // TODO: 타입 구체화
-  features: string[]
+  features: Features[]
 }
 
 export interface Variation {
@@ -66,3 +66,10 @@ export interface Asset {
   encryptedAssetUrl: string
   encryptedDepthMapUrl?: string
 }
+
+export type Features =
+  | 'MAKEUP_BRUSH'
+  | 'SKIN_GLOW'
+  | 'HAIR_COLOR'
+  | 'EYE_CONTACT' // contact's' 아님 주의
+  | 'CREAM_TEXTURE'
