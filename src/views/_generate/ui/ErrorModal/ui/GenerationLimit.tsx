@@ -19,10 +19,10 @@ export const GenerationLimit = (props: GenerationLimitProps) => {
       }}
       title="Generation Limit Reached for This Model"
       description={
-        <>
+        <div className="text-[0.875rem]">
           You’ve hit the 100-generation limit for this model. <br />
           To continue, please select another model.
-        </>
+        </div>
       }
       footer={
         <>

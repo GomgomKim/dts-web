@@ -22,8 +22,12 @@ export const Unauthorized = (props: UnauthorizedProps) => {
     <DefaultModal
       withLogo
       title="Service Unavailable"
-      description="An error occurred while processing your request. Return to the
-            homepage to log in again."
+      description={
+        <div className="text-[0.875rem]">
+          An error occurred while processing your request. <br />
+          Return to the homepage to log in again.
+        </div>
+      }
       footer={
         <>
           <Button

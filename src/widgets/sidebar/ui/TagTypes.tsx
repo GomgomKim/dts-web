@@ -4,6 +4,9 @@ import { ComponentProps } from 'react'
 
 import { usePathname, useSearchParams } from 'next/navigation'
 
+import { TAG_TYPES } from '@/views/explore/ui/gallery/constant'
+
+import { capitalizeFirstLetter } from '@/shared/lib/utils'
 import { Badge } from '@/shared/ui/badge'
 import { Menu, MenuGroup, MenuItem } from '@/shared/ui/menu'
 
@@ -59,9 +62,9 @@ export const TagTypes = () => {
           title="Beauty"
           prefix={<Square color={'rgba(97, 97, 242, 1)'} />}
         >
-          <TagTypeItem>Makeup</TagTypeItem>
-          <TagTypeItem>Skincare</TagTypeItem>
-          <TagTypeItem>Hair</TagTypeItem>
+          {TAG_TYPES.slice(2).map((tag) => (
+            <TagTypeItem key={tag}>{capitalizeFirstLetter(tag)}</TagTypeItem>
+          ))}
         </MenuGroup>
       </li>
       <li>

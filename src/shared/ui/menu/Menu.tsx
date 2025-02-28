@@ -35,7 +35,7 @@ export const MenuItem = (props: MenuItemProps) => {
         variant="ghost"
         stretch
         disabled={props.disabled}
-        className={cn('h-10', {
+        className={cn('h-10 rounded-[0.5rem]', {
           active: props.isActive
         })}
       >

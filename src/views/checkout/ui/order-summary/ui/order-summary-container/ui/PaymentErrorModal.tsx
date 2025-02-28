@@ -16,7 +16,12 @@ export const PaymentErrorModal = (props: PaymentErrorProps) => {
         withCancel: false
       }}
       title="Payment Error"
-      description="Your payment couldn't be processed. Please check your payment details and try again."
+      description={
+        <div className="text-[0.875rem]">
+          Your payment couldn&#39;t be processed. Please check your payment
+          details and try again.
+        </div>
+      }
       footer={
         <>
           <div>retry button</div>
