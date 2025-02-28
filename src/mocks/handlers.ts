@@ -109,11 +109,11 @@ export const handlers = [
     let responseItems: ArchiveItem[] = []
     if (sortingType === 'NEWEST') {
       responseItems = ArchiveData.sort((a, b) => {
-        return new Date(a.createdDate) - new Date(b.createdDate)
+        return +new Date(a.createdDate) - +new Date(b.createdDate)
       })
     } else {
       responseItems = ArchiveData.sort((a, b) => {
-        return new Date(b.createdDate) - new Date(a.createdDate)
+        return +new Date(b.createdDate) - +new Date(a.createdDate)
       })
     }
 
