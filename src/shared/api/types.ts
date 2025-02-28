@@ -7,7 +7,7 @@ export interface ResData<T> {
 export interface ScrollContent {
   data: MainItem[]
   hasNext: boolean
-  scrollKey: string
+  offset: string
 }
 
 export interface MainItem {
@@ -17,6 +17,7 @@ export interface MainItem {
   isFavorite: boolean
   encryptedThumbnailPath: string
   tags: string[] // TODO: 타입 구체화
+  features: string[]
 }
 
 export interface Variation {

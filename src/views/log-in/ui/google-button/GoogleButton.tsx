@@ -24,13 +24,10 @@ export const GoogleButton = (props: GoogleButtonProps) => {
 
     if (loginUrl && redirectBaseUrl) {
       const targetPath = props.redirectPageInfo ? '/generate' : '/explore'
-      const redirectState = props.redirectPageInfo
-        ? getState(props.redirectPageInfo)
-        : ''
 
-      const redirectSearchParam = redirectState ? '&state=' + redirectState : ''
-      const redirectPath = `${targetPath}${redirectSearchParam ? `?${redirectSearchParam}` : ''}`
+      const redirectPath = `${targetPath}${props.redirectPageInfo ? `${getRedirectPath(props.redirectPageInfo)}` : ''}` // /generate/name?id=123
       const oAuthUrl = getOAuthURL('google', redirectPath)
+
       router.replace(oAuthUrl.href)
     } else {
       console.error('Google login URL is not defined')
@@ -51,7 +48,7 @@ export const GoogleButton = (props: GoogleButtonProps) => {
   )
 }
 
-// 구글 로그인 후 리다이렉트 될 모델 generate 페이지 정보(name, id) 전달
-const getState = (redirectPageInfo: string) => {
-  return redirectPageInfo.replaceAll('=', '-').replace('&', '-')
+// 테스트용 데이터때문에 임시 작성 (ex. 테스트 모델1 -> 테스트모델1)
+const getRedirectPath = (redirectPageInfo: string) => {
+  return redirectPageInfo.replace(' ', '')
 }

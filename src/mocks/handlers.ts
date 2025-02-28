@@ -23,14 +23,15 @@ import { faker } from '@faker-js/faker'
 import { HttpResponse, http } from 'msw'
 
 const ImageData = {
-  MAKEUP: [
+  NATURAL: [
     {
       id: 1,
       name: 'jisoo',
       description: '지수의 메인 이미지',
       isFavorite: false,
       encryptedThumbnailPath: faker.image.urlLoremFlickr(),
-      tags: ['tag1', 'tag2']
+      tags: ['tag1', 'tag2'],
+      features: ['HAIR_COLOR']
     },
     {
       id: 2,
@@ -38,7 +39,8 @@ const ImageData = {
       description: '지수의 메인 이미지',
       isFavorite: false,
       encryptedThumbnailPath: faker.image.urlLoremFlickr(),
-      tags: ['tag1', 'tag2']
+      tags: ['tag1', 'tag2'],
+      features: ['HAIR_COLOR']
     },
     {
       id: 3,
@@ -46,7 +48,8 @@ const ImageData = {
       description: '지수의 메인 이미지',
       isFavorite: true,
       encryptedThumbnailPath: faker.image.urlLoremFlickr(),
-      tags: ['tag1', 'tag2']
+      tags: ['tag1', 'tag2'],
+      features: ['HAIR_COLOR']
     },
     {
       id: 4,
@@ -54,17 +57,19 @@ const ImageData = {
       description: '지수의 메인 이미지',
       isFavorite: false,
       encryptedThumbnailPath: faker.image.urlLoremFlickr(),
-      tags: ['tag1', 'tag2']
+      tags: ['tag1', 'tag2'],
+      features: ['HAIR_COLOR']
     }
   ],
-  SKINCARE: [
+  BOLD: [
     {
       id: 5,
       name: 'jisoo',
       description: '지수의 메인 이미지',
       isFavorite: true,
       encryptedThumbnailPath: faker.image.urlLoremFlickr(),
-      tags: ['tag1', 'tag2']
+      tags: ['tag1', 'tag2'],
+      features: ['HAIR_COLOR']
     },
     {
       id: 6,
@@ -72,17 +77,61 @@ const ImageData = {
       description: '지수의 메인 이미지',
       isFavorite: true,
       encryptedThumbnailPath: faker.image.urlLoremFlickr(),
-      tags: ['tag1', 'tag2']
+      tags: ['tag1', 'tag2'],
+      features: ['HAIR_COLOR']
     }
   ],
-  HAIR: [
+  TRENDY: [
     {
       id: 7,
       name: 'jisoo',
       description: '지수의 메인 이미지',
       isFavorite: false,
       encryptedThumbnailPath: faker.image.urlLoremFlickr(),
-      tags: ['tag1', 'tag2']
+      tags: ['tag1', 'tag2'],
+      features: ['HAIR_COLOR']
+    }
+  ],
+  ROMANTIC: [
+    {
+      id: 8,
+      name: 'jisoo',
+      description: '지수의 메인 이미지',
+      isFavorite: false,
+      encryptedThumbnailPath: faker.image.urlLoremFlickr(),
+      tags: ['tag1', 'tag2'],
+      features: ['HAIR_COLOR']
+    }
+  ],
+  YOUTHFUL: [
+    {
+      id: 9,
+      name: 'jisoo',
+      description: '지수의 메인 이미지',
+      isFavorite: false,
+      encryptedThumbnailPath: faker.image.urlLoremFlickr(),
+      tags: ['tag1', 'tag2'],
+      features: ['HAIR_COLOR']
+    }
+  ],
+  MODERN: [
+    {
+      id: 10,
+      name: 'gigi',
+      description: '지수의 메인 이미지',
+      isFavorite: false,
+      encryptedThumbnailPath: faker.image.urlLoremFlickr(),
+      tags: ['tag1', 'tag2'],
+      features: ['HAIR_COLOR']
+    },
+    {
+      id: 11,
+      name: 'bobo',
+      description: '지수의 메인 이미지',
+      isFavorite: false,
+      encryptedThumbnailPath: faker.image.urlLoremFlickr(),
+      tags: ['tag1', 'tag2'],
+      features: ['HAIR_COLOR']
     }
   ]
 }
@@ -165,21 +214,30 @@ export const handlers = [
   http.get(`${URL_EXPLORE_LIST}`, ({ request }) => {
     const url = new URL(request.url)
     const tagType = url.searchParams.get('tagType')
-    const cursor = parseInt(url.searchParams.get('scrollKey') as string) || 1
+    const cursor = parseInt(url.searchParams.get('offset') as string) || 1
 
     let responseImages: MainItem[] = []
-    if (tagType === 'FEATURED' || tagType === 'ALL') {
+    if (tagType === 'NATURAL') {
+      responseImages = ImageData.NATURAL
+    } else if (tagType === 'BOLD') {
+      responseImages = ImageData.BOLD
+    } else if (tagType === 'TRENDY') {
+      responseImages = ImageData.TRENDY
+    } else if (tagType === 'ROMANTIC') {
+      responseImages = ImageData.ROMANTIC
+    } else if (tagType === 'YOUTHFUL') {
+      responseImages = ImageData.YOUTHFUL
+    } else if (tagType === 'MODERN') {
+      responseImages = ImageData.MODERN
+    } else {
       responseImages = [
-        ...ImageData.MAKEUP,
-        ...ImageData.SKINCARE,
-        ...ImageData.HAIR
+        ...ImageData.NATURAL,
+        ...ImageData.BOLD,
+        ...ImageData.TRENDY,
+        ...ImageData.ROMANTIC,
+        ...ImageData.YOUTHFUL,
+        ...ImageData.MODERN
       ]
-    } else if (tagType === 'MAKEUP') {
-      responseImages = ImageData.MAKEUP
-    } else if (tagType === 'SKINCARE') {
-      responseImages = ImageData.SKINCARE
-    } else if (tagType === 'HAIR') {
-      responseImages = ImageData.HAIR
     }
 
     const scrollkey = 10 * cursor === 1000 ? null : (10 * cursor).toString()
@@ -188,9 +246,9 @@ export const handlers = [
         code: 0,
         message: null,
         content: {
-          images: responseImages,
+          data: responseImages,
           hasNext: scrollkey === null ? false : true,
-          scrollKey: scrollkey
+          offset: scrollkey
         }
       },
       { status: 200 }
@@ -200,18 +258,21 @@ export const handlers = [
     const url = new URL(request.url)
     const tagType = url.searchParams.get('tagType')
     let responseImages: MainItem[] = []
-    if (tagType === 'FEATURED' || tagType === 'ALL') {
+    if (tagType === 'NATURAL') {
+      responseImages = ImageData.NATURAL.filter((i) => i.isFavorite)
+    } else if (tagType === 'BOLD') {
+      responseImages = ImageData.BOLD.filter((i) => i.isFavorite)
+    } else if (tagType === 'TRENDY') {
+      responseImages = ImageData.TRENDY.filter((i) => i.isFavorite)
+    } else {
       responseImages = [
-        ...ImageData.MAKEUP.filter((i) => i.isFavorite),
-        ...ImageData.SKINCARE.filter((i) => i.isFavorite),
-        ...ImageData.HAIR.filter((i) => i.isFavorite)
+        ...ImageData.NATURAL.filter((i) => i.isFavorite),
+        ...ImageData.BOLD.filter((i) => i.isFavorite),
+        ...ImageData.TRENDY.filter((i) => i.isFavorite),
+        ...ImageData.ROMANTIC.filter((i) => i.isFavorite),
+        ...ImageData.YOUTHFUL.filter((i) => i.isFavorite),
+        ...ImageData.MODERN.filter((i) => i.isFavorite)
       ]
-    } else if (tagType === 'MAKEUP') {
-      responseImages = ImageData.MAKEUP.filter((i) => i.isFavorite)
-    } else if (tagType === 'SKINCARE') {
-      responseImages = ImageData.SKINCARE.filter((i) => i.isFavorite)
-    } else if (tagType === 'HAIR') {
-      responseImages = ImageData.HAIR.filter((i) => i.isFavorite)
     }
     return HttpResponse.json(
       {
