@@ -31,6 +31,7 @@ export const useApplyHairColor = (props: UseApplyHairColorProps) => {
     )
 
     setHairColorLayer(base64)
+    return base64
   }, [hairColor, hairColorOpacity, hairColorLevel])
 
   // hairColorLevel 값을 0.5 ~ 1.1 사이로 변환

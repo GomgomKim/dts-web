@@ -4,6 +4,7 @@ import {
   useGlowStore,
   useSkinGlowStore
 } from '@/views/canvas/model/useEditorPanelsStore'
+import { useGlobalHistoryStore } from '@/views/canvas/model/useGlobalHistoryStore'
 import { useLayerVisibilityStore } from '@/views/canvas/model/useLayerVisibilityStore'
 
 import { AI_TOOL } from '@/widgets/canvas-sidebar/model/types'
@@ -43,6 +44,20 @@ export const SkinGlowView = (props: SkinGlowViewProps) => {
   const CURSOR_OFFSET = 20
   const GLOW_CURSOR_SIZE = 40
 
+  const history = useGlobalHistoryStore((state) => state.globalHistory)
+  const currentIndex = useGlobalHistoryStore((state) => state.currentIndex)
+  const currentEntry = history[currentIndex]
+
+  useEffect(() => {
+    if (
+      currentEntry &&
+      currentEntry.cursorPos &&
+      currentEntry.layer === 'skinGlow'
+    ) {
+      setLightPos(currentEntry.cursorPos)
+    }
+  }, [currentEntry])
+
   const { applySkinGlow, throttledSkinGlow } = useApplySkinGlow({
     modelMat: props.modelMat,
     normalMat: props.normalMat,
@@ -55,7 +70,14 @@ export const SkinGlowView = (props: SkinGlowViewProps) => {
   }, [])
 
   useEffect(() => {
-    applySkinGlow(lightPos.x, lightPos.y)
+    useGlobalHistoryStore
+      .getState()
+      .addEntry(
+        'skinGlow',
+        applySkinGlow(lightPos.x, lightPos.y) ?? '',
+        null,
+        lightPos
+      )
   }, [skinGlowSize, skinGlowPower])
 
   useEffect(() => {
@@ -85,6 +107,14 @@ export const SkinGlowView = (props: SkinGlowViewProps) => {
 
   const handleMouseUp = () => {
     setIsDragging(false)
+    useGlobalHistoryStore
+      .getState()
+      .addEntry(
+        'skinGlow',
+        applySkinGlow(lightPos.x, lightPos.y) ?? '',
+        null,
+        lightPos
+      )
   }
 
   const handleMouseLeave = () => {

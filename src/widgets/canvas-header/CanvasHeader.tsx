@@ -27,7 +27,7 @@ export const CanvasHeader = (props: CanvasHeaderProps) => {
           <ViewButton />
         </div>
         <div className="ml-auto flex flex-nowrap gap-5">
-          <ZoomControls canvasRef={props.canvasRef} />
+          <ZoomControls />
           {/* TODO: 임시 containerRef에 canvasRef 할당 */}
           <DownloadDropdown containerRef={props.canvasRef} />
         </div>

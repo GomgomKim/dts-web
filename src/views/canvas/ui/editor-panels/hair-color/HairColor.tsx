@@ -1,4 +1,7 @@
-import { useHairColorStore } from '@/views/canvas/model/useEditorPanelsStore'
+import {
+  useColorChangeStore,
+  useHairColorStore
+} from '@/views/canvas/model/useEditorPanelsStore'
 
 import { AiToolId } from '@/widgets/canvas-sidebar/model/types'
 import { DrawingPanel } from '@/widgets/editor-panel'
@@ -22,6 +25,10 @@ export const HairColor = (props: HairColorProps) => {
     return a.length === b.length && a.every((val, idx) => val === b[idx])
   }
 
+  const setColorChangeStatus = useColorChangeStore(
+    (state) => state.setColorChangeStatus
+  )
+
   const prefixContent = (
     <div className="grid grid-cols-5 gap-2">
       {HAIR_COLOR_PRESETS.map((preset) => (
@@ -30,7 +37,10 @@ export const HairColor = (props: HairColorProps) => {
           name={preset.name}
           backgroundImage={preset.backgroundImage}
           selected={hairColor ? colorsEqual(hairColor, preset.color) : false}
-          handleClickButton={() => setHairColor(preset.color)}
+          handleClickButton={() => {
+            setHairColor(preset.color)
+            setColorChangeStatus()
+          }}
         />
       ))}
     </div>

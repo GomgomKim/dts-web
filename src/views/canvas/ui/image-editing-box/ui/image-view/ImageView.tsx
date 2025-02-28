@@ -9,8 +9,7 @@ import { useLayerVisibilityStore } from '@/views/canvas/model/useLayerVisibility
 
 import { AI_TOOL, AiToolId } from '@/widgets/canvas-sidebar/model/types'
 
-import { URL_VARIATION_IMAGE } from '@/entities/generate/constant'
-
+// import { URL_VARIATION_IMAGE } from '@/entities/generate/constant'
 import { Variation } from '@/shared/api/types'
 
 import FaceParseImg from '/public/images/face_parse.png'
@@ -104,22 +103,24 @@ export const ImageView = (props: ImageViewProps) => {
         return item.ratio === presentAspectRatio
       })
       if (presentVariation) {
-        imgUrl =
-          process.env.NEXT_PUBLIC_API_MOCKING === 'enabled'
-            ? presentVariation.encryptedImageUrl
-            : process.env.NEXT_PUBLIC_API_URL +
-              URL_VARIATION_IMAGE +
-              presentVariation.encryptedImageUrl
+        // imgUrl =
+        //   process.env.NEXT_PUBLIC_API_MOCKING === 'enabled'
+        //     ? presentVariation.encryptedImageUrl
+        //     : process.env.NEXT_PUBLIC_API_URL +
+        //       URL_VARIATION_IMAGE +
+        //       presentVariation.encryptedImageUrl
+        imgUrl = presentVariation.encryptedImageUrl
       }
     } else {
       // 기본 이미지
       if (images[0]) {
-        imgUrl =
-          process.env.NEXT_PUBLIC_API_MOCKING === 'enabled'
-            ? images[0].encryptedImageUrl
-            : process.env.NEXT_PUBLIC_API_URL +
-              URL_VARIATION_IMAGE +
-              images[0].encryptedImageUrl
+        // imgUrl =
+        //   process.env.NEXT_PUBLIC_API_MOCKING === 'enabled'
+        //     ? images[0].encryptedImageUrl
+        //     : process.env.NEXT_PUBLIC_API_URL +
+        //       URL_VARIATION_IMAGE +
+        //       images[0].encryptedImageUrl
+        imgUrl = images[0].encryptedImageUrl
       }
     }
   }

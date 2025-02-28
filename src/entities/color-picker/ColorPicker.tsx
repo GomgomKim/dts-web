@@ -6,6 +6,7 @@ import 'react-color-palette/css'
 
 import {
   useColorBrushStore,
+  useColorChangeStore,
   useHairColorStore
 } from '@/views/canvas/model/useEditorPanelsStore'
 
@@ -38,6 +39,9 @@ export const ColorPicker = (props: ColorPickerProps) => {
   const updateBrushColor = useColorBrushStore((state) => state.updateBrushColor)
   const selectedColorBrushItem = useColorBrushStore(
     (state) => state.selectedColorBrushItem
+  )
+  const setColorChangeStatus = useColorChangeStore(
+    (state) => state.setColorChangeStatus
   )
 
   // 선택된 브러시의 색상으로 컬러피커 색상 업데이트
@@ -99,6 +103,10 @@ export const ColorPicker = (props: ColorPickerProps) => {
     }
   }
 
+  const handleChangeColorComplete = () => {
+    setColorChangeStatus()
+  }
+
   return (
     <div
       className="flex flex-col gap-4"
@@ -112,7 +120,12 @@ export const ColorPicker = (props: ColorPickerProps) => {
         e.nativeEvent.stopImmediatePropagation()
       }}
     >
-      <Saturation color={color} onChange={handleChangeColor} height={160} />
+      <Saturation
+        color={color}
+        onChange={handleChangeColor}
+        onChangeComplete={handleChangeColorComplete}
+        height={160}
+      />
 
       <div className="flex gap-4">
         <div
@@ -120,8 +133,16 @@ export const ColorPicker = (props: ColorPickerProps) => {
           style={{ backgroundColor: color.hex }}
         />
         <div className="flex flex-1 flex-col gap-2">
-          <Hue color={color} onChange={handleChangeColor} />
-          <Alpha color={color} onChange={handleChangeColor} />
+          <Hue
+            color={color}
+            onChange={handleChangeColor}
+            onChangeComplete={handleChangeColorComplete}
+          />
+          <Alpha
+            color={color}
+            onChange={handleChangeColor}
+            onChangeComplete={handleChangeColorComplete}
+          />
         </div>
       </div>
 

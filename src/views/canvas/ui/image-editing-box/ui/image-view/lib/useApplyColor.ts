@@ -76,6 +76,8 @@ export const useApplyColor = (props: UseApplyColorProps) => {
     if (selectedColorBrushItem) {
       setColorBrushLayers(selectedColorBrushItem.id, base64)
     }
+
+    return base64
   }, [
     colorBrushColor,
     colorBrushOpacity,

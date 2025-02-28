@@ -56,6 +56,7 @@ export const useApplySkinGlow = (props: UseApplySkinGlowProps) => {
         )
 
         setSkinGlowLayer(resultBase64)
+        return resultBase64
         // console.log('resultBase64', resultBase64)
       } catch (error) {
         // TODO: error 처리
@@ -76,7 +77,7 @@ export const useApplySkinGlow = (props: UseApplySkinGlowProps) => {
 
   const throttledSkinGlow = useCallback(
     throttle((x: number, y: number) => {
-      applySkinGlow(x, y)
+      return applySkinGlow(x, y)
     }, THROTTLE_DELAY),
     [applySkinGlow]
   )

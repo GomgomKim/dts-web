@@ -1,59 +1,58 @@
 // 'use client'
+import { useState } from 'react'
+
 import { Button } from '@/shared/ui'
 
 import MinusIcon from '/public/icons/minus.svg'
 import PlusIcon from '/public/icons/plus.svg'
 
-interface ZoomButtonProps {
-  canvasRef: React.RefObject<HTMLDivElement>
-}
+import { useZoomStore } from './model/useZoomStore'
 
-export const ZoomControls = (props: ZoomButtonProps) => {
-  console.log(props.canvasRef)
-  // const [scale, setScale] = useState<number>(1)
-  // const [zoomStep, setZoomStep] = useState<number>(10)
+export const ZoomControls = () => {
+  const [scaleText, setScaleText] = useState<string>('100%')
 
-  // const handleZoomIn = () => {
-  //   setScale((prevScale) => Math.min(prevScale + zoomStep, 300))
-  // }
+  const numericScale = Number(scaleText.replace(/[^\d]/g, ''))
+  const setScale = useZoomStore((state) => state.setScale)
 
-  // const handleZoomOut = () => {
-  //   setScale((prevScale) => Math.max(prevScale - zoomStep, 1))
-  // }
+  const handleZoomIn = () => {
+    let newScale = numericScale + 10
+    newScale = Math.min(newScale, 200)
+    setScaleText(`${newScale}%`)
+    setScale(newScale / 100)
+  }
 
-  // const handleZoomStepChange = (e) => {
-  //   setZoomStep(parseFloat(e.target.value))
-  // }
+  const handleZoomOut = () => {
+    let newScale = numericScale - 10
+    newScale = Math.max(newScale, 20)
+    setScaleText(`${newScale}%`)
+    setScale(newScale / 100)
+  }
 
-  // useEffect(() => {
-  //   if (props.canvasRef.current) {
-  //     props.canvasRef.current.style.transform = `scale(${scale})`
-  //     props.canvasRef.current.style.transition = 'transform 0.3s ease-in-out'
-  //   }
-  // }, [scale])
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value
+    value = value.replace(/[^\d]/g, '')
+    const numericValue = Math.min(Math.max(Number(value), 20), 200)
+    setScaleText(`${numericValue}%`)
+    setScale(numericValue / 100)
+  }
 
   return (
     <div
       id="zoom-controls"
       className="flex items-center gap-2 rounded-[.5rem] bg-[#202124] p-2 *:bg-[#202124]"
     >
-      <Button onClick={() => {}} variant="ghost" className="p-0">
+      <Button onClick={handleZoomOut} variant="ghost" className="p-0">
         <span className="flex size-6 items-center justify-center">
           <MinusIcon />
         </span>
       </Button>
-      {/* TODO: % 단위 추가 */}
       <input
-        type="number"
-        value={100}
-        // value={zoomStep}
-        // onChange={handleZoomStepChange}
-        step="10"
-        min="1"
-        max="300"
+        type="text"
+        value={scaleText}
+        onChange={handleInputChange}
         className="w-12 text-center text-[0.875rem] text-white focus:outline-none"
       />
-      <Button onClick={() => {}} variant="ghost" className="p-0">
+      <Button onClick={handleZoomIn} variant="ghost" className="p-0">
         <span className="flex size-6 items-center justify-center">
           <PlusIcon width="16px" stroke="#AEAFB5" />
         </span>

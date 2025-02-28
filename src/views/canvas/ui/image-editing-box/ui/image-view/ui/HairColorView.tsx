@@ -1,7 +1,11 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { useEditModeStore } from '@/views/canvas/model/useEditModeStore'
-import { useHairColorStore } from '@/views/canvas/model/useEditorPanelsStore'
+import {
+  useColorChangeStore,
+  useHairColorStore
+} from '@/views/canvas/model/useEditorPanelsStore'
+import { useGlobalHistoryStore } from '@/views/canvas/model/useGlobalHistoryStore'
 import { useLayerVisibilityStore } from '@/views/canvas/model/useLayerVisibilityStore'
 import { TOOL_IDS } from '@/views/canvas/ui/add-remove-toggle/model'
 
@@ -11,16 +15,29 @@ import { cn } from '@/shared/lib/utils'
 
 import { useApplyHairColor } from '../lib/useApplyHairColor'
 import { useHairHighlight } from '../lib/useHairHighlight'
+import { useLayersStore } from '../lib/useLayersStore'
 
 type HairColorViewProps = {
   modelMat: cv.Mat | null
-  maskMatRef: React.RefObject<cv.Mat>
+  maskMatRef: React.MutableRefObject<cv.Mat | null>
 }
 
 export const HairColorView = (props: HairColorViewProps) => {
   const hairColor = useHairColorStore((state) => state.hairColor)
+  const memoizedHairColor = useMemo(
+    () => hairColor,
+    [JSON.stringify(hairColor)]
+  )
   const hairColorOpacity = useHairColorStore((state) => state.hairColorOpacity)
+  const memoizedHairColorOpacity = useMemo(
+    () => hairColorOpacity,
+    [JSON.stringify(hairColorOpacity)]
+  )
   const hairColorLevel = useHairColorStore((state) => state.hairColorLevel)
+  const memoizedHairColorLevel = useMemo(
+    () => hairColorLevel,
+    [JSON.stringify(hairColorLevel)]
+  )
   const selectedToolId = useHairColorStore((state) => state.selectedToolId)
   const isEditing = useHairColorStore((state) => state.isEditing)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
@@ -28,6 +45,26 @@ export const HairColorView = (props: HairColorViewProps) => {
   const [isMouseDown, setIsMouseDown] = useState(false)
   const setActiveTool = useLayerVisibilityStore((state) => state.setActiveTool)
   const ref = useRef<HTMLCanvasElement>(null)
+
+  const resetStatus = useLayersStore((state) => state.resetStatus)
+
+  const originalMaskMatRef = useRef<cv.Mat | null>(null)
+
+  const isFirstRender = useRef<boolean>(true)
+
+  const history = useGlobalHistoryStore((state) => state.globalHistory)
+  const currentIndex = useGlobalHistoryStore((state) => state.currentIndex)
+  const currentEntry = history[currentIndex]
+
+  const colorChangeStatus = useColorChangeStore(
+    (state) => state.colorChangeStatus
+  )
+
+  useEffect(() => {
+    if (currentEntry && currentEntry.mat) {
+      props.maskMatRef.current = currentEntry.mat.clone()
+    }
+  }, [currentEntry])
 
   // 얼굴 부위별 호버
   const { drawHairHighlight } = useHairHighlight({
@@ -41,6 +78,18 @@ export const HairColorView = (props: HairColorViewProps) => {
     maskMatRef: props.maskMatRef
   })
 
+  useEffect(() => {
+    if (props.maskMatRef.current) {
+      originalMaskMatRef.current = props.maskMatRef.current.clone()
+    }
+  }, [])
+
+  useEffect(() => {
+    if (props.maskMatRef.current && originalMaskMatRef.current) {
+      props.maskMatRef.current = originalMaskMatRef.current.clone()
+    }
+  }, [resetStatus])
+
   // 캔버스의 내부 해상도를 컨테이너 크기에 맞게 설정 (좌표 계산 정확도 개선)
   useEffect(() => {
     const canvas = ref.current
@@ -53,8 +102,18 @@ export const HairColorView = (props: HairColorViewProps) => {
 
   // 브러시 색상 변경 시 applyColor 호출
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+      return
+    }
     applyHairColor()
-  }, [hairColor, hairColorOpacity, hairColorLevel])
+  }, [memoizedHairColor, memoizedHairColorOpacity, memoizedHairColorLevel])
+
+  useEffect(() => {
+    useGlobalHistoryStore
+      .getState()
+      .addEntry('hairColor', applyHairColor() ?? '', props.maskMatRef.current)
+  }, [colorChangeStatus])
 
   // 브러시 선택 시 호버 표시
   useEffect(() => {

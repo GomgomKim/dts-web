@@ -181,3 +181,16 @@ export const useGlowStore = create<GlowState>((set) => ({
   isGlowVisible: true,
   setIsGlowVisible: (value) => set({ isGlowVisible: value })
 }))
+
+interface ColorChangeState {
+  colorChangeStatus: number
+  setColorChangeStatus: () => void
+}
+
+export const useColorChangeStore = create<ColorChangeState>((set) => ({
+  colorChangeStatus: 0,
+  setColorChangeStatus: () =>
+    set((state) => ({
+      colorChangeStatus: state.colorChangeStatus + 1
+    }))
+}))

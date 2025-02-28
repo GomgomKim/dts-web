@@ -109,7 +109,7 @@ export default function Canvas({
           </div>
         )}
         {/* BrushEraseToggle */}
-        <div className="mt-4">
+        <div className="z-[200] mt-4">
           {isShowBrushEraseToggle(selectedAiTool) ? (
             <BrushEraseToggle
               selectedToolId={selectedToolMode}

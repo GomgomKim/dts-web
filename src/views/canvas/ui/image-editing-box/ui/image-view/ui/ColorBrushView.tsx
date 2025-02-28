@@ -1,11 +1,17 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
-import { useColorBrushStore } from '@/views/canvas/model/useEditorPanelsStore'
+import {
+  useColorBrushStore,
+  useColorChangeStore
+} from '@/views/canvas/model/useEditorPanelsStore'
+import { useGlobalHistoryStore } from '@/views/canvas/model/useGlobalHistoryStore'
 import { useLayerVisibilityStore } from '@/views/canvas/model/useLayerVisibilityStore'
 import { useToolModeStore } from '@/views/canvas/model/useToolModeStore'
 import { TOOL_IDS } from '@/views/canvas/ui/brush-erase-toggle/model'
-import { MAX_CUSTOM_BRUSHES } from '@/views/canvas/ui/editor-panels/color-brush/model'
-import { CUSTOM_BRUSH_START } from '@/views/canvas/ui/editor-panels/color-brush/model'
+import {
+  CUSTOM_BRUSH_START,
+  MAX_CUSTOM_BRUSHES
+} from '@/views/canvas/ui/editor-panels/color-brush/model'
 
 import { AI_TOOL } from '@/widgets/canvas-sidebar/model/types'
 
@@ -13,6 +19,7 @@ import { cn } from '@/shared/lib/utils'
 
 import { useApplyColor } from '../lib/useApplyColor'
 import { useCanvasHighlight } from '../lib/useCanvasHighlight'
+import { useLayersStore } from '../lib/useLayersStore'
 
 type ColorBrushViewProps = {
   modelMat: cv.Mat | null
@@ -31,12 +38,24 @@ export const ColorBrushView = (props: ColorBrushViewProps) => {
   const colorBrushSmoothEdges = useColorBrushStore(
     (state) => state.colorBrushSmoothEdges
   )
+  const memoizedColorBrushSmoothEdges = useMemo(
+    () => colorBrushSmoothEdges,
+    [JSON.stringify(colorBrushSmoothEdges)]
+  )
   const selectedColorBrushItem = useColorBrushStore(
     (state) => state.selectedColorBrushItem
   )
   const colorBrushColor = useColorBrushStore((state) => state.colorBrushColor)
+  const memoizedColorBrushColor = useMemo(
+    () => colorBrushColor,
+    [JSON.stringify(colorBrushColor)]
+  )
   const colorBrushOpacity = useColorBrushStore(
     (state) => state.colorBrushOpacity
+  )
+  const memoizedColorBrushOpacity = useMemo(
+    () => colorBrushOpacity,
+    [JSON.stringify(colorBrushOpacity)]
   )
 
   const activeToolVisibility = useLayerVisibilityStore(
@@ -71,11 +90,41 @@ export const ColorBrushView = (props: ColorBrushViewProps) => {
 
   const isFirstRender = useRef<boolean>(true)
 
+  const resetStatus = useLayersStore((state) => state.resetStatus)
+
+  const history = useGlobalHistoryStore((state) => state.globalHistory)
+  const currentIndex = useGlobalHistoryStore((state) => state.currentIndex)
+  const currentEntry = history[currentIndex]
+
+  const colorChangeStatus = useColorChangeStore(
+    (state) => state.colorChangeStatus
+  )
+
   useEffect(() => {
-    if (
-      props.maskMatRef.current &&
-      Object.keys(props.brushMaskMatRefs).length === 0
-    ) {
+    if (currentEntry && currentEntry.mat && currentEntry.layer) {
+      const layerName = currentEntry.layer
+
+      const brushLayers = [
+        'lips',
+        'eyebrows',
+        'brush_1',
+        'brush_2',
+        'brush_3',
+        'brush_4',
+        'brush_5',
+        'brush_6'
+      ]
+
+      if (brushLayers.includes(layerName)) {
+        if (props.brushMaskMatRefs[layerName]) {
+          props.brushMaskMatRefs[layerName].current = currentEntry.mat.clone()
+        }
+      }
+    }
+  }, [currentEntry])
+
+  useEffect(() => {
+    if (props.maskMatRef.current) {
       props.setBrushMaskMatRefs({
         lips: { current: props.maskMatRef.current.clone() },
         eyebrows: { current: props.maskMatRef.current.clone() },
@@ -87,8 +136,7 @@ export const ColorBrushView = (props: ColorBrushViewProps) => {
         brush_6: { current: props.maskMatRef.current.clone() }
       })
     }
-    // 만약 props.maskMatRef.current가 변경된다면 다시 clone 처리
-  }, [props.maskMatRef.current])
+  }, [props.maskMatRef.current, resetStatus])
 
   // 현재 선택된 브러시 아이디에 따라 활성화된 mask ref를 결정합니다.
   const getActiveMaskRef = () => {
@@ -130,6 +178,7 @@ export const ColorBrushView = (props: ColorBrushViewProps) => {
       return
     }
     applyColor()
+
     if (prevSelectedBrushRef.current && selectedColorBrushItem) {
       // 기존 브러시와 동일하다면 하이라이트 숨김 (같은 브러시 내 색상 변경 등)
       if (prevSelectedBrushRef.current.id === selectedColorBrushItem.id) {
@@ -137,7 +186,21 @@ export const ColorBrushView = (props: ColorBrushViewProps) => {
       }
     }
     prevSelectedBrushRef.current = selectedColorBrushItem
-  }, [colorBrushColor, colorBrushOpacity, colorBrushSmoothEdges])
+  }, [
+    memoizedColorBrushColor,
+    memoizedColorBrushOpacity,
+    memoizedColorBrushSmoothEdges
+  ])
+
+  useEffect(() => {
+    useGlobalHistoryStore
+      .getState()
+      .addEntry(
+        selectedColorBrushItem?.id ?? '',
+        applyColor() ?? '',
+        getActiveMaskRef().current
+      )
+  }, [colorChangeStatus])
 
   // 선택된 브러시가 변경되었는지 이전 값과 비교하여 하이라이트 제어
   useEffect(() => {
@@ -279,6 +342,13 @@ export const ColorBrushView = (props: ColorBrushViewProps) => {
   // 마우스 업 이벤트 추가
   const handleMouseUp = () => {
     setIsDrawing(false)
+    useGlobalHistoryStore
+      .getState()
+      .addEntry(
+        selectedColorBrushItem?.id ?? '',
+        applyColor() ?? '',
+        getActiveMaskRef().current
+      )
   }
 
   // 마우스 캔버스 벗어남 이벤트 수정
@@ -320,7 +390,7 @@ export const ColorBrushView = (props: ColorBrushViewProps) => {
             borderRadius: '50%',
             backgroundColor: 'rgba(0,0,0,0.05)',
             pointerEvents: 'none',
-            zIndex: 20
+            zIndex: 100
           }}
         />
       )}
