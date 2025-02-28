@@ -7,7 +7,7 @@ export interface ResData<T> {
 export interface ScrollContent {
   data: MainItem[]
   hasNext: boolean
-  scrollKey: string
+  scrollKey: string // TODO: offset
 }
 
 export interface MainItem {

@@ -1,16 +1,28 @@
-import { MainItem, ResData } from '@/shared/api/types'
+import { ResData } from '@/shared/api/types'
 
 export interface GetArchivesReqData {
   size?: number
   sortingType?: 'NEWEST' | 'OLDEST'
-  mediaType?: 'ALL' | 'IMAGE' | 'VIDEO'
-  scrollKey?: string
+  offset?: string
 }
 
-interface ArchivesContent {
-  data: MainItem[]
+// TODO: shared로 옮기기
+export interface ArchiveItem {
+  createdDate: string
+  contents: Content[] // 최종 날짜별 아이템들
+}
+
+export interface Content {
+  contentsId: number
+  modelId: number
+  encryptedContentsPath: string
+}
+
+// TODO: shared 적용
+interface ScrollContent {
+  data: ArchiveItem[]
   hasNext: boolean
-  scrollKey: string | null
+  offset: string | null
 }
 
-export interface GetArchivesResData extends ResData<ArchivesContent> {}
+export interface GetArchivesResData extends ResData<ScrollContent> {}

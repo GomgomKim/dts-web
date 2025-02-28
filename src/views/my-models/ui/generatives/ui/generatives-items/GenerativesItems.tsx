@@ -1,45 +1,12 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
-import { useInfiniteQuery } from '@tanstack/react-query'
+import Image from 'next/image'
+
+import { useGetArchives } from '@/views/my-models/model/adapter'
+
+import { URL_BASE_IMAGE_FILE } from '@/shared/api/constants'
+
 import { useVirtualizer } from '@tanstack/react-virtual'
-
-interface Item {
-  id: string
-  content: string
-  date: string
-}
-
-interface GroupedData {
-  date: string
-  items: Item[]
-}
-
-interface ServerResponse {
-  groupedData: GroupedData[]
-  nextCursor: number | null
-}
-
-async function fetchGroupedData(cursor: number = 0): Promise<ServerResponse> {
-  // 서버에서 데이터를 가져오는 로직을 구현합니다.
-  // 이 예제에서는 더미 데이터를 생성합니다.
-  const groupedData: GroupedData[] = new Array(5).fill(null).map((_, i) => ({
-    date: new Date(2025, 1, 25 + i).toISOString().split('T')[0],
-    items: new Array(Math.floor(Math.random() * 5) + 1)
-      .fill(null)
-      .map((_, j) => ({
-        id: `${cursor}-${i}-${j}`,
-        content: `Item ${j + 1} for ${new Date(2025, 1, 25 + i).toDateString()}`,
-        date: new Date(2025, 1, 25 + i).toISOString().split('T')[0]
-      }))
-  }))
-
-  await new Promise((resolve) => setTimeout(resolve, 500)) // 서버 지연 시뮬레이션
-
-  return {
-    groupedData,
-    nextCursor: cursor + 1
-  }
-}
 
 export const GenerativesItems: React.FC = () => {
   const {
@@ -50,15 +17,10 @@ export const GenerativesItems: React.FC = () => {
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage
-  } = useInfiniteQuery({
-    queryKey: ['groupedData'],
-    queryFn: ({ pageParam = 0 }) => fetchGroupedData(pageParam),
-    getNextPageParam: (lastPage) => lastPage.nextCursor,
-    initialPageParam: 0
-  })
+  } = useGetArchives() // TODO: sorting type
 
   const allGroupedData = data
-    ? data.pages.flatMap((page) => page.groupedData)
+    ? data.pages.flatMap((page) => page.content.data)
     : []
 
   const parentRef = useRef<HTMLDivElement>(null)
@@ -196,7 +158,7 @@ export const GenerativesItems: React.FC = () => {
                       className="mt-5 text-[1.125rem] font-semibold text-neutral-7"
                     >
                       {/* TODO: formatted */}
-                      {formattedDate(group.date)}
+                      {formattedDate(group.createdDate)}
                     </h3>
                     <div
                       ref={containerRef}
@@ -207,16 +169,22 @@ export const GenerativesItems: React.FC = () => {
                         gap: '4px'
                       }}
                     >
-                      {group.items.map((item, index) => (
+                      {group.contents.map((item, index) => (
                         <div
-                          key={item.id}
+                          key={item.contentsId}
+                          className="relative overflow-hidden"
                           style={getItemStyle(
                             index,
-                            group.items.length,
+                            group.contents.length,
                             containerWidth
                           )}
                         >
-                          {/* {item.content} */}
+                          <Image
+                            src={getImageUrl(item.encryptedContentsPath)}
+                            alt={`${item.modelId}-${item.contentsId}`}
+                            fill
+                            style={{ objectFit: 'cover' }}
+                          />
                         </div>
                       ))}
                     </div>
@@ -235,10 +203,18 @@ export const GenerativesItems: React.FC = () => {
 }
 
 const formattedDate = (dateString: string) => {
-  const dateParts = dateString.split('-')
-  const year = dateParts[0]
-  const month = parseInt(dateParts[1], 10) // parseInt로 숫자로 변환
-  const day = dateParts[2]
+  const date = new Date(dateString)
+
+  const year = date.getFullYear()
+  const month = date.getMonth() + 1 // getMonth()는 0부터 시작
+  const day = date.getDate()
 
   return `${year}. ${month}. ${day}`
+}
+
+// TODO: shared/utils 적용
+export const getImageUrl = (imagePath: string) => {
+  return process.env.NEXT_PUBLIC_API_MOCKING === 'enabled'
+    ? imagePath
+    : process.env.NEXT_PUBLIC_API_URL + URL_BASE_IMAGE_FILE + imagePath
 }

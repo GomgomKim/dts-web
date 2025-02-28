@@ -1,5 +1,7 @@
 import { URL_EXPLORE_LIST } from '@/views/explore/ui/gallery/model/constant'
 import { URL_FAVORITE_LIST } from '@/views/favorites/ui/favorite-items/model/constant'
+import { URL_ARCHIVES } from '@/views/my-models/model/constants'
+import { ArchiveItem } from '@/views/my-models/model/type'
 
 import { URL_ASSET_UPLOAD } from '@/features/upload-asset/ImageInputBox/model/constants'
 
@@ -153,6 +155,84 @@ let AssetData = [
   }
 ]
 
+const ArchiveData: ArchiveItem[] = [
+  {
+    createdDate: '2025-02-24T19:02:00+09:00',
+    contents: [
+      {
+        contentsId: 1001,
+        modelId: 5001,
+        encryptedContentsPath: faker.image.urlLoremFlickr()
+      },
+      {
+        contentsId: 1002,
+        modelId: 5002,
+        encryptedContentsPath: faker.image.urlLoremFlickr()
+      },
+      {
+        contentsId: 1003,
+        modelId: 5001,
+        encryptedContentsPath: faker.image.urlLoremFlickr()
+      }
+    ]
+  },
+  {
+    createdDate: '2025-02-27T19:02:00+09:00',
+    contents: [
+      {
+        contentsId: 1001,
+        modelId: 5001,
+        encryptedContentsPath: faker.image.urlLoremFlickr()
+      },
+      {
+        contentsId: 1002,
+        modelId: 5002,
+        encryptedContentsPath: faker.image.urlLoremFlickr()
+      },
+      {
+        contentsId: 1003,
+        modelId: 5003,
+        encryptedContentsPath: faker.image.urlLoremFlickr()
+      },
+      {
+        contentsId: 1004,
+        modelId: 5004,
+        encryptedContentsPath: faker.image.urlLoremFlickr()
+      },
+      {
+        contentsId: 1005,
+        modelId: 5005,
+        encryptedContentsPath: faker.image.urlLoremFlickr()
+      },
+      {
+        contentsId: 1006,
+        modelId: 5006,
+        encryptedContentsPath: faker.image.urlLoremFlickr()
+      }
+    ]
+  },
+  {
+    createdDate: '2025-02-28T19:02:00+09:00',
+    contents: [
+      {
+        contentsId: 1001,
+        modelId: 5001,
+        encryptedContentsPath: faker.image.urlLoremFlickr()
+      },
+      {
+        contentsId: 1002,
+        modelId: 5002,
+        encryptedContentsPath: faker.image.urlLoremFlickr()
+      },
+      {
+        contentsId: 1003,
+        modelId: 5001,
+        encryptedContentsPath: faker.image.urlLoremFlickr()
+      }
+    ]
+  }
+]
+
 let current = 0
 
 // variationId마다 상태를 저장할 Map
@@ -162,6 +242,36 @@ const imageProgressMap = new Map<
 >()
 
 export const handlers = [
+  http.get(`${URL_ARCHIVES}`, ({ request }) => {
+    const url = new URL(request.url)
+    const sortingType = url.searchParams.get('sortingType')
+    const cursor = parseInt(url.searchParams.get('offset') as string) || 1
+
+    let responseItems: ArchiveItem[] = []
+    if (sortingType === 'NEWEST') {
+      responseItems = ArchiveData.sort((a, b) => {
+        return new Date(a.createdDate) - new Date(b.createdDate)
+      })
+    } else {
+      responseItems = ArchiveData.sort((a, b) => {
+        return new Date(b.createdDate) - new Date(a.createdDate)
+      })
+    }
+
+    const offset = 10 * cursor === 100000 ? null : (10 * cursor).toString()
+    return HttpResponse.json(
+      {
+        code: 0,
+        message: null,
+        content: {
+          data: responseItems,
+          hasNext: offset === null ? false : true,
+          offset: offset
+        }
+      },
+      { status: 200 }
+    )
+  }),
   http.get(`${URL_EXPLORE_LIST}`, ({ request }) => {
     const url = new URL(request.url)
     const tagType = url.searchParams.get('tagType')
@@ -182,7 +292,7 @@ export const handlers = [
       responseImages = ImageData.HAIR
     }
 
-    const scrollkey = 10 * cursor === 1000 ? null : (10 * cursor).toString()
+    const scrollkey = 10 * cursor === 1000000 ? null : (10 * cursor).toString()
     return HttpResponse.json(
       {
         code: 0,
