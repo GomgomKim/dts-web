@@ -1,5 +1,7 @@
 import { URL_EXPLORE_LIST } from '@/views/explore/ui/gallery/model/constant'
 import { URL_FAVORITE_LIST } from '@/views/favorites/ui/favorite-items/model/constant'
+import { URL_ARCHIVES } from '@/views/my-models/model/constants'
+import { ArchiveItem } from '@/views/my-models/model/type'
 
 import { URL_ASSET_UPLOAD } from '@/features/upload-asset/ImageInputBox/model/constants'
 
@@ -22,70 +24,7 @@ import {
 import { faker } from '@faker-js/faker'
 import { HttpResponse, http } from 'msw'
 
-const ImageData = {
-  MAKEUP: [
-    {
-      id: 1,
-      name: 'jisoo',
-      description: '지수의 메인 이미지',
-      isFavorite: false,
-      encryptedThumbnailPath: faker.image.urlLoremFlickr(),
-      tags: ['tag1', 'tag2']
-    },
-    {
-      id: 2,
-      name: 'jisoo',
-      description: '지수의 메인 이미지',
-      isFavorite: false,
-      encryptedThumbnailPath: faker.image.urlLoremFlickr(),
-      tags: ['tag1', 'tag2']
-    },
-    {
-      id: 3,
-      name: 'jisoo',
-      description: '지수의 메인 이미지',
-      isFavorite: true,
-      encryptedThumbnailPath: faker.image.urlLoremFlickr(),
-      tags: ['tag1', 'tag2']
-    },
-    {
-      id: 4,
-      name: 'jisoo',
-      description: '지수의 메인 이미지',
-      isFavorite: false,
-      encryptedThumbnailPath: faker.image.urlLoremFlickr(),
-      tags: ['tag1', 'tag2']
-    }
-  ],
-  SKINCARE: [
-    {
-      id: 5,
-      name: 'jisoo',
-      description: '지수의 메인 이미지',
-      isFavorite: true,
-      encryptedThumbnailPath: faker.image.urlLoremFlickr(),
-      tags: ['tag1', 'tag2']
-    },
-    {
-      id: 6,
-      name: 'jisoo',
-      description: '지수의 메인 이미지',
-      isFavorite: true,
-      encryptedThumbnailPath: faker.image.urlLoremFlickr(),
-      tags: ['tag1', 'tag2']
-    }
-  ],
-  HAIR: [
-    {
-      id: 7,
-      name: 'jisoo',
-      description: '지수의 메인 이미지',
-      isFavorite: false,
-      encryptedThumbnailPath: faker.image.urlLoremFlickr(),
-      tags: ['tag1', 'tag2']
-    }
-  ]
-}
+import { ArchiveData, ImageData } from './data'
 
 let AssetData = [
   {
@@ -162,6 +101,36 @@ const imageProgressMap = new Map<
 >()
 
 export const handlers = [
+  http.get(`${URL_ARCHIVES}`, ({ request }) => {
+    const url = new URL(request.url)
+    const sortingType = url.searchParams.get('sortingType')
+    const cursor = parseInt(url.searchParams.get('offset') as string) || 1
+
+    let responseItems: ArchiveItem[] = []
+    if (sortingType === 'NEWEST') {
+      responseItems = ArchiveData.sort((a, b) => {
+        return +new Date(a.createdDate) - +new Date(b.createdDate)
+      })
+    } else {
+      responseItems = ArchiveData.sort((a, b) => {
+        return +new Date(b.createdDate) - +new Date(a.createdDate)
+      })
+    }
+
+    const offset = 10 * cursor === 100000 ? null : (10 * cursor).toString()
+    return HttpResponse.json(
+      {
+        code: 0,
+        message: null,
+        content: {
+          data: responseItems,
+          hasNext: offset === null ? false : true,
+          offset: offset
+        }
+      },
+      { status: 200 }
+    )
+  }),
   http.get(`${URL_EXPLORE_LIST}`, ({ request }) => {
     const url = new URL(request.url)
     const tagType = url.searchParams.get('tagType')
@@ -182,7 +151,7 @@ export const handlers = [
       responseImages = ImageData.HAIR
     }
 
-    const scrollkey = 10 * cursor === 1000 ? null : (10 * cursor).toString()
+    const scrollkey = 10 * cursor === 1000000 ? null : (10 * cursor).toString()
     return HttpResponse.json(
       {
         code: 0,

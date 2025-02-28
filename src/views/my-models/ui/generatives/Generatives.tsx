@@ -1,18 +1,18 @@
 'use client'
 
-import useModals from '@/shared/ui/modal/model/Modals.hooks'
-
-import { DATA } from './model/DATA'
-import { useGenerativeItemStore } from './model/useGenerativeItemStore'
-import { GenerativeItemViewModal } from './ui/GenerativeItemViewModal'
+// import useModals from '@/shared/ui/modal/model/Modals.hooks'
+// import { DATA } from './model/DATA'
+// import { useGenerativeItemStore } from './model/useGenerativeItemStore'
+// import { GenerativeItemViewModal, GenerativesItems } from './ui'
+import { GenerativesItems } from './ui'
 
 export const Generatives = () => {
-  const { openModal } = useModals()
-  const setIndex = useGenerativeItemStore((state) => state.setIndex)
+  // const { openModal } = useModals()
+  // const setIndex = useGenerativeItemStore((state) => state.setIndex)
 
   return (
     <div id="generatives-items" className="relative h-full">
-      {DATA.map((item, index) => (
+      {/* {DATA.map((item, index) => (
         <button
           key={item.id}
           onClick={() => {
@@ -23,7 +23,8 @@ export const Generatives = () => {
         >
           item {item.id}
         </button>
-      ))}
+      ))} */}
+      <GenerativesItems />
     </div>
   )
 }

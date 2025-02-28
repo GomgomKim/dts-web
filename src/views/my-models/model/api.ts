@@ -8,15 +8,14 @@ import { GetArchivesReqData, GetArchivesResData } from './type'
 export async function getArchives({
   size = DEFAULT_PAGE_SIZE,
   sortingType = 'NEWEST',
-  mediaType = 'ALL',
-  scrollKey
+  offset
 }: GetArchivesReqData = {}): Promise<GetArchivesResData> {
   const response = await dtsAxios.get<
     GetArchivesReqData,
     AxiosResponse<GetArchivesResData, AxiosError>
   >(
-    `${URL_ARCHIVES}?size=${size}&sortingType=${sortingType}&mediaType=${mediaType}` +
-      (scrollKey ? `&scrollKey=${scrollKey}` : '')
+    `${URL_ARCHIVES}?size=${size}&sortingType=${sortingType}` +
+      (offset ? `&offset=${offset}` : '')
   )
   return response.data
 }

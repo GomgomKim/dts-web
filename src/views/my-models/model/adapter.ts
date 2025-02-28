@@ -6,21 +6,19 @@ import { GetArchivesReqData, GetArchivesResData } from './type'
 
 export const useGetArchives = ({
   sortingType = 'NEWEST',
-  mediaType = 'ALL',
   size = DEFAULT_PAGE_SIZE
 }: GetArchivesReqData = {}) => {
   return useInfiniteQuery<GetArchivesResData, Error>({
-    queryKey: ['archives', sortingType, mediaType],
+    queryKey: ['archives', sortingType],
     queryFn: ({ pageParam }) =>
       getArchives({
         sortingType,
-        mediaType,
         size,
-        scrollKey: pageParam as string
+        offset: pageParam as string
       }),
     initialPageParam: null,
-    getNextPageParam: (lastPage) => lastPage.content.scrollKey,
-    staleTime: 60 * 1000,
-    gcTime: 300 * 1000
+    getNextPageParam: (lastPage) => lastPage.content.offset
+    // staleTime: 60 * 1000,
+    // gcTime: 300 * 1000
   })
 }
